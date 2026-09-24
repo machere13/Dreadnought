@@ -41,13 +41,13 @@ importers:
 
   examples/react:
     dependencies:
-      '@morpha/react':
+      '@dreadnought/react':
         specifier: workspace:*
         version: link:../../packages/adapters/react
-      '@morpha/themes':
+      '@dreadnought/themes':
         specifier: workspace:*
         version: link:../../packages/themes
-      '@morpha/ui':
+      '@dreadnought/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       react:
@@ -59,7 +59,7 @@ importers:
 
   packages/adapters/react:
     dependencies:
-      '@morpha/core':
+      '@dreadnought/core':
         specifier: workspace:*
         version: link:../../core
       react:
@@ -72,7 +72,7 @@ importers:
 
   packages/ui:
     dependencies:
-      '@morpha/react':
+      '@dreadnought/react':
         specifier: workspace:*
         version: link:../adapters/react
       react:

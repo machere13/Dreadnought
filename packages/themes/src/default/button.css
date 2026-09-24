@@ -6,29 +6,29 @@
   min-height: 2.75rem;
   padding: 0.65rem 1rem;
   border: 0;
-  border-radius: var(--morpha-button-radius);
+  border-radius: var(--dreadnought-button-radius);
   font: inherit;
   font-weight: 600;
-  background: var(--morpha-button-bg);
-  color: var(--morpha-button-fg);
+  background: var(--dreadnought-button-bg);
+  color: var(--dreadnought-button-fg);
   cursor: pointer;
 }
 
 :where([data-ui="button"][data-variant="primary"]:hover:not(:disabled):not([aria-disabled="true"])) {
-  background: var(--morpha-button-bg-hover);
+  background: var(--dreadnought-button-bg-hover);
 }
 
 :where([data-ui="button"][data-variant="secondary"]) {
-  background: var(--morpha-button-secondary-bg);
-  color: var(--morpha-button-secondary-fg);
+  background: var(--dreadnought-button-secondary-bg);
+  color: var(--dreadnought-button-secondary-fg);
 }
 
 :where([data-ui="button"][data-variant="secondary"]):hover:not(:disabled):not([aria-disabled="true"]) {
-  background: var(--morpha-button-secondary-bg-hover);
+  background: var(--dreadnought-button-secondary-bg-hover);
 }
 
 :where([data-ui="button"][data-variant]):focus-visible {
-  outline: 3px solid var(--morpha-button-focus);
+  outline: 3px solid var(--dreadnought-button-focus);
   outline-offset: 3px;
 }
 
@@ -45,10 +45,10 @@
   border: 2px solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
-  animation: morpha-button-spin 0.75s linear infinite;
+  animation: dreadnought-button-spin 0.75s linear infinite;
 }
 
-@keyframes morpha-button-spin {
+@keyframes dreadnought-button-spin {
   to { transform: rotate(360deg); }
 }
 

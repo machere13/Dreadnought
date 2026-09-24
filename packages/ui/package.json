@@ -1,5 +1,5 @@
 {
-  "name": "@morpha/ui",
+  "name": "@dreadnought/ui",
   "version": "0.1.0",
   "type": "module",
   "sideEffects": false,
@@ -15,7 +15,7 @@
     "typecheck": "tsc -p tsconfig.build.json --noEmit"
   },
   "dependencies": {
-    "@morpha/react": "workspace:*"
+    "@dreadnought/react": "workspace:*"
   },
   "peerDependencies": {
     "react": "^19.0.0"

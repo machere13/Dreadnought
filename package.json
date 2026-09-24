@@ -1,11 +1,11 @@
 {
-  "name": "morpha",
+  "name": "dreadnought",
   "private": true,
   "packageManager": "pnpm@9.6.0",
   "type": "module",
   "scripts": {
     "build": "pnpm -r build",
-    "dev": "pnpm --filter @morpha/example-react dev",
+    "dev": "pnpm --filter @dreadnought/example-react dev",
     "test": "vitest run",
     "typecheck": "pnpm -r typecheck"
   },

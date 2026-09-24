@@ -1,4 +1,4 @@
-import { getButtonState } from '@morpha/core';
+import { getButtonState } from '@dreadnought/core';
 import type { ButtonHTMLAttributes, MouseEvent } from 'react';
 
 export interface UseButtonOptions extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'> {

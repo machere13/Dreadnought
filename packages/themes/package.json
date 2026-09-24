@@ -1,5 +1,5 @@
 {
-  "name": "@morpha/themes",
+  "name": "@dreadnought/themes",
   "version": "0.1.0",
   "sideEffects": ["*.css"],
   "files": ["src/default"],

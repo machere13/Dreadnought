@@ -1,9 +1,9 @@
 import { createRoot } from 'react-dom/client';
 import { useState } from 'react';
-import { Button } from '@morpha/ui';
-import { ButtonBase } from '@morpha/react/unstyled';
-import { useButton } from '@morpha/react/logic';
-import '@morpha/themes/default.css';
+import { Button } from '@dreadnought/ui';
+import { ButtonBase } from '@dreadnought/react/unstyled';
+import { useButton } from '@dreadnought/react/logic';
+import '@dreadnought/themes/default.css';
 import './page.css';
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
 
   return (
     <main>
-      <h1>Morpha: Button</h1>
+      <h1>Dreadnought: Button</h1>
       <section>
         <h2>Готовый компонент</h2>
         <Button onClick={() => setCount((value) => value + 1)}>Нажать</Button>

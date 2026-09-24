@@ -4,6 +4,6 @@ section { padding: 20px 0; border-bottom: 1px solid #d9d9e5; }
 h1 { margin-bottom: 24px; }
 h2 { font-size: 18px; }
 section button + button { margin-left: 12px; }
-.other-theme { --morpha-button-secondary-bg: #182b47; --morpha-button-secondary-fg: #fff; --morpha-button-secondary-bg-hover: #254468; --morpha-button-radius: 999px; }
+.other-theme { --dreadnought-button-secondary-bg: #182b47; --dreadnought-button-secondary-fg: #fff; --dreadnought-button-secondary-bg-hover: #254468; --dreadnought-button-radius: 999px; }
 .custom-button { border: 1px solid #282844; background: transparent; color: inherit; padding: 10px 16px; border-radius: 6px; font: inherit; cursor: pointer; }
 .custom-button:focus-visible { outline: 3px solid #5046e5; outline-offset: 3px; }

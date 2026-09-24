@@ -1,5 +1,5 @@
 {
-  "name": "@morpha/example-react",
+  "name": "@dreadnought/example-react",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,9 +8,9 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@morpha/react": "workspace:*",
-    "@morpha/themes": "workspace:*",
-    "@morpha/ui": "workspace:*",
+    "@dreadnought/react": "workspace:*",
+    "@dreadnought/themes": "workspace:*",
+    "@dreadnought/ui": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   }
