@@ -2,7 +2,7 @@
 
 Статус: архитектура принята за основу реализации; первый компонент — Button.
 
-Документ определяет устройство продукта и границы ответственности. Здесь нет календарного плана. Названия пакетов и примеры API предварительные; `@library` — условный npm-scope.
+Документ определяет устройство продукта и границы ответственности. Здесь нет календарного плана. Названия пакетов и примеры API предварительные; `@library` — условный npm-scope. Правила размещения тестов и именования: [conventions.md](conventions.md).
 
 ## 1. Назначение
 
@@ -45,21 +45,33 @@ packages/
     src/
       button/
         button.types.ts
-        button.ts
-        button.test.ts
+        getButtonState.ts
       index.ts
+    tests/
+      button/
+        getButtonState.test.ts
 
-  react/                        # React-адаптация всех трёх уровней
+  implementations/             # Слой 2: реализации под фреймворки
+    react/
+      src/
+        button/
+          useButton.ts          # React-хук для поведения слоя 1
+          ButtonBase.tsx        # Разметка и привязка логики
+        logic.ts                # Экспорт хуков
+        unstyled.ts             # Экспорт базовых компонентов
+      tests/
+        button/
+          useButton.test.tsx
+          ButtonBase.test.tsx
+
+  ui/                           # Готовые компоненты слоя 3
     src/
       button/
-        use-button.ts           # Слой 1: привязка поведения к React
-        button-base.tsx         # Слой 2: базовая разметка
-        button.tsx              # Слой 3: оформленный компонент
-        button.meta.ts          # Явные сведения для каталога
-        button.test.tsx
-      logic.ts                  # Экспорт хуков
-      unstyled.ts               # Экспорт базовых компонентов
-      index.ts                  # Экспорт оформленных компонентов
+        Button.tsx
+        button.meta.ts
+    tests/
+      button/
+        Button.test.tsx
 
   themes/                       # Стили слоя 3
     src/
@@ -73,6 +85,7 @@ examples/
 
 docs/
   architecture.md
+  conventions.md
   components/
     button.md
 
@@ -93,7 +106,8 @@ graphify-out/                   # Генерируемая карта исход
 | Пакет | Зависимости | Назначение |
 |---|---|---|
 | `@library/core` | Без UI-фреймворков и DOM | Общие контракты и логика |
-| `@library/react` | `core`; React как peer dependency | Хуки, базовые и оформленные React-компоненты |
+| `@library/react` | `core`; React как peer dependency | React-хуки и базовые компоненты слоя 2 |
+| `@library/ui` | `react`; React как peer dependency | Готовые оформленные компоненты слоя 3 |
 | `@library/themes` | Без React и JavaScript runtime | Стандартная тема и CSS компонентов |
 
 Для репозитория используется workspace. Начальный вариант — pnpm и TypeScript. Инструменты разработки и генерации не попадают в зависимости пользовательского приложения.
@@ -105,7 +119,7 @@ graphify-out/                   # Генерируемая карта исход
 ```tsx
 import { useButton } from '@library/react/logic';
 import { ButtonBase } from '@library/react/unstyled';
-import { Button } from '@library/react';
+import { Button } from '@library/ui';
 import '@library/themes/default.css';
 ```
 
