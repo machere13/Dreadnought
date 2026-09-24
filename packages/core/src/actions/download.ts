@@ -9,6 +9,7 @@ export function download(blob: Blob, filename: string): void {
     link.click();
   } finally {
     link.remove();
+    // TODO: Replace this arbitrary delay with an explicit blob URL lifecycle strategy.
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 }
