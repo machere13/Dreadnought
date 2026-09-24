@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getButtonState } from './button.js';
+import { getButtonState } from '../../src/button/getButtonState.js';
 
 describe('getButtonState', () => {
   it('keeps a loading button focusable while blocking its action', () => {

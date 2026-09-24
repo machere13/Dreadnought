@@ -3,7 +3,7 @@
 Первый компонент Morpha. Его три уровня можно использовать независимо.
 
 ```tsx
-import { Button } from '@morpha/react';
+import { Button } from '@morpha/ui';
 import { ButtonBase } from '@morpha/react/unstyled';
 import { useButton } from '@morpha/react/logic';
 import '@morpha/themes/default.css';

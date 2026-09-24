@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
-import { useButton } from './use-button.js';
-import type { UseButtonOptions } from './use-button.js';
+import { useButton } from './useButton.js';
+import type { UseButtonOptions } from './useButton.js';
 
 export type ButtonBaseProps = UseButtonOptions;
 

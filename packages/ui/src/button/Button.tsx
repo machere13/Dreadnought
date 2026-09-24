@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
-import { ButtonBase } from './button-base.js';
-import type { ButtonBaseProps } from './button-base.js';
+import { ButtonBase } from '@morpha/react/unstyled';
+import type { ButtonBaseProps } from '@morpha/react/unstyled';
 
 export interface ButtonProps extends ButtonBaseProps {
   variant?: 'primary' | 'secondary';

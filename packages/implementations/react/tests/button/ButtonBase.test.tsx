@@ -3,16 +3,15 @@ import type { FormEvent } from 'react';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { Button } from './button.js';
-import { ButtonBase } from './button-base.js';
+import { ButtonBase } from '../../src/button/ButtonBase.js';
 
 afterEach(cleanup);
 
-describe('Button', () => {
+describe('ButtonBase', () => {
   it('defaults to a non-submitting native button', () => {
     const submit = vi.fn((event: FormEvent<HTMLFormElement>) => event.preventDefault());
     const click = vi.fn();
-    render(<form onSubmit={submit}><Button onClick={click}>Save</Button></form>);
+    render(<form onSubmit={submit}><ButtonBase onClick={click}>Save</ButtonBase></form>);
 
     fireEvent.click(screen.getByRole('button', { name: 'Save' }));
     expect(click).toHaveBeenCalledOnce();
@@ -23,7 +22,7 @@ describe('Button', () => {
     const user = userEvent.setup();
     const submit = vi.fn((event: FormEvent<HTMLFormElement>) => event.preventDefault());
     const click = vi.fn();
-    render(<form onSubmit={submit}><Button loading type="submit" onClick={click}>Save</Button></form>);
+    render(<form onSubmit={submit}><ButtonBase loading type="submit" onClick={click}>Save</ButtonBase></form>);
 
     const button = screen.getByRole('button', { name: 'Save' });
     button.focus();
@@ -40,7 +39,7 @@ describe('Button', () => {
   it('submits a form when explicitly asked to', async () => {
     const user = userEvent.setup();
     const submit = vi.fn((event: FormEvent<HTMLFormElement>) => event.preventDefault());
-    render(<form onSubmit={submit}><Button type="submit">Send</Button></form>);
+    render(<form onSubmit={submit}><ButtonBase type="submit">Send</ButtonBase></form>);
 
     screen.getByRole('button', { name: 'Send' }).focus();
     await user.keyboard('{Enter}');

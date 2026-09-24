@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { useState } from 'react';
-import { Button } from '@morpha/react';
+import { Button } from '@morpha/ui';
 import { ButtonBase } from '@morpha/react/unstyled';
 import { useButton } from '@morpha/react/logic';
 import '@morpha/themes/default.css';
