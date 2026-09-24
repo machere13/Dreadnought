@@ -56,4 +56,31 @@ describe('ButtonBase', () => {
     expect(button.className).toBe('custom');
     expect(button.hasAttribute('disabled')).toBe(true);
   });
+
+  it('uses native disabled semantics and never calls the action', async () => {
+    const user = userEvent.setup();
+    const click = vi.fn();
+    render(<ButtonBase disabled onClick={click}>Save</ButtonBase>);
+
+    const button = screen.getByRole('button', { name: 'Save' });
+    await user.click(button);
+    button.focus();
+    await user.keyboard('{Enter} ');
+
+    expect(button.hasAttribute('disabled')).toBe(true);
+    expect(click).not.toHaveBeenCalled();
+  });
+
+  it('restores its action when loading ends', () => {
+    const click = vi.fn();
+    const { rerender } = render(<ButtonBase loading onClick={click}>Save</ButtonBase>);
+    const button = screen.getByRole('button', { name: 'Save' });
+
+    fireEvent.click(button);
+    rerender(<ButtonBase onClick={click}>Save</ButtonBase>);
+    fireEvent.click(button);
+
+    expect(button.hasAttribute('aria-busy')).toBe(false);
+    expect(click).toHaveBeenCalledOnce();
+  });
 });

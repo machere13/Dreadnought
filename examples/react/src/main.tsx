@@ -16,6 +16,8 @@ function App() {
       <section>
         <h2>Готовый компонент</h2>
         <Button onClick={() => setCount((value) => value + 1)}>Нажать</Button>
+        <Button disabled>Недоступна</Button>
+        <Button loading>Загрузка</Button>
       </section>
       <section className="other-theme">
         <h2>Своя тема</h2>

@@ -5,6 +5,11 @@ import { Button } from '../../src/Button/Button.js';
 afterEach(cleanup);
 
 describe('Button', () => {
+  it('uses the primary theme variant by default', () => {
+    render(<Button>Continue</Button>);
+    expect(screen.getByRole('button', { name: 'Continue' }).getAttribute('data-variant')).toBe('primary');
+  });
+
   it('applies its visual variant without changing button behavior', () => {
     const onClick = vi.fn();
     render(<Button variant="secondary" onClick={onClick}>Continue</Button>);
