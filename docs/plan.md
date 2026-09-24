@@ -28,10 +28,10 @@
 
 **Реализовать Button:**
 
-1. `packages/core/src/button/`: публичные типы и общие правила `disabled`/`loading`, не зависящие от React.
-2. `packages/implementations/react/src/button/useButton.ts`: свойства и действия нативного `<button>`.
-3. `packages/implementations/react/src/button/ButtonBase.tsx`: разметка, передача DOM-свойств и ref.
-4. `packages/ui/src/button/Button.tsx` и `packages/themes/src/default/`: готовый компонент, стандартные стили и токены.
+1. `packages/core/src/Button/`: публичные типы и общие правила `disabled`/`loading`, не зависящие от React.
+2. `packages/implementations/react/src/Button/useButton.ts`: свойства и действия нативного `<button>`.
+3. `packages/implementations/react/src/Button/ButtonBase.tsx`: разметка, передача DOM-свойств и ref.
+4. `packages/ui/src/Button/Button.tsx` и `packages/themes/src/default/`: готовый компонент, стандартные стили и токены.
 5. Публичные экспорты для трёх способов использования и страница примеров, импортирующая только эти экспорты.
 
 **Проверить:** обычное действие; `disabled`; `loading`; `type="button"` внутри формы; явно заданный `submit`; работа мышью и клавиатурой; фокус во время загрузки; передача `aria-label`, обработчика, `className` и ref. Проверить, что импорт `logic` и `unstyled` не подключает стандартную тему.

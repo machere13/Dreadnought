@@ -43,34 +43,34 @@ React-хук не может быть независимым от React. Поэ�
 packages/
   core/                         # Независимая часть слоя 1
     src/
-      button/
+      Button/
         button.types.ts
         getButtonState.ts
       index.ts
     tests/
-      button/
+      Button/
         getButtonState.test.ts
 
   implementations/             # Слой 2: реализации под фреймворки
     react/
       src/
-        button/
+        Button/
           useButton.ts          # React-хук для поведения слоя 1
           ButtonBase.tsx        # Разметка и привязка логики
         logic.ts                # Экспорт хуков
         unstyled.ts             # Экспорт базовых компонентов
       tests/
-        button/
+        Button/
           useButton.test.tsx
           ButtonBase.test.tsx
 
   ui/                           # Готовые компоненты слоя 3
     src/
-      button/
+      Button/
         Button.tsx
         button.meta.ts
     tests/
-      button/
+      Button/
         Button.test.tsx
 
   themes/                       # Стили слоя 3
