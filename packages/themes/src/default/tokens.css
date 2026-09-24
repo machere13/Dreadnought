@@ -1,0 +1,10 @@
+:root {
+  --morpha-button-bg: #5046e5;
+  --morpha-button-fg: #ffffff;
+  --morpha-button-bg-hover: #4338ca;
+  --morpha-button-secondary-bg: #eeeefd;
+  --morpha-button-secondary-fg: #272264;
+  --morpha-button-secondary-bg-hover: #dcdafa;
+  --morpha-button-radius: 10px;
+  --morpha-button-focus: #8a84f5;
+}

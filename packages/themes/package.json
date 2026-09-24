@@ -1,0 +1,9 @@
+{
+  "name": "@morpha/themes",
+  "version": "0.1.0",
+  "sideEffects": ["*.css"],
+  "files": ["src/default"],
+  "exports": {
+    "./default.css": "./src/default/index.css"
+  }
+}
