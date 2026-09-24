@@ -28,7 +28,7 @@
 
 **Реализовать Button:**
 
-1. `packages/core/src/Button/`: публичные типы и общие правила `disabled`/`loading`, не зависящие от React.
+1. `packages/core/src/components/Button/`: публичные типы и общие правила `disabled`/`loading`, не зависящие от React.
 2. `packages/adapters/react/src/Button/useButton.ts`: свойства и действия нативного `<button>`.
 3. `packages/adapters/react/src/Button/ButtonBase.tsx`: разметка, передача DOM-свойств и ref.
 4. `packages/ui/src/Button/Button.tsx` и `packages/themes/src/default/`: готовый компонент, стандартные стили и токены.
