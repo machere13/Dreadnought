@@ -24,13 +24,13 @@
 
 ### 1. 24 сентября — 20 октября: основание библиотеки и Button
 
-**Создать структуру:** `pnpm-workspace.yaml`, корневые настройки TypeScript, `packages/core`, `packages/implementations/react`, `packages/ui`, `packages/themes` и минимальное приложение в `examples/react`. Зависимости направлены только от верхнего уровня к нижнему; React указан как peer dependency адаптера.
+**Создать структуру:** `pnpm-workspace.yaml`, корневые настройки TypeScript, `packages/core`, `packages/adapters/react`, `packages/ui`, `packages/themes` и минимальное приложение в `examples/react`. Зависимости направлены только от верхнего уровня к нижнему; React указан как peer dependency адаптера.
 
 **Реализовать Button:**
 
 1. `packages/core/src/Button/`: публичные типы и общие правила `disabled`/`loading`, не зависящие от React.
-2. `packages/implementations/react/src/Button/useButton.ts`: свойства и действия нативного `<button>`.
-3. `packages/implementations/react/src/Button/ButtonBase.tsx`: разметка, передача DOM-свойств и ref.
+2. `packages/adapters/react/src/Button/useButton.ts`: свойства и действия нативного `<button>`.
+3. `packages/adapters/react/src/Button/ButtonBase.tsx`: разметка, передача DOM-свойств и ref.
 4. `packages/ui/src/Button/Button.tsx` и `packages/themes/src/default/`: готовый компонент, стандартные стили и токены.
 5. Публичные экспорты для трёх способов использования и страница примеров, импортирующая только эти экспорты.
 

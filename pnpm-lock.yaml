@@ -43,7 +43,7 @@ importers:
     dependencies:
       '@morpha/react':
         specifier: workspace:*
-        version: link:../../packages/implementations/react
+        version: link:../../packages/adapters/react
       '@morpha/themes':
         specifier: workspace:*
         version: link:../../packages/themes
@@ -57,9 +57,7 @@ importers:
         specifier: ^19.0.0
         version: 19.3.0(react@19.3.0)
 
-  packages/core: {}
-
-  packages/implementations/react:
+  packages/adapters/react:
     dependencies:
       '@morpha/core':
         specifier: workspace:*
@@ -68,13 +66,15 @@ importers:
         specifier: ^19.0.0
         version: 19.3.0
 
+  packages/core: {}
+
   packages/themes: {}
 
   packages/ui:
     dependencies:
       '@morpha/react':
         specifier: workspace:*
-        version: link:../implementations/react
+        version: link:../adapters/react
       react:
         specifier: ^19.0.0
         version: 19.3.0
