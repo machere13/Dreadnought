@@ -1,0 +1,10 @@
+:root {
+  --dreadnought-button-radius: var(--dreadnought-radius-control);
+  --dreadnought-button-min-height: var(--dreadnought-size-control-min-height);
+  --dreadnought-button-focus-width: 3px;
+  --dreadnought-button-border-width: 0px;
+  --dreadnought-button-icon-size: 1em;
+  --dreadnought-button-spinner-size: 1em;
+  --dreadnought-button-spinner-border-width: 2px;
+  --dreadnought-button-spinner-radius: 50%;
+}

@@ -1,9 +1,0 @@
-:root {
-  --dreadnought-radius-control: 10px;
-  --dreadnought-size-control-min-height: 2.75rem;
-  --dreadnought-space-control-x: 1rem;
-  --dreadnought-space-control-y: 0.65rem;
-  --dreadnought-space-control-gap: 0.5rem;
-  --dreadnought-font-family-ui: system-ui, sans-serif;
-  --dreadnought-motion-spinner-duration: 0.75s;
-}

@@ -1,4 +1,12 @@
-@import './tokens/global/colors.css';
-@import './tokens/global/constants.css';
-@import './tokens/components/Button/tokens.css';
-@import './typography.css';
+@import './tokens/global/colors.tokens.css';
+@import './tokens/global/spacing.tokens.css';
+@import './tokens/global/sizing.tokens.css';
+@import './tokens/global/typography.tokens.css';
+@import './tokens/global/motion.tokens.css';
+@import './tokens/components/Button/colors.tokens.css';
+@import './tokens/components/Button/spacing.tokens.css';
+@import './tokens/components/Button/sizing.tokens.css';
+@import './tokens/components/Button/typography.tokens.css';
+@import './tokens/components/Button/effects.tokens.css';
+@import './tokens/components/Button/motion.tokens.css';
+@import './components/Button/typography.css';

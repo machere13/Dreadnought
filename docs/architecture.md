@@ -107,12 +107,22 @@ packages/
       default/
         tokens/
           global/
-            colors.css
-            constants.css
+            colors.tokens.css
+            spacing.tokens.css
+            sizing.tokens.css
+            typography.tokens.css
+            motion.tokens.css
           components/
             Button/
-              tokens.css
-        typography.css
+              colors.tokens.css
+              spacing.tokens.css
+              sizing.tokens.css
+              typography.tokens.css
+              effects.tokens.css
+              motion.tokens.css
+        components/
+          Button/
+            typography.css
         index.css
 
 examples/
