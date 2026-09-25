@@ -2,5 +2,5 @@
   --dreadnought-button-padding-x: var(--dreadnought-space-control-x);
   --dreadnought-button-padding-y: var(--dreadnought-space-control-y);
   --dreadnought-button-gap: var(--dreadnought-space-control-gap);
-  --dreadnought-button-focus-offset: 3px;
+  --dreadnought-button-focus-offset: var(--dreadnought-space-focus-offset);
 }

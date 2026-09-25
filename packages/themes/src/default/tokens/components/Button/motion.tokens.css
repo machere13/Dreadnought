@@ -1,6 +1,6 @@
 :root {
   --dreadnought-button-spinner-duration: var(--dreadnought-motion-spinner-duration);
-  --dreadnought-button-spinner-timing: linear;
-  --dreadnought-button-spinner-iteration-count: infinite;
-  --dreadnought-button-spinner-rotation: 360deg;
+  --dreadnought-button-spinner-timing: var(--dreadnought-motion-spinner-timing);
+  --dreadnought-button-spinner-iteration-count: var(--dreadnought-motion-spinner-iteration-count);
+  --dreadnought-button-spinner-rotation: var(--dreadnought-motion-spinner-rotation);
 }

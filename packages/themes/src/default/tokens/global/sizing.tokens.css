@@ -1,4 +1,10 @@
 :root {
   --dreadnought-radius-control: 10px;
   --dreadnought-size-control-min-height: 2.75rem;
+  --dreadnought-size-focus-width: 3px;
+  --dreadnought-size-border-none: 0px;
+  --dreadnought-size-icon: 1em;
+  --dreadnought-size-spinner: 1em;
+  --dreadnought-size-spinner-border-width: 2px;
+  --dreadnought-radius-circle: 50%;
 }

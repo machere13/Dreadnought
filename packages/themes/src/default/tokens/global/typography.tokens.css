@@ -1,3 +1,9 @@
 :root {
   --dreadnought-font-family-ui: system-ui, sans-serif;
+  --dreadnought-font-size-control: 1rem;
+  --dreadnought-font-weight-control: 600;
+  --dreadnought-line-height-control: 1.25;
+  --dreadnought-font-letter-spacing-control: normal;
+  --dreadnought-font-style-control: normal;
+  --dreadnought-font-text-transform-control: none;
 }

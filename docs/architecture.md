@@ -111,6 +111,7 @@ packages/
             spacing.tokens.css
             sizing.tokens.css
             typography.tokens.css
+            effects.tokens.css
             motion.tokens.css
           components/
             Button/

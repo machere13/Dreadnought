@@ -1,3 +1,6 @@
 :root {
   --dreadnought-motion-spinner-duration: 0.75s;
+  --dreadnought-motion-spinner-timing: linear;
+  --dreadnought-motion-spinner-iteration-count: infinite;
+  --dreadnought-motion-spinner-rotation: 360deg;
 }

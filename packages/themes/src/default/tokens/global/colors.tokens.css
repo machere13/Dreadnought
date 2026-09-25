@@ -6,4 +6,6 @@
   --dreadnought-color-on-action-secondary: #272264;
   --dreadnought-color-action-secondary-hover: #dcdafa;
   --dreadnought-color-focus: #8a84f5;
+  --dreadnought-color-transparent: transparent;
+  --dreadnought-color-current: currentColor;
 }

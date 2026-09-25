@@ -1,10 +1,29 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const css = (file: string) => readFileSync(resolve('packages/themes/src/default', file), 'utf8');
 
 describe('default theme', () => {
+  it('derives every Button token from a defined global token', () => {
+    const globalFiles = readdirSync(resolve('packages/themes/src/default/tokens/global'));
+    const buttonFiles = readdirSync(resolve('packages/themes/src/default/tokens/components/Button'));
+    const declarations = (files: string[], directory: string) => files.flatMap((file) =>
+      [...css(`${directory}/${file}`).matchAll(/(--dreadnought-[\w-]+):\s*([^;]+);/g)],
+    );
+    const globalNames = new Set(
+      declarations(globalFiles, 'tokens/global').map((declaration) => declaration[1]),
+    );
+    const buttonDeclarations = declarations(buttonFiles, 'tokens/components/Button');
+
+    expect(buttonDeclarations.length).toBeGreaterThan(0);
+    for (const [, name, value] of buttonDeclarations) {
+      const globalReference = value.trim().match(/^var\((--dreadnought-[\w-]+)\)$/)?.[1];
+      expect(globalReference, `${name} must reference a global token`).toBeDefined();
+      expect(globalNames.has(globalReference!), `${name} references an undefined global token`).toBe(true);
+    }
+  });
+
   it('exposes theme tokens and typography without global Button rules', () => {
     const entry = css('index.css');
     for (const file of [
@@ -12,6 +31,7 @@ describe('default theme', () => {
       'tokens/global/spacing.tokens.css',
       'tokens/global/sizing.tokens.css',
       'tokens/global/typography.tokens.css',
+      'tokens/global/effects.tokens.css',
       'tokens/global/motion.tokens.css',
       'tokens/components/Button/colors.tokens.css',
       'tokens/components/Button/spacing.tokens.css',
@@ -37,13 +57,13 @@ describe('default theme', () => {
     ]) {
       expect(buttonEffects).toContain(`--dreadnought-button-${token}:`);
     }
-    expect(buttonSizing).toContain('--dreadnought-button-icon-size: 1em');
+    expect(buttonSizing).toContain('--dreadnought-button-icon-size: var(--dreadnought-size-icon)');
     expect(buttonMotion).toContain('--dreadnought-button-spinner-duration: var(--dreadnought-motion-spinner-duration)');
-    expect(buttonTypography).toMatch(/--dreadnought-font-letter-spacing-button:\s*normal/);
+    expect(buttonTypography).toMatch(/--dreadnought-font-letter-spacing-button:\s*var\(--dreadnought-font-letter-spacing-control\)/);
     expect(typography).toMatch(/letter-spacing:\s*var\(--dreadnought-font-letter-spacing-button\)/);
-    expect(buttonTypography).toContain('--dreadnought-font-style-button: normal');
+    expect(buttonTypography).toContain('--dreadnought-font-style-button: var(--dreadnought-font-style-control)');
     expect(typography).toContain('font-style: var(--dreadnought-font-style-button)');
-    expect(buttonTypography).toContain('--dreadnought-font-text-transform-button: none');
+    expect(buttonTypography).toContain('--dreadnought-font-text-transform-button: var(--dreadnought-font-text-transform-control)');
     expect(typography).toContain('text-transform: var(--dreadnought-font-text-transform-button)');
     expect(globalSpacing).not.toMatch(/--dreadnought-[\w-]*button:/);
   });
