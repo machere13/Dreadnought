@@ -21,4 +21,12 @@ describe('Button', () => {
     fireEvent.click(button);
     expect(onClick).toHaveBeenCalledOnce();
   });
+
+  it('passes icon placement through to the adapter', () => {
+    render(<Button icon={<svg />} iconPosition="end">Search</Button>);
+
+    const button = screen.getByRole('button', { name: 'Search' });
+    expect(button.children[0]?.getAttribute('data-slot')).toBe('label');
+    expect(button.children[1]?.getAttribute('data-slot')).toBe('icon');
+  });
 });

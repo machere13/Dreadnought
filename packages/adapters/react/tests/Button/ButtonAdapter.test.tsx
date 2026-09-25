@@ -83,4 +83,29 @@ describe('ButtonAdapter', () => {
     expect(button.hasAttribute('aria-busy')).toBe(false);
     expect(click).toHaveBeenCalledOnce();
   });
+
+  it('places the icon before the label by default', () => {
+    render(<ButtonAdapter icon={<svg />}>Search</ButtonAdapter>);
+
+    const button = screen.getByRole('button', { name: 'Search' });
+    expect(button.children[0]?.getAttribute('data-slot')).toBe('icon');
+    expect(button.children[0]?.getAttribute('aria-hidden')).toBe('true');
+    expect(button.children[1]?.getAttribute('data-slot')).toBe('label');
+  });
+
+  it('places the icon after the label when requested', () => {
+    render(<ButtonAdapter icon={<svg />} iconPosition="end">Search</ButtonAdapter>);
+
+    const button = screen.getByRole('button', { name: 'Search' });
+    expect(button.children[0]?.getAttribute('data-slot')).toBe('label');
+    expect(button.children[1]?.getAttribute('data-slot')).toBe('icon');
+  });
+
+  it('supports an icon-only button with an explicit accessible name', () => {
+    render(<ButtonAdapter icon={<svg />} aria-label="Search" />);
+
+    const button = screen.getByRole('button', { name: 'Search' });
+    expect(button.querySelector('[data-slot="icon"]')).not.toBeNull();
+    expect(button.querySelector('[data-slot="label"]')).toBeNull();
+  });
 });
