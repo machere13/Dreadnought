@@ -2,10 +2,10 @@
   box-sizing: border-box;
   min-height: var(--dreadnought-text-area-min-height);
   padding: var(--dreadnought-text-area-padding-y) var(--dreadnought-text-area-padding-x);
-  border: var(--dreadnought-text-area-border-width) var(--dreadnought-text-area-border-style) var(--dreadnought-text-area-border-color);
+  border: var(--dreadnought-text-area-border-width) var(--dreadnought-text-area-border-style) var(--dreadnought-text-area-border-default);
   border-radius: var(--dreadnought-text-area-radius);
   background: var(--dreadnought-text-area-bg);
-  color: var(--dreadnought-text-area-fg);
+  color: var(--dreadnought-text-area-text);
   resize: var(--dreadnought-text-area-resize);
 }
 
@@ -22,16 +22,16 @@
 }
 
 .textArea::placeholder {
-  color: var(--dreadnought-text-area-placeholder);
+  color: var(--dreadnought-text-area-placeholder-text);
 }
 
 .textArea:focus-visible {
-  outline: var(--dreadnought-text-area-focus-width) solid var(--dreadnought-text-area-focus);
+  outline: var(--dreadnought-text-area-focus-width) solid var(--dreadnought-text-area-focus-ring);
   outline-offset: var(--dreadnought-text-area-focus-offset);
 }
 
 .textArea[aria-invalid="true"] {
-  border-color: var(--dreadnought-text-area-invalid-border);
+  border-color: var(--dreadnought-text-area-border-invalid);
 }
 
 .textArea:disabled {

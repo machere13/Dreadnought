@@ -15,7 +15,7 @@ import '@dreadnought/themes/default.css';
 
 ```css
 .my-theme {
-  --dreadnought-button-bg: rgb(24 43 71 / 100%);
+  --dreadnought-button-primary-bg: rgb(24 43 71 / 100%);
   --dreadnought-button-radius: 999px;
   --dreadnought-button-border-width: 1px;
   --dreadnought-button-shadow: 0 4px 12px rgb(0 0 0 / 15%);

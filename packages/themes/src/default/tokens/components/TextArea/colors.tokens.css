@@ -1,8 +1,8 @@
 :root {
-  --dreadnought-text-area-bg: var(--dreadnought-color-surface);
-  --dreadnought-text-area-fg: var(--dreadnought-color-on-surface);
-  --dreadnought-text-area-placeholder: var(--dreadnought-color-placeholder);
-  --dreadnought-text-area-border-color: var(--dreadnought-color-border);
-  --dreadnought-text-area-invalid-border: var(--dreadnought-color-danger);
-  --dreadnought-text-area-focus: var(--dreadnought-color-focus);
+  --dreadnought-text-area-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-text-area-text: var(--dreadnought-color-text-primary);
+  --dreadnought-text-area-placeholder-text: var(--dreadnought-color-text-placeholder);
+  --dreadnought-text-area-border-default: var(--dreadnought-color-border-default);
+  --dreadnought-text-area-border-invalid: var(--dreadnought-color-status-error);
+  --dreadnought-text-area-focus-ring: var(--dreadnought-color-focus-ring);
 }

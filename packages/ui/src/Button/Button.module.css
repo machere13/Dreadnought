@@ -13,8 +13,8 @@
 }
 
 .primary {
-  background: var(--dreadnought-button-bg);
-  color: var(--dreadnought-button-fg);
+  background: var(--dreadnought-button-primary-bg);
+  color: var(--dreadnought-button-primary-fg);
 }
 
 .secondary {
@@ -37,7 +37,7 @@
 }
 
 .primary:hover:not(:disabled):not([aria-disabled="true"]) {
-  background: var(--dreadnought-button-bg-hover);
+  background: var(--dreadnought-button-primary-bg-hover);
 }
 
 .secondary:hover:not(:disabled):not([aria-disabled="true"]) {
@@ -45,7 +45,7 @@
 }
 
 .button:focus-visible {
-  outline: var(--dreadnought-button-focus-width) solid var(--dreadnought-button-focus);
+  outline: var(--dreadnought-button-focus-width) solid var(--dreadnought-button-focus-ring);
   outline-offset: var(--dreadnought-button-focus-offset);
 }
 

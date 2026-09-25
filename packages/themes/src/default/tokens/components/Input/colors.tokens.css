@@ -1,8 +1,8 @@
 :root {
-  --dreadnought-input-bg: var(--dreadnought-color-surface);
-  --dreadnought-input-fg: var(--dreadnought-color-on-surface);
-  --dreadnought-input-placeholder: var(--dreadnought-color-placeholder);
-  --dreadnought-input-border-color: var(--dreadnought-color-border);
-  --dreadnought-input-invalid-border: var(--dreadnought-color-danger);
-  --dreadnought-input-focus: var(--dreadnought-color-focus);
+  --dreadnought-input-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-input-text: var(--dreadnought-color-text-primary);
+  --dreadnought-input-placeholder-text: var(--dreadnought-color-text-placeholder);
+  --dreadnought-input-border-default: var(--dreadnought-color-border-default);
+  --dreadnought-input-border-invalid: var(--dreadnought-color-status-error);
+  --dreadnought-input-focus-ring: var(--dreadnought-color-focus-ring);
 }

@@ -1,14 +1,11 @@
 :root {
-  --dreadnought-color-primary: rgb(80 70 229 / 100%);
-  --dreadnought-color-primary-hover: rgb(67 56 202 / 100%);
-  --dreadnought-color-on-primary: rgb(255 255 255 / 100%);
-  --dreadnought-color-secondary: rgb(238 238 253 / 100%);
-  --dreadnought-color-on-secondary: rgb(39 34 100 / 100%);
-  --dreadnought-color-secondary-hover: rgb(220 218 250 / 100%);
-  --dreadnought-color-focus: rgb(138 132 245 / 100%);
-  --dreadnought-color-surface: rgb(255 255 255 / 100%);
-  --dreadnought-color-on-surface: rgb(39 34 100 / 100%);
-  --dreadnought-color-border: rgb(129 124 170 / 100%);
-  --dreadnought-color-placeholder: rgb(104 100 140 / 100%);
-  --dreadnought-color-danger: rgb(180 35 24 / 100%);
+  --dreadnought-color-action-primary: rgb(80 70 229 / 100%);
+  --dreadnought-color-action-primary-hover: rgb(67 56 202 / 100%);
+  --dreadnought-color-text-on-action-primary: rgb(255 255 255 / 100%);
+  --dreadnought-color-focus-ring: rgb(138 132 245 / 100%);
+  --dreadnought-color-surface-default: rgb(255 255 255 / 100%);
+  --dreadnought-color-text-primary: rgb(39 34 100 / 100%);
+  --dreadnought-color-border-default: rgb(129 124 170 / 100%);
+  --dreadnought-color-text-placeholder: rgb(104 100 140 / 100%);
+  --dreadnought-color-status-error: rgb(180 35 24 / 100%);
 }

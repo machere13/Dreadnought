@@ -27,7 +27,7 @@ describe('default theme', () => {
 
     expect(globalTokens.some(([, name]) => name === '--dreadnought-spacing-x1')).toBe(true);
     expect(globalTokens.some(([, name]) => name === '--dreadnought-border-radius-x1')).toBe(true);
-    expect(globalTokens.some(([, name]) => name === '--dreadnought-color-primary')).toBe(true);
+    expect(globalTokens.some(([, name]) => name === '--dreadnought-color-action-primary')).toBe(true);
     expect(globalTokens.some(([, name]) => name === '--dreadnought-opacity-disabled')).toBe(true);
     expect(globalTokens.some(([, name]) => name === '--dreadnought-font-family-ui')).toBe(true);
     expect(globalTokens.some(([, name]) => name === '--dreadnought-size-control-min-height')).toBe(true);
@@ -54,6 +54,25 @@ describe('default theme', () => {
         expect(value.trim(), `${name} must contain a numeric scale value`).toMatch(/^-?\d*\.?\d+(?:px|rem|em|s|ms|%)?$/);
       }
     }
+  });
+
+  it('maps semantic color roles to component-specific slots', () => {
+    const declarations = (source: string) => new Map(
+      [...source.matchAll(/(--dreadnought-[\w-]+):\s*([^;]+);/g)].map(([, name, value]) => [name, value.trim()]),
+    );
+    const global = declarations(css('tokens/global/colors.tokens.css'));
+    expect(global.get('--dreadnought-color-action-primary')).toBe('rgb(80 70 229 / 100%)');
+    expect(global.get('--dreadnought-color-text-primary')).toBe('rgb(39 34 100 / 100%)');
+    expect(global.get('--dreadnought-color-status-error')).toBe('rgb(180 35 24 / 100%)');
+    expect(global.has('--dreadnought-color-secondary')).toBe(false);
+
+    const button = declarations(css('tokens/components/Button/colors.tokens.css'));
+    expect(button.get('--dreadnought-button-primary-bg')).toBe('var(--dreadnought-color-action-primary)');
+    expect(button.get('--dreadnought-button-secondary-bg')).toBe('rgb(238 238 253 / 100%)');
+    const input = declarations(css('tokens/components/Input/colors.tokens.css'));
+    expect(input.get('--dreadnought-input-border-invalid')).toBe('var(--dreadnought-color-status-error)');
+    const textArea = declarations(css('tokens/components/TextArea/colors.tokens.css'));
+    expect(textArea.get('--dreadnought-text-area-text')).toBe('var(--dreadnought-color-text-primary)');
   });
 
   it('references only defined global tokens from component tokens', () => {
@@ -119,7 +138,7 @@ describe('default theme', () => {
     const buttonEffects = css('tokens/components/Button/effects.tokens.css');
     const buttonMotion = css('tokens/components/Button/motion.tokens.css');
     const typography = css('components/Button/typography.css');
-    expect(buttonColors).toMatch(/--dreadnought-button-bg:\s*var\(--dreadnought-color-primary\)/);
+    expect(buttonColors).toMatch(/--dreadnought-button-primary-bg:\s*var\(--dreadnought-color-action-primary\)/);
     for (const token of [
       'border-style', 'text-decoration', 'shadow', 'cursor', 'disabled-cursor',
     ]) {

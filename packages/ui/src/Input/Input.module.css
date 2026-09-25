@@ -2,23 +2,23 @@
   box-sizing: border-box;
   min-height: var(--dreadnought-input-min-height);
   padding: var(--dreadnought-input-padding-y) var(--dreadnought-input-padding-x);
-  border: var(--dreadnought-input-border-width) var(--dreadnought-input-border-style) var(--dreadnought-input-border-color);
+  border: var(--dreadnought-input-border-width) var(--dreadnought-input-border-style) var(--dreadnought-input-border-default);
   border-radius: var(--dreadnought-input-radius);
   background: var(--dreadnought-input-bg);
-  color: var(--dreadnought-input-fg);
+  color: var(--dreadnought-input-text);
 }
 
 .input::placeholder {
-  color: var(--dreadnought-input-placeholder);
+  color: var(--dreadnought-input-placeholder-text);
 }
 
 .input:focus-visible {
-  outline: var(--dreadnought-input-focus-width) solid var(--dreadnought-input-focus);
+  outline: var(--dreadnought-input-focus-width) solid var(--dreadnought-input-focus-ring);
   outline-offset: var(--dreadnought-input-focus-offset);
 }
 
 .input[aria-invalid="true"] {
-  border-color: var(--dreadnought-input-invalid-border);
+  border-color: var(--dreadnought-input-border-invalid);
 }
 
 .input:disabled {
