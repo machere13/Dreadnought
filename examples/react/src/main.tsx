@@ -39,7 +39,9 @@ function App() {
           <label htmlFor="demo-email">Электронная почта</label>
           <Input id="demo-email" type="email" placeholder="name@example.com" />
           <label htmlFor="demo-notes">Заметки</label>
-          <TextArea id="demo-notes" rows={4} placeholder="Напишите что-нибудь" />
+          <TextArea id="demo-notes" rows={4} minRows={2} maxRows={8} placeholder="Можно растянуть мышкой" />
+          <label htmlFor="demo-auto-notes">Автоматическая высота</label>
+          <TextArea id="demo-auto-notes" rows={2} maxRows={6} autoSize placeholder="Растёт вместе с текстом" />
         </div>
       </section>
     </main>

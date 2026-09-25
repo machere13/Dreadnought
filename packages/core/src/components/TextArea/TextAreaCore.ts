@@ -1,5 +1,15 @@
 import type { TextFieldState, TextFieldStateOptions } from '../../behaviors/getTextFieldState.js';
 
-export type TextAreaCoreOptions = TextFieldStateOptions;
+export interface TextAreaCoreOptions extends TextFieldStateOptions {
+  rows?: number;
+  minRows?: number;
+  maxRows?: number;
+  autoSize?: boolean;
+}
 
-export type TextAreaCore = TextFieldState;
+export interface TextAreaCore extends TextFieldState {
+  rows: number;
+  minRows?: number;
+  maxRows?: number;
+  autoSize: boolean;
+}

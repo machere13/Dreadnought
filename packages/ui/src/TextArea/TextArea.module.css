@@ -9,6 +9,18 @@
   resize: var(--dreadnought-text-area-resize);
 }
 
+.textArea[data-min-rows] {
+  min-height: calc(var(--dreadnought-text-area-min-rows) * 1lh + 2 * var(--dreadnought-text-area-padding-y) + 2 * var(--dreadnought-text-area-border-width));
+}
+
+.textArea[data-max-rows] {
+  max-height: calc(var(--dreadnought-text-area-max-rows) * 1lh + 2 * var(--dreadnought-text-area-padding-y) + 2 * var(--dreadnought-text-area-border-width));
+}
+
+.textArea[data-auto-size] {
+  resize: none;
+}
+
 .textArea::placeholder {
   color: var(--dreadnought-text-area-placeholder);
 }
