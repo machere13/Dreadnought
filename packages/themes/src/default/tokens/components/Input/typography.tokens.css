@@ -2,7 +2,7 @@
   --dreadnought-font-size-input: var(--dreadnought-font-size-x1);
   --dreadnought-font-weight-input: var(--dreadnought-font-weight-x1);
   --dreadnought-line-height-input: var(--dreadnought-line-height-x1);
-  --dreadnought-font-letter-spacing-input: var(--dreadnought-letter-spacing-x1);
-  --dreadnought-font-style-input: var(--dreadnought-font-style-x1);
-  --dreadnought-font-text-transform-input: var(--dreadnought-text-transform-x1);
+  --dreadnought-font-letter-spacing-input: normal;
+  --dreadnought-font-style-input: normal;
+  --dreadnought-font-text-transform-input: none;
 }

@@ -2,7 +2,7 @@
   --dreadnought-font-size-text-area: var(--dreadnought-font-size-x1);
   --dreadnought-font-weight-text-area: var(--dreadnought-font-weight-x1);
   --dreadnought-line-height-text-area: var(--dreadnought-line-height-x1);
-  --dreadnought-font-letter-spacing-text-area: var(--dreadnought-letter-spacing-x1);
-  --dreadnought-font-style-text-area: var(--dreadnought-font-style-x1);
-  --dreadnought-font-text-transform-text-area: var(--dreadnought-text-transform-x1);
+  --dreadnought-font-letter-spacing-text-area: normal;
+  --dreadnought-font-style-text-area: normal;
+  --dreadnought-font-text-transform-text-area: none;
 }

@@ -3,7 +3,6 @@
 @import './tokens/global/sizing.tokens.css';
 @import './tokens/global/typography.tokens.css';
 @import './tokens/global/effects.tokens.css';
-@import './tokens/global/motion.tokens.css';
 @import './tokens/components/Button/colors.tokens.css';
 @import './tokens/components/Button/spacing.tokens.css';
 @import './tokens/components/Button/sizing.tokens.css';

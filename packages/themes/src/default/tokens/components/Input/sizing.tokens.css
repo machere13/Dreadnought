@@ -1,5 +1,5 @@
 :root {
-  --dreadnought-input-min-height: var(--dreadnought-size-x2);
+  --dreadnought-input-min-height: var(--dreadnought-size-control-min-height);
   --dreadnought-input-border-width: var(--dreadnought-border-width-x2);
   --dreadnought-input-focus-width: var(--dreadnought-border-width-x2);
   --dreadnought-input-radius: var(--dreadnought-border-radius-x1);

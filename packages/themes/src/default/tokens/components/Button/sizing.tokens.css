@@ -1,10 +1,10 @@
 :root {
   --dreadnought-button-radius: var(--dreadnought-border-radius-x1);
-  --dreadnought-button-min-height: var(--dreadnought-size-x2);
+  --dreadnought-button-min-height: var(--dreadnought-size-control-min-height);
   --dreadnought-button-focus-width: var(--dreadnought-border-width-x3);
   --dreadnought-button-border-width: var(--dreadnought-border-width-x1);
-  --dreadnought-button-icon-size: var(--dreadnought-size-x1);
-  --dreadnought-button-spinner-size: var(--dreadnought-size-x1);
+  --dreadnought-button-icon-size: 1em;
+  --dreadnought-button-spinner-size: 1em;
   --dreadnought-button-spinner-border-width: var(--dreadnought-border-width-x2);
-  --dreadnought-button-spinner-radius: var(--dreadnought-border-radius-x2);
+  --dreadnought-button-spinner-radius: 50%;
 }

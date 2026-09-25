@@ -1,5 +1,5 @@
 :root {
-  --dreadnought-text-area-min-height: var(--dreadnought-size-x2);
+  --dreadnought-text-area-min-height: var(--dreadnought-size-control-min-height);
   --dreadnought-text-area-border-width: var(--dreadnought-border-width-x2);
   --dreadnought-text-area-focus-width: var(--dreadnought-border-width-x2);
   --dreadnought-text-area-radius: var(--dreadnought-border-radius-x1);

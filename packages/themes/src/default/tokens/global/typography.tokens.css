@@ -1,9 +1,6 @@
 :root {
-  --dreadnought-font-family-x1: system-ui, sans-serif;
+  --dreadnought-font-family-ui: system-ui, sans-serif;
   --dreadnought-font-size-x1: 1rem;
   --dreadnought-font-weight-x1: 600;
   --dreadnought-line-height-x1: 1.25;
-  --dreadnought-letter-spacing-x1: normal;
-  --dreadnought-font-style-x1: normal;
-  --dreadnought-text-transform-x1: none;
 }

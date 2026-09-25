@@ -1,6 +1,6 @@
 :root {
-  --dreadnought-text-area-border-style: var(--dreadnought-border-style-x1);
-  --dreadnought-text-area-disabled-opacity: var(--dreadnought-opacity-x1);
-  --dreadnought-text-area-disabled-cursor: var(--dreadnought-cursor-x2);
-  --dreadnought-text-area-resize: var(--dreadnought-resize-x1);
+  --dreadnought-text-area-border-style: solid;
+  --dreadnought-text-area-disabled-opacity: var(--dreadnought-opacity-disabled);
+  --dreadnought-text-area-disabled-cursor: not-allowed;
+  --dreadnought-text-area-resize: vertical;
 }
