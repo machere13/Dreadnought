@@ -82,7 +82,10 @@ packages/
       src/
         Button/
           useButton.ts          # React-хук для поведения слоя 1
-          ButtonAdapter.tsx     # Разметка и привязка логики
+          ButtonAdapter.tsx     # Выбор кнопки или ссылки по href
+          ButtonActionAdapter.tsx # Нативный button и привязка useButton
+          ButtonLinkAdapter.tsx # Нативная ссылка и блокировка перехода
+          renderButtonContent.tsx # Общий порядок иконки и текста
         logic.ts                # Экспорт хуков
         unstyled.ts             # Экспорт базовых компонентов
       tests/
