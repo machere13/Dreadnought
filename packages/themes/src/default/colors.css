@@ -1,0 +1,9 @@
+:root {
+  --dreadnought-color-action-primary: #5046e5;
+  --dreadnought-color-action-primary-hover: #4338ca;
+  --dreadnought-color-on-action: #fff;
+  --dreadnought-color-action-secondary: #eeeefd;
+  --dreadnought-color-on-action-secondary: #272264;
+  --dreadnought-color-action-secondary-hover: #dcdafa;
+  --dreadnought-color-focus: #8a84f5;
+}

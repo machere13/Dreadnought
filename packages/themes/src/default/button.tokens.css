@@ -1,0 +1,10 @@
+:root {
+  --dreadnought-button-bg: var(--dreadnought-color-action-primary);
+  --dreadnought-button-fg: var(--dreadnought-color-on-action);
+  --dreadnought-button-bg-hover: var(--dreadnought-color-action-primary-hover);
+  --dreadnought-button-secondary-bg: var(--dreadnought-color-action-secondary);
+  --dreadnought-button-secondary-fg: var(--dreadnought-color-on-action-secondary);
+  --dreadnought-button-secondary-bg-hover: var(--dreadnought-color-action-secondary-hover);
+  --dreadnought-button-radius: var(--dreadnought-radius-control);
+  --dreadnought-button-focus: var(--dreadnought-color-focus);
+}

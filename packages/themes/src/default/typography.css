@@ -1,0 +1,7 @@
+.dreadnought-text-button {
+  font-family: var(--dreadnought-font-family-ui);
+  font-size: var(--dreadnought-font-size-button);
+  font-weight: var(--dreadnought-font-weight-button);
+  line-height: var(--dreadnought-line-height-button);
+  letter-spacing: var(--dreadnought-font-letter-spacing-button);
+}
