@@ -1,7 +1,7 @@
 :root {
-  --dreadnought-font-size-text-area: var(--dreadnought-font-size-control);
-  --dreadnought-font-weight-text-area: var(--dreadnought-font-weight-control);
-  --dreadnought-line-height-text-area: var(--dreadnought-line-height-control);
+  --dreadnought-font-size-text-area: var(--dreadnought-font-size-body-2);
+  --dreadnought-font-weight-text-area: var(--dreadnought-font-weight-body-2);
+  --dreadnought-line-height-text-area: var(--dreadnought-line-height-body-2);
   --dreadnought-font-letter-spacing-text-area: normal;
   --dreadnought-font-style-text-area: normal;
   --dreadnought-font-text-transform-text-area: none;

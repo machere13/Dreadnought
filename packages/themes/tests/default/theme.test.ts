@@ -18,7 +18,7 @@ describe('default theme', () => {
     expect(globalTokens.some(([, name]) => name === '--dreadnought-font-family-ui')).toBe(true);
     expect(globalTokens.some(([, name]) => name === '--dreadnought-size-control-min-height')).toBe(true);
     const names = new Set(globalTokens.map(([, name]) => name));
-    for (const role of ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p1', 'p2', 'p3', 'caption1', 'caption2', 'control']) {
+    for (const role of ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body-1', 'body-2', 'body-3', 'label-1', 'label-2', 'caption-1', 'caption-2']) {
       for (const property of ['font-size', 'font-weight', 'line-height']) {
         expect(names.has(`--dreadnought-${property}-${role}`), `${role} needs ${property}`).toBe(true);
       }
@@ -27,9 +27,13 @@ describe('default theme', () => {
     expect(names.has('--dreadnought-font-weight-x1')).toBe(false);
     expect(names.has('--dreadnought-line-height-x1')).toBe(false);
     const values = new Map(globalTokens.map(([, name, value]) => [name, value.trim()]));
-    expect(values.get('--dreadnought-font-size-control')).toBe('1rem');
-    expect(values.get('--dreadnought-font-weight-control')).toBe('600');
-    expect(values.get('--dreadnought-line-height-control')).toBe('1.25');
+    expect(values.get('--dreadnought-font-size-label-1')).toBe('1rem');
+    expect(values.get('--dreadnought-font-weight-label-1')).toBe('600');
+    expect(values.get('--dreadnought-line-height-label-1')).toBe('1.25');
+    expect(values.get('--dreadnought-font-size-body-2')).toBe('1rem');
+    expect(values.get('--dreadnought-font-weight-body-2')).toBe('400');
+    expect(values.get('--dreadnought-line-height-body-2')).toBe('1.5');
+    expect(names.has('--dreadnought-font-size-control')).toBe(false);
     for (const [, name, value] of globalTokens) {
       expect(name).not.toMatch(/button|input|text-area|spinner|icon/);
       if (/-x[1-9]\d*$/.test(name)) {
@@ -51,9 +55,10 @@ describe('default theme', () => {
       const componentDeclarations = declarations(files, `tokens/components/${component}`);
       expect(componentDeclarations.length).toBeGreaterThan(0);
       const suffix = component === 'TextArea' ? 'text-area' : component.toLowerCase();
+      const role = component === 'Button' ? 'label-1' : 'body-2';
       for (const property of ['font-size', 'font-weight', 'line-height']) {
         const name = `--dreadnought-${property}-${suffix}`;
-        expect(componentDeclarations.find(([, token]) => token === name)?.[2].trim()).toBe(`var(--dreadnought-${property}-control)`);
+        expect(componentDeclarations.find(([, token]) => token === name)?.[2].trim()).toBe(`var(--dreadnought-${property}-${role})`);
       }
       for (const [, name, value] of componentDeclarations) {
         const reference = value.trim().match(/^var\((--dreadnought-[\w-]+)\)$/)?.[1];
@@ -108,9 +113,9 @@ describe('default theme', () => {
     }
     expect(buttonSizing).toContain('--dreadnought-button-icon-size: 1em');
     expect(buttonMotion).toContain('--dreadnought-button-spinner-duration: 0.75s');
-    expect(buttonTypography).toContain('--dreadnought-font-size-button: var(--dreadnought-font-size-control)');
-    expect(buttonTypography).toContain('--dreadnought-font-weight-button: var(--dreadnought-font-weight-control)');
-    expect(buttonTypography).toContain('--dreadnought-line-height-button: var(--dreadnought-line-height-control)');
+    expect(buttonTypography).toContain('--dreadnought-font-size-button: var(--dreadnought-font-size-label-1)');
+    expect(buttonTypography).toContain('--dreadnought-font-weight-button: var(--dreadnought-font-weight-label-1)');
+    expect(buttonTypography).toContain('--dreadnought-line-height-button: var(--dreadnought-line-height-label-1)');
     expect(buttonTypography).toMatch(/--dreadnought-font-letter-spacing-button:\s*normal/);
     expect(typography).toMatch(/letter-spacing:\s*var\(--dreadnought-font-letter-spacing-button\)/);
     expect(buttonTypography).toContain('--dreadnought-font-style-button: normal');
