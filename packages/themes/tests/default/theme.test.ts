@@ -106,34 +106,24 @@ describe('default theme', () => {
 
   it('exposes theme tokens and typography without global Button rules', () => {
     const entry = css('index.css');
-    for (const file of [
-      'tokens/global/colors.tokens.css',
-      'tokens/global/spacing.tokens.css',
-      'tokens/global/sizing.tokens.css',
-      'tokens/global/typography.tokens.css',
-      'tokens/global/effects.tokens.css',
-      'tokens/global/motion.tokens.css',
-      'tokens/components/Button/colors.tokens.css',
-      'tokens/components/Button/spacing.tokens.css',
-      'tokens/components/Button/sizing.tokens.css',
-      'tokens/components/Button/typography.tokens.css',
-      'tokens/components/Button/effects.tokens.css',
-      'tokens/components/Button/motion.tokens.css',
-      'components/Button/typography.css',
-      'tokens/components/Input/colors.tokens.css',
-      'tokens/components/Input/spacing.tokens.css',
-      'tokens/components/Input/sizing.tokens.css',
-      'tokens/components/Input/effects.tokens.css',
-      'tokens/components/Input/typography.tokens.css',
-      'components/Input/typography.css',
-      'tokens/components/TextArea/colors.tokens.css',
-      'tokens/components/TextArea/spacing.tokens.css',
-      'tokens/components/TextArea/sizing.tokens.css',
-      'tokens/components/TextArea/effects.tokens.css',
-      'tokens/components/TextArea/typography.tokens.css',
-      'components/TextArea/typography.css',
-    ]) {
-      expect(entry).toContain(`@import './${file}'`);
+    expect(entry.trim().split(/\r?\n/)).toEqual([
+      "@import './tokens/global/index.css';",
+      "@import './components/Button/index.css';",
+      "@import './components/Input/index.css';",
+      "@import './components/TextArea/index.css';",
+    ]);
+    for (const file of ['colors', 'spacing', 'sizing', 'typography', 'effects', 'motion']) {
+      expect(css('tokens/global/index.css')).toContain(`@import './${file}.tokens.css'`);
+    }
+    for (const [component, files] of [
+      ['Button', ['colors', 'spacing', 'sizing', 'typography', 'effects', 'motion']],
+      ['Input', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
+      ['TextArea', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
+    ] as const) {
+      const tokenEntry = css(`tokens/components/${component}/index.css`);
+      for (const file of files) expect(tokenEntry).toContain(`@import './${file}.tokens.css'`);
+      expect(css(`components/${component}/index.css`)).toContain(`@import '../../tokens/components/${component}/index.css'`);
+      expect(css(`components/${component}/index.css`)).toContain("@import './typography.css'");
     }
     expect(entry).not.toContain("@import './button.css'");
     const globalSpacing = css('tokens/global/spacing.tokens.css');
