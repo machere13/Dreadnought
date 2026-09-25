@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-textarea-min-height: var(--dreadnought-size-x2);
+  --dreadnought-textarea-border-width: var(--dreadnought-border-width-x2);
+  --dreadnought-textarea-focus-width: var(--dreadnought-border-width-x2);
+  --dreadnought-textarea-radius: var(--dreadnought-border-radius-x1);
+}

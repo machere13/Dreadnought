@@ -7,3 +7,7 @@ export { getButtonState } from './components/Button/getButtonState.js';
 export type { ButtonCore, ButtonCoreOptions } from './components/Button/ButtonCore.js';
 export { getInputState } from './components/Input/getInputState.js';
 export type { InputCore, InputCoreOptions } from './components/Input/InputCore.js';
+export { getTextFieldState } from './behaviors/getTextFieldState.js';
+export type { TextFieldState, TextFieldStateOptions } from './behaviors/getTextFieldState.js';
+export { getTextareaState } from './components/Textarea/getTextareaState.js';
+export type { TextareaCore, TextareaCoreOptions } from './components/Textarea/TextareaCore.js';

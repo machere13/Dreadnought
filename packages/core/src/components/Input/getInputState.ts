@@ -1,10 +1,6 @@
 import type { InputCore, InputCoreOptions } from './InputCore.js';
+import { getTextFieldState } from '../../behaviors/getTextFieldState.js';
 
-export function getInputState({
-  disabled = false,
-  readOnly = false,
-  required = false,
-  invalid = false,
-}: InputCoreOptions): InputCore {
-  return { disabled, readOnly, required, invalid };
+export function getInputState(options: InputCoreOptions): InputCore {
+  return getTextFieldState(options);
 }

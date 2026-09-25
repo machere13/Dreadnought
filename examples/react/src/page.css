@@ -7,3 +7,4 @@ h2 { font-size: 18px; }
 .other-theme { --dreadnought-button-secondary-bg: #182b47; --dreadnought-button-secondary-fg: #fff; --dreadnought-button-secondary-bg-hover: #254468; --dreadnought-button-radius: 999px; --dreadnought-font-size-button: 1.125rem; --dreadnought-font-letter-spacing-button: 0.04em; }
 .custom-button { border: 1px solid #282844; background: transparent; color: inherit; padding: 10px 16px; border-radius: 6px; font: inherit; cursor: pointer; }
 .custom-button:focus-visible { outline: 3px solid #5046e5; outline-offset: 3px; }
+.demo-fields { display: grid; gap: 8px; max-width: 360px; }

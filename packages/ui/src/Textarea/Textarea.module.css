@@ -1,0 +1,28 @@
+.textarea {
+  box-sizing: border-box;
+  min-height: var(--dreadnought-textarea-min-height);
+  padding: var(--dreadnought-textarea-padding-y) var(--dreadnought-textarea-padding-x);
+  border: var(--dreadnought-textarea-border-width) var(--dreadnought-textarea-border-style) var(--dreadnought-textarea-border-color);
+  border-radius: var(--dreadnought-textarea-radius);
+  background: var(--dreadnought-textarea-bg);
+  color: var(--dreadnought-textarea-fg);
+  resize: var(--dreadnought-textarea-resize);
+}
+
+.textarea::placeholder {
+  color: var(--dreadnought-textarea-placeholder);
+}
+
+.textarea:focus-visible {
+  outline: var(--dreadnought-textarea-focus-width) solid var(--dreadnought-textarea-focus);
+  outline-offset: var(--dreadnought-textarea-focus-offset);
+}
+
+.textarea[aria-invalid="true"] {
+  border-color: var(--dreadnought-textarea-invalid-border);
+}
+
+.textarea:disabled {
+  opacity: var(--dreadnought-textarea-disabled-opacity);
+  cursor: var(--dreadnought-textarea-disabled-cursor);
+}

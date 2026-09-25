@@ -1,0 +1,9 @@
+.dreadnought-text-textarea {
+  font-family: var(--dreadnought-font-family-x1);
+  font-size: var(--dreadnought-font-size-textarea);
+  font-weight: var(--dreadnought-font-weight-textarea);
+  line-height: var(--dreadnought-line-height-textarea);
+  letter-spacing: var(--dreadnought-font-letter-spacing-textarea);
+  font-style: var(--dreadnought-font-style-textarea);
+  text-transform: var(--dreadnought-font-text-transform-textarea);
+}

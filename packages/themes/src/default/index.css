@@ -17,3 +17,9 @@
 @import './tokens/components/Input/effects.tokens.css';
 @import './tokens/components/Input/typography.tokens.css';
 @import './components/Input/typography.css';
+@import './tokens/components/Textarea/colors.tokens.css';
+@import './tokens/components/Textarea/spacing.tokens.css';
+@import './tokens/components/Textarea/sizing.tokens.css';
+@import './tokens/components/Textarea/effects.tokens.css';
+@import './tokens/components/Textarea/typography.tokens.css';
+@import './components/Textarea/typography.css';

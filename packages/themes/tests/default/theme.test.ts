@@ -42,20 +42,22 @@ describe('default theme', () => {
     }
   });
 
-  it('derives every Input token from a defined global token', () => {
+  it('derives every text-field token from a defined global token', () => {
     const globalFiles = readdirSync(resolve('packages/themes/src/default/tokens/global'));
-    const inputFiles = readdirSync(resolve('packages/themes/src/default/tokens/components/Input'));
     const names = new Set(globalFiles.flatMap((file) =>
       [...css(`tokens/global/${file}`).matchAll(/(--dreadnought-[\w-]+):\s*([^;]+);/g)].map((declaration) => declaration[1]),
     ));
-    const declarations = inputFiles.flatMap((file) =>
-      [...css(`tokens/components/Input/${file}`).matchAll(/(--dreadnought-[\w-]+):\s*([^;]+);/g)],
-    );
-    expect(declarations.length).toBeGreaterThan(0);
-    for (const [, name, value] of declarations) {
-      const reference = value.trim().match(/^var\((--dreadnought-[\w-]+)\)$/)?.[1];
-      expect(reference, `${name} must reference a global token`).toBeDefined();
-      expect(names.has(reference!), `${name} references an undefined global token`).toBe(true);
+    for (const component of ['Input', 'Textarea']) {
+      const files = readdirSync(resolve(`packages/themes/src/default/tokens/components/${component}`));
+      const declarations = files.flatMap((file) =>
+        [...css(`tokens/components/${component}/${file}`).matchAll(/(--dreadnought-[\w-]+):\s*([^;]+);/g)],
+      );
+      expect(declarations.length).toBeGreaterThan(0);
+      for (const [, name, value] of declarations) {
+        const reference = value.trim().match(/^var\((--dreadnought-[\w-]+)\)$/)?.[1];
+        expect(reference, `${name} must reference a global token`).toBeDefined();
+        expect(names.has(reference!), `${name} references an undefined global token`).toBe(true);
+      }
     }
   });
 
@@ -81,6 +83,12 @@ describe('default theme', () => {
       'tokens/components/Input/effects.tokens.css',
       'tokens/components/Input/typography.tokens.css',
       'components/Input/typography.css',
+      'tokens/components/Textarea/colors.tokens.css',
+      'tokens/components/Textarea/spacing.tokens.css',
+      'tokens/components/Textarea/sizing.tokens.css',
+      'tokens/components/Textarea/effects.tokens.css',
+      'tokens/components/Textarea/typography.tokens.css',
+      'components/Textarea/typography.css',
     ]) {
       expect(entry).toContain(`@import './${file}'`);
     }

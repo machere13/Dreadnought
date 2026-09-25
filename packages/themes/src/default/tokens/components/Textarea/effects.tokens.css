@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-textarea-border-style: var(--dreadnought-border-style-x1);
+  --dreadnought-textarea-disabled-opacity: var(--dreadnought-opacity-x1);
+  --dreadnought-textarea-disabled-cursor: var(--dreadnought-cursor-x2);
+  --dreadnought-textarea-resize: var(--dreadnought-resize-x1);
+}
