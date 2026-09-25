@@ -69,7 +69,7 @@ packages/
       domains/                   # Появляется с первой специализированной моделью
       components/
         Button/
-          button.types.ts
+          ButtonCore.ts
           getButtonState.ts
       index.ts
     tests/
@@ -82,13 +82,13 @@ packages/
       src/
         Button/
           useButton.ts          # React-хук для поведения слоя 1
-          ButtonBase.tsx        # Разметка и привязка логики
+          ButtonAdapter.tsx     # Разметка и привязка логики
         logic.ts                # Экспорт хуков
         unstyled.ts             # Экспорт базовых компонентов
       tests/
         Button/
           useButton.test.tsx
-          ButtonBase.test.tsx
+          ButtonAdapter.test.tsx
 
   ui/                           # Готовые компоненты слоя 3
     src/
@@ -144,7 +144,7 @@ graphify-out/                   # Генерируемая карта исход
 
 ```tsx
 import { useButton } from '@library/react/logic';
-import { ButtonBase } from '@library/react/unstyled';
+import { ButtonAdapter } from '@library/react/unstyled';
 import { Button } from '@library/ui';
 import '@library/themes/default.css';
 ```
@@ -192,7 +192,7 @@ import '@library/themes/default.css';
 | Сценарий | Использование |
 |---|---|
 | Стандартный интерфейс | `Button` + стандартная тема |
-| Собственная дизайн-система | `Button` + пользовательская тема; `ButtonBase`, если нужно полностью своё оформление |
+| Собственная дизайн-система | `Button` + пользовательская тема; `ButtonAdapter`, если нужно полностью своё оформление |
 | Нестандартная структура | `useButton` + собственная разметка в рамках семантического контракта |
 | Нет готового компонента | Собственный компонент из доступных возможностей `core`, с собственной разметкой и темой |
 
@@ -282,7 +282,7 @@ AI-агент помогает сопоставить названия, вари
 |---|---|
 | Общее ядро | Контракт состояний `disabled` и `loading`, общие правила доступности действия |
 | React-логика | `useButton`: вычисление свойств нативной кнопки, защита действия в недоступном состоянии |
-| Базовый компонент | `ButtonBase`: нативный `<button>`, ref, содержимое и стандартные DOM-свойства |
+| Компонент второго слоя | `ButtonAdapter`: нативный `<button>`, ref, содержимое и стандартные DOM-свойства |
 | Оформленный компонент | `Button`: базовая кнопка с точками оформления и визуальными вариантами |
 | Тема | Токены и стили обычного состояния, hover, active, focus-visible, disabled и loading |
 

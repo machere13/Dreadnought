@@ -1,6 +1,6 @@
-import type { ButtonState, ButtonStateInput } from './button.types.js';
+import type { ButtonCore, ButtonCoreOptions } from './ButtonCore.js';
 
-export function getButtonState({ disabled = false, loading = false }: ButtonStateInput): ButtonState {
+export function getButtonState({ disabled = false, loading = false }: ButtonCoreOptions): ButtonCore {
   return {
     nativeDisabled: disabled,
     ariaDisabled: loading && !disabled,

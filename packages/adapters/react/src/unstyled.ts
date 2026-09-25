@@ -1,2 +1,2 @@
-export { ButtonBase } from './Button/ButtonBase.js';
-export type { ButtonBaseProps } from './Button/ButtonBase.js';
+export { ButtonAdapter } from './Button/ButtonAdapter.js';
+export type { ButtonAdapterProps } from './Button/ButtonAdapter.js';

@@ -1,9 +1,9 @@
-export interface ButtonStateInput {
+export interface ButtonCoreOptions {
   disabled?: boolean;
   loading?: boolean;
 }
 
-export interface ButtonState {
+export interface ButtonCore {
   nativeDisabled: boolean;
   ariaDisabled: boolean;
   busy: boolean;

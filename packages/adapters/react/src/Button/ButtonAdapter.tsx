@@ -2,10 +2,10 @@ import { forwardRef } from 'react';
 import { useButton } from './useButton.js';
 import type { UseButtonOptions } from './useButton.js';
 
-export type ButtonBaseProps = UseButtonOptions;
+export type ButtonAdapterProps = UseButtonOptions;
 
-export const ButtonBase = forwardRef<HTMLButtonElement, ButtonBaseProps>(
-  function ButtonBase({ children, ...options }, ref) {
+export const ButtonAdapter = forwardRef<HTMLButtonElement, ButtonAdapterProps>(
+  function ButtonAdapter({ children, ...options }, ref) {
     const { buttonProps } = useButton(options);
 
     return (

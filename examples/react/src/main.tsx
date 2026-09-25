@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import { useState } from 'react';
 import { Button } from '@dreadnought/ui';
-import { ButtonBase } from '@dreadnought/react/unstyled';
+import { ButtonAdapter } from '@dreadnought/react/unstyled';
 import { useButton } from '@dreadnought/react/logic';
 import '@dreadnought/themes/default.css';
 import './page.css';
@@ -25,7 +25,7 @@ function App() {
       </section>
       <section>
         <h2>Своя разметка</h2>
-        <ButtonBase className="custom-button" onClick={() => setCount((value) => value + 1)}>ButtonBase</ButtonBase>
+        <ButtonAdapter className="custom-button" onClick={() => setCount((value) => value + 1)}>ButtonAdapter</ButtonAdapter>
         <button {...buttonProps} className="custom-button">useButton</button>
       </section>
       <p aria-live="polite">Нажатий: {count}</p>
