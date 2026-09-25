@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": [
+    "packages/adapters/react/tests/Button/ButtonAdapter.types.tsx",
+    "packages/ui/tests/Button/Button.types.tsx"
+  ]
+}
