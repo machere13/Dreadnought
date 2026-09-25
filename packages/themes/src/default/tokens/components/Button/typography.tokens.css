@@ -1,7 +1,7 @@
 :root {
-  --dreadnought-font-size-button: var(--dreadnought-font-size-x1);
-  --dreadnought-font-weight-button: var(--dreadnought-font-weight-x1);
-  --dreadnought-line-height-button: var(--dreadnought-line-height-x1);
+  --dreadnought-font-size-button: var(--dreadnought-font-size-control);
+  --dreadnought-font-weight-button: var(--dreadnought-font-weight-control);
+  --dreadnought-line-height-button: var(--dreadnought-line-height-control);
   --dreadnought-font-letter-spacing-button: normal;
   --dreadnought-font-style-button: normal;
   --dreadnought-font-text-transform-button: none;

@@ -1,7 +1,7 @@
 :root {
-  --dreadnought-font-size-input: var(--dreadnought-font-size-x1);
-  --dreadnought-font-weight-input: var(--dreadnought-font-weight-x1);
-  --dreadnought-line-height-input: var(--dreadnought-line-height-x1);
+  --dreadnought-font-size-input: var(--dreadnought-font-size-control);
+  --dreadnought-font-weight-input: var(--dreadnought-font-weight-control);
+  --dreadnought-line-height-input: var(--dreadnought-line-height-control);
   --dreadnought-font-letter-spacing-input: normal;
   --dreadnought-font-style-input: normal;
   --dreadnought-font-text-transform-input: none;

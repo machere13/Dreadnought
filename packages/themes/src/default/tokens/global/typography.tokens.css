@@ -1,6 +1,43 @@
 :root {
   --dreadnought-font-family-ui: system-ui, sans-serif;
-  --dreadnought-font-size-x1: 1rem;
-  --dreadnought-font-weight-x1: 600;
-  --dreadnought-line-height-x1: 1.25;
+
+  --dreadnought-font-size-h1: 3rem;
+  --dreadnought-font-weight-h1: 700;
+  --dreadnought-line-height-h1: 1.1;
+  --dreadnought-font-size-h2: 2.5rem;
+  --dreadnought-font-weight-h2: 700;
+  --dreadnought-line-height-h2: 1.15;
+  --dreadnought-font-size-h3: 2rem;
+  --dreadnought-font-weight-h3: 700;
+  --dreadnought-line-height-h3: 1.2;
+  --dreadnought-font-size-h4: 1.5rem;
+  --dreadnought-font-weight-h4: 600;
+  --dreadnought-line-height-h4: 1.25;
+  --dreadnought-font-size-h5: 1.25rem;
+  --dreadnought-font-weight-h5: 600;
+  --dreadnought-line-height-h5: 1.3;
+  --dreadnought-font-size-h6: 1.125rem;
+  --dreadnought-font-weight-h6: 600;
+  --dreadnought-line-height-h6: 1.35;
+
+  --dreadnought-font-size-p1: 1.125rem;
+  --dreadnought-font-weight-p1: 400;
+  --dreadnought-line-height-p1: 1.6;
+  --dreadnought-font-size-p2: 1rem;
+  --dreadnought-font-weight-p2: 400;
+  --dreadnought-line-height-p2: 1.5;
+  --dreadnought-font-size-p3: 0.875rem;
+  --dreadnought-font-weight-p3: 400;
+  --dreadnought-line-height-p3: 1.5;
+
+  --dreadnought-font-size-caption1: 0.875rem;
+  --dreadnought-font-weight-caption1: 400;
+  --dreadnought-line-height-caption1: 1.4;
+  --dreadnought-font-size-caption2: 0.75rem;
+  --dreadnought-font-weight-caption2: 400;
+  --dreadnought-line-height-caption2: 1.4;
+
+  --dreadnought-font-size-control: 1rem;
+  --dreadnought-font-weight-control: 600;
+  --dreadnought-line-height-control: 1.25;
 }
