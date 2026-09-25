@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import type { FormEvent } from 'react';
+import type { FormEvent, MouseEvent } from 'react';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -107,5 +107,46 @@ describe('ButtonAdapter', () => {
     const button = screen.getByRole('button', { name: 'Search' });
     expect(button.querySelector('[data-slot="icon"]')).not.toBeNull();
     expect(button.querySelector('[data-slot="label"]')).toBeNull();
+  });
+
+  it('renders href as a native link and forwards link attributes', () => {
+    const click = vi.fn((event: MouseEvent<HTMLAnchorElement>) => event.preventDefault());
+    const ref = createRef<HTMLAnchorElement>();
+    render(<ButtonAdapter href="/docs" target="_blank" ref={ref} onClick={click}>Docs</ButtonAdapter>);
+
+    const link = screen.getByRole('link', { name: 'Docs' });
+    expect(link.tagName).toBe('A');
+    expect(link.getAttribute('href')).toBe('/docs');
+    expect(link.getAttribute('target')).toBe('_blank');
+    expect(ref.current).toBe(link);
+    fireEvent.click(link);
+    expect(click).toHaveBeenCalledOnce();
+  });
+
+  it('removes navigation when a link is disabled', () => {
+    const click = vi.fn();
+    render(<ButtonAdapter href="/docs" disabled onClick={click}>Docs</ButtonAdapter>);
+
+    const link = screen.getByRole('link', { name: 'Docs' });
+    expect(link.getAttribute('href')).toBeNull();
+    expect(link.getAttribute('aria-disabled')).toBe('true');
+    expect(link.getAttribute('tabindex')).toBe('-1');
+    fireEvent.click(link);
+    expect(click).not.toHaveBeenCalled();
+  });
+
+  it('keeps a loading link focusable without allowing navigation', () => {
+    const click = vi.fn();
+    render(<ButtonAdapter href="/docs" loading onClick={click}>Docs</ButtonAdapter>);
+
+    const link = screen.getByRole('link', { name: 'Docs' });
+    link.focus();
+    expect(document.activeElement).toBe(link);
+    expect(link.getAttribute('href')).toBeNull();
+    expect(link.getAttribute('tabindex')).toBe('0');
+    expect(link.getAttribute('aria-disabled')).toBe('true');
+    expect(link.getAttribute('aria-busy')).toBe('true');
+    fireEvent.click(link);
+    expect(click).not.toHaveBeenCalled();
   });
 });

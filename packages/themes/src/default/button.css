@@ -9,6 +9,7 @@
   border-radius: var(--dreadnought-button-radius);
   font: inherit;
   font-weight: 600;
+  text-decoration: none;
   background: var(--dreadnought-button-bg);
   color: var(--dreadnought-button-fg);
   cursor: pointer;

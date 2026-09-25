@@ -29,4 +29,13 @@ describe('Button', () => {
     expect(button.children[0]?.getAttribute('data-slot')).toBe('label');
     expect(button.children[1]?.getAttribute('data-slot')).toBe('icon');
   });
+
+  it('renders a styled native link when href is provided', () => {
+    render(<Button href="/docs" variant="secondary">Docs</Button>);
+
+    const link = screen.getByRole('link', { name: 'Docs' });
+    expect(link.tagName).toBe('A');
+    expect(link.getAttribute('href')).toBe('/docs');
+    expect(link.getAttribute('data-variant')).toBe('secondary');
+  });
 });
