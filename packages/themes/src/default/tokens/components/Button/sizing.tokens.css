@@ -3,8 +3,8 @@
   --dreadnought-button-min-height: var(--dreadnought-size-control-min-height);
   --dreadnought-button-focus-width: var(--dreadnought-border-width-x3);
   --dreadnought-button-border-width: var(--dreadnought-border-width-x1);
-  --dreadnought-button-icon-size: 1em;
-  --dreadnought-button-spinner-size: 1em;
+  --dreadnought-button-icon-size: var(--dreadnought-size-inline-graphic);
+  --dreadnought-button-spinner-size: var(--dreadnought-size-inline-graphic);
   --dreadnought-button-spinner-border-width: var(--dreadnought-border-width-x2);
-  --dreadnought-button-spinner-radius: 50%;
+  --dreadnought-button-spinner-radius: var(--dreadnought-border-radius-circle);
 }

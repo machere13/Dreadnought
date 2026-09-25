@@ -97,6 +97,7 @@ describe('default theme', () => {
         expect(componentDeclarations.find(([, token]) => token === name)?.[2].trim()).toBe(`var(--dreadnought-${property}-${role})`);
       }
       for (const [, name, value] of componentDeclarations) {
+        expect(value.trim(), `${name} must use a shared numeric token`).not.toMatch(/(?<![\w-])\d+(?:\.\d+)?(?:px|rem|em|%|s|ms|deg|turn)?(?![\w-])/);
         const reference = value.trim().match(/^var\((--dreadnought-[\w-]+)\)$/)?.[1];
         if (reference) expect(globalNames.has(reference), `${name} references an undefined global token`).toBe(true);
       }
@@ -111,6 +112,7 @@ describe('default theme', () => {
       'tokens/global/sizing.tokens.css',
       'tokens/global/typography.tokens.css',
       'tokens/global/effects.tokens.css',
+      'tokens/global/motion.tokens.css',
       'tokens/components/Button/colors.tokens.css',
       'tokens/components/Button/spacing.tokens.css',
       'tokens/components/Button/sizing.tokens.css',
@@ -147,8 +149,8 @@ describe('default theme', () => {
     ]) {
       expect(buttonEffects).toContain(`--dreadnought-button-${token}:`);
     }
-    expect(buttonSizing).toContain('--dreadnought-button-icon-size: 1em');
-    expect(buttonMotion).toContain('--dreadnought-button-spinner-duration: 0.75s');
+    expect(buttonSizing).toContain('--dreadnought-button-icon-size: var(--dreadnought-size-inline-graphic)');
+    expect(buttonMotion).toContain('--dreadnought-button-spinner-duration: var(--dreadnought-motion-duration-standard)');
     expect(buttonTypography).toContain('--dreadnought-font-size-button: var(--dreadnought-font-size-label-1)');
     expect(buttonTypography).toContain('--dreadnought-font-weight-button: var(--dreadnought-font-weight-label-1)');
     expect(buttonTypography).toContain('--dreadnought-line-height-button: var(--dreadnought-line-height-label-1)');

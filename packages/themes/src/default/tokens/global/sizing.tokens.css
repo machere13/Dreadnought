@@ -1,6 +1,8 @@
 :root {
   --dreadnought-size-control-min-height: 2.75rem;
+  --dreadnought-size-inline-graphic: 1em;
   --dreadnought-border-radius-x1: 10px;
+  --dreadnought-border-radius-circle: 50%;
   --dreadnought-border-width-x1: 0px;
   --dreadnought-border-width-x2: 2px;
   --dreadnought-border-width-x3: 3px;
