@@ -105,9 +105,13 @@ packages/
   themes/                       # Значения темы и типографика слоя 3
     src/
       default/
-        colors.css
-        constants.css
-        button.tokens.css
+        tokens/
+          global/
+            colors.css
+            constants.css
+          components/
+            Button/
+              tokens.css
         typography.css
         index.css
 
