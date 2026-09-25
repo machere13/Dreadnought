@@ -47,7 +47,7 @@ describe('default theme', () => {
     const names = new Set(globalFiles.flatMap((file) =>
       [...css(`tokens/global/${file}`).matchAll(/(--dreadnought-[\w-]+):\s*([^;]+);/g)].map((declaration) => declaration[1]),
     ));
-    for (const component of ['Input', 'Textarea']) {
+    for (const component of ['Input', 'TextArea']) {
       const files = readdirSync(resolve(`packages/themes/src/default/tokens/components/${component}`));
       const declarations = files.flatMap((file) =>
         [...css(`tokens/components/${component}/${file}`).matchAll(/(--dreadnought-[\w-]+):\s*([^;]+);/g)],
@@ -83,12 +83,12 @@ describe('default theme', () => {
       'tokens/components/Input/effects.tokens.css',
       'tokens/components/Input/typography.tokens.css',
       'components/Input/typography.css',
-      'tokens/components/Textarea/colors.tokens.css',
-      'tokens/components/Textarea/spacing.tokens.css',
-      'tokens/components/Textarea/sizing.tokens.css',
-      'tokens/components/Textarea/effects.tokens.css',
-      'tokens/components/Textarea/typography.tokens.css',
-      'components/Textarea/typography.css',
+      'tokens/components/TextArea/colors.tokens.css',
+      'tokens/components/TextArea/spacing.tokens.css',
+      'tokens/components/TextArea/sizing.tokens.css',
+      'tokens/components/TextArea/effects.tokens.css',
+      'tokens/components/TextArea/typography.tokens.css',
+      'components/TextArea/typography.css',
     ]) {
       expect(entry).toContain(`@import './${file}'`);
     }

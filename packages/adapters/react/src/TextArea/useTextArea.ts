@@ -1,19 +1,19 @@
-import { getTextareaState } from '@dreadnought/core';
+import { getTextAreaState } from '@dreadnought/core';
 import type { TextareaHTMLAttributes } from 'react';
 
-export interface UseTextareaOptions extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+export interface UseTextAreaOptions extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   invalid?: boolean;
 }
 
-export function useTextarea({
+export function useTextArea({
   disabled,
   readOnly,
   required,
   invalid,
   ...rest
-}: UseTextareaOptions = {}) {
-  const state = getTextareaState({ disabled, readOnly, required, invalid });
-  const textareaProps = {
+}: UseTextAreaOptions = {}) {
+  const state = getTextAreaState({ disabled, readOnly, required, invalid });
+  const textAreaProps = {
     ...rest,
     disabled: state.disabled,
     readOnly: state.readOnly,
@@ -22,5 +22,5 @@ export function useTextarea({
     'data-invalid': state.invalid ? '' : undefined,
   };
 
-  return { textareaProps, state };
+  return { textAreaProps, state };
 }

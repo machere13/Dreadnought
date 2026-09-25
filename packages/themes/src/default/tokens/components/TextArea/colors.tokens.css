@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-text-area-bg: var(--dreadnought-color-surface);
+  --dreadnought-text-area-fg: var(--dreadnought-color-on-surface);
+  --dreadnought-text-area-placeholder: var(--dreadnought-color-placeholder);
+  --dreadnought-text-area-border-color: var(--dreadnought-color-border);
+  --dreadnought-text-area-invalid-border: var(--dreadnought-color-danger);
+  --dreadnought-text-area-focus: var(--dreadnought-color-focus);
+}

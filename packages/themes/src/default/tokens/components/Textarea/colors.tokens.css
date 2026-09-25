@@ -1,8 +1,0 @@
-:root {
-  --dreadnought-textarea-bg: var(--dreadnought-color-surface);
-  --dreadnought-textarea-fg: var(--dreadnought-color-on-surface);
-  --dreadnought-textarea-placeholder: var(--dreadnought-color-placeholder);
-  --dreadnought-textarea-border-color: var(--dreadnought-color-border);
-  --dreadnought-textarea-invalid-border: var(--dreadnought-color-danger);
-  --dreadnought-textarea-focus: var(--dreadnought-color-focus);
-}

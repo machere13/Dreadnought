@@ -1,0 +1,28 @@
+.textArea {
+  box-sizing: border-box;
+  min-height: var(--dreadnought-text-area-min-height);
+  padding: var(--dreadnought-text-area-padding-y) var(--dreadnought-text-area-padding-x);
+  border: var(--dreadnought-text-area-border-width) var(--dreadnought-text-area-border-style) var(--dreadnought-text-area-border-color);
+  border-radius: var(--dreadnought-text-area-radius);
+  background: var(--dreadnought-text-area-bg);
+  color: var(--dreadnought-text-area-fg);
+  resize: var(--dreadnought-text-area-resize);
+}
+
+.textArea::placeholder {
+  color: var(--dreadnought-text-area-placeholder);
+}
+
+.textArea:focus-visible {
+  outline: var(--dreadnought-text-area-focus-width) solid var(--dreadnought-text-area-focus);
+  outline-offset: var(--dreadnought-text-area-focus-offset);
+}
+
+.textArea[aria-invalid="true"] {
+  border-color: var(--dreadnought-text-area-invalid-border);
+}
+
+.textArea:disabled {
+  opacity: var(--dreadnought-text-area-disabled-opacity);
+  cursor: var(--dreadnought-text-area-disabled-cursor);
+}

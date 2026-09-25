@@ -1,5 +1,5 @@
 import type { TextFieldState, TextFieldStateOptions } from '../../behaviors/getTextFieldState.js';
 
-export type TextareaCoreOptions = TextFieldStateOptions;
+export type TextAreaCoreOptions = TextFieldStateOptions;
 
-export type TextareaCore = TextFieldState;
+export type TextAreaCore = TextFieldState;

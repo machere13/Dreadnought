@@ -1,15 +1,15 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
-import { useTextarea } from '../../src/Textarea/useTextarea.js';
+import { useTextArea } from '../../src/TextArea/useTextArea.js';
 
 afterEach(cleanup);
 
 it('provides props for custom unstyled markup', () => {
-  function CustomTextarea() {
-    const { textareaProps } = useTextarea({ invalid: true, rows: 3 });
-    return <textarea {...textareaProps} aria-label="Custom" />;
+  function CustomTextArea() {
+    const { textAreaProps } = useTextArea({ invalid: true, rows: 3 });
+    return <textarea {...textAreaProps} aria-label="Custom" />;
   }
-  render(<CustomTextarea />);
+  render(<CustomTextArea />);
   const area = screen.getByRole('textbox', { name: 'Custom' });
   expect(area.getAttribute('aria-invalid')).toBe('true');
   expect(area.getAttribute('rows')).toBe('3');

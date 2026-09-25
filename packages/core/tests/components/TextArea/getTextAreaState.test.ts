@@ -1,8 +1,8 @@
 import { expect, it } from 'vitest';
-import { getTextareaState } from '../../../src/components/Textarea/getTextareaState.js';
+import { getTextAreaState } from '../../../src/components/TextArea/getTextAreaState.js';
 
 it('provides the shared native text-field state', () => {
-  expect(getTextareaState({ readOnly: true, required: true })).toEqual({
+  expect(getTextAreaState({ readOnly: true, required: true })).toEqual({
     disabled: false, readOnly: true, required: true, invalid: false,
   });
 });

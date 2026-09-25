@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-text-area-padding-y: var(--dreadnought-spacing-x2);
+  --dreadnought-text-area-padding-x: var(--dreadnought-spacing-x3);
+  --dreadnought-text-area-focus-offset: var(--dreadnought-spacing-x1);
+}

@@ -9,5 +9,5 @@ export { getInputState } from './components/Input/getInputState.js';
 export type { InputCore, InputCoreOptions } from './components/Input/InputCore.js';
 export { getTextFieldState } from './behaviors/getTextFieldState.js';
 export type { TextFieldState, TextFieldStateOptions } from './behaviors/getTextFieldState.js';
-export { getTextareaState } from './components/Textarea/getTextareaState.js';
-export type { TextareaCore, TextareaCoreOptions } from './components/Textarea/TextareaCore.js';
+export { getTextAreaState } from './components/TextArea/getTextAreaState.js';
+export type { TextAreaCore, TextAreaCoreOptions } from './components/TextArea/TextAreaCore.js';

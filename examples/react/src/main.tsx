@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { useState } from 'react';
-import { Button, Input, Textarea } from '@dreadnought/ui';
+import { Button, Input, TextArea } from '@dreadnought/ui';
 import { ButtonAdapter } from '@dreadnought/react/unstyled';
 import { useButton } from '@dreadnought/react/logic';
 import '@dreadnought/themes/default.css';
@@ -12,7 +12,7 @@ function App() {
 
   return (
     <main>
-      <h1>Dreadnought: Button, Input, Textarea</h1>
+      <h1>Dreadnought: Button, Input, TextArea</h1>
       <section>
         <h2>Готовый компонент</h2>
         <div className="demo-row">
@@ -39,7 +39,7 @@ function App() {
           <label htmlFor="demo-email">Электронная почта</label>
           <Input id="demo-email" type="email" placeholder="name@example.com" />
           <label htmlFor="demo-notes">Заметки</label>
-          <Textarea id="demo-notes" rows={4} placeholder="Напишите что-нибудь" />
+          <TextArea id="demo-notes" rows={4} placeholder="Напишите что-нибудь" />
         </div>
       </section>
     </main>
