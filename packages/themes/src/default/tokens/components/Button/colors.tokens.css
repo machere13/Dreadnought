@@ -2,9 +2,9 @@
   --dreadnought-button-primary-bg: var(--dreadnought-color-action-primary);
   --dreadnought-button-primary-fg: var(--dreadnought-color-text-on-action-primary);
   --dreadnought-button-primary-bg-hover: var(--dreadnought-color-action-primary-hover);
-  --dreadnought-button-secondary-bg: rgb(238 238 253 / 100%);
+  --dreadnought-button-secondary-bg: var(--dreadnought-color-action-secondary);
   --dreadnought-button-secondary-fg: var(--dreadnought-color-text-primary);
-  --dreadnought-button-secondary-bg-hover: rgb(220 218 250 / 100%);
+  --dreadnought-button-secondary-bg-hover: var(--dreadnought-color-action-secondary-hover);
   --dreadnought-button-focus-ring: var(--dreadnought-color-focus-ring);
   --dreadnought-button-border-color: transparent;
   --dreadnought-button-spinner-border-color: currentColor;

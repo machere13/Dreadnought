@@ -62,13 +62,16 @@ describe('default theme', () => {
     );
     const global = declarations(css('tokens/global/colors.tokens.css'));
     expect(global.get('--dreadnought-color-action-primary')).toBe('rgb(80 70 229 / 100%)');
+    expect(global.get('--dreadnought-color-action-secondary')).toBe('rgb(238 238 253 / 100%)');
+    expect(global.get('--dreadnought-color-action-secondary-hover')).toBe('rgb(220 218 250 / 100%)');
     expect(global.get('--dreadnought-color-text-primary')).toBe('rgb(39 34 100 / 100%)');
     expect(global.get('--dreadnought-color-status-error')).toBe('rgb(180 35 24 / 100%)');
     expect(global.has('--dreadnought-color-secondary')).toBe(false);
 
     const button = declarations(css('tokens/components/Button/colors.tokens.css'));
     expect(button.get('--dreadnought-button-primary-bg')).toBe('var(--dreadnought-color-action-primary)');
-    expect(button.get('--dreadnought-button-secondary-bg')).toBe('rgb(238 238 253 / 100%)');
+    expect(button.get('--dreadnought-button-secondary-bg')).toBe('var(--dreadnought-color-action-secondary)');
+    expect(button.get('--dreadnought-button-secondary-bg-hover')).toBe('var(--dreadnought-color-action-secondary-hover)');
     const input = declarations(css('tokens/components/Input/colors.tokens.css'));
     expect(input.get('--dreadnought-input-border-invalid')).toBe('var(--dreadnought-color-status-error)');
     const textArea = declarations(css('tokens/components/TextArea/colors.tokens.css'));
