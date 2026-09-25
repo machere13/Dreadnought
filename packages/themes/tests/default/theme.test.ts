@@ -5,6 +5,20 @@ import { describe, expect, it } from 'vitest';
 const css = (file: string) => readFileSync(resolve('packages/themes/src/default', file), 'utf8');
 
 describe('default theme', () => {
+  it('defines palette colors in RGB with explicit percentage alpha', () => {
+    const colors = css('tokens/global/colors.tokens.css');
+    const declarations = [...colors.matchAll(/--dreadnought-color-[\w-]+:\s*([^;]+);/g)];
+    expect(declarations.length).toBeGreaterThan(0);
+    for (const [, value] of declarations) {
+      const channels = value.trim().match(/^rgb\((\d{1,3}) (\d{1,3}) (\d{1,3}) \/ (\d+(?:\.\d+)?)%\)$/);
+      expect(channels, `${value} must use rgb(R G B / A%)`).not.toBeNull();
+      for (const channel of channels!.slice(1, 4)) expect(Number(channel)).toBeLessThanOrEqual(255);
+      expect(Number(channels![4])).toBeLessThanOrEqual(100);
+    }
+    const example = readFileSync(resolve('examples/react/src/page.css'), 'utf8');
+    expect(example).not.toMatch(/#[\da-f]{3,8}\b/i);
+  });
+
   it('uses scales only for numeric values and names shared roles explicitly', () => {
     const globalFiles = readdirSync(resolve('packages/themes/src/default/tokens/global'));
     const globalTokens = globalFiles.flatMap((file) =>

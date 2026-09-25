@@ -89,13 +89,13 @@ describe('default theme', () => {
 ```css
 /* colors.css */
 :root {
-  --dreadnought-color-action-primary: #5046e5;
-  --dreadnought-color-action-primary-hover: #4338ca;
-  --dreadnought-color-on-action: #fff;
-  --dreadnought-color-action-secondary: #eeeefd;
-  --dreadnought-color-on-action-secondary: #272264;
-  --dreadnought-color-action-secondary-hover: #dcdafa;
-  --dreadnought-color-focus: #8a84f5;
+  --dreadnought-color-action-primary: rgb(80 70 229 / 100%);
+  --dreadnought-color-action-primary-hover: rgb(67 56 202 / 100%);
+  --dreadnought-color-on-action: rgb(255 255 255 / 100%);
+  --dreadnought-color-action-secondary: rgb(238 238 253 / 100%);
+  --dreadnought-color-on-action-secondary: rgb(39 34 100 / 100%);
+  --dreadnought-color-action-secondary-hover: rgb(220 218 250 / 100%);
+  --dreadnought-color-focus: rgb(138 132 245 / 100%);
 }
 /* constants.css */
 :root {
@@ -237,7 +237,7 @@ export default defineConfig({
 - Produces: пример стандартной и переопределённой темы, описание пути через `ButtonAdapter` и правил новых компонентов.
 
 - [ ] **Step 1: В примере оставить готовый `Button`, кнопку в `.other-theme` и неоформленный `ButtonAdapter`; убрать любые глобальные правила Button из `page.css`.** Переопределить в `.other-theme` `--dreadnought-button-secondary-bg`, `--dreadnought-button-secondary-fg`, `--dreadnought-button-radius`, `--dreadnought-font-size-button` и `--dreadnought-font-letter-spacing-button: 0.04em`. Сохранить `.custom-button` только для собственного `ButtonAdapter`.
-- [ ] **Step 2: Обновить документацию.** В `docs/components/button.md` показать `import { Button } from '@dreadnought/ui'; import '@dreadnought/themes/default.css';`, пример `.my-theme { --dreadnought-button-bg: #182b47; }`, объяснить глобальный шрифтовой класс, локальный CSS Module и пределы кастомизации через `className`. В `docs/architecture.md` и `docs/conventions.md` закрепить `*.module.css` для третьего слоя, переменные темы и шрифтовые классы как единственные глобальные исключения; зафиксировать, что Figma-агент предлагает изменения CSS-файлов темы проекта, а не исходников библиотеки.
+- [ ] **Step 2: Обновить документацию.** В `docs/components/button.md` показать `import { Button } from '@dreadnought/ui'; import '@dreadnought/themes/default.css';`, пример `.my-theme { --dreadnought-button-bg: rgb(24 43 71 / 100%); }`, объяснить глобальный шрифтовой класс, локальный CSS Module и пределы кастомизации через `className`. В `docs/architecture.md` и `docs/conventions.md` закрепить `*.module.css` для третьего слоя, переменные темы и шрифтовые классы как единственные глобальные исключения; зафиксировать, что Figma-агент предлагает изменения CSS-файлов темы проекта, а не исходников библиотеки.
 - [ ] **Step 3: Запустить `pnpm build`, `pnpm typecheck`, `pnpm test`; ожидать PASS.** Открыть пример и проверить: базовый и `.other-theme` Button различаются; ButtonAdapter получает только `.custom-button`; `loading` не анимируется при включённом reduced motion, фокус и контраст читаемы.
 - [ ] **Step 4: Коммит `docs: document layered styling and theme overrides`.**
 

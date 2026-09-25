@@ -1,10 +1,10 @@
-body { margin: 0; background: #f7f7fb; color: #1b1b27; font: 16px/1.5 system-ui, sans-serif; }
+body { margin: 0; background: rgb(247 247 251 / 100%); color: rgb(27 27 39 / 100%); font: 16px/1.5 system-ui, sans-serif; }
 main { max-width: 720px; margin: 64px auto; padding: 0 24px; }
-section { padding: 20px 0; border-bottom: 1px solid #d9d9e5; }
+section { padding: 20px 0; border-bottom: 1px solid rgb(217 217 229 / 100%); }
 h1 { margin-bottom: 24px; }
 h2 { font-size: 18px; }
 .demo-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-.other-theme { --dreadnought-button-secondary-bg: #182b47; --dreadnought-button-secondary-fg: #fff; --dreadnought-button-secondary-bg-hover: #254468; --dreadnought-button-radius: 999px; --dreadnought-font-size-button: 1.125rem; --dreadnought-font-letter-spacing-button: 0.04em; }
-.custom-button { border: 1px solid #282844; background: transparent; color: inherit; padding: 10px 16px; border-radius: 6px; font: inherit; cursor: pointer; }
-.custom-button:focus-visible { outline: 3px solid #5046e5; outline-offset: 3px; }
+.other-theme { --dreadnought-button-secondary-bg: rgb(24 43 71 / 100%); --dreadnought-button-secondary-fg: rgb(255 255 255 / 100%); --dreadnought-button-secondary-bg-hover: rgb(37 68 104 / 100%); --dreadnought-button-radius: 999px; --dreadnought-font-size-button: 1.125rem; --dreadnought-font-letter-spacing-button: 0.04em; }
+.custom-button { border: 1px solid rgb(40 40 68 / 100%); background: transparent; color: inherit; padding: 10px 16px; border-radius: 6px; font: inherit; cursor: pointer; }
+.custom-button:focus-visible { outline: 3px solid rgb(80 70 229 / 100%); outline-offset: 3px; }
 .demo-fields { display: grid; gap: 8px; max-width: 360px; }
