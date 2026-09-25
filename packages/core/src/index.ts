@@ -5,3 +5,5 @@ export type { PickFilesOptions } from './actions/pickFiles.js';
 export { readClipboard } from './actions/readClipboard.js';
 export { getButtonState } from './components/Button/getButtonState.js';
 export type { ButtonCore, ButtonCoreOptions } from './components/Button/ButtonCore.js';
+export { getInputState } from './components/Input/getInputState.js';
+export type { InputCore, InputCoreOptions } from './components/Input/InputCore.js';

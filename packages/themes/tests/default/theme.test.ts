@@ -42,6 +42,23 @@ describe('default theme', () => {
     }
   });
 
+  it('derives every Input token from a defined global token', () => {
+    const globalFiles = readdirSync(resolve('packages/themes/src/default/tokens/global'));
+    const inputFiles = readdirSync(resolve('packages/themes/src/default/tokens/components/Input'));
+    const names = new Set(globalFiles.flatMap((file) =>
+      [...css(`tokens/global/${file}`).matchAll(/(--dreadnought-[\w-]+):\s*([^;]+);/g)].map((declaration) => declaration[1]),
+    ));
+    const declarations = inputFiles.flatMap((file) =>
+      [...css(`tokens/components/Input/${file}`).matchAll(/(--dreadnought-[\w-]+):\s*([^;]+);/g)],
+    );
+    expect(declarations.length).toBeGreaterThan(0);
+    for (const [, name, value] of declarations) {
+      const reference = value.trim().match(/^var\((--dreadnought-[\w-]+)\)$/)?.[1];
+      expect(reference, `${name} must reference a global token`).toBeDefined();
+      expect(names.has(reference!), `${name} references an undefined global token`).toBe(true);
+    }
+  });
+
   it('exposes theme tokens and typography without global Button rules', () => {
     const entry = css('index.css');
     for (const file of [
@@ -58,6 +75,12 @@ describe('default theme', () => {
       'tokens/components/Button/effects.tokens.css',
       'tokens/components/Button/motion.tokens.css',
       'components/Button/typography.css',
+      'tokens/components/Input/colors.tokens.css',
+      'tokens/components/Input/spacing.tokens.css',
+      'tokens/components/Input/sizing.tokens.css',
+      'tokens/components/Input/effects.tokens.css',
+      'tokens/components/Input/typography.tokens.css',
+      'components/Input/typography.css',
     ]) {
       expect(entry).toContain(`@import './${file}'`);
     }

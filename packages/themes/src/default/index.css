@@ -11,3 +11,9 @@
 @import './tokens/components/Button/effects.tokens.css';
 @import './tokens/components/Button/motion.tokens.css';
 @import './components/Button/typography.css';
+@import './tokens/components/Input/colors.tokens.css';
+@import './tokens/components/Input/spacing.tokens.css';
+@import './tokens/components/Input/sizing.tokens.css';
+@import './tokens/components/Input/effects.tokens.css';
+@import './tokens/components/Input/typography.tokens.css';
+@import './components/Input/typography.css';

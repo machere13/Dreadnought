@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-input-border-style: var(--dreadnought-border-style-x1);
+  --dreadnought-input-disabled-opacity: var(--dreadnought-opacity-x1);
+  --dreadnought-input-disabled-cursor: var(--dreadnought-cursor-x2);
+}

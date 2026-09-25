@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-input-bg: var(--dreadnought-color-surface);
+  --dreadnought-input-fg: var(--dreadnought-color-on-surface);
+  --dreadnought-input-placeholder: var(--dreadnought-color-placeholder);
+  --dreadnought-input-border-color: var(--dreadnought-color-border);
+  --dreadnought-input-invalid-border: var(--dreadnought-color-danger);
+  --dreadnought-input-focus: var(--dreadnought-color-focus);
+}
