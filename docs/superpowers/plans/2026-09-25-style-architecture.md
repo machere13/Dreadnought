@@ -25,7 +25,7 @@
 
 - `className` пользователя вместе с классами библиотеки: оба присутствуют на `<button>` и `<a>` (Task 2).
 - `loading`/`disabled` на `<a>` и `<button>`: оформление не меняет блокировку действий и фокус (Task 2).
-- Контейнер с переопределённой темой: CSS-переменные наследуются, а базовый Button вне контейнера не меняется (Task 1/3).
+- Контейнер с переопределённой темой: цвет и `letter-spacing` наследуются как CSS-переменные, а базовый Button вне контейнера не меняется (Task 1/3).
 - CSS Module после сборки: опубликованный JS импортирует существующий CSS-файл; `react/logic` и `react/unstyled` его не импортируют (Task 2).
 - Анимация загрузки при `prefers-reduced-motion: reduce`: не выполняется (Task 2).
 
@@ -108,6 +108,7 @@ describe('default theme', () => {
   --dreadnought-font-size-button: 1rem;
   --dreadnought-font-weight-button: 600;
   --dreadnought-line-height-button: 1.25;
+  --dreadnought-font-letter-spacing-button: normal;
   --dreadnought-motion-spinner-duration: 0.75s;
 }
 /* button.tokens.css */
@@ -127,6 +128,7 @@ describe('default theme', () => {
   font-size: var(--dreadnought-font-size-button);
   font-weight: var(--dreadnought-font-weight-button);
   line-height: var(--dreadnought-line-height-button);
+  letter-spacing: var(--dreadnought-font-letter-spacing-button);
 }
 ```
 
@@ -234,7 +236,7 @@ export default defineConfig({
 - Consumes: собранный `@dreadnought/ui` и `@dreadnought/themes/default.css`.
 - Produces: пример стандартной и переопределённой темы, описание пути через `ButtonAdapter` и правил новых компонентов.
 
-- [ ] **Step 1: В примере оставить готовый `Button`, кнопку в `.other-theme` и неоформленный `ButtonAdapter`; убрать любые глобальные правила Button из `page.css`.** Переопределить в `.other-theme` `--dreadnought-button-secondary-bg`, `--dreadnought-button-secondary-fg`, `--dreadnought-button-radius` и `--dreadnought-font-size-button`. Сохранить `.custom-button` только для собственного `ButtonAdapter`.
+- [ ] **Step 1: В примере оставить готовый `Button`, кнопку в `.other-theme` и неоформленный `ButtonAdapter`; убрать любые глобальные правила Button из `page.css`.** Переопределить в `.other-theme` `--dreadnought-button-secondary-bg`, `--dreadnought-button-secondary-fg`, `--dreadnought-button-radius`, `--dreadnought-font-size-button` и `--dreadnought-font-letter-spacing-button: 0.04em`. Сохранить `.custom-button` только для собственного `ButtonAdapter`.
 - [ ] **Step 2: Обновить документацию.** В `docs/components/button.md` показать `import { Button } from '@dreadnought/ui'; import '@dreadnought/themes/default.css';`, пример `.my-theme { --dreadnought-button-bg: #182b47; }`, объяснить глобальный шрифтовой класс, локальный CSS Module и пределы кастомизации через `className`. В `docs/architecture.md` и `docs/conventions.md` закрепить `*.module.css` для третьего слоя, переменные темы и шрифтовые классы как единственные глобальные исключения; зафиксировать, что Figma-агент предлагает изменения CSS-файлов темы проекта, а не исходников библиотеки.
 - [ ] **Step 3: Запустить `pnpm build`, `pnpm typecheck`, `pnpm test`; ожидать PASS.** Открыть пример и проверить: базовый и `.other-theme` Button различаются; ButtonAdapter получает только `.custom-button`; `loading` не анимируется при включённом reduced motion, фокус и контраст читаемы.
 - [ ] **Step 4: Коммит `docs: document layered styling and theme overrides`.**
