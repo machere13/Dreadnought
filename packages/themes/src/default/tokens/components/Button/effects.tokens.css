@@ -1,9 +1,9 @@
 :root {
-  --dreadnought-button-disabled-opacity: var(--dreadnought-opacity-disabled);
-  --dreadnought-button-border-style: var(--dreadnought-border-style-control);
-  --dreadnought-button-text-decoration: var(--dreadnought-text-decoration-control);
-  --dreadnought-button-shadow: var(--dreadnought-shadow-control);
-  --dreadnought-button-cursor: var(--dreadnought-cursor-interactive);
-  --dreadnought-button-disabled-cursor: var(--dreadnought-cursor-disabled);
-  --dreadnought-button-spinner-border-style: var(--dreadnought-border-style-control);
+  --dreadnought-button-disabled-opacity: var(--dreadnought-opacity-x1);
+  --dreadnought-button-border-style: var(--dreadnought-border-style-x1);
+  --dreadnought-button-text-decoration: var(--dreadnought-text-decoration-x1);
+  --dreadnought-button-shadow: var(--dreadnought-shadow-x1);
+  --dreadnought-button-cursor: var(--dreadnought-cursor-x1);
+  --dreadnought-button-disabled-cursor: var(--dreadnought-cursor-x2);
+  --dreadnought-button-spinner-border-style: var(--dreadnought-border-style-x1);
 }

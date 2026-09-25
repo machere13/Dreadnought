@@ -5,6 +5,24 @@ import { describe, expect, it } from 'vitest';
 const css = (file: string) => readFileSync(resolve('packages/themes/src/default', file), 'utf8');
 
 describe('default theme', () => {
+  it('uses abstract global scales and purpose-based colors', () => {
+    const globalFiles = readdirSync(resolve('packages/themes/src/default/tokens/global'));
+    const globalTokens = globalFiles.flatMap((file) =>
+      [...css(`tokens/global/${file}`).matchAll(/(--dreadnought-[\w-]+):\s*([^;]+);/g)],
+    );
+
+    expect(globalTokens.some(([, name]) => name === '--dreadnought-spacing-x1')).toBe(true);
+    expect(globalTokens.some(([, name]) => name === '--dreadnought-border-radius-x1')).toBe(true);
+    expect(globalTokens.some(([, name]) => name === '--dreadnought-color-primary')).toBe(true);
+    for (const [, name] of globalTokens) {
+      if (name.startsWith('--dreadnought-color-')) {
+        expect(name).not.toMatch(/button|control|spinner|icon/);
+      } else {
+        expect(name).toMatch(/-x[1-9]\d*$/);
+      }
+    }
+  });
+
   it('derives every Button token from a defined global token', () => {
     const globalFiles = readdirSync(resolve('packages/themes/src/default/tokens/global'));
     const buttonFiles = readdirSync(resolve('packages/themes/src/default/tokens/components/Button'));
@@ -51,19 +69,19 @@ describe('default theme', () => {
     const buttonEffects = css('tokens/components/Button/effects.tokens.css');
     const buttonMotion = css('tokens/components/Button/motion.tokens.css');
     const typography = css('components/Button/typography.css');
-    expect(buttonColors).toMatch(/--dreadnought-button-bg:\s*var\(--dreadnought-color-action-primary\)/);
+    expect(buttonColors).toMatch(/--dreadnought-button-bg:\s*var\(--dreadnought-color-primary\)/);
     for (const token of [
       'border-style', 'text-decoration', 'shadow', 'cursor', 'disabled-cursor',
     ]) {
       expect(buttonEffects).toContain(`--dreadnought-button-${token}:`);
     }
-    expect(buttonSizing).toContain('--dreadnought-button-icon-size: var(--dreadnought-size-icon)');
-    expect(buttonMotion).toContain('--dreadnought-button-spinner-duration: var(--dreadnought-motion-spinner-duration)');
-    expect(buttonTypography).toMatch(/--dreadnought-font-letter-spacing-button:\s*var\(--dreadnought-font-letter-spacing-control\)/);
+    expect(buttonSizing).toContain('--dreadnought-button-icon-size: var(--dreadnought-size-x1)');
+    expect(buttonMotion).toContain('--dreadnought-button-spinner-duration: var(--dreadnought-motion-duration-x1)');
+    expect(buttonTypography).toMatch(/--dreadnought-font-letter-spacing-button:\s*var\(--dreadnought-letter-spacing-x1\)/);
     expect(typography).toMatch(/letter-spacing:\s*var\(--dreadnought-font-letter-spacing-button\)/);
-    expect(buttonTypography).toContain('--dreadnought-font-style-button: var(--dreadnought-font-style-control)');
+    expect(buttonTypography).toContain('--dreadnought-font-style-button: var(--dreadnought-font-style-x1)');
     expect(typography).toContain('font-style: var(--dreadnought-font-style-button)');
-    expect(buttonTypography).toContain('--dreadnought-font-text-transform-button: var(--dreadnought-font-text-transform-control)');
+    expect(buttonTypography).toContain('--dreadnought-font-text-transform-button: var(--dreadnought-text-transform-x1)');
     expect(typography).toContain('text-transform: var(--dreadnought-font-text-transform-button)');
     expect(globalSpacing).not.toMatch(/--dreadnought-[\w-]*button:/);
   });

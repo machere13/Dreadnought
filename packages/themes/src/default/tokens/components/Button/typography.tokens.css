@@ -1,8 +1,8 @@
 :root {
-  --dreadnought-font-size-button: var(--dreadnought-font-size-control);
-  --dreadnought-font-weight-button: var(--dreadnought-font-weight-control);
-  --dreadnought-line-height-button: var(--dreadnought-line-height-control);
-  --dreadnought-font-letter-spacing-button: var(--dreadnought-font-letter-spacing-control);
-  --dreadnought-font-style-button: var(--dreadnought-font-style-control);
-  --dreadnought-font-text-transform-button: var(--dreadnought-font-text-transform-control);
+  --dreadnought-font-size-button: var(--dreadnought-font-size-x1);
+  --dreadnought-font-weight-button: var(--dreadnought-font-weight-x1);
+  --dreadnought-line-height-button: var(--dreadnought-line-height-x1);
+  --dreadnought-font-letter-spacing-button: var(--dreadnought-letter-spacing-x1);
+  --dreadnought-font-style-button: var(--dreadnought-font-style-x1);
+  --dreadnought-font-text-transform-button: var(--dreadnought-text-transform-x1);
 }

@@ -1,11 +1,11 @@
 :root {
-  --dreadnought-color-action-primary: #5046e5;
-  --dreadnought-color-action-primary-hover: #4338ca;
-  --dreadnought-color-on-action: #fff;
-  --dreadnought-color-action-secondary: #eeeefd;
-  --dreadnought-color-on-action-secondary: #272264;
-  --dreadnought-color-action-secondary-hover: #dcdafa;
+  --dreadnought-color-primary: #5046e5;
+  --dreadnought-color-primary-hover: #4338ca;
+  --dreadnought-color-on-primary: #fff;
+  --dreadnought-color-secondary: #eeeefd;
+  --dreadnought-color-on-secondary: #272264;
+  --dreadnought-color-secondary-hover: #dcdafa;
   --dreadnought-color-focus: #8a84f5;
-  --dreadnought-color-transparent: transparent;
-  --dreadnought-color-current: currentColor;
+  --dreadnought-color-border-invisible: transparent;
+  --dreadnought-color-content-current: currentColor;
 }

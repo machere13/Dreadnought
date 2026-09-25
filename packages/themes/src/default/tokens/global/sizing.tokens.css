@@ -1,10 +1,9 @@
 :root {
-  --dreadnought-radius-control: 10px;
-  --dreadnought-size-control-min-height: 2.75rem;
-  --dreadnought-size-focus-width: 3px;
-  --dreadnought-size-border-none: 0px;
-  --dreadnought-size-icon: 1em;
-  --dreadnought-size-spinner: 1em;
-  --dreadnought-size-spinner-border-width: 2px;
-  --dreadnought-radius-circle: 50%;
+  --dreadnought-border-radius-x1: 10px;
+  --dreadnought-border-radius-x2: 50%;
+  --dreadnought-border-width-x1: 0px;
+  --dreadnought-border-width-x2: 2px;
+  --dreadnought-border-width-x3: 3px;
+  --dreadnought-size-x1: 1em;
+  --dreadnought-size-x2: 2.75rem;
 }

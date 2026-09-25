@@ -1,12 +1,12 @@
 :root {
-  --dreadnought-button-bg: var(--dreadnought-color-action-primary);
-  --dreadnought-button-fg: var(--dreadnought-color-on-action);
-  --dreadnought-button-bg-hover: var(--dreadnought-color-action-primary-hover);
-  --dreadnought-button-secondary-bg: var(--dreadnought-color-action-secondary);
-  --dreadnought-button-secondary-fg: var(--dreadnought-color-on-action-secondary);
-  --dreadnought-button-secondary-bg-hover: var(--dreadnought-color-action-secondary-hover);
+  --dreadnought-button-bg: var(--dreadnought-color-primary);
+  --dreadnought-button-fg: var(--dreadnought-color-on-primary);
+  --dreadnought-button-bg-hover: var(--dreadnought-color-primary-hover);
+  --dreadnought-button-secondary-bg: var(--dreadnought-color-secondary);
+  --dreadnought-button-secondary-fg: var(--dreadnought-color-on-secondary);
+  --dreadnought-button-secondary-bg-hover: var(--dreadnought-color-secondary-hover);
   --dreadnought-button-focus: var(--dreadnought-color-focus);
-  --dreadnought-button-border-color: var(--dreadnought-color-transparent);
-  --dreadnought-button-spinner-border-color: var(--dreadnought-color-current);
-  --dreadnought-button-spinner-border-right-color: var(--dreadnought-color-transparent);
+  --dreadnought-button-border-color: var(--dreadnought-color-border-invisible);
+  --dreadnought-button-spinner-border-color: var(--dreadnought-color-content-current);
+  --dreadnought-button-spinner-border-right-color: var(--dreadnought-color-border-invisible);
 }

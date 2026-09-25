@@ -1,6 +1,6 @@
 :root {
-  --dreadnought-space-control-x: 1rem;
-  --dreadnought-space-control-y: 0.65rem;
-  --dreadnought-space-control-gap: 0.5rem;
-  --dreadnought-space-focus-offset: 3px;
+  --dreadnought-spacing-x1: 3px;
+  --dreadnought-spacing-x2: 0.5rem;
+  --dreadnought-spacing-x3: 0.65rem;
+  --dreadnought-spacing-x4: 1rem;
 }

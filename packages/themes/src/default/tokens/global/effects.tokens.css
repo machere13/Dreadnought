@@ -1,8 +1,8 @@
 :root {
-  --dreadnought-opacity-disabled: 0.55;
-  --dreadnought-border-style-control: solid;
-  --dreadnought-text-decoration-control: none;
-  --dreadnought-shadow-control: none;
-  --dreadnought-cursor-interactive: pointer;
-  --dreadnought-cursor-disabled: not-allowed;
+  --dreadnought-opacity-x1: 0.55;
+  --dreadnought-border-style-x1: solid;
+  --dreadnought-text-decoration-x1: none;
+  --dreadnought-shadow-x1: none;
+  --dreadnought-cursor-x1: pointer;
+  --dreadnought-cursor-x2: not-allowed;
 }
