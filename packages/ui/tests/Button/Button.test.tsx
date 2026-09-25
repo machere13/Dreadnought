@@ -38,4 +38,34 @@ describe('Button', () => {
     expect(link.getAttribute('href')).toBe('/docs');
     expect(link.getAttribute('data-variant')).toBe('secondary');
   });
+
+  it('composes library and consumer classes on a button', () => {
+    render(<Button className="custom" variant="secondary">Save</Button>);
+
+    const button = screen.getByRole('button', { name: 'Save' });
+    expect(button.classList.contains('custom')).toBe(true);
+    expect(button.classList.contains('dreadnought-text-button')).toBe(true);
+    expect(button.classList.length).toBe(4);
+  });
+
+  it('composes library and consumer classes on a link', () => {
+    render(<Button href="/docs" className="custom" variant="secondary">Docs</Button>);
+
+    const link = screen.getByRole('link', { name: 'Docs' });
+    expect(link.classList.contains('custom')).toBe(true);
+    expect(link.classList.contains('dreadnought-text-button')).toBe(true);
+    expect(link.classList.length).toBe(4);
+  });
+
+  it('keeps loading action blocked and focusable while styled', () => {
+    const onClick = vi.fn();
+    render(<Button loading onClick={onClick}>Save</Button>);
+
+    const button = screen.getByRole('button', { name: 'Save' });
+    expect(button.getAttribute('aria-busy')).toBe('true');
+    expect(button.getAttribute('aria-disabled')).toBe('true');
+    expect(button.hasAttribute('disabled')).toBe(false);
+    fireEvent.click(button);
+    expect(onClick).not.toHaveBeenCalled();
+  });
 });

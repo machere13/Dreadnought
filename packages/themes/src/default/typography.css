@@ -4,4 +4,6 @@
   font-weight: var(--dreadnought-font-weight-button);
   line-height: var(--dreadnought-line-height-button);
   letter-spacing: var(--dreadnought-font-letter-spacing-button);
+  font-style: var(--dreadnought-font-style-button);
+  text-transform: var(--dreadnought-font-text-transform-button);
 }

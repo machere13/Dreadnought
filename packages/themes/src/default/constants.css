@@ -9,5 +9,7 @@
   --dreadnought-font-weight-button: 600;
   --dreadnought-line-height-button: 1.25;
   --dreadnought-font-letter-spacing-button: normal;
+  --dreadnought-font-style-button: normal;
+  --dreadnought-font-text-transform-button: none;
   --dreadnought-motion-spinner-duration: 0.75s;
 }

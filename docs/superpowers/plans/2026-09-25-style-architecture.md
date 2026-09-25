@@ -15,7 +15,7 @@
 - Папки компонентов и компонентов тестов — PascalCase; функции и хуки — camelCase.
 - Тесты лежат в `tests/` наравне с `src/` и повторяют его структуру.
 - `core` и React-адаптер не импортируют CSS; `ButtonAdapter` остаётся неоформленным.
-- Оформление, геометрия, варианты, слоты и визуальные состояния Button — только в `Button.module.css`; глобальные исключения — CSS-переменные и `.dreadnought-text-*`.
+- Оформление, геометрия, варианты, слоты и визуальные состояния Button — только в `Button.module.css`; все настраиваемые значения этого модуля берутся из публичных токенов. Глобальные исключения — CSS-переменные и `.dreadnought-text-*`.
 - Нет reset и глобальных правил для `body`, `h1`, `button` и других элементов приложения.
 - Публичные CSS-переменные начинаются с `--dreadnought-`; стандартная тема подключается явно.
 - Существующие поведение Button, типы `ref`, атрибуты `data-ui`/`data-slot` и доступность не меняются.
@@ -25,7 +25,7 @@
 
 - `className` пользователя вместе с классами библиотеки: оба присутствуют на `<button>` и `<a>` (Task 2).
 - `loading`/`disabled` на `<a>` и `<button>`: оформление не меняет блокировку действий и фокус (Task 2).
-- Контейнер с переопределённой темой: цвет и `letter-spacing` наследуются как CSS-переменные, а базовый Button вне контейнера не меняется (Task 1/3).
+- Если на контейнере задать `--dreadnought-button-bg` и `--dreadnought-font-letter-spacing-button`, новые значения действуют только на вложенные Button; кнопки вне контейнера сохраняют стандартную тему (Task 1/3).
 - CSS Module после сборки: опубликованный JS импортирует существующий CSS-файл; `react/logic` и `react/unstyled` его не импортируют (Task 2).
 - Анимация загрузки при `prefers-reduced-motion: reduce`: не выполняется (Task 2).
 
@@ -158,7 +158,7 @@ expect(button.classList.contains('custom')).toBe(true);
 ```
 
 - [ ] **Step 2: Запустить `pnpm test -- packages/ui/tests/Button/Button.test.tsx`; ожидать FAIL** из-за отсутствующего CSS Module.
-- [ ] **Step 3: Добавить `Button.module.css`.** Перенести правила из `button.css` в `.button`, `.primary`, `.secondary` и вложенные селекторы `.button [data-slot="icon"]`, `.button:hover:not(:disabled):not([aria-disabled="true"])`, `.button:focus-visible`, `.button:is(:disabled, [aria-disabled="true"])`, `.button[data-loading]::before`; оставить `@keyframes` локально. Значения брать только из `--dreadnought-*`; `font-family`, `font-size`, `font-weight`, `line-height` здесь не объявлять. Сохранить `@media (prefers-reduced-motion: reduce) { .button[data-loading]::before { animation: none; } }`.
+- [ ] **Step 3: Добавить `Button.module.css`.** Перенести правила из `button.css` в `.button`, `.primary`, `.secondary` и вложенные селекторы `.button [data-slot="icon"]`, `.button:hover:not(:disabled):not([aria-disabled="true"])`, `.button:focus-visible`, `.button:is(:disabled, [aria-disabled="true"])`, `.button[data-loading]::before`; оставить `@keyframes` локально. Все настраиваемые значения брать только из `--dreadnought-*`, включая границы, размеры иконки и индикатора загрузки, текстовое оформление и параметры движения; `font-family`, `font-size`, `font-weight`, `line-height`, `letter-spacing` здесь не объявлять. Сохранить `@media (prefers-reduced-motion: reduce) { .button[data-loading]::before { animation: none; } }`.
 
 - [ ] **Step 4: Типизировать `*.module.css` и собрать классы в `Button.tsx` без изменения ветвления по `href`.** Реализация композиции:
 

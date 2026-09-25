@@ -1,0 +1,76 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dreadnought-button-gap);
+  min-height: var(--dreadnought-button-min-height);
+  padding: var(--dreadnought-button-padding-y) var(--dreadnought-button-padding-x);
+  border: var(--dreadnought-button-border-width) var(--dreadnought-button-border-style) var(--dreadnought-button-border-color);
+  border-radius: var(--dreadnought-button-radius);
+  text-decoration: var(--dreadnought-button-text-decoration);
+  box-shadow: var(--dreadnought-button-shadow);
+  cursor: var(--dreadnought-button-cursor);
+}
+
+.primary {
+  background: var(--dreadnought-button-bg);
+  color: var(--dreadnought-button-fg);
+}
+
+.secondary {
+  background: var(--dreadnought-button-secondary-bg);
+  color: var(--dreadnought-button-secondary-fg);
+}
+
+.button [data-slot="icon"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--dreadnought-button-icon-size);
+  height: var(--dreadnought-button-icon-size);
+}
+
+.button [data-slot="icon"] svg {
+  width: 100%;
+  height: 100%;
+}
+
+.primary:hover:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--dreadnought-button-bg-hover);
+}
+
+.secondary:hover:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--dreadnought-button-secondary-bg-hover);
+}
+
+.button:focus-visible {
+  outline: var(--dreadnought-button-focus-width) solid var(--dreadnought-button-focus);
+  outline-offset: var(--dreadnought-button-focus-offset);
+}
+
+.button:is(:disabled, [aria-disabled="true"]) {
+  opacity: var(--dreadnought-button-disabled-opacity);
+  cursor: var(--dreadnought-button-disabled-cursor);
+}
+
+.button[data-loading]::before {
+  content: '';
+  box-sizing: border-box;
+  width: var(--dreadnought-button-spinner-size);
+  height: var(--dreadnought-button-spinner-size);
+  border: var(--dreadnought-button-spinner-border-width) var(--dreadnought-button-spinner-border-style) var(--dreadnought-button-spinner-border-color);
+  border-right-color: var(--dreadnought-button-spinner-border-right-color);
+  border-radius: var(--dreadnought-button-spinner-radius);
+  animation: dreadnought-button-spin var(--dreadnought-button-spinner-duration) var(--dreadnought-button-spinner-timing) var(--dreadnought-button-spinner-iteration-count);
+}
+
+@keyframes dreadnought-button-spin {
+  to { transform: rotate(var(--dreadnought-button-spinner-rotation)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button[data-loading]::before {
+    animation: none;
+  }
+}
