@@ -4,7 +4,7 @@ import { getButtonState } from '../../../src/components/Button/getButtonState.js
 describe('getButtonState', () => {
   it('keeps a loading button focusable while blocking its action', () => {
     expect(getButtonState({ loading: true })).toEqual({
-      nativeDisabled: false,
+      disabled: false,
       ariaDisabled: true,
       busy: true,
       actionBlocked: true,
@@ -13,7 +13,7 @@ describe('getButtonState', () => {
 
   it('uses native disabled semantics when explicitly disabled', () => {
     expect(getButtonState({ disabled: true, loading: true })).toEqual({
-      nativeDisabled: true,
+      disabled: true,
       ariaDisabled: false,
       busy: true,
       actionBlocked: true,

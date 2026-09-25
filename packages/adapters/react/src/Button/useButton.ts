@@ -28,7 +28,7 @@ export function useButton({
   const buttonProps = {
     ...rest,
     type,
-    disabled: state.nativeDisabled,
+    disabled: state.disabled,
     'aria-disabled': state.ariaDisabled || undefined,
     'aria-busy': state.busy || undefined,
     'data-loading': state.busy ? '' : undefined,

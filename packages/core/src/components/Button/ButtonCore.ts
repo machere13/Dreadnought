@@ -4,7 +4,7 @@ export interface ButtonCoreOptions {
 }
 
 export interface ButtonCore {
-  nativeDisabled: boolean;
+  disabled: boolean;
   ariaDisabled: boolean;
   busy: boolean;
   actionBlocked: boolean;
