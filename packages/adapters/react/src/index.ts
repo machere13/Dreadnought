@@ -1,12 +1,3 @@
-export { ButtonAdapter } from './Button/ButtonAdapter.js';
-export type { ButtonAdapterProps } from './Button/ButtonAdapter.js';
-export { useButton } from './Button/useButton.js';
-export type { UseButtonOptions } from './Button/useButton.js';
-export { InputAdapter } from './Input/InputAdapter.js';
-export type { InputAdapterProps } from './Input/InputAdapter.js';
-export { useInput } from './Input/useInput.js';
-export type { UseInputOptions, TextInputType } from './Input/useInput.js';
-export { TextAreaAdapter } from './TextArea/TextAreaAdapter.js';
-export type { TextAreaAdapterProps } from './TextArea/TextAreaAdapter.js';
-export { useTextArea } from './TextArea/useTextArea.js';
-export type { UseTextAreaOptions } from './TextArea/useTextArea.js';
+export * from './Button/index.js';
+export * from './Input/index.js';
+export * from './TextArea/index.js';
