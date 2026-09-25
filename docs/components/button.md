@@ -9,7 +9,21 @@ import { useButton } from '@dreadnought/react/logic';
 import '@dreadnought/themes/default.css';
 ```
 
-`Button` — готовый компонент с вариантами `primary` и `secondary`. CSS темы подключается отдельно. Токены `--dreadnought-button-*` можно переопределить в контейнере проекта.
+`Button` — готовый компонент с вариантами `primary` и `secondary`. Он сам подключает локальный CSS Module, но значения стандартной темы и глобальные шрифтовые классы подключаются отдельно через `@dreadnought/themes/default.css`.
+
+Внешний вид меняется токенами на контейнере, без переопределения CSS-классов компонента:
+
+```css
+.my-theme {
+  --dreadnought-button-bg: #182b47;
+  --dreadnought-button-radius: 999px;
+  --dreadnought-button-border-width: 1px;
+  --dreadnought-button-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  --dreadnought-font-letter-spacing-button: 0.04em;
+}
+```
+
+`Button.module.css` использует токены для настраиваемых значений: цветов, размеров, отступов, границ, тени, состояний, иконки и индикатора загрузки. Шрифтовой класс `.dreadnought-text-button` тоже читает токены темы — `font-family`, размер, насыщенность, высоту строки, межбуквенный интервал, начертание и регистр. Полный список значений по умолчанию находится в CSS-файлах `@dreadnought/themes`. Пользовательский `className` добавляет класс к элементу, но не является контрактом для замены правил CSS Module. Если требуется другой порядок элементов или новая разметка, используйте `ButtonAdapter` со своим CSS Module.
 
 `ButtonCore` — тип результата вычисления состояния в первом слое. `ButtonAdapter` создаёт нативный `<button>` для действия или `<a>` при передаче `href`, но не добавляет визуальный вариант. Он принимает `icon` и `iconPosition="start" | "end"` (по умолчанию `start`); порядок иконки и текста задаётся здесь, оформление — темой. Отдельного `IconButton` нет: для кнопки без текста передайте `icon` и обязательный `aria-label` или `aria-labelledby`. `useButton` возвращает свойства для собственной разметки на нативном `<button>`.
 
