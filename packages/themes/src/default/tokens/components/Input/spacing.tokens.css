@@ -2,4 +2,6 @@
   --dreadnought-input-padding-y: var(--dreadnought-spacing-x2);
   --dreadnought-input-padding-x: var(--dreadnought-spacing-x3);
   --dreadnought-input-focus-offset: var(--dreadnought-spacing-x1);
+  --dreadnought-input-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-input-toggle-padding: var(--dreadnought-spacing-x1);
 }

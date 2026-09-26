@@ -2,4 +2,5 @@
   --dreadnought-input-border-style: solid;
   --dreadnought-input-disabled-opacity: var(--dreadnought-opacity-disabled);
   --dreadnought-input-disabled-cursor: not-allowed;
+  --dreadnought-input-toggle-cursor: pointer;
 }

@@ -38,6 +38,8 @@ function App() {
         <div className="demo-fields">
           <label htmlFor="demo-email">Электронная почта</label>
           <Input id="demo-email" type="email" placeholder="name@example.com" />
+          <label htmlFor="demo-password">Пароль</label>
+          <Input id="demo-password" type="password" passwordVisibilityLabels={{ show: 'Показать пароль', hide: 'Скрыть пароль' }} />
           <label htmlFor="demo-notes">Заметки</label>
           <TextArea id="demo-notes" rows={4} minRows={2} maxRows={8} placeholder="Можно растянуть мышкой" />
           <label htmlFor="demo-auto-notes">Автоматическая высота</label>

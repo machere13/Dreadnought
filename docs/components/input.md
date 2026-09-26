@@ -9,8 +9,14 @@ import { Input } from '@dreadnought/ui';
 <Input id="email" type="email" name="email" required />
 ```
 
-`InputAdapter` из `@dreadnought/react/unstyled` даёт нативный элемент без оформления. `useInput` из `@dreadnought/react/logic` возвращает `inputProps` и `state` для своей разметки. В первом слое `getInputState` из `@dreadnought/core` вычисляет состояние независимо от React.
+`Input type="password"` добавляет кнопку показа и скрытия пароля. Текст кнопки по умолчанию английский; для другого языка передайте `passwordVisibilityLabels`:
+
+```tsx
+<Input id="password" type="password" passwordVisibilityLabels={{ show: 'Показать пароль', hide: 'Скрыть пароль' }} />
+```
+
+`InputAdapter` из `@dreadnought/react/unstyled` создаёт неоформленную обёртку с нативным полем и, только для пароля, кнопкой `type="button"`. `useInput` из `@dreadnought/react/logic` возвращает `inputProps`, `state` и для пароля `visibilityButtonProps`/`isPasswordVisible`, чтобы собрать собственную разметку с тем же переключением. В первом слое `getInputState` из `@dreadnought/core` вычисляет состояние поля независимо от React.
 
 Сохраняются нативные `value`/`defaultValue`, `onChange`, `ref`, участие в форме, `disabled`, `readOnly` и `required`. `invalid` выставляет `aria-invalid="true"` и `data-invalid`, но не запускает валидацию. Подпись передаётся отдельным `<label>` либо через ARIA; `placeholder` её не заменяет.
 
-Внешний вид задаётся CSS Module и токенами `--dreadnought-input-*`. Переопределяйте токен компонента в теме проекта или для отдельного экземпляра через `className`.
+Обёртка несёт `data-ui="input"`; само поле — `data-slot="control"`, а кнопка пароля — `data-slot="visibility-toggle"`. `className` и `style` относятся к обёртке, тогда как `ref`, `id`, `name` и остальные нативные свойства относятся к `<input>`. Внешний вид обёртки задаётся CSS Module и токенами `--dreadnought-input-*`; нативное поле остаётся прозрачным и без собственной рамки. Переопределяйте токен компонента в теме проекта или для отдельного экземпляра через `className`/`style`.
