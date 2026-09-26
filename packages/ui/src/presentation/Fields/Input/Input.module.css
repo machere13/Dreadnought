@@ -28,6 +28,13 @@
     text-transform: inherit;
   }
 
+  .input [data-slot="control"]:-webkit-autofill,
+  .input [data-slot="control"]:autofill {
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: var(--dreadnought-input-text);
+  }
+
   .input [data-slot="control"]::placeholder {
     color: var(--dreadnought-input-placeholder-text);
   }

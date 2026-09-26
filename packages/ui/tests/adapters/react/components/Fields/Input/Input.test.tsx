@@ -1,9 +1,20 @@
 import { cleanup, render, screen } from '@testing-library/react';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import postcss from 'postcss';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
 import { Input } from '@dreadnought/ui/react';
 
 afterEach(cleanup);
+
+it('keeps autofilled control text and background in the dark Input theme', () => {
+  const css = postcss.parse(readFileSync(resolve('packages/ui/src/presentation/Fields/Input/Input.module.css'), 'utf8'));
+  const layer = css.nodes.find((node) => node.type === 'atrule');
+  const autofill = layer?.nodes?.find((node) => node.type === 'rule' && node.selector.includes('[data-slot="control"]:-webkit-autofill'));
+  expect(autofill?.nodes?.some((node) => node.type === 'decl' && node.prop === 'background-clip' && node.value === 'text')).toBe(true);
+  expect(autofill?.nodes?.some((node) => node.type === 'decl' && node.prop === '-webkit-text-fill-color' && node.value === 'var(--dreadnought-input-text)')).toBe(true);
+});
 
 it('composes styled and consumer classes while preserving adapter semantics', () => {
   render(<Input aria-label="Search" type="search" invalid className="custom" />);
