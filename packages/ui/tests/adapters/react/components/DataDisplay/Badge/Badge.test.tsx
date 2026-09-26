@@ -1,7 +1,10 @@
 import { createRef } from 'react';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import postcss from 'postcss';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { Badge } from '@dreadnought/ui/react';
+import { Badge, Button } from '@dreadnought/ui/react';
 
 afterEach(cleanup);
 
@@ -42,5 +45,26 @@ describe('Badge', () => {
     const badge = screen.getByText('New').closest('[data-ui="badge"]');
     expect(badge?.children[0]?.getAttribute('data-slot')).toBe('label');
     expect(badge?.children[1]?.getAttribute('data-slot')).toBe('icon');
+  });
+
+  it('does not apply Badge icon sizing to an icon inside the overlay target', () => {
+    render(
+      <Badge icon={<svg aria-hidden="true" data-testid="badge-icon" />} target={
+        <Button icon={<svg aria-hidden="true" data-testid="button-icon" />} aria-label="Inbox, 3 unread">Inbox</Button>
+      }>3</Badge>,
+    );
+
+    const css = postcss.parse(readFileSync(resolve(process.cwd(), 'packages/ui/dist/style.css'), 'utf8'));
+    const selectors: string[] = [];
+    css.walkRules((rule) => {
+      if (rule.nodes.some((node) => node.type === 'decl' && node.value.includes('--dreadnought-badge-icon-size'))) {
+        selectors.push(...rule.selector.split(',').map((selector) => selector.trim()));
+      }
+    });
+
+    const badgeIcon = screen.getByTestId('badge-icon').closest('[data-slot="icon"]');
+    const buttonIcon = screen.getByTestId('button-icon').closest('[data-slot="icon"]');
+    expect(selectors.some((selector) => badgeIcon?.matches(selector))).toBe(true);
+    expect(selectors.some((selector) => buttonIcon?.matches(selector))).toBe(false);
   });
 });
