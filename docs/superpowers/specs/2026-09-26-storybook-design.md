@@ -6,7 +6,7 @@
 
 ## Размещение и зависимости
 
-Создать приватный workspace-пакет `examples/storybook` с конфигурацией `.storybook/` и историями компонентов. Он использует React, Vite и Storybook для React/Vite, импортируя компоненты только через публичный `@dreadnought/ui/react`. При демонстрации второго слоя истории используют `@dreadnought/react/unstyled`; внутренние пути `src/` не импортируются. Зависимости Storybook остаются только в этом примере, а не в `packages/core`, `packages/adapters/react`, `packages/ui` или `packages/themes`.
+Создать приватное приложение `apps/storybook` с конфигурацией `.storybook/` и историями компонентов. Оно использует React, Vite и Storybook для React/Vite, импортируя компоненты только через публичный `@dreadnought/ui/react`. При демонстрации второго слоя истории используют `@dreadnought/react/unstyled`; внутренние пути `src/` не импортируются. Зависимости Storybook остаются только в этом приложении, а не в `packages/core`, `packages/adapters/react`, `packages/ui` или `packages/themes`.
 
 На машине доступен Node.js 22 и pnpm 9; они удовлетворяют [текущим требованиям Storybook](https://storybook.js.org/docs/get-started/install/). При установке фиксируется совместимая версия пакетов Storybook в lockfile. Не запускать генератор с примерными компонентами, которые не принадлежат Dreadnought, либо удалить их из итоговой конфигурации.
 

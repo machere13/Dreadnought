@@ -4,7 +4,7 @@
 
 **Goal:** Дать локальную площадку для просмотра готовых компонентов Dreadnought и изменения их props через Controls.
 
-**Architecture:** Приватный workspace-пакет `examples/storybook` запускает Storybook для React/Vite и импортирует только публичные entrypoints библиотеки. Истории разделены по компонентам; существующие пакеты библиотеки не получают зависимостей от Storybook.
+**Architecture:** Приватное приложение `apps/storybook` запускает Storybook для React/Vite и импортирует только публичные entrypoints библиотеки. Истории разделены по компонентам; существующие пакеты библиотеки не получают зависимостей от Storybook.
 
 **Tech Stack:** Storybook 10.6.0, `@storybook/react-vite` 10.6.0, React 19, Vite 7, TypeScript, pnpm 9.
 
@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- Storybook размещается только в `examples/storybook`, остаётся приватным и импортирует UI через `@dreadnought/ui/react` (второй слой — через `@dreadnought/react/unstyled`).
+- Storybook размещается только в `apps/storybook`, остаётся приватным и импортирует UI через `@dreadnought/ui/react` (второй слой — через `@dreadnought/react/unstyled`).
 - Не добавлять документационный аддон, снапшоты, тестовый раннер, публикацию сайта, примерную тему или истории для несуществующих компонентов.
 - Использовать одинаковую закреплённую версию `10.6.0` для `storybook` и `@storybook/react-vite`; версию сверили через `pnpm view` 26.09.2026.
 - Сборка библиотечных пакетов предшествует запуску Storybook, поскольку публичные экспорты указывают на `dist`.
@@ -31,16 +31,16 @@
 ### Task 1: Приватный Storybook и история Button
 
 **Files:**
-- Create: `examples/storybook/package.json`, `examples/storybook/tsconfig.json`
-- Create: `examples/storybook/.storybook/main.ts`, `examples/storybook/.storybook/preview.ts`
-- Create: `examples/storybook/stories/Button.stories.tsx`
-- Modify: `package.json`, `.gitignore`, `pnpm-lock.yaml`
+- Create: `apps/storybook/package.json`, `apps/storybook/tsconfig.json`
+- Create: `apps/storybook/.storybook/main.ts`, `apps/storybook/.storybook/preview.ts`
+- Create: `apps/storybook/stories/Button.stories.tsx`
+- Modify: `package.json`, `pnpm-workspace.yaml`, `.gitignore`, `pnpm-lock.yaml`
 
 **Interfaces:**
 - Consumes: `Button` из `@dreadnought/ui/react` и собранные workspace-пакеты.
-- Produces: `pnpm storybook` для локального просмотра, `pnpm storybook:build` для статической сборки, `pnpm --filter @dreadnought/example-storybook typecheck` для историй.
+- Produces: `pnpm storybook` для локального просмотра, `pnpm storybook:build` для статической сборки, `pnpm --filter @dreadnought/storybook typecheck` для историй.
 
-- [ ] **Step 1: Создать минимальный пакет и первую историю.** В `package.json` примера указать `name: "@dreadnought/example-storybook"`, `private: true`, `type: "module"`, scripts `dev: "storybook dev -p 6006 --no-open"`, `build:storybook: "storybook build"`, `typecheck: "tsc -p tsconfig.json --noEmit"`; dependencies `@dreadnought/ui: "workspace:*"`, `@dreadnought/react: "workspace:*"`, `react: "^19.0.0"`, `react-dom: "^19.0.0"`; devDependencies `storybook: "10.6.0"`, `@storybook/react-vite: "10.6.0"`, `@types/react: "^19.0.0"`, `typescript: "^5.7.0"`, `vite: "^7.0.0"`. `tsconfig.json` расширяет `../../tsconfig.base.json`, задаёт `noEmit: true`, `module: "ESNext"`, `moduleResolution: "Bundler"`, `jsx: "react-jsx"`, включает `.storybook/**/*.ts` и `stories/**/*.tsx`. В `.storybook/main.ts`:
+- [ ] **Step 1: Создать минимальное приложение и первую историю.** Добавить `apps/*` в `pnpm-workspace.yaml`. В `apps/storybook/package.json` указать `name: "@dreadnought/storybook"`, `private: true`, `type: "module"`, scripts `dev: "storybook dev -p 6006 --no-open"`, `build:storybook: "storybook build"`, `typecheck: "tsc -p tsconfig.json --noEmit"`; dependencies `@dreadnought/ui: "workspace:*"`, `@dreadnought/react: "workspace:*"`, `react: "^19.0.0"`, `react-dom: "^19.0.0"`; devDependencies `storybook: "10.6.0"`, `@storybook/react-vite: "10.6.0"`, `@types/react: "^19.0.0"`, `typescript: "^5.7.0"`, `vite: "^7.0.0"`. `tsconfig.json` расширяет `../../tsconfig.base.json`, задаёт `noEmit: true`, `module: "ESNext"`, `moduleResolution: "Bundler"`, `jsx: "react-jsx"`, включает `.storybook/**/*.ts` и `stories/**/*.tsx`. В `.storybook/main.ts`:
 
 ```ts
 import type { StorybookConfig } from '@storybook/react-vite';
@@ -68,18 +68,18 @@ export const Disabled: Story = { args: { disabled: true } };
 export const Loading: Story = { args: { loading: true } };
 ```
 
-- [ ] **Step 2: Установить зависимости и проверить первый вариант.** Выполнить `pnpm install`; затем `pnpm --filter @dreadnought/example-storybook typecheck` и `pnpm --filter @dreadnought/example-storybook build:storybook`. Исправлять только пакет примера. Не запускать Storybook-генератор.
+- [ ] **Step 2: Установить зависимости и проверить первый вариант.** Выполнить `pnpm install`; затем `pnpm --filter @dreadnought/storybook typecheck` и `pnpm --filter @dreadnought/storybook build:storybook`. Исправлять только приложение Storybook. Не запускать Storybook-генератор.
 
-- [ ] **Step 3: Подключить команды и игнорирование результата.** Добавить в корень `"storybook": "pnpm build && pnpm --filter @dreadnought/example-storybook dev"` и `"storybook:build": "pnpm build && pnpm --filter @dreadnought/example-storybook build:storybook"`; в `.gitignore` добавить `storybook-static/`. При необходимости поправить типы `.storybook/preview.ts` по установленному API Storybook 10.6.0.
+- [ ] **Step 3: Подключить команды и игнорирование результата.** Добавить в корень `"storybook": "pnpm build && pnpm --filter @dreadnought/storybook dev"` и `"storybook:build": "pnpm build && pnpm --filter @dreadnought/storybook build:storybook"`; в `.gitignore` — `storybook-static/`. При необходимости поправить типы `.storybook/preview.ts` по установленному API Storybook 10.6.0.
 
-- [ ] **Step 4: Проверить готовую площадку.** Запустить `pnpm --filter @dreadnought/example-storybook typecheck`, `pnpm storybook:build`, `pnpm test`. Проверить, что `examples/storybook/storybook-static/index.json` содержит `controls-button--default`, что `git status` не показывает `storybook-static`, а `packages/*/package.json` не изменены. Кратко запустить `pnpm storybook`, дождаться адреса `localhost:6006`, остановить процесс.
+- [ ] **Step 4: Проверить готовую площадку.** Запустить `pnpm --filter @dreadnought/storybook typecheck`, `pnpm storybook:build`, `pnpm test`. Проверить, что `apps/storybook/storybook-static/index.json` содержит `controls-button--default`, что `git status` не показывает `storybook-static`, а `packages/*/package.json` не изменены. Кратко запустить `pnpm storybook`, дождаться адреса `localhost:6006`, остановить процесс.
 
 - [ ] **Step 5: Коммит.** Добавить только файлы Task 1 и зафиксировать `feat: add Storybook workspace with Button stories`.
 
 ### Task 2: Истории Input, TextArea и Badge
 
 **Files:**
-- Create: `examples/storybook/stories/Input.stories.tsx`, `TextArea.stories.tsx`, `Badge.stories.tsx`
+- Create: `apps/storybook/stories/Input.stories.tsx`, `TextArea.stories.tsx`, `Badge.stories.tsx`
 
 **Interfaces:**
 - Consumes: конфигурацию и команды Storybook из Task 1; `Input`, `TextArea`, `Badge`, `Button` из `@dreadnought/ui/react`.
@@ -110,6 +110,6 @@ export const Overlay: Story = { args: { target: <Button aria-label="Уведом
 
 В каждом файле добавить собственные `import type { Meta, StoryObj }`, публичные импорты компонентов, `export default meta` и `type Story = StoryObj<typeof meta>`; повторённые имена `meta`/`Story` принадлежат разным файлам.
 
-- [ ] **Step 2: Проверить индекс и типы.** Запустить `pnpm --filter @dreadnought/example-storybook typecheck` и `pnpm storybook:build`. Прочитать `examples/storybook/storybook-static/index.json` и убедиться, что для каждой группы `Controls/Button`, `Fields/Input`, `Fields/TextArea`, `DataDisplay/Badge` есть записи, включая `datadisplay-badge--overlay`. Исправить только ошибки историй и конфигурации примера.
+- [ ] **Step 2: Проверить индекс и типы.** Запустить `pnpm --filter @dreadnought/storybook typecheck` и `pnpm storybook:build`. Прочитать `apps/storybook/storybook-static/index.json` и убедиться, что для каждой группы `Controls/Button`, `Fields/Input`, `Fields/TextArea`, `DataDisplay/Badge` есть записи, включая `datadisplay-badge--overlay`. Исправить только ошибки историй и конфигурации примера.
 
 - [ ] **Step 3: Проверить регрессию и коммит.** Запустить `pnpm typecheck` и `pnpm test`; проверить отсутствие импортов `packages/**/src` в историях. Добавить три новых файла и зафиксировать `feat: add component stories for Storybook`.
