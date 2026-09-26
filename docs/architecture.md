@@ -107,15 +107,16 @@ packages/
         TextArea/
           textAreaPresentation.ts
           TextArea.module.css
-      react/
-        components/
-          Button/
-            Button.tsx         # Готовый React-фасад поверх ButtonAdapter
-          Input/
-            Input.tsx
-          TextArea/
-            TextArea.tsx
-      react.ts                  # Публичная точка входа готовых React-компонентов
+      adapters/                 # Визуальные адаптеры слоя 3 по фреймворкам
+        react/
+          components/
+            Button/
+              Button.tsx       # Готовый React-фасад поверх ButtonAdapter
+            Input/
+              Input.tsx
+            TextArea/
+              TextArea.tsx
+          index.ts             # Исходник публичного @dreadnought/ui/react
     tests/
       presentation.test.ts
 

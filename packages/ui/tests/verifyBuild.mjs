@@ -7,6 +7,7 @@ const js = artifact('index.js');
 const reactJs = artifact('react.js');
 const css = artifact('style.css');
 const types = artifact('index.d.ts');
+const reactTypes = artifact('adapters/react/index.d.ts');
 
 assert.doesNotMatch(js, /(?:react|jsx-runtime|style\.css)/i);
 assert.match(reactJs, /import ['"]\.\/style\.css['"]/);
@@ -33,6 +34,7 @@ assert.match(artifact('presentation/Button/buttonPresentation.d.ts'), /buttonPre
 assert.match(artifact('presentation/Input/inputPresentation.d.ts'), /inputPresentation/);
 assert.match(artifact('presentation/TextArea/textAreaPresentation.d.ts'), /textAreaPresentation/);
 assert.doesNotMatch(types, /React|ButtonProps|InputProps|TextAreaProps/);
+assert.match(reactTypes, /components\/index\.js/);
 
 const presentation = await import('../dist/index.js');
 for (const name of ['buttonPresentation', 'inputPresentation', 'textAreaPresentation']) {

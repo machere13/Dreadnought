@@ -13,7 +13,7 @@ export default defineConfig({
   }],
   build: {
     lib: {
-      entry: { index: 'src/index.ts', react: 'src/react.ts' },
+      entry: { index: 'src/index.ts', react: 'src/adapters/react/index.ts' },
       formats: ['es'],
       cssFileName: 'style',
     },

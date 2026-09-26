@@ -10,7 +10,7 @@
       "import": "./dist/index.js"
     },
     "./react": {
-      "types": "./dist/react.d.ts",
+      "types": "./dist/adapters/react/index.d.ts",
       "import": "./dist/react.js",
       "default": "./dist/react.js"
     },
