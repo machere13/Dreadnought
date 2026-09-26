@@ -1,6 +1,6 @@
-import { inputPresentation } from '@dreadnought/ui';
+import { inputPresentation } from '../../Input/inputPresentation.js';
 import type { ComponentPropsWithRef } from 'react';
-import { InputAdapter } from './InputAdapter.js';
+import { InputAdapter } from '@dreadnought/react/unstyled';
 
 export type InputProps = ComponentPropsWithRef<typeof InputAdapter>;
 

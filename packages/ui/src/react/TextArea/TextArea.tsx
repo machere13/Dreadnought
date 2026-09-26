@@ -1,6 +1,6 @@
-import { textAreaPresentation } from '@dreadnought/ui';
+import { textAreaPresentation } from '../../TextArea/textAreaPresentation.js';
 import type { ComponentPropsWithRef } from 'react';
-import { TextAreaAdapter } from './TextAreaAdapter.js';
+import { TextAreaAdapter } from '@dreadnought/react/unstyled';
 
 export type TextAreaProps = ComponentPropsWithRef<typeof TextAreaAdapter>;
 

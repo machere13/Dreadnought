@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
-import { TextArea } from '../../src/styled.js';
+import { TextArea } from '@dreadnought/ui/react';
 
 afterEach(cleanup);
 

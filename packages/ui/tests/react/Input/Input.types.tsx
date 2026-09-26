@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import { Input } from '@dreadnought/react/styled';
+import { Input } from '@dreadnought/ui/react';
 
 <Input ref={createRef<HTMLInputElement>()} type="search" />;
 

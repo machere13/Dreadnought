@@ -4,10 +4,13 @@ import { fileURLToPath } from 'node:url';
 
 const artifact = (name) => readFileSync(fileURLToPath(new URL(`../dist/${name}`, import.meta.url)), 'utf8');
 const js = artifact('index.js');
+const reactJs = artifact('react.js');
 const css = artifact('style.css');
 const types = artifact('index.d.ts');
 
 assert.doesNotMatch(js, /(?:react|jsx-runtime|style\.css)/i);
+assert.match(reactJs, /import ['"]\.\/style\.css['"]/);
+assert.match(reactJs, /import ['"]@dreadnought\/themes\/default\.css['"]/);
 assert.match(js, /buttonPresentation/);
 assert.match(js, /inputPresentation/);
 assert.match(js, /textAreaPresentation/);
@@ -34,4 +37,7 @@ assert.doesNotMatch(types, /React|ButtonProps|InputProps|TextAreaProps/);
 const presentation = await import('../dist/index.js');
 for (const name of ['buttonPresentation', 'inputPresentation', 'textAreaPresentation']) {
   assert.ok(presentation[name]?.root, `${name} must be exported from the built package`);
+}
+for (const name of ['Button', 'Input', 'TextArea']) {
+  assert.equal(name in presentation, false, `${name} must only be exported by the React entrypoint`);
 }

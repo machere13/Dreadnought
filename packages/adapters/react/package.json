@@ -2,7 +2,7 @@
   "name": "@dreadnought/react",
   "version": "0.1.0",
   "type": "module",
-  "sideEffects": ["./dist/styled.js"],
+  "sideEffects": false,
   "files": ["dist"],
   "exports": {
     ".": {
@@ -16,10 +16,6 @@
     "./unstyled": {
       "types": "./dist/unstyled.d.ts",
       "import": "./dist/unstyled.js"
-    },
-    "./styled": {
-      "types": "./dist/styled.d.ts",
-      "import": "./dist/styled.js"
     }
   },
   "scripts": {
@@ -27,8 +23,7 @@
     "typecheck": "tsc -p tsconfig.build.json --noEmit"
   },
   "dependencies": {
-    "@dreadnought/core": "workspace:*",
-    "@dreadnought/ui": "workspace:*"
+    "@dreadnought/core": "workspace:*"
   },
   "peerDependencies": {
     "react": "^19.0.0"

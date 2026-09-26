@@ -5,8 +5,8 @@
   },
   "include": [
     "packages/adapters/react/tests/Button/ButtonAdapter.types.tsx",
-    "packages/adapters/react/tests/Button/Button.types.tsx",
-    "packages/adapters/react/tests/Input/Input.types.tsx",
-    "packages/adapters/react/tests/TextArea/TextArea.types.tsx"
+    "packages/ui/tests/react/Button/Button.types.tsx",
+    "packages/ui/tests/react/Input/Input.types.tsx",
+    "packages/ui/tests/react/TextArea/TextArea.types.tsx"
   ]
 }

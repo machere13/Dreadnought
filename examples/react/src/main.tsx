@@ -1,9 +1,8 @@
 import { createRoot } from 'react-dom/client';
 import { useState } from 'react';
-import { Button, Input, TextArea } from '@dreadnought/react/styled';
+import { Button, Input, TextArea } from '@dreadnought/ui/react';
 import { ButtonAdapter } from '@dreadnought/react/unstyled';
 import { useButton } from '@dreadnought/react/logic';
-import '@dreadnought/themes/default.css';
 import './page.css';
 
 function App() {

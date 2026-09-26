@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import { Button } from '@dreadnought/react/styled';
+import { Button } from '@dreadnought/ui/react';
 
 const buttonRef = createRef<HTMLButtonElement>();
 const linkRef = createRef<HTMLAnchorElement>();

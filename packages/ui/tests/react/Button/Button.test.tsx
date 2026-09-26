@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { Button } from '../../src/styled.js';
+import { Button } from '@dreadnought/ui/react';
 
 afterEach(cleanup);
 

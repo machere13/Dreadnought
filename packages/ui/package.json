@@ -2,17 +2,37 @@
   "name": "@dreadnought/ui",
   "version": "0.1.0",
   "type": "module",
-  "sideEffects": ["./dist/style.css"],
+  "sideEffects": ["./dist/react.js", "./dist/style.css"],
   "files": ["dist"],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js",
+      "default": "./dist/react.js"
+    },
     "./style.css": "./dist/style.css"
   },
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json --emitDeclarationOnly && node tests/verifyBuild.mjs",
     "typecheck": "tsc -p tsconfig.build.json --noEmit"
+  },
+  "dependencies": {
+    "@dreadnought/themes": "workspace:*"
+  },
+  "peerDependencies": {
+    "@dreadnought/react": "0.1.0",
+    "react": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@dreadnought/react": { "optional": true },
+    "react": { "optional": true }
+  },
+  "devDependencies": {
+    "@dreadnought/react": "workspace:*",
+    "react": "^19.0.0"
   }
 }
