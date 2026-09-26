@@ -97,16 +97,24 @@ packages/
 
   ui/                           # Общее оформление и фасады слоя 3
     src/
-      Button/
-        buttonPresentation.ts
-        Button.module.css
-      react/
+      presentation/             # Общие для веб-фреймворков стили и карты классов
         Button/
-          Button.tsx           # Готовый React-фасад поверх ButtonAdapter
+          buttonPresentation.ts
+          Button.module.css
         Input/
-          Input.tsx
+          inputPresentation.ts
+          Input.module.css
         TextArea/
-          TextArea.tsx
+          textAreaPresentation.ts
+          TextArea.module.css
+      react/
+        components/
+          Button/
+            Button.tsx         # Готовый React-фасад поверх ButtonAdapter
+          Input/
+            Input.tsx
+          TextArea/
+            TextArea.tsx
       react.ts                  # Публичная точка входа готовых React-компонентов
     tests/
       presentation.test.ts

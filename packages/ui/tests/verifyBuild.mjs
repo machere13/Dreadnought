@@ -29,9 +29,9 @@ assert.match(css, /width:var\(--dreadnought-button-icon-size\)/);
 assert.match(css, /--dreadnought-button-spinner-timing/);
 assert.match(css, /--dreadnought-button-spinner-iteration-count/);
 assert.match(css, /--dreadnought-button-spinner-rotation/);
-assert.match(artifact('Button/buttonPresentation.d.ts'), /buttonPresentation/);
-assert.match(artifact('Input/inputPresentation.d.ts'), /inputPresentation/);
-assert.match(artifact('TextArea/textAreaPresentation.d.ts'), /textAreaPresentation/);
+assert.match(artifact('presentation/Button/buttonPresentation.d.ts'), /buttonPresentation/);
+assert.match(artifact('presentation/Input/inputPresentation.d.ts'), /inputPresentation/);
+assert.match(artifact('presentation/TextArea/textAreaPresentation.d.ts'), /textAreaPresentation/);
 assert.doesNotMatch(types, /React|ButtonProps|InputProps|TextAreaProps/);
 
 const presentation = await import('../dist/index.js');

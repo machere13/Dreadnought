@@ -1,4 +1,4 @@
-import { inputPresentation } from '../../Input/inputPresentation.js';
+import { inputPresentation } from '../../../presentation/Input/inputPresentation.js';
 import type { ComponentPropsWithRef } from 'react';
 import { InputAdapter } from '@dreadnought/react/unstyled';
 
