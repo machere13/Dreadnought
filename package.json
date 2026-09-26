@@ -7,7 +7,9 @@
     "build": "pnpm -r build",
     "dev": "pnpm --filter @dreadnought/example-react dev",
     "test": "vitest run",
-    "typecheck": "pnpm -r typecheck && tsc -p tsconfig.type-tests.json --noEmit"
+    "typecheck": "pnpm -r typecheck && tsc -p tsconfig.type-tests.json --noEmit",
+    "storybook": "pnpm build && pnpm --filter @dreadnought/storybook dev",
+    "storybook:build": "pnpm build && pnpm --filter @dreadnought/storybook build:storybook"
   },
   "devDependencies": {
     "@testing-library/react": "^16.0.0",
