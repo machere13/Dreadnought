@@ -10,6 +10,6 @@
     "packages/ui/tests/adapters/react/components/Button/Button.types.tsx",
     "packages/ui/tests/adapters/react/components/Input/Input.types.tsx",
     "packages/ui/tests/adapters/react/components/TextArea/TextArea.types.tsx",
-    "packages/ui/tests/publicImports.types.ts"
+    "packages/ui/tests/index.types.ts"
   ]
 }
