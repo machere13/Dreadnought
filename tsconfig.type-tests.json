@@ -7,9 +7,9 @@
     "packages/adapters/react/tests/Controls/Button/ButtonAdapter.types.tsx",
     "packages/adapters/react/tests/Fields/Input/InputAdapter.types.tsx",
     "packages/adapters/react/tests/Fields/TextArea/TextAreaAdapter.types.tsx",
-    "packages/ui/tests/adapters/react/components/Button/Button.types.tsx",
-    "packages/ui/tests/adapters/react/components/Input/Input.types.tsx",
-    "packages/ui/tests/adapters/react/components/TextArea/TextArea.types.tsx",
+    "packages/ui/tests/adapters/react/components/Controls/Button/Button.types.tsx",
+    "packages/ui/tests/adapters/react/components/Fields/Input/Input.types.tsx",
+    "packages/ui/tests/adapters/react/components/Fields/TextArea/TextArea.types.tsx",
     "packages/ui/tests/index.types.ts"
   ]
 }

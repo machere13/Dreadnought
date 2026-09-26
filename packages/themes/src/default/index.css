@@ -1,4 +1,4 @@
 @import './tokens/global/index.css';
-@import './components/Button/index.css';
-@import './components/Input/index.css';
-@import './components/TextArea/index.css';
+@import './components/Controls/Button/index.css';
+@import './components/Fields/Input/index.css';
+@import './components/Fields/TextArea/index.css';

@@ -40,9 +40,9 @@ assert.match(css, /width:var\(--dreadnought-button-icon-size\)/);
 assert.match(css, /--dreadnought-button-spinner-timing/);
 assert.match(css, /--dreadnought-button-spinner-iteration-count/);
 assert.match(css, /--dreadnought-button-spinner-rotation/);
-assert.match(artifact('presentation/Button/buttonPresentation.d.ts'), /buttonPresentation/);
-assert.match(artifact('presentation/Input/inputPresentation.d.ts'), /inputPresentation/);
-assert.match(artifact('presentation/TextArea/textAreaPresentation.d.ts'), /textAreaPresentation/);
+assert.match(artifact('presentation/Controls/Button/buttonPresentation.d.ts'), /buttonPresentation/);
+assert.match(artifact('presentation/Fields/Input/inputPresentation.d.ts'), /inputPresentation/);
+assert.match(artifact('presentation/Fields/TextArea/textAreaPresentation.d.ts'), /textAreaPresentation/);
 assert.doesNotMatch(types, /React|ButtonProps|InputProps|TextAreaProps/);
 assert.match(reactTypes, /components\/index\.ts/);
 

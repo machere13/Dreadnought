@@ -3,12 +3,13 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const css = (file: string) => readFileSync(resolve('packages/themes/src/default', file), 'utf8');
+const componentFamilies = { Button: 'Controls', Input: 'Fields', TextArea: 'Fields' } as const;
 
 describe('default theme', () => {
   it('keeps typography in the library layer and token defaults outside it', () => {
-    for (const component of ['Button', 'Input', 'TextArea']) {
-      expect(css(`components/${component}/typography.css`).trimStart()).toMatch(/^@layer dreadnought\s*\{/);
-      expect(css(`tokens/components/${component}/colors.tokens.css`).trimStart()).toMatch(/^:root\s*\{/);
+    for (const [component, family] of Object.entries(componentFamilies)) {
+      expect(css(`components/${family}/${component}/typography.css`).trimStart()).toMatch(/^@layer dreadnought\s*\{/);
+      expect(css(`tokens/components/${family}/${component}/colors.tokens.css`).trimStart()).toMatch(/^:root\s*\{/);
     }
   });
 
@@ -75,13 +76,13 @@ describe('default theme', () => {
     expect(global.get('--dreadnought-color-status-error')).toBe('rgb(180 35 24 / 100%)');
     expect(global.has('--dreadnought-color-secondary')).toBe(false);
 
-    const button = declarations(css('tokens/components/Button/colors.tokens.css'));
+    const button = declarations(css('tokens/components/Controls/Button/colors.tokens.css'));
     expect(button.get('--dreadnought-button-primary-bg')).toBe('var(--dreadnought-color-action-primary)');
     expect(button.get('--dreadnought-button-secondary-bg')).toBe('var(--dreadnought-color-action-secondary)');
     expect(button.get('--dreadnought-button-secondary-bg-hover')).toBe('var(--dreadnought-color-action-secondary-hover)');
-    const input = declarations(css('tokens/components/Input/colors.tokens.css'));
+    const input = declarations(css('tokens/components/Fields/Input/colors.tokens.css'));
     expect(input.get('--dreadnought-input-border-invalid')).toBe('var(--dreadnought-color-status-error)');
-    const textArea = declarations(css('tokens/components/TextArea/colors.tokens.css'));
+    const textArea = declarations(css('tokens/components/Fields/TextArea/colors.tokens.css'));
     expect(textArea.get('--dreadnought-text-area-text')).toBe('var(--dreadnought-color-text-primary)');
   });
 
@@ -93,9 +94,9 @@ describe('default theme', () => {
     const globalNames = new Set(
       declarations(globalFiles, 'tokens/global').map((declaration) => declaration[1]),
     );
-    for (const component of ['Button', 'Input', 'TextArea']) {
-      const files = readdirSync(resolve(`packages/themes/src/default/tokens/components/${component}`));
-      const componentDeclarations = declarations(files, `tokens/components/${component}`);
+    for (const [component, family] of Object.entries(componentFamilies)) {
+      const files = readdirSync(resolve(`packages/themes/src/default/tokens/components/${family}/${component}`));
+      const componentDeclarations = declarations(files, `tokens/components/${family}/${component}`);
       expect(componentDeclarations.length).toBeGreaterThan(0);
       const suffix = component === 'TextArea' ? 'text-area' : component.toLowerCase();
       const role = component === 'Button' ? 'label-1' : 'body-2';
@@ -115,31 +116,31 @@ describe('default theme', () => {
     const entry = css('index.css');
     expect(entry.trim().split(/\r?\n/)).toEqual([
       "@import './tokens/global/index.css';",
-      "@import './components/Button/index.css';",
-      "@import './components/Input/index.css';",
-      "@import './components/TextArea/index.css';",
+      "@import './components/Controls/Button/index.css';",
+      "@import './components/Fields/Input/index.css';",
+      "@import './components/Fields/TextArea/index.css';",
     ]);
     for (const file of ['colors', 'spacing', 'sizing', 'typography', 'effects', 'motion']) {
       expect(css('tokens/global/index.css')).toContain(`@import './${file}.tokens.css'`);
     }
-    for (const [component, files] of [
-      ['Button', ['colors', 'spacing', 'sizing', 'typography', 'effects', 'motion']],
-      ['Input', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
-      ['TextArea', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
+    for (const [family, component, files] of [
+      ['Controls', 'Button', ['colors', 'spacing', 'sizing', 'typography', 'effects', 'motion']],
+      ['Fields', 'Input', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
+      ['Fields', 'TextArea', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
     ] as const) {
-      const tokenEntry = css(`tokens/components/${component}/index.css`);
+      const tokenEntry = css(`tokens/components/${family}/${component}/index.css`);
       for (const file of files) expect(tokenEntry).toContain(`@import './${file}.tokens.css'`);
-      expect(css(`components/${component}/index.css`)).toContain(`@import '../../tokens/components/${component}/index.css'`);
-      expect(css(`components/${component}/index.css`)).toContain("@import './typography.css'");
+      expect(css(`components/${family}/${component}/index.css`)).toContain(`@import '../../../tokens/components/${family}/${component}/index.css'`);
+      expect(css(`components/${family}/${component}/index.css`)).toContain("@import './typography.css'");
     }
     expect(entry).not.toContain("@import './button.css'");
     const globalSpacing = css('tokens/global/spacing.tokens.css');
-    const buttonColors = css('tokens/components/Button/colors.tokens.css');
-    const buttonSizing = css('tokens/components/Button/sizing.tokens.css');
-    const buttonTypography = css('tokens/components/Button/typography.tokens.css');
-    const buttonEffects = css('tokens/components/Button/effects.tokens.css');
-    const buttonMotion = css('tokens/components/Button/motion.tokens.css');
-    const typography = css('components/Button/typography.css');
+    const buttonColors = css('tokens/components/Controls/Button/colors.tokens.css');
+    const buttonSizing = css('tokens/components/Controls/Button/sizing.tokens.css');
+    const buttonTypography = css('tokens/components/Controls/Button/typography.tokens.css');
+    const buttonEffects = css('tokens/components/Controls/Button/effects.tokens.css');
+    const buttonMotion = css('tokens/components/Controls/Button/motion.tokens.css');
+    const typography = css('components/Controls/Button/typography.css');
     expect(buttonColors).toMatch(/--dreadnought-button-primary-bg:\s*var\(--dreadnought-color-action-primary\)/);
     for (const token of [
       'border-style', 'text-decoration', 'shadow', 'cursor', 'disabled-cursor',

@@ -1,6 +1,6 @@
 import { ButtonAdapter } from '@dreadnought/react/unstyled';
 import type { ButtonAdapterProps } from '@dreadnought/react/unstyled';
-import { buttonPresentation } from '#presentation/Button/buttonPresentation.ts';
+import { buttonPresentation } from '#presentation/Controls/Button/buttonPresentation.ts';
 
 export type ButtonProps = ButtonAdapterProps & {
   variant?: 'primary' | 'secondary';

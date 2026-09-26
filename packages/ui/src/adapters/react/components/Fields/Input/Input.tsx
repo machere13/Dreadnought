@@ -1,4 +1,4 @@
-import { inputPresentation } from '#presentation/Input/inputPresentation.ts';
+import { inputPresentation } from '#presentation/Fields/Input/inputPresentation.ts';
 import type { ComponentPropsWithRef } from 'react';
 import { InputAdapter } from '@dreadnought/react/unstyled';
 
