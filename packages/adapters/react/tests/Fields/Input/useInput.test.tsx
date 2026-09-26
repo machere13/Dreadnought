@@ -1,7 +1,7 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
-import { useInput } from '../../src/Input/useInput.ts';
+import { useInput } from '../../../src/Fields/Input/useInput.ts';
 
 afterEach(cleanup);
 

@@ -1,6 +1,6 @@
-export { useButton } from './Button/useButton.ts';
-export type { UseButtonOptions } from './Button/useButton.ts';
-export { useInput } from './Input/useInput.ts';
-export type { UseInputOptions, TextInputType } from './Input/useInput.ts';
-export { useTextArea } from './TextArea/useTextArea.ts';
-export type { UseTextAreaOptions } from './TextArea/useTextArea.ts';
+export { useButton } from './Controls/Button/useButton.ts';
+export type { UseButtonOptions } from './Controls/Button/useButton.ts';
+export { useInput } from './Fields/Input/useInput.ts';
+export type { UseInputOptions, TextInputType } from './Fields/Input/useInput.ts';
+export { useTextArea } from './Fields/TextArea/useTextArea.ts';
+export type { UseTextAreaOptions } from './Fields/TextArea/useTextArea.ts';

@@ -2,7 +2,7 @@ import type { FormEvent } from 'react';
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
-import { useButton } from '../../src/Button/useButton.ts';
+import { useButton } from '../../../src/Controls/Button/useButton.ts';
 
 afterEach(cleanup);
 

@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { getTextAreaState } from '../../../src/components/TextArea/getTextAreaState.ts';
+import { getTextAreaState } from '../../../../src/components/Fields/TextArea/getTextAreaState.ts';
 
 it('provides the shared native text-field state', () => {
   expect(getTextAreaState({ readOnly: true, required: true })).toEqual({

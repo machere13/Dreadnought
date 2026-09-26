@@ -1,4 +1,4 @@
-import type { TextFieldState, TextFieldStateOptions } from '../../behaviors/getTextFieldState.ts';
+import type { TextFieldState, TextFieldStateOptions } from '../../../behaviors/getTextFieldState.ts';
 
 export interface TextAreaCoreOptions extends TextFieldStateOptions {
   rows?: number;

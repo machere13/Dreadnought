@@ -1,6 +1,6 @@
-export { ButtonAdapter } from './Button/ButtonAdapter.tsx';
-export type { ButtonAdapterProps } from './Button/ButtonAdapter.tsx';
-export { InputAdapter } from './Input/InputAdapter.tsx';
-export type { InputAdapterProps } from './Input/InputAdapter.tsx';
-export { TextAreaAdapter } from './TextArea/TextAreaAdapter.tsx';
-export type { TextAreaAdapterProps } from './TextArea/TextAreaAdapter.tsx';
+export { ButtonAdapter } from './Controls/Button/ButtonAdapter.tsx';
+export type { ButtonAdapterProps } from './Controls/Button/ButtonAdapter.tsx';
+export { InputAdapter } from './Fields/Input/InputAdapter.tsx';
+export type { InputAdapterProps } from './Fields/Input/InputAdapter.tsx';
+export { TextAreaAdapter } from './Fields/TextArea/TextAreaAdapter.tsx';
+export type { TextAreaAdapterProps } from './Fields/TextArea/TextAreaAdapter.tsx';

@@ -2,7 +2,7 @@ import { createRef } from 'react';
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
-import { InputAdapter } from '../../src/Input/InputAdapter.tsx';
+import { InputAdapter } from '../../../src/Fields/Input/InputAdapter.tsx';
 
 afterEach(cleanup);
 

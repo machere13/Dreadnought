@@ -3,7 +3,7 @@ import type { FormEvent, MouseEvent } from 'react';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ButtonAdapter } from '../../src/Button/ButtonAdapter.tsx';
+import { ButtonAdapter } from '../../../src/Controls/Button/ButtonAdapter.tsx';
 
 afterEach(cleanup);
 
