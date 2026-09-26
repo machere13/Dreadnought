@@ -28,10 +28,10 @@
 
 **Реализовать Button:**
 
-1. `packages/core/src/components/Button/`: публичные типы и общие правила `disabled`/`loading`, не зависящие от React.
-2. `packages/adapters/react/src/Button/useButton.ts`: свойства и действия нативного `<button>`.
-3. `packages/adapters/react/src/Button/ButtonAdapter.tsx`: разметка, передача DOM-свойств и ref.
-4. `packages/ui/src/adapters/react/components/Button/`, `packages/ui/src/presentation/Button/` и `packages/themes/src/default/` — готовый React-фасад третьего слоя, общее оформление и стандартные токены.
+1. `packages/core/src/components/Controls/Button/`: публичные типы и общие правила `disabled`/`loading`, не зависящие от React.
+2. `packages/adapters/react/src/Controls/Button/useButton.ts`: свойства и действия нативного `<button>`.
+3. `packages/adapters/react/src/Controls/Button/ButtonAdapter.tsx`: разметка, передача DOM-свойств и ref.
+4. `packages/ui/src/adapters/react/components/Controls/Button/`, `packages/ui/src/presentation/Controls/Button/` и `packages/themes/src/default/` — готовый React-фасад третьего слоя, общее оформление и стандартные токены.
 5. Публичные экспорты для трёх способов использования и страница примеров, импортирующая только эти экспорты.
 
 **Проверить:** обычное действие; `disabled`; `loading`; `type="button"` внутри формы; явно заданный `submit`; работа мышью и клавиатурой; фокус во время загрузки; передача `aria-label`, обработчика, `className` и ref. Проверить, что импорт `logic` и `unstyled` не подключает стандартную тему.
