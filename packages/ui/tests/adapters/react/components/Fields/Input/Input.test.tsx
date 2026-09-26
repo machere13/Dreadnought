@@ -8,11 +8,12 @@ import { Input } from '@dreadnought/ui/react';
 
 afterEach(cleanup);
 
-it('keeps autofilled control text and background in the dark Input theme', () => {
+it('covers autofilled control without clipping its text background', () => {
   const css = postcss.parse(readFileSync(resolve('packages/ui/src/presentation/Fields/Input/Input.module.css'), 'utf8'));
   const layer = css.nodes.find((node) => node.type === 'atrule');
   const autofill = layer?.nodes?.find((node) => node.type === 'rule' && node.selector.includes('[data-slot="control"]:-webkit-autofill'));
-  expect(autofill?.nodes?.some((node) => node.type === 'decl' && node.prop === 'background-clip' && node.value === 'text')).toBe(true);
+  expect(autofill?.nodes?.some((node) => node.type === 'decl' && node.prop === 'background-clip')).toBe(false);
+  expect(autofill?.nodes?.some((node) => node.type === 'decl' && node.prop === 'box-shadow' && node.value === 'inset 0 0 0 100vmax var(--dreadnought-input-bg)')).toBe(true);
   expect(autofill?.nodes?.some((node) => node.type === 'decl' && node.prop === '-webkit-text-fill-color' && node.value === 'var(--dreadnought-input-text)')).toBe(true);
 });
 
