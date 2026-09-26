@@ -31,7 +31,7 @@
 1. `packages/core/src/components/Button/`: публичные типы и общие правила `disabled`/`loading`, не зависящие от React.
 2. `packages/adapters/react/src/Button/useButton.ts`: свойства и действия нативного `<button>`.
 3. `packages/adapters/react/src/Button/ButtonAdapter.tsx`: разметка, передача DOM-свойств и ref.
-4. `packages/adapters/react/src/Button/Button.tsx`, `packages/ui/src/Button/` и `packages/themes/src/default/`: готовый React-фасад, общее оформление и стандартные токены.
+4. Целевая структура: `packages/ui/src/react/Button/`, `packages/ui/src/Button/` и `packages/themes/src/default/` — готовый React-фасад третьего слоя, общее оформление и стандартные токены. Текущий `Button.tsx` ещё находится в React-пакете и подлежит переносу.
 5. Публичные экспорты для трёх способов использования и страница примеров, импортирующая только эти экспорты.
 
 **Проверить:** обычное действие; `disabled`; `loading`; `type="button"` внутри формы; явно заданный `submit`; работа мышью и клавиатурой; фокус во время загрузки; передача `aria-label`, обработчика, `className` и ref. Проверить, что импорт `logic` и `unstyled` не подключает стандартную тему.
