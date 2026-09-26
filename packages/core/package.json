@@ -2,6 +2,12 @@
   "name": "@dreadnought/core",
   "version": "0.1.0",
   "type": "module",
+  "imports": {
+    "#behaviors/*": {
+      "types": "./dist/behaviors/*.d.ts",
+      "default": "./dist/behaviors/*.js"
+    }
+  },
   "sideEffects": false,
   "files": ["dist"],
   "exports": {

@@ -1,4 +1,4 @@
-import type { TextFieldState, TextFieldStateOptions } from '../../../behaviors/getTextFieldState.ts';
+import type { TextFieldState, TextFieldStateOptions } from '#behaviors/getTextFieldState';
 
 export type InputCoreOptions = TextFieldStateOptions;
 
