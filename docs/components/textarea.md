@@ -3,7 +3,7 @@
 `TextArea` — готовое многострочное поле ввода с нативным поведением браузера.
 
 ```tsx
-import { TextArea } from '@dreadnought/ui';
+import { TextArea } from '@dreadnought/react/styled';
 
 <label htmlFor="notes">Заметки</label>
 <TextArea id="notes" name="notes" rows={4} />
@@ -22,4 +22,4 @@ import { TextArea } from '@dreadnought/ui';
 
 Для собственной разметки `useTextArea` возвращает `textAreaRef`: его нужно передать нативному элементу вместе с `textAreaProps`, чтобы работал `autoSize`. Динамическая высота задаётся React-слоем, а ограничения ручного изменения размера готового компонента — через его CSS Module.
 
-Внешний вид задаётся CSS Module и токенами `--dreadnought-text-area-*`. Их можно переопределить для темы или конкретного экземпляра через `className`.
+Внешний вид задаётся общим CSS из `@dreadnought/ui` и токенами `--dreadnought-text-area-*`. Их можно переопределить для темы или конкретного экземпляра через `className`. Другой веб-адаптер может использовать `textAreaPresentation` из `@dreadnought/ui` при соблюдении того же DOM-контракта.

@@ -2,14 +2,15 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-const artifact = (name) => readFileSync(fileURLToPath(new URL(`../../dist/${name}`, import.meta.url)), 'utf8');
+const artifact = (name) => readFileSync(fileURLToPath(new URL(`../dist/${name}`, import.meta.url)), 'utf8');
 const js = artifact('index.js');
 const css = artifact('style.css');
 const types = artifact('index.d.ts');
 
-assert.match(js, /import\s+['"]\.\/style\.css['"]/);
-assert.doesNotMatch(js, /\bReact\.createElement\b/);
-assert.match(js, /react\/jsx-runtime/);
+assert.doesNotMatch(js, /(?:react|jsx-runtime|style\.css)/i);
+assert.match(js, /buttonPresentation/);
+assert.match(js, /inputPresentation/);
+assert.match(js, /textAreaPresentation/);
 assert.match(css, /--dreadnought-button-primary-bg/);
 assert.match(css, /--dreadnought-input-border-invalid/);
 assert.match(css, /--dreadnought-text-area-text/);
@@ -25,6 +26,12 @@ assert.match(css, /width:var\(--dreadnought-button-icon-size\)/);
 assert.match(css, /--dreadnought-button-spinner-timing/);
 assert.match(css, /--dreadnought-button-spinner-iteration-count/);
 assert.match(css, /--dreadnought-button-spinner-rotation/);
-assert.match(types, /Button/);
-assert.match(types, /Input/);
-assert.match(types, /TextArea/);
+assert.match(artifact('Button/buttonPresentation.d.ts'), /buttonPresentation/);
+assert.match(artifact('Input/inputPresentation.d.ts'), /inputPresentation/);
+assert.match(artifact('TextArea/textAreaPresentation.d.ts'), /textAreaPresentation/);
+assert.doesNotMatch(types, /React|ButtonProps|InputProps|TextAreaProps/);
+
+const presentation = await import('../dist/index.js');
+for (const name of ['buttonPresentation', 'inputPresentation', 'textAreaPresentation']) {
+  assert.ok(presentation[name]?.root, `${name} must be exported from the built package`);
+}

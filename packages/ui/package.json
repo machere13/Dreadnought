@@ -12,13 +12,7 @@
     "./style.css": "./dist/style.css"
   },
   "scripts": {
-    "build": "vite build && tsc -p tsconfig.build.json --emitDeclarationOnly && node tests/Button/verifyBuild.mjs",
+    "build": "vite build && tsc -p tsconfig.build.json --emitDeclarationOnly && node tests/verifyBuild.mjs",
     "typecheck": "tsc -p tsconfig.build.json --noEmit"
-  },
-  "dependencies": {
-    "@dreadnought/react": "workspace:*"
-  },
-  "peerDependencies": {
-    "react": "^19.0.0"
   }
 }

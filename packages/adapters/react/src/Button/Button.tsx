@@ -1,13 +1,13 @@
-import { ButtonAdapter } from '@dreadnought/react/unstyled';
-import type { ButtonAdapterProps } from '@dreadnought/react/unstyled';
-import styles from './Button.module.css';
+import { buttonPresentation } from '@dreadnought/ui';
+import { ButtonAdapter } from './ButtonAdapter.js';
+import type { ButtonAdapterProps } from './ButtonAdapter.js';
 
 export type ButtonProps = ButtonAdapterProps & {
   variant?: 'primary' | 'secondary';
 };
 
 export function Button({ variant = 'primary', className, ...props }: ButtonProps) {
-  const classes = ['dreadnought-text-button', styles.button, styles[variant], className]
+  const classes = [buttonPresentation.root, buttonPresentation.variants[variant], className]
     .filter(Boolean)
     .join(' ');
 

@@ -3,13 +3,13 @@
 Первый компонент Dreadnought. Его три уровня можно использовать независимо.
 
 ```tsx
-import { Button } from '@dreadnought/ui';
+import { Button } from '@dreadnought/react/styled';
 import { ButtonAdapter } from '@dreadnought/react/unstyled';
 import { useButton } from '@dreadnought/react/logic';
 import '@dreadnought/themes/default.css';
 ```
 
-`Button` — готовый компонент с вариантами `primary` и `secondary`. Он сам подключает локальный CSS Module, но значения стандартной темы и глобальные шрифтовые классы подключаются отдельно через `@dreadnought/themes/default.css`.
+`Button` — готовый React-компонент с вариантами `primary` и `secondary`. Импорт `@dreadnought/react/styled` подключает общий CSS оформления из `@dreadnought/ui`; значения стандартной темы и шрифтовые классы подключаются отдельно через `@dreadnought/themes/default.css`. Пакет `@dreadnought/ui` также экспортирует `buttonPresentation` — карту классов для другого веб-адаптера, реализующего тот же DOM-контракт.
 
 Внешний вид меняется токенами на контейнере, без переопределения CSS-классов компонента:
 
@@ -29,6 +29,6 @@ import '@dreadnought/themes/default.css';
 
 Поддерживаются стандартные свойства соответствующего элемента, `disabled` и `loading`. У кнопки по умолчанию используется `type="button"`; явный `disabled` включает нативный атрибут. При `loading` действие блокируется, но элемент остаётся в фокусе; выставляются `aria-disabled` и `aria-busy`. У ссылки в состояниях `disabled` и `loading` временно убирается `href`, чтобы заблокировать навигацию; отключённая ссылка исключается из порядка Tab. Состоянием асинхронной операции управляет вызывающий код.
 
-Тип `ref` зависит от `href`: без него это `HTMLButtonElement`, с ним — `HTMLAnchorElement`. Пакеты React-адаптера и готового компонента рассчитаны на React 19.
+Тип `ref` зависит от `href`: без него это `HTMLButtonElement`, с ним — `HTMLAnchorElement`. Готовый React-компонент рассчитан на React 19; CSS и карта классов из `@dreadnought/ui` от React не зависят.
 
 Доступное имя задаётся текстом или `aria-label`/`aria-labelledby`. Произвольный `as` и поведение переключателя `aria-pressed` не поддерживаются.

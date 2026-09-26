@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
-import { Input } from '../../src/Input/Input.js';
+import { Input } from '../../src/styled.js';
 
 afterEach(cleanup);
 

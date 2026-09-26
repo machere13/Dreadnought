@@ -9,15 +9,5 @@ export default defineConfig({
       fileName: 'index',
       cssFileName: 'style',
     },
-    rollupOptions: {
-      external: ['react', 'react/jsx-runtime', '@dreadnought/react/unstyled'],
-    },
   },
-  plugins: [{
-    name: 'dreadnought-ui-css-import',
-    renderChunk(code, chunk) {
-      if (chunk.isEntry) return `import './style.css';\n${code}`;
-      return null;
-    },
-  }],
 });

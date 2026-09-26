@@ -1,10 +1,10 @@
-import { TextAreaAdapter } from '@dreadnought/react/unstyled';
+import { textAreaPresentation } from '@dreadnought/ui';
 import type { ComponentPropsWithRef } from 'react';
-import styles from './TextArea.module.css';
+import { TextAreaAdapter } from './TextAreaAdapter.js';
 
 export type TextAreaProps = ComponentPropsWithRef<typeof TextAreaAdapter>;
 
 export function TextArea({ className, ...props }: TextAreaProps) {
-  const classes = ['dreadnought-text-text-area', styles.textArea, className].filter(Boolean).join(' ');
+  const classes = [textAreaPresentation.root, className].filter(Boolean).join(' ');
   return <TextAreaAdapter {...props} className={classes} />;
 }
