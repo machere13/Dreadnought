@@ -3,7 +3,7 @@
 `TextArea` — готовое многострочное поле ввода с нативным поведением браузера.
 
 ```tsx
-import { TextArea } from '@dreadnought/react/styled';
+import { TextArea } from '@dreadnought/ui/react';
 
 <label htmlFor="notes">Заметки</label>
 <TextArea id="notes" name="notes" rows={4} />

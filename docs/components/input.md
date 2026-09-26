@@ -3,7 +3,7 @@
 `Input` — готовое однострочное текстовое поле. Поддерживаются `text` (по умолчанию), `email`, `password`, `search`, `tel` и `url`. Для других типов нужны отдельные контракты.
 
 ```tsx
-import { Input } from '@dreadnought/react/styled';
+import { Input } from '@dreadnought/ui/react';
 
 <label htmlFor="email">Электронная почта</label>
 <Input id="email" type="email" name="email" required />
