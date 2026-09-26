@@ -25,9 +25,11 @@ assert.match(reactJs, /import ['"]@dreadnought\/themes\/default\.css['"]/);
 assert.match(js, /buttonPresentation/);
 assert.match(js, /inputPresentation/);
 assert.match(js, /textAreaPresentation/);
+assert.match(js, /badgePresentation/);
 assert.match(css, /--dreadnought-button-primary-bg/);
 assert.match(css, /--dreadnought-input-border-invalid/);
 assert.match(css, /--dreadnought-text-area-text/);
+assert.match(css, /--dreadnought-badge-solid-bg/);
 assert.match(css, /--dreadnought-input-bg/);
 assert.match(css, /--dreadnought-text-area-bg/);
 assert.match(css, /min-height:calc\(var\(--dreadnought-text-area-min-rows\)/);
@@ -43,13 +45,14 @@ assert.match(css, /--dreadnought-button-spinner-rotation/);
 assert.match(artifact('presentation/Controls/Button/buttonPresentation.d.ts'), /buttonPresentation/);
 assert.match(artifact('presentation/Fields/Input/inputPresentation.d.ts'), /inputPresentation/);
 assert.match(artifact('presentation/Fields/TextArea/textAreaPresentation.d.ts'), /textAreaPresentation/);
-assert.doesNotMatch(types, /React|ButtonProps|InputProps|TextAreaProps/);
+assert.match(artifact('presentation/DataDisplay/Badge/badgePresentation.d.ts'), /badgePresentation/);
+assert.doesNotMatch(types, /React|ButtonProps|InputProps|TextAreaProps|BadgeProps/);
 assert.match(reactTypes, /components\/index\.ts/);
 
 const presentation = await import('../dist/index.js');
-for (const name of ['buttonPresentation', 'inputPresentation', 'textAreaPresentation']) {
+for (const name of ['buttonPresentation', 'inputPresentation', 'textAreaPresentation', 'badgePresentation']) {
   assert.ok(presentation[name]?.root, `${name} must be exported from the built package`);
 }
-for (const name of ['Button', 'Input', 'TextArea']) {
+for (const name of ['Button', 'Input', 'TextArea', 'Badge']) {
   assert.equal(name in presentation, false, `${name} must only be exported by the React entrypoint`);
 }

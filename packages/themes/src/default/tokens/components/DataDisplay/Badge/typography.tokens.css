@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-font-size-badge: var(--dreadnought-font-size-label-2);
+  --dreadnought-font-weight-badge: var(--dreadnought-font-weight-label-2);
+  --dreadnought-line-height-badge: var(--dreadnought-line-height-label-2);
+  --dreadnought-font-letter-spacing-badge: normal;
+  --dreadnought-font-style-badge: normal;
+  --dreadnought-font-text-transform-badge: none;
+}

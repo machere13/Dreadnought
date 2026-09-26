@@ -1,0 +1,11 @@
+@layer dreadnought {
+  .dreadnought-text-badge {
+    font-family: var(--dreadnought-font-family-ui);
+    font-size: var(--dreadnought-font-size-badge);
+    font-weight: var(--dreadnought-font-weight-badge);
+    line-height: var(--dreadnought-line-height-badge);
+    letter-spacing: var(--dreadnought-font-letter-spacing-badge);
+    font-style: var(--dreadnought-font-style-badge);
+    text-transform: var(--dreadnought-font-text-transform-badge);
+  }
+}

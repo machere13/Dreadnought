@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-badge-icon-size: var(--dreadnought-size-inline-graphic);
+  --dreadnought-badge-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-badge-solid-border-width: var(--dreadnought-border-width-x1);
+  --dreadnought-badge-outline-border-width: var(--dreadnought-border-width-x2);
+}

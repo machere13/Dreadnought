@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-badge-padding-block: var(--dreadnought-spacing-x1);
+  --dreadnought-badge-padding-inline: var(--dreadnought-spacing-x2);
+  --dreadnought-badge-gap: var(--dreadnought-spacing-x1);
+  --dreadnought-badge-overlay-offset: var(--dreadnought-spacing-x2);
+}
