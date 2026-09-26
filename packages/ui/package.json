@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@dreadnought/react": "workspace:*",
+    "postcss": "8.5.28",
     "react": "^19.0.0"
   }
 }

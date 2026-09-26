@@ -79,6 +79,9 @@ importers:
       '@dreadnought/react':
         specifier: workspace:*
         version: link:../adapters/react
+      postcss:
+        specifier: 8.5.28
+        version: 8.5.28
       react:
         specifier: ^19.0.0
         version: 19.3.0

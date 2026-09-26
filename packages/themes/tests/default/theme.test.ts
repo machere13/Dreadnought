@@ -5,6 +5,13 @@ import { describe, expect, it } from 'vitest';
 const css = (file: string) => readFileSync(resolve('packages/themes/src/default', file), 'utf8');
 
 describe('default theme', () => {
+  it('keeps typography in the library layer and token defaults outside it', () => {
+    for (const component of ['Button', 'Input', 'TextArea']) {
+      expect(css(`components/${component}/typography.css`).trimStart()).toMatch(/^@layer dreadnought\s*\{/);
+      expect(css(`tokens/components/${component}/colors.tokens.css`).trimStart()).toMatch(/^:root\s*\{/);
+    }
+  });
+
   it('defines palette colors in RGB with explicit percentage alpha', () => {
     const colors = css('tokens/global/colors.tokens.css');
     const declarations = [...colors.matchAll(/--dreadnought-color-[\w-]+:\s*([^;]+);/g)];

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import postcss from 'postcss';
 
 const artifact = (name) => readFileSync(fileURLToPath(new URL(`../dist/${name}`, import.meta.url)), 'utf8');
 const js = artifact('index.js');
@@ -8,6 +9,15 @@ const reactJs = artifact('react.js');
 const css = artifact('style.css');
 const types = artifact('index.d.ts');
 const reactTypes = artifact('adapters/react/index.d.ts');
+
+const styleRules = postcss.parse(css).nodes;
+assert.ok(styleRules.length > 0, 'UI CSS must contain component rules');
+assert.doesNotMatch(css, /!important/, 'component styles must not depend on !important');
+for (const rule of styleRules) {
+  assert.equal(rule.type, 'atrule', 'component CSS must not have unlayered top-level rules');
+  assert.equal(rule.name, 'layer');
+  assert.equal(rule.params, 'dreadnought');
+}
 
 assert.doesNotMatch(js, /(?:react|jsx-runtime|style\.css)/i);
 assert.match(reactJs, /import ['"]\.\/style\.css['"]/);

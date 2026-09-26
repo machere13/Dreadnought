@@ -1,9 +1,11 @@
-.dreadnought-text-text-area {
-  font-family: var(--dreadnought-font-family-ui);
-  font-size: var(--dreadnought-font-size-text-area);
-  font-weight: var(--dreadnought-font-weight-text-area);
-  line-height: var(--dreadnought-line-height-text-area);
-  letter-spacing: var(--dreadnought-font-letter-spacing-text-area);
-  font-style: var(--dreadnought-font-style-text-area);
-  text-transform: var(--dreadnought-font-text-transform-text-area);
+@layer dreadnought {
+  .dreadnought-text-text-area {
+    font-family: var(--dreadnought-font-family-ui);
+    font-size: var(--dreadnought-font-size-text-area);
+    font-weight: var(--dreadnought-font-weight-text-area);
+    line-height: var(--dreadnought-line-height-text-area);
+    letter-spacing: var(--dreadnought-font-letter-spacing-text-area);
+    font-style: var(--dreadnought-font-style-text-area);
+    text-transform: var(--dreadnought-font-text-transform-text-area);
+  }
 }
