@@ -5,6 +5,12 @@ const meta = {
   title: 'DataDisplay/Badge',
   component: Badge,
   args: { children: 'Beta' },
+  argTypes: {
+    appearance: { control: 'select', options: ['solid', 'outline', 'ghosted'] },
+    iconPosition: { control: 'select', options: ['start', 'end'] },
+    icon: { control: false },
+    target: { control: false },
+  },
 } satisfies Meta<typeof Badge>;
 
 export default meta;

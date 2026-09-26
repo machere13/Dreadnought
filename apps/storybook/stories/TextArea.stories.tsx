@@ -5,6 +5,16 @@ const meta = {
   title: 'Fields/TextArea',
   component: TextArea,
   args: { rows: 4, placeholder: 'Введите текст' },
+  argTypes: {
+    rows: { control: { type: 'number', min: 1, step: 1 } },
+    minRows: { control: { type: 'number', min: 1, step: 1 } },
+    maxRows: { control: { type: 'number', min: 1, step: 1 } },
+    autoSize: { control: 'boolean' },
+    disabled: { control: 'boolean' },
+    readOnly: { control: 'boolean' },
+    required: { control: 'boolean' },
+    invalid: { control: 'boolean' },
+  },
 } satisfies Meta<typeof TextArea>;
 
 export default meta;

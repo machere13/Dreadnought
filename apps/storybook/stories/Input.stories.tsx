@@ -5,6 +5,14 @@ const meta = {
   title: 'Fields/Input',
   component: Input,
   args: { placeholder: 'Введите текст' },
+  argTypes: {
+    type: { control: 'select', options: ['text', 'email', 'password', 'search', 'tel', 'url'] },
+    disabled: { control: 'boolean' },
+    readOnly: { control: 'boolean' },
+    required: { control: 'boolean' },
+    invalid: { control: 'boolean' },
+    passwordVisibilityLabels: { control: 'object' },
+  },
 } satisfies Meta<typeof Input>;
 
 export default meta;

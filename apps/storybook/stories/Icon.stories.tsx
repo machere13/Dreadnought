@@ -1,7 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Icon } from '@dreadnought/ui/react';
 
-const meta = { title: 'DataDisplay/Icon', component: Icon, args: { name: 'eye', 'aria-label': 'Показать' } } satisfies Meta<typeof Icon>;
+const meta = {
+  title: 'DataDisplay/Icon',
+  component: Icon,
+  args: { name: 'eye', 'aria-label': 'Показать' },
+  argTypes: { name: { control: 'select', options: ['eye', 'eye-off', 'search', 'check', 'close'] } },
+} satisfies Meta<typeof Icon>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

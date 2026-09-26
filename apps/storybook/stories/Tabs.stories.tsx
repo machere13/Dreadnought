@@ -4,13 +4,19 @@ import { Tabs } from '@dreadnought/ui/react';
 
 const meta = {
   title: 'Navigation/Tabs',
-} satisfies Meta;
+  component: Tabs,
+  args: { defaultValue: 'ready', children: null },
+  argTypes: {
+    defaultValue: { control: 'select', options: ['ready', 'adapter', 'core'] },
+    children: { table: { disable: true } },
+  },
+} satisfies Meta<typeof Tabs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Layers: Story = {
-  render: () => <Tabs defaultValue="ready">
+  render: (args) => <Tabs key={args.defaultValue} {...args}>
     <Tabs.List aria-label="Уровень библиотеки">
       <Tabs.Tab value="ready">Компонент</Tabs.Tab>
       <Tabs.Tab value="adapter">Адаптер</Tabs.Tab>
@@ -23,7 +29,9 @@ export const Layers: Story = {
 };
 
 export const Disabled: Story = {
-  render: () => <Tabs defaultValue="first">
+  args: { defaultValue: 'first' },
+  argTypes: { defaultValue: { control: 'select', options: ['first', 'third'] } },
+  render: (args) => <Tabs key={args.defaultValue} {...args}>
     <Tabs.List aria-label="Разделы">
       <Tabs.Tab value="first">Доступен</Tabs.Tab>
       <Tabs.Tab value="second" disabled>Недоступен</Tabs.Tab>
@@ -47,15 +55,7 @@ function ControlledExample() {
   </Tabs>;
 }
 
-export const Controlled: Story = { render: () => <ControlledExample /> };
-
-export const TwoTabs: Story = {
-  render: () => <Tabs defaultValue="first">
-    <Tabs.List aria-label="Два раздела">
-      <Tabs.Tab value="first">Обзор</Tabs.Tab>
-      <Tabs.Tab value="second">Детали</Tabs.Tab>
-    </Tabs.List>
-    <Tabs.Panel value="first">Обзор компонента.</Tabs.Panel>
-    <Tabs.Panel value="second">Подробности компонента.</Tabs.Panel>
-  </Tabs>,
+export const Controlled: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => <ControlledExample />,
 };
