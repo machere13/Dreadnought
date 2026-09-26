@@ -37,6 +37,10 @@
     color: var(--dreadnought-text-area-placeholder-text);
   }
 
+  .textArea:focus-visible {
+    outline: none;
+  }
+
   .textArea:focus-visible:not([aria-invalid="true"]) {
     border-color: var(--dreadnought-text-area-border-focus);
   }

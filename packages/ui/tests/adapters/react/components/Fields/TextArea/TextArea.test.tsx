@@ -9,12 +9,11 @@ afterEach(cleanup);
 
 it('focuses with one border and keeps the error border while focused', () => {
   const css = postcss.parse(readFileSync(resolve('packages/ui/src/presentation/Fields/TextArea/TextArea.module.css'), 'utf8'));
-  const focus = css.nodes.flatMap((node) => node.type === 'atrule' ? node.nodes ?? [] : [])
-    .find((node) => node.type === 'rule' && node.selector.includes(':focus-visible'));
-  const declarations = focus?.nodes.filter((node) => node.type === 'decl') ?? [];
-  expect(declarations.some((node) => node.prop === 'border-color')).toBe(true);
-  expect(declarations.some((node) => node.prop === 'outline')).toBe(false);
-  expect(focus?.selector).toContain(':not([aria-invalid="true"])');
+  const focusRules = css.nodes.flatMap((node) => node.type === 'atrule' ? node.nodes ?? [] : [])
+    .filter((node) => node.type === 'rule' && node.selector.includes(':focus-visible'));
+  expect(focusRules.some((rule) => rule.nodes.some((node) => node.type === 'decl' && node.prop === 'outline' && node.value === 'none'))).toBe(true);
+  const normalFocus = focusRules.find((rule) => rule.selector.includes(':not([aria-invalid="true"])'));
+  expect(normalFocus?.nodes.some((node) => node.type === 'decl' && node.prop === 'border-color')).toBe(true);
 });
 
 it('adds local styling without changing adapter semantics', () => {

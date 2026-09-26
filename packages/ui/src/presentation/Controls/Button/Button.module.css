@@ -78,6 +78,11 @@
     outline-offset: var(--dreadnought-button-focus-offset);
   }
 
+  .primary:focus-visible {
+    box-shadow: 0 0 0 var(--dreadnought-button-primary-focus-halo-width)
+      var(--dreadnought-button-primary-focus-halo-color);
+  }
+
   .button:is(:disabled, [aria-disabled="true"]) {
     opacity: var(--dreadnought-button-disabled-opacity);
     cursor: var(--dreadnought-button-disabled-cursor);

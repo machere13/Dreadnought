@@ -6,7 +6,8 @@
   --dreadnought-button-secondary-fg: var(--dreadnought-color-text-on-action-secondary);
   --dreadnought-button-secondary-bg-hover: var(--dreadnought-color-action-secondary-hover);
   --dreadnought-button-primary-border-color: var(--dreadnought-color-border-default);
-  --dreadnought-button-primary-focus-ring: var(--dreadnought-color-text-inverse);
+  --dreadnought-button-primary-focus-ring: var(--dreadnought-color-surface-inverse);
+  --dreadnought-button-primary-focus-halo-color: var(--dreadnought-color-text-inverse);
   --dreadnought-button-secondary-border-color: var(--dreadnought-color-border-default);
   --dreadnought-button-outlined-bg: transparent;
   --dreadnought-button-outlined-fg: var(--dreadnought-color-text-primary);

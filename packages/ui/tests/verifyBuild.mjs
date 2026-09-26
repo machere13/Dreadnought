@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import postcss from 'postcss';
 
@@ -48,6 +49,13 @@ assert.match(artifact('presentation/Fields/TextArea/textAreaPresentation.d.ts'),
 assert.match(artifact('presentation/DataDisplay/Badge/badgePresentation.d.ts'), /badgePresentation/);
 assert.doesNotMatch(types, /React|ButtonProps|InputProps|TextAreaProps|BadgeProps/);
 assert.match(reactTypes, /components\/index\.ts/);
+
+const iconDeclarationPath = fileURLToPath(new URL('../dist/adapters/react/components/DataDisplay/Icon/Icon.d.ts', import.meta.url));
+const iconDeclaration = readFileSync(iconDeclarationPath, 'utf8');
+const iconNameImport = iconDeclaration.match(/from ['"]([^'"]*iconNames\.ts)['"]/);
+assert.ok(iconNameImport, 'IconProps must refer to a published IconName declaration');
+assert.ok(iconNameImport[1].startsWith('.'), 'IconProps must not refer to the unpublished source alias');
+assert.ok(existsSync(resolve(dirname(iconDeclarationPath), iconNameImport[1].replace(/\.ts$/, '.d.ts'))), 'IconName declaration must ship in dist');
 
 const presentation = await import('../dist/index.js');
 for (const name of ['buttonPresentation', 'inputPresentation', 'textAreaPresentation', 'badgePresentation']) {

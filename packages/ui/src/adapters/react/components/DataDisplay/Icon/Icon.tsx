@@ -3,7 +3,7 @@ import { IconAdapter } from '@dreadnought/react/unstyled';
 import type { IconAdapterProps } from '@dreadnought/react/unstyled';
 import type { ComponentType } from 'react';
 import { iconPresentation } from '#presentation/DataDisplay/Icon/iconPresentation.ts';
-import type { IconName } from '#presentation/DataDisplay/Icon/iconNames.ts';
+import type { IconName } from '../../../../../presentation/DataDisplay/Icon/iconNames.ts';
 
 const icons = {
   eye: EyeOutlined,
