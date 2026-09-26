@@ -1,4 +1,4 @@
-export { TextAreaAdapter } from './TextAreaAdapter.js';
-export type { TextAreaAdapterProps } from './TextAreaAdapter.js';
-export { useTextArea } from './useTextArea.js';
-export type { UseTextAreaOptions } from './useTextArea.js';
+export { TextAreaAdapter } from './TextAreaAdapter.tsx';
+export type { TextAreaAdapterProps } from './TextAreaAdapter.tsx';
+export { useTextArea } from './useTextArea.ts';
+export type { UseTextAreaOptions } from './useTextArea.ts';

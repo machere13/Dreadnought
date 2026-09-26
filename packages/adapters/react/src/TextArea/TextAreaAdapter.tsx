@@ -1,6 +1,6 @@
 import { forwardRef, useCallback } from 'react';
-import { useTextArea } from './useTextArea.js';
-import type { UseTextAreaOptions } from './useTextArea.js';
+import { useTextArea } from './useTextArea.ts';
+import type { UseTextAreaOptions } from './useTextArea.ts';
 
 export type TextAreaAdapterProps = UseTextAreaOptions;
 

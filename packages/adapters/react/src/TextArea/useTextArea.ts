@@ -2,7 +2,7 @@ import { getTextAreaState } from '@dreadnought/core';
 import type { TextAreaCore } from '@dreadnought/core';
 import { useCallback, useLayoutEffect, useRef } from 'react';
 import type { InputEvent, RefCallback, TextareaHTMLAttributes } from 'react';
-import { resizeTextArea } from './resizeTextArea.js';
+import { resizeTextArea } from './resizeTextArea.ts';
 
 export interface UseTextAreaOptions extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   invalid?: boolean;

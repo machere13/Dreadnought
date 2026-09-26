@@ -1,1 +1,1 @@
-export { textAreaPresentation } from './textAreaPresentation.js';
+export { textAreaPresentation } from './textAreaPresentation.ts';

@@ -1,1 +1,1 @@
-export { inputPresentation } from './inputPresentation.js';
+export { inputPresentation } from './inputPresentation.ts';

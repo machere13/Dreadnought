@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
-import { useTextArea } from '../../src/TextArea/useTextArea.js';
+import { useTextArea } from '../../src/TextArea/useTextArea.ts';
 
 afterEach(cleanup);
 

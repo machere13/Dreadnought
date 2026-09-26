@@ -1,4 +1,4 @@
-export { InputAdapter } from './InputAdapter.js';
-export type { InputAdapterProps } from './InputAdapter.js';
-export { useInput } from './useInput.js';
-export type { UseInputOptions, TextInputType } from './useInput.js';
+export { InputAdapter } from './InputAdapter.tsx';
+export type { InputAdapterProps } from './InputAdapter.tsx';
+export { useInput } from './useInput.ts';
+export type { UseInputOptions, TextInputType } from './useInput.ts';

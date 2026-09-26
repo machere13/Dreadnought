@@ -1,5 +1,5 @@
-import type { InputCore, InputCoreOptions } from './InputCore.js';
-import { getTextFieldState } from '../../behaviors/getTextFieldState.js';
+import type { InputCore, InputCoreOptions } from './InputCore.ts';
+import { getTextFieldState } from '../../behaviors/getTextFieldState.ts';
 
 export function getInputState(options: InputCoreOptions): InputCore {
   return getTextFieldState(options);

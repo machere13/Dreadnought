@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { readClipboard } from '../../src/actions/readClipboard.js';
+import { readClipboard } from '../../src/actions/readClipboard.ts';
 
 afterEach(() => vi.unstubAllGlobals());
 

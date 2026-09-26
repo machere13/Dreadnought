@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { pickFiles } from '../../src/actions/pickFiles.js';
+import { pickFiles } from '../../src/actions/pickFiles.ts';
 
 afterEach(() => vi.restoreAllMocks());
 

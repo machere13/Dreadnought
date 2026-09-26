@@ -1,6 +1,6 @@
-export { ButtonAdapter } from './Button/ButtonAdapter.js';
-export type { ButtonAdapterProps } from './Button/ButtonAdapter.js';
-export { InputAdapter } from './Input/InputAdapter.js';
-export type { InputAdapterProps } from './Input/InputAdapter.js';
-export { TextAreaAdapter } from './TextArea/TextAreaAdapter.js';
-export type { TextAreaAdapterProps } from './TextArea/TextAreaAdapter.js';
+export { ButtonAdapter } from './Button/ButtonAdapter.tsx';
+export type { ButtonAdapterProps } from './Button/ButtonAdapter.tsx';
+export { InputAdapter } from './Input/InputAdapter.tsx';
+export type { InputAdapterProps } from './Input/InputAdapter.tsx';
+export { TextAreaAdapter } from './TextArea/TextAreaAdapter.tsx';
+export type { TextAreaAdapterProps } from './TextArea/TextAreaAdapter.tsx';

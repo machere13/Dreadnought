@@ -1,2 +1,2 @@
-export { getTextFieldState } from './getTextFieldState.js';
-export type { TextFieldState, TextFieldStateOptions } from './getTextFieldState.js';
+export { getTextFieldState } from './getTextFieldState.ts';
+export type { TextFieldState, TextFieldStateOptions } from './getTextFieldState.ts';

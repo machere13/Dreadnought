@@ -1,1 +1,1 @@
-export * from './presentation/index.js';
+export * from './presentation/index.ts';

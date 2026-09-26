@@ -1,5 +1,5 @@
-import { getTextFieldState } from '../../behaviors/getTextFieldState.js';
-import type { TextAreaCore, TextAreaCoreOptions } from './TextAreaCore.js';
+import { getTextFieldState } from '../../behaviors/getTextFieldState.ts';
+import type { TextAreaCore, TextAreaCoreOptions } from './TextAreaCore.ts';
 
 export function getTextAreaState({
   rows = 2,

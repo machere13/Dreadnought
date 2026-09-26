@@ -1,8 +1,8 @@
 import { forwardRef } from 'react';
-import { useButton } from './useButton.js';
-import type { UseButtonOptions } from './useButton.js';
-import { renderButtonContent } from './renderButtonContent.js';
-import type { ButtonContentProps } from './renderButtonContent.js';
+import { useButton } from './useButton.ts';
+import type { UseButtonOptions } from './useButton.ts';
+import { renderButtonContent } from './renderButtonContent.tsx';
+import type { ButtonContentProps } from './renderButtonContent.tsx';
 
 export type ButtonActionAdapterProps = UseButtonOptions & ButtonContentProps;
 

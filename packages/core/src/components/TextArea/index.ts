@@ -1,2 +1,2 @@
-export { getTextAreaState } from './getTextAreaState.js';
-export type { TextAreaCore, TextAreaCoreOptions } from './TextAreaCore.js';
+export { getTextAreaState } from './getTextAreaState.ts';
+export type { TextAreaCore, TextAreaCoreOptions } from './TextAreaCore.ts';

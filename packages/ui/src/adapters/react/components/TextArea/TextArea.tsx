@@ -1,4 +1,4 @@
-import { textAreaPresentation } from '#presentation/TextArea/textAreaPresentation.js';
+import { textAreaPresentation } from '#presentation/TextArea/textAreaPresentation.ts';
 import type { ComponentPropsWithRef } from 'react';
 import { TextAreaAdapter } from '@dreadnought/react/unstyled';
 

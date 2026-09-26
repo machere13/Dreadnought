@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { download } from '../../src/actions/download.js';
+import { download } from '../../src/actions/download.ts';
 
 afterEach(() => {
   vi.useRealTimers();

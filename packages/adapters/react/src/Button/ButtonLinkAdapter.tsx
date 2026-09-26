@@ -1,8 +1,8 @@
 import { forwardRef } from 'react';
 import type { AnchorHTMLAttributes, MouseEvent } from 'react';
 import { getButtonState } from '@dreadnought/core';
-import { renderButtonContent } from './renderButtonContent.js';
-import type { ButtonContentProps } from './renderButtonContent.js';
+import { renderButtonContent } from './renderButtonContent.tsx';
+import type { ButtonContentProps } from './renderButtonContent.tsx';
 
 export type ButtonLinkAdapterProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'type'>
   & ButtonContentProps

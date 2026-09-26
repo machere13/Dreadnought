@@ -1,4 +1,4 @@
-export { ButtonAdapter } from './ButtonAdapter.js';
-export type { ButtonAdapterProps } from './ButtonAdapter.js';
-export { useButton } from './useButton.js';
-export type { UseButtonOptions } from './useButton.js';
+export { ButtonAdapter } from './ButtonAdapter.tsx';
+export type { ButtonAdapterProps } from './ButtonAdapter.tsx';
+export { useButton } from './useButton.ts';
+export type { UseButtonOptions } from './useButton.ts';

@@ -1,3 +1,3 @@
-export * from './Button/index.js';
-export * from './Input/index.js';
-export * from './TextArea/index.js';
+export * from './Button/index.ts';
+export * from './Input/index.ts';
+export * from './TextArea/index.ts';

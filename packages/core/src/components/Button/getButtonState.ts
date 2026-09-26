@@ -1,4 +1,4 @@
-import type { ButtonCore, ButtonCoreOptions } from './ButtonCore.js';
+import type { ButtonCore, ButtonCoreOptions } from './ButtonCore.ts';
 
 export function getButtonState({ disabled = false, loading = false }: ButtonCoreOptions): ButtonCore {
   return {

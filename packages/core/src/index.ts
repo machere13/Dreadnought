@@ -1,3 +1,3 @@
-export * from './actions/index.js';
-export * from './behaviors/index.js';
-export * from './components/index.js';
+export * from './actions/index.ts';
+export * from './behaviors/index.ts';
+export * from './components/index.ts';

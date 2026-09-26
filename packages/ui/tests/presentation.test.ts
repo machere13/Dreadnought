@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import * as ui from '../src/index.js';
+import * as ui from '../src/index.ts';
 
 describe('framework-neutral presentation', () => {
   it('does not export React components', () => {

@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
-import { useInput } from './useInput.js';
-import type { UseInputOptions } from './useInput.js';
+import { useInput } from './useInput.ts';
+import type { UseInputOptions } from './useInput.ts';
 
 export type InputAdapterProps = UseInputOptions;
 

@@ -5,8 +5,11 @@
   },
   "include": [
     "packages/adapters/react/tests/Button/ButtonAdapter.types.tsx",
-    "packages/ui/tests/react/Button/Button.types.tsx",
-    "packages/ui/tests/react/Input/Input.types.tsx",
-    "packages/ui/tests/react/TextArea/TextArea.types.tsx"
+    "packages/adapters/react/tests/Input/InputAdapter.types.tsx",
+    "packages/adapters/react/tests/TextArea/TextAreaAdapter.types.tsx",
+    "packages/ui/tests/adapters/react/components/Button/Button.types.tsx",
+    "packages/ui/tests/adapters/react/components/Input/Input.types.tsx",
+    "packages/ui/tests/adapters/react/components/TextArea/TextArea.types.tsx",
+    "packages/ui/tests/publicImports.types.ts"
   ]
 }

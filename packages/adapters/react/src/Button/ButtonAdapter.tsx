@@ -1,8 +1,8 @@
 import type { Ref } from 'react';
-import { ButtonActionAdapter } from './ButtonActionAdapter.js';
-import type { ButtonActionAdapterProps } from './ButtonActionAdapter.js';
-import { ButtonLinkAdapter } from './ButtonLinkAdapter.js';
-import type { ButtonLinkAdapterProps } from './ButtonLinkAdapter.js';
+import { ButtonActionAdapter } from './ButtonActionAdapter.tsx';
+import type { ButtonActionAdapterProps } from './ButtonActionAdapter.tsx';
+import { ButtonLinkAdapter } from './ButtonLinkAdapter.tsx';
+import type { ButtonLinkAdapterProps } from './ButtonLinkAdapter.tsx';
 
 export type ButtonAdapterProps =
   | (ButtonActionAdapterProps & { href?: undefined; ref?: Ref<HTMLButtonElement> })
