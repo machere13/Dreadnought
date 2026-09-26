@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { useState } from 'react';
-import { Button, Input, TextArea } from '@dreadnought/ui/react';
+import { Badge, Button, Input, TextArea } from '@dreadnought/ui/react';
 import { ButtonAdapter } from '@dreadnought/react/unstyled';
 import { useButton } from '@dreadnought/react/logic';
 import './page.css';
@@ -11,7 +11,7 @@ function App() {
 
   return (
     <main>
-      <h1>Dreadnought: Button, Input, TextArea</h1>
+      <h1>Dreadnought: Button, Input, TextArea, Badge</h1>
       <section>
         <h2>Готовый компонент</h2>
         <div className="demo-row">
@@ -32,6 +32,14 @@ function App() {
         </div>
       </section>
       <p aria-live="polite">Нажатий: {count}</p>
+      <section>
+        <h2>Метки</h2>
+        <div className="demo-row">
+          <Badge icon={<span aria-hidden="true">★</span>}>Beta</Badge>
+          <Badge appearance="outline">New</Badge>
+          <Badge target={<Button aria-label="Уведомления, 3 новых">Уведомления</Button>}>3</Badge>
+        </div>
+      </section>
       <section>
         <h2>Текстовые поля</h2>
         <div className="demo-fields">
