@@ -22,3 +22,5 @@ export { TabsPanelAdapter } from './Navigation/Tabs/TabsPanelAdapter.tsx';
 export type { TabsPanelAdapterProps } from './Navigation/Tabs/TabsPanelAdapter.tsx';
 export { AccordionAdapter, AccordionItemAdapter, AccordionTriggerAdapter, AccordionPanelAdapter } from './Navigation/Accordion/index.ts';
 export type { AccordionAdapterProps, AccordionItemAdapterProps, AccordionTriggerAdapterProps, AccordionPanelAdapterProps } from './Navigation/Accordion/index.ts';
+export { AlertAdapter } from './Feedback/Alert/index.ts';
+export type { AlertAdapterProps, AlertSlotClassNames, AlertType } from './Feedback/Alert/index.ts';
