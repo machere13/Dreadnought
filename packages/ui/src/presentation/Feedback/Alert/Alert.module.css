@@ -3,7 +3,6 @@
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto auto;
     align-items: center;
-    column-gap: var(--dreadnought-alert-gap);
     padding: var(--dreadnought-alert-padding-block) var(--dreadnought-alert-padding-inline);
     border: var(--dreadnought-alert-border-width) solid var(--dreadnought-alert-border-color);
     border-radius: var(--dreadnought-alert-radius);
@@ -26,9 +25,18 @@
     --dreadnought-alert-border-color: var(--dreadnought-alert-filled-border);
   }
 
-  .icon { grid-column: 1; align-self: start; color: var(--dreadnought-alert-accent); }
+  .icon {
+    grid-column: 1;
+    align-self: start;
+    margin-inline-end: var(--dreadnought-alert-gap);
+    color: var(--dreadnought-alert-accent);
+  }
   .title, .description { grid-column: 2; min-width: 0; }
-  .actions { grid-column: 3; grid-row: 1 / span 2; }
+  .actions {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    margin-inline-start: var(--dreadnought-alert-gap);
+  }
   .close {
     grid-column: 4;
     grid-row: 1 / span 2;
@@ -36,6 +44,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    margin-inline-start: var(--dreadnought-alert-gap);
     padding: var(--dreadnought-alert-close-padding);
     border: 0;
     border-radius: var(--dreadnought-alert-close-radius);
@@ -51,6 +60,7 @@
       grid-column: 2 / -1;
       grid-row: 3;
       justify-self: start;
+      margin-inline-start: 0;
       margin-top: var(--dreadnought-alert-gap);
     }
   }

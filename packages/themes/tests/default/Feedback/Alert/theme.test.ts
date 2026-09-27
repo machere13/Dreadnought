@@ -41,4 +41,12 @@ describe('default Alert theme', () => {
     const styles = read('packages/ui/src/presentation/Feedback/Alert/Alert.module.css');
     expect(styles).toMatch(/@media\s*\(max-width:\s*30rem\)[\s\S]*?\.actions\s*\{[^}]*grid-column:\s*2\s*\/\s*-1;[^}]*grid-row:\s*3;/);
   });
+
+  it('adds spacing only around slots that are actually rendered', () => {
+    const styles = read('packages/ui/src/presentation/Feedback/Alert/Alert.module.css');
+    expect(styles).not.toMatch(/column-gap:\s*var\(--dreadnought-alert-gap\)/);
+    expect(styles).toMatch(/\.icon\s*\{[^}]*margin-inline-end:\s*var\(--dreadnought-alert-gap\)/);
+    expect(styles).toMatch(/\.actions\s*\{[^}]*margin-inline-start:\s*var\(--dreadnought-alert-gap\)/);
+    expect(styles).toMatch(/\.close\s*\{[^}]*margin-inline-start:\s*var\(--dreadnought-alert-gap\)/);
+  });
 });
