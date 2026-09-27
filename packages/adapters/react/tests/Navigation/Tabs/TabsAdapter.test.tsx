@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { createPortal } from 'react-dom';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -46,6 +47,24 @@ describe('TabsAdapter', () => {
     await user.keyboard('{ArrowRight}');
     expect(screen.getByRole('tab', { name: 'A' }).getAttribute('aria-selected')).toBe('true');
     expect(onValueChange).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps registration order when tab elements are in disconnected portal roots', () => {
+    const roots = Array.from({ length: 3 }, () => document.createElement('div'));
+    render(<TabsAdapter defaultValue="a">
+      <TabsAdapter.List aria-label="Sections">
+        {createPortal(<TabsAdapter.Tab value="a">A</TabsAdapter.Tab>, roots[0])}
+        {createPortal(<TabsAdapter.Tab value="b">B</TabsAdapter.Tab>, roots[1])}
+        {createPortal(<TabsAdapter.Tab value="c">C</TabsAdapter.Tab>, roots[2])}
+      </TabsAdapter.List>
+      <TabsAdapter.Panel value="a">Alpha</TabsAdapter.Panel>
+      <TabsAdapter.Panel value="b">Beta</TabsAdapter.Panel>
+      <TabsAdapter.Panel value="c">Gamma</TabsAdapter.Panel>
+    </TabsAdapter>);
+
+    const first = roots[0].querySelector('button')!;
+    fireEvent.keyDown(first, { key: 'ArrowRight' });
+    expect(roots[1].querySelector('button')?.getAttribute('aria-selected')).toBe('true');
   });
 
   it('handles Home and End without intercepting vertical arrows', async () => {
