@@ -1,0 +1,15 @@
+@layer dreadnought {
+  .dreadnought-text-layout {
+    font-family: var(--dreadnought-layout-font-family);
+    font-size: var(--dreadnought-layout-font-size);
+    font-weight: var(--dreadnought-layout-font-weight);
+    line-height: var(--dreadnought-layout-line-height);
+  }
+
+  .dreadnought-text-layout-trigger {
+    font-family: var(--dreadnought-layout-font-family);
+    font-size: var(--dreadnought-layout-trigger-font-size);
+    font-weight: var(--dreadnought-layout-trigger-font-weight);
+    line-height: var(--dreadnought-layout-trigger-line-height);
+  }
+}

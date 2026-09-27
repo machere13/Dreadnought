@@ -1,0 +1,9 @@
+:root {
+  --dreadnought-layout-font-size: var(--dreadnought-font-size-body-2);
+  --dreadnought-layout-font-weight: var(--dreadnought-font-weight-body-2);
+  --dreadnought-layout-line-height: var(--dreadnought-line-height-body-2);
+  --dreadnought-layout-font-family: var(--dreadnought-font-family-ui);
+  --dreadnought-layout-trigger-font-size: var(--dreadnought-font-size-label-2);
+  --dreadnought-layout-trigger-font-weight: var(--dreadnought-font-weight-label-2);
+  --dreadnought-layout-trigger-line-height: var(--dreadnought-line-height-label-2);
+}

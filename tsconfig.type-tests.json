@@ -22,6 +22,7 @@
     "packages/ui/tests/adapters/react/components/DataDisplay/CodeBlock/CodeBlock.types.tsx",
     "packages/ui/tests/adapters/react/components/Feedback/Alert/Alert.types.tsx",
     "packages/ui/tests/adapters/react/components/Navigation/Breadcrumb/Breadcrumb.types.tsx",
+    "packages/ui/tests/adapters/react/components/Layout/Layout/Layout.types.tsx",
     "packages/ui/tests/index.types.ts"
   ]
 }
