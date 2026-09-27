@@ -32,6 +32,7 @@ describe('Accordion', () => {
     expect(screen.getByText('Plain answer').className).toBe('');
     expect(readyTrigger.textContent).toBe('Ready');
     expect(readyTrigger.querySelector('[aria-hidden="true"]')).not.toBeNull();
+    expect(readyTrigger.querySelector('[aria-hidden="true"] svg[data-icon="down"]')).not.toBeNull();
     expect(plainTrigger.querySelector('[aria-hidden="true"]')).toBeNull();
   });
 });

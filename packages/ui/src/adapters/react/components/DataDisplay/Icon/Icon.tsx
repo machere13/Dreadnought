@@ -1,4 +1,4 @@
-import { CheckOutlined, CloseOutlined, EyeInvisibleOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined, DownOutlined, EyeInvisibleOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
 import { IconAdapter } from '@dreadnought/react/unstyled';
 import type { IconAdapterProps } from '@dreadnought/react/unstyled';
 import type { ComponentType } from 'react';
@@ -11,6 +11,7 @@ const icons = {
   search: SearchOutlined,
   check: CheckOutlined,
   close: CloseOutlined,
+  down: DownOutlined,
 } satisfies Record<IconName, ComponentType>;
 
 export type IconProps = Omit<IconAdapterProps, 'children'> & { name: IconName };

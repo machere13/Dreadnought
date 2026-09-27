@@ -4,7 +4,7 @@ import { Icon } from '@dreadnought/ui/react';
 
 afterEach(cleanup);
 
-it.each(['eye', 'eye-off', 'search', 'check', 'close'] as const)('renders named icon %s as SVG', (name) => {
+it.each(['eye', 'eye-off', 'search', 'check', 'close', 'down'] as const)('renders named icon %s as SVG', (name) => {
   const { container } = render(<Icon name={name} />);
   expect(container.querySelector('[data-ui="icon"] svg')).not.toBeNull();
   expect(container.querySelector('[data-ui="icon"]')?.getAttribute('aria-hidden')).toBe('true');

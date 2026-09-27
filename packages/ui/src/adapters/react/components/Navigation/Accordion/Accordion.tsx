@@ -11,6 +11,7 @@ import type {
   AccordionPanelAdapterProps,
 } from '@dreadnought/react/unstyled';
 import { accordionPresentation } from '#presentation/Navigation/Accordion/accordionPresentation.ts';
+import { Icon } from '../../DataDisplay/Icon/Icon.tsx';
 
 function classes(library: string, consumer?: string) {
   return [library, consumer].filter(Boolean).join(' ');
@@ -26,7 +27,7 @@ function Item({ className, ...props }: AccordionItemAdapterProps) {
 
 function Trigger({ className, children, ...props }: AccordionTriggerAdapterProps) {
   return <AccordionTriggerAdapter {...props} className={classes(accordionPresentation.trigger, className)}>
-    {children}<span className={accordionPresentation.indicator} aria-hidden="true" />
+    {children}<Icon name="down" className={accordionPresentation.indicator} aria-hidden="true" />
   </AccordionTriggerAdapter>;
 }
 

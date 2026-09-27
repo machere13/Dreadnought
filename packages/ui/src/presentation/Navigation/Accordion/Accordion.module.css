@@ -45,12 +45,7 @@
   }
 
   .indicator {
-    box-sizing: border-box;
-    flex: none;
-    width: var(--dreadnought-accordion-indicator-size);
-    height: var(--dreadnought-accordion-indicator-size);
-    border-right: var(--dreadnought-accordion-indicator-stroke) solid currentColor;
-    border-bottom: var(--dreadnought-accordion-indicator-stroke) solid currentColor;
+    --dreadnought-icon-size: var(--dreadnought-accordion-indicator-size);
     transform: rotate(var(--dreadnought-accordion-indicator-rotation-closed));
   }
 
