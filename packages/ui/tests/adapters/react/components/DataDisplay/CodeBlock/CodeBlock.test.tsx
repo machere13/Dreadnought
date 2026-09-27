@@ -3,6 +3,7 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CodeBlockAdapter } from '@dreadnought/react/unstyled';
 import { CodeBlock } from '@dreadnought/ui/react';
+import { Button } from '@dreadnought/ui/react';
 
 afterEach(() => {
   cleanup();
@@ -38,5 +39,17 @@ describe('CodeBlock', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Copy' }));
     expect(await screen.findByRole('button', { name: 'Copied' })).toBeTruthy();
     expect(writeText).toHaveBeenCalledExactlyOnceWith('const x = 1;');
+  });
+
+  it('uses the ready Button visual contract for its compact copy action', () => {
+    render(<>
+      <CodeBlock code="example" />
+      <Button size="compact" variant="ghosted">Reference action</Button>
+    </>);
+    const copy = screen.getByRole('button', { name: 'Copy' });
+    const reference = screen.getByRole('button', { name: 'Reference action' });
+    for (const className of reference.classList) {
+      expect(copy.classList.contains(className), `copy action needs ${className}`).toBe(true);
+    }
   });
 });

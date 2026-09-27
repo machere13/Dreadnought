@@ -8,4 +8,8 @@ export const buttonPresentation = {
     outlined: styles.outlined,
     ghosted: styles.ghosted,
   },
+  sizes: {
+    default: '',
+    compact: styles.compact,
+  },
 } as const;

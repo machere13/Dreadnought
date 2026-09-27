@@ -27,6 +27,22 @@ describe('Button', () => {
   it('uses the primary theme variant by default', () => {
     render(<Button>Continue</Button>);
     expect(screen.getByRole('button', { name: 'Continue' }).getAttribute('data-variant')).toBe('primary');
+    expect(screen.getByRole('button', { name: 'Continue' }).getAttribute('data-size')).toBe('default');
+  });
+
+  it('gives compact actions and links a separate size without changing their variant', () => {
+    render(<>
+      <Button size="compact" variant="ghosted">Toolbar action</Button>
+      <Button size="compact" variant="secondary" href="/docs">Toolbar link</Button>
+    </>);
+    const action = screen.getByRole('button', { name: 'Toolbar action' });
+    const link = screen.getByRole('link', { name: 'Toolbar link' });
+    expect(action.getAttribute('data-size')).toBe('compact');
+    expect(link.getAttribute('data-size')).toBe('compact');
+    expect(action.getAttribute('data-variant')).toBe('ghosted');
+    expect(link.getAttribute('data-variant')).toBe('secondary');
+    expect(action.className).toContain('compact');
+    expect(link.className).toContain('compact');
   });
 
   it('applies its visual variant without changing button behavior', () => {

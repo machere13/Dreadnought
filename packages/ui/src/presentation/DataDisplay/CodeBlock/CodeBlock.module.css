@@ -29,27 +29,6 @@
   }
 
   .copyButton {
-    appearance: none;
-    flex: none;
-    padding: var(--dreadnought-code-block-copy-padding-block) var(--dreadnought-code-block-copy-padding-inline);
-    color: var(--dreadnought-code-block-copy-text);
-    background: var(--dreadnought-code-block-copy-bg);
-    border: var(--dreadnought-code-block-border-width) solid var(--dreadnought-code-block-border);
-    border-radius: var(--dreadnought-code-block-copy-radius);
-    cursor: pointer;
-    font: inherit;
-  }
-
-  .copyButton:hover:not(:disabled) {
-    background: var(--dreadnought-code-block-copy-bg-hover);
-  }
-
-  .copyButton:focus-visible {
-    outline: var(--dreadnought-code-block-focus-width) solid var(--dreadnought-code-block-focus);
-    outline-offset: var(--dreadnought-code-block-focus-offset);
-  }
-
-  .copyButton:disabled {
-    cursor: default;
+    margin-inline-start: auto;
   }
 }

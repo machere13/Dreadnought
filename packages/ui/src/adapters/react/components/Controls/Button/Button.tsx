@@ -4,17 +4,18 @@ import { buttonPresentation } from '#presentation/Controls/Button/buttonPresenta
 
 export type ButtonProps = ButtonAdapterProps & {
   variant?: 'primary' | 'secondary' | 'outlined' | 'ghosted';
+  size?: 'default' | 'compact';
 };
 
-export function Button({ variant = 'primary', className, ...props }: ButtonProps) {
-  const classes = [buttonPresentation.root, buttonPresentation.variants[variant], className]
+export function Button({ variant = 'primary', size = 'default', className, ...props }: ButtonProps) {
+  const classes = [buttonPresentation.root, buttonPresentation.variants[variant], buttonPresentation.sizes[size], className]
     .filter(Boolean)
     .join(' ');
 
   if (typeof props.href === 'string') {
-    return <ButtonAdapter {...props} className={classes} data-variant={variant} />;
+    return <ButtonAdapter {...props} className={classes} data-variant={variant} data-size={size} />;
   }
 
   const { href: _href, ...actionProps } = props;
-  return <ButtonAdapter {...actionProps} className={classes} data-variant={variant} />;
+  return <ButtonAdapter {...actionProps} className={classes} data-variant={variant} data-size={size} />;
 }

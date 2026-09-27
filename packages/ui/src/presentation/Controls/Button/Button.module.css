@@ -17,6 +17,12 @@
     cursor: var(--dreadnought-button-cursor);
   }
 
+  .compact {
+    --dreadnought-button-min-height: var(--dreadnought-button-compact-min-height);
+    --dreadnought-button-padding-y: var(--dreadnought-button-compact-padding-y);
+    --dreadnought-button-padding-x: var(--dreadnought-button-compact-padding-x);
+  }
+
   .primary {
     --dreadnought-button-border-color: var(--dreadnought-button-primary-border-color);
     --dreadnought-button-focus-ring: var(--dreadnought-button-primary-focus-ring);

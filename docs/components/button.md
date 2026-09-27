@@ -8,7 +8,13 @@ import { ButtonAdapter } from '@dreadnought/react/unstyled';
 import { useButton } from '@dreadnought/react/logic';
 ```
 
-`Button` — готовый React-компонент с вариантами `primary` и `secondary`. Импорт `@dreadnought/ui/react` подключает общий CSS оформления и стандартную тему. Пакет `@dreadnought/ui` также экспортирует `buttonPresentation` — карту классов для другого веб-адаптера, реализующего тот же DOM-контракт.
+`Button` — готовый React-компонент с вариантами `primary`, `secondary`, `outlined` и `ghosted`. Импорт `@dreadnought/ui/react` подключает общий CSS оформления и стандартную тему. Пакет `@dreadnought/ui` также экспортирует `buttonPresentation` — карту классов для другого веб-адаптера, реализующего тот же DOM-контракт.
+
+`size="default"` сохраняет обычную высоту и отступы; `size="compact"` подходит для тулбаров и действий внутри других компонентов. Размер и визуальный вариант независимы: для кнопки редактора можно сочетать `size="compact"` с `variant="ghosted"`. Отдельного режима `inner` нет.
+
+```tsx
+<Button size="compact" variant="ghosted" aria-label="Полужирный">B</Button>
+```
 
 Внешний вид меняется токенами на контейнере, без переопределения CSS-классов компонента:
 

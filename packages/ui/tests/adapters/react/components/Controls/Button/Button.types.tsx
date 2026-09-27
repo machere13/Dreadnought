@@ -5,6 +5,7 @@ const buttonRef = createRef<HTMLButtonElement>();
 const linkRef = createRef<HTMLAnchorElement>();
 
 <Button ref={buttonRef}>Action</Button>;
+<Button size="compact" variant="ghosted" ref={buttonRef}>Toolbar action</Button>;
 <Button href="/docs" ref={linkRef}>Docs</Button>;
 
 // @ts-expect-error A link must not receive a button ref.

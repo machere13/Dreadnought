@@ -1,6 +1,8 @@
 :root {
   --dreadnought-button-padding-x: var(--dreadnought-spacing-x4);
   --dreadnought-button-padding-y: var(--dreadnought-spacing-x3);
+  --dreadnought-button-compact-padding-x: var(--dreadnought-spacing-x2);
+  --dreadnought-button-compact-padding-y: var(--dreadnought-spacing-x1);
   --dreadnought-button-gap: var(--dreadnought-spacing-x2);
   --dreadnought-button-focus-offset: var(--dreadnought-spacing-x1);
 }

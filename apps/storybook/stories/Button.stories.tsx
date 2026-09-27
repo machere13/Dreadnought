@@ -7,6 +7,7 @@ const meta = {
   args: { children: 'Нажать' },
   argTypes: {
     variant: { control: 'select', options: ['primary', 'secondary', 'outlined', 'ghosted'] },
+    size: { control: 'select', options: ['default', 'compact'] },
     disabled: { control: 'boolean' },
     loading: { control: 'boolean' },
     iconPosition: { control: 'select', options: ['start', 'end'] },
@@ -21,6 +22,7 @@ export const Default: Story = {};
 export const Secondary: Story = { args: { variant: 'secondary' } };
 export const Outlined: Story = { args: { variant: 'outlined' } };
 export const Ghosted: Story = { args: { variant: 'ghosted' } };
+export const Compact: Story = { args: { size: 'compact', variant: 'ghosted', children: 'Действие в тулбаре' } };
 export const Disabled: Story = { args: { disabled: true } };
 export const Loading: Story = { args: { loading: true } };
 export const WithIcon: Story = { args: { icon: <span aria-hidden="true">★</span>, iconPosition: 'start' } };
