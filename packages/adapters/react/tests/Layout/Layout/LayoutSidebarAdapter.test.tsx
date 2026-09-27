@@ -64,4 +64,12 @@ describe('LayoutSidebarAdapter', () => {
     expect(screen.getByRole('button', { name: 'Close' }).className).toBe('own-trigger');
     expect(container.querySelector('[data-slot="body"]')?.className).toBe('own-body');
   });
+
+  it('accepts a decorative compact trigger without losing its accessible name', () => {
+    render(<LayoutSidebarAdapter defaultCollapsed triggerIcon={<span>symbol</span>}>Content</LayoutSidebarAdapter>);
+    const trigger = screen.getByRole('button', { name: 'Expand sidebar' });
+    expect(trigger.getAttribute('aria-label')).toBe('Expand sidebar');
+    expect(trigger.textContent).toBe('symbol');
+    expect(trigger.querySelector('span')?.getAttribute('aria-hidden')).toBe('true');
+  });
 });

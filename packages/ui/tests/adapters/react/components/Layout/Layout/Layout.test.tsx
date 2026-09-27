@@ -40,8 +40,12 @@ describe('Layout', () => {
     const { container } = render(<Layout><Layout.Sidebar defaultCollapsed aria-label="Sections"><a href="/docs">Docs</a></Layout.Sidebar></Layout>);
     const button = screen.getByRole('button', { name: 'Expand sidebar' });
     const body = container.querySelector('[data-slot="body"]') as HTMLDivElement;
+    expect(button.querySelector('svg')).not.toBeNull();
+    expect(button.textContent).toBe('');
+    expect(button.getAttribute('aria-label')).toBe('Expand sidebar');
     expect(body.hidden).toBe(true);
     fireEvent.click(button);
+    expect(screen.getByRole('button', { name: 'Collapse sidebar' }).querySelector('svg')).not.toBeNull();
     expect(body.hidden).toBe(false);
     expect(body.querySelector('a')?.getAttribute('href')).toBe('/docs');
   });

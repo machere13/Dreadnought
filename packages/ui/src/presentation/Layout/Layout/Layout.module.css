@@ -48,8 +48,12 @@
 
   .trigger {
     box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     min-height: var(--dreadnought-layout-trigger-min-height);
+    padding: 0;
     border: 0;
     background: var(--dreadnought-layout-trigger-bg);
     color: var(--dreadnought-layout-trigger-fg);
