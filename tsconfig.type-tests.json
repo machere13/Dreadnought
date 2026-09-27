@@ -12,6 +12,7 @@
     "packages/adapters/react/tests/Navigation/Tabs/TabsAdapter.types.tsx",
     "packages/adapters/react/tests/Navigation/Tabs/TabsPublic.types.ts",
     "packages/adapters/react/tests/Navigation/Accordion/AccordionPublic.types.tsx",
+    "packages/adapters/react/tests/Navigation/Breadcrumb/BreadcrumbAdapter.types.tsx",
     "packages/adapters/react/tests/Feedback/Alert/AlertAdapter.types.tsx",
     "packages/ui/tests/adapters/react/components/Controls/Button/Button.types.tsx",
     "packages/ui/tests/adapters/react/components/Fields/Input/Input.types.tsx",

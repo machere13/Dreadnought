@@ -24,3 +24,5 @@ export { AccordionAdapter, AccordionItemAdapter, AccordionTriggerAdapter, Accord
 export type { AccordionAdapterProps, AccordionItemAdapterProps, AccordionTriggerAdapterProps, AccordionPanelAdapterProps } from './Navigation/Accordion/index.ts';
 export { AlertAdapter } from './Feedback/Alert/index.ts';
 export type { AlertAdapterProps, AlertSlotClassNames, AlertType } from './Feedback/Alert/index.ts';
+export { BreadcrumbAdapter } from './Navigation/Breadcrumb/index.ts';
+export type { BreadcrumbAdapterProps, BreadcrumbItem, BreadcrumbSlotClassNames } from './Navigation/Breadcrumb/index.ts';
