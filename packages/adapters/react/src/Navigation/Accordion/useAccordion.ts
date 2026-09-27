@@ -17,6 +17,7 @@ export interface UseAccordionResult<T> {
 
 export function useAccordion(options: MultipleAccordionOptions): UseAccordionResult<string[]>;
 export function useAccordion(options: SingleAccordionOptions): UseAccordionResult<string | null>;
+export function useAccordion(options: UseAccordionOptions): UseAccordionResult<string | null | string[]>;
 export function useAccordion(options: UseAccordionOptions): UseAccordionResult<string | null | string[]> {
   const [internalValue, setInternalValue] = useState<string | null | string[]>(
     () => options.defaultValue ?? options.value ?? (options.multiple ? [] : null),
