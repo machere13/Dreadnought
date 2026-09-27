@@ -70,8 +70,8 @@ export function useTextArea({
     if (state.autoSize) resizeTextArea(event.currentTarget, state);
   }
 
-  const minimumRows = state.autoSize || state.minRows !== undefined || state.maxRows !== undefined
-    ? Math.min(state.minRows ?? (state.autoSize ? state.rows : 1), state.maxRows ?? Infinity)
+  const minimumRows = !state.autoSize && (state.minRows !== undefined || state.maxRows !== undefined)
+    ? Math.min(state.minRows ?? 1, state.maxRows ?? Infinity)
     : undefined;
   const textAreaProps = {
     ...rest,
@@ -83,11 +83,11 @@ export function useTextArea({
     'data-invalid': state.invalid ? '' : undefined,
     'data-auto-size': state.autoSize ? '' : undefined,
     'data-min-rows': minimumRows === undefined ? undefined : '',
-    'data-max-rows': state.maxRows === undefined ? undefined : '',
+    'data-max-rows': !state.autoSize && state.maxRows !== undefined ? '' : undefined,
     style: {
       ...style,
       '--dreadnought-text-area-min-rows': minimumRows,
-      '--dreadnought-text-area-max-rows': state.maxRows,
+      '--dreadnought-text-area-max-rows': state.autoSize ? undefined : state.maxRows,
       ...(state.autoSize ? { resize: 'none' as const, overflowY: 'hidden' as const } : {}),
     },
     onInput: handleInput,

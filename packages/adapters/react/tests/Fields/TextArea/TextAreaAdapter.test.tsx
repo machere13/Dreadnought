@@ -54,6 +54,10 @@ it('auto-sizes to content within row limits and disables mouse resizing', () => 
   expect(area.getAttribute('rows')).toBe('1');
   expect(area.hasAttribute('minRows')).toBe(false);
   expect(area.hasAttribute('maxRows')).toBe(false);
+  expect(area.hasAttribute('data-min-rows')).toBe(false);
+  expect(area.hasAttribute('data-max-rows')).toBe(false);
+  expect(area.style.getPropertyValue('--dreadnought-text-area-min-rows')).toBe('');
+  expect(area.style.getPropertyValue('--dreadnought-text-area-max-rows')).toBe('');
 });
 
 it('remeasures controlled content and restores manual mode', () => {
