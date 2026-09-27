@@ -7,7 +7,7 @@ function DocumentationLayout({ collapsed }: LayoutStoryArgs) {
   return <Layout>
     <Layout.Header>Dreadnought · Документация</Layout.Header>
     <Layout direction="horizontal">
-      <Layout.Sidebar key={String(collapsed)} defaultCollapsed={collapsed} aria-label="Разделы документации">
+      <Layout.Sidebar key={String(collapsed)} defaultCollapsed={collapsed ? true : undefined} aria-label="Разделы документации">
         <nav aria-label="Страницы"><a href="#components">Компоненты</a></nav>
       </Layout.Sidebar>
       <Layout.Content><h1 id="components">Компоненты</h1><p>Основное содержимое не зависит от состояния боковой области.</p></Layout.Content>

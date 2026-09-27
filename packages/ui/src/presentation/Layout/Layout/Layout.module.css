@@ -44,6 +44,31 @@
 
   .sidebar[data-collapsed="true"] { width: var(--dreadnought-layout-sidebar-collapsed-width); }
 
+  .sidebar[data-mobile="true"] {
+    position: relative;
+    z-index: 1;
+    width: var(--dreadnought-layout-sidebar-collapsed-width);
+  }
+
+  .sidebar[data-mobile="true"] .body:not([hidden]) {
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: min(var(--dreadnought-layout-sidebar-width), 100vw);
+    min-height: 100%;
+    max-height: 100dvh;
+    overflow-y: auto;
+    padding-top: calc(var(--dreadnought-layout-trigger-min-height) + var(--dreadnought-layout-sidebar-body-padding));
+    background: var(--dreadnought-layout-sidebar-bg);
+  }
+
+  .sidebar[data-mobile="true"] .trigger {
+    position: relative;
+    z-index: 2;
+  }
+
   .body { padding: var(--dreadnought-layout-sidebar-body-padding); }
 
   .trigger {

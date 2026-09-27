@@ -1,11 +1,34 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { LayoutAdapter } from '@dreadnought/react/unstyled';
 import { Layout } from '@dreadnought/ui/react';
 
-afterEach(cleanup);
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
+
+function setMobileViewport() {
+  vi.stubGlobal('matchMedia', () => ({
+    matches: true,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+  }));
+}
 
 describe('Layout', () => {
+  it('starts the ready Sidebar collapsed on mobile and opens it on demand', () => {
+    setMobileViewport();
+    const { container } = render(<Layout direction="horizontal">
+      <Layout.Sidebar aria-label="Sections"><a href="/docs">Docs</a></Layout.Sidebar>
+      <Layout.Content>Content</Layout.Content>
+    </Layout>);
+    const sidebar = screen.getByRole('complementary', { name: 'Sections' });
+    expect(sidebar.getAttribute('data-collapsed')).toBe('true');
+    expect(sidebar.getAttribute('data-mobile')).toBe('true');
+    expect(container.querySelector('[data-slot="body"]')?.hasAttribute('hidden')).toBe(true);
+    fireEvent.click(screen.getByRole('button', { name: 'Expand sidebar' }));
+    expect(sidebar.getAttribute('data-collapsed')).toBe('false');
+    expect(container.querySelector('[data-slot="body"]')?.hasAttribute('hidden')).toBe(false);
+  });
+
   it('styles each ready part while leaving the plain adapter unstyled', () => {
     render(<>
       <Layout className="own-layout">
