@@ -170,9 +170,7 @@ describe('default theme', () => {
     const buttonMotion = css('tokens/components/Controls/Button/motion.tokens.css');
     const typography = css('components/Controls/Button/typography.css');
     expect(buttonColors).toMatch(/--dreadnought-button-primary-bg:\s*var\(--dreadnought-color-action-primary\)/);
-    for (const token of [
-      'border-style', 'text-decoration', 'shadow', 'cursor', 'disabled-cursor',
-    ]) {
+    for (const token of ['disabled-opacity', 'shadow']) {
       expect(buttonEffects).toContain(`--dreadnought-button-${token}:`);
     }
     expect(buttonSizing).toContain('--dreadnought-button-icon-size: var(--dreadnought-size-inline-graphic)');

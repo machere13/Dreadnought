@@ -1,9 +1,4 @@
 :root {
   --dreadnought-button-disabled-opacity: var(--dreadnought-opacity-disabled);
-  --dreadnought-button-border-style: solid;
-  --dreadnought-button-text-decoration: none;
   --dreadnought-button-shadow: none;
-  --dreadnought-button-cursor: pointer;
-  --dreadnought-button-disabled-cursor: not-allowed;
-  --dreadnought-button-spinner-border-style: solid;
 }
