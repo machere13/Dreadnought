@@ -1,0 +1,10 @@
+:root {
+  --dreadnought-code-block-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-code-block-text: var(--dreadnought-color-text-primary);
+  --dreadnought-code-block-muted-text: var(--dreadnought-color-text-placeholder);
+  --dreadnought-code-block-border: var(--dreadnought-color-border-subtle);
+  --dreadnought-code-block-copy-bg: var(--dreadnought-color-surface-subtle);
+  --dreadnought-code-block-copy-bg-hover: var(--dreadnought-color-surface-hover);
+  --dreadnought-code-block-copy-text: var(--dreadnought-color-text-primary);
+  --dreadnought-code-block-focus: var(--dreadnought-color-focus-ring);
+}

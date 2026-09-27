@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const css = (file: string) => readFileSync(resolve('packages/themes/src/default', file), 'utf8');
-const componentFamilies = { Button: 'Controls', Input: 'Fields', TextArea: 'Fields', Badge: 'DataDisplay', Tabs: 'Navigation' } as const;
+const componentFamilies = { Button: 'Controls', Input: 'Fields', TextArea: 'Fields', Badge: 'DataDisplay', CodeBlock: 'DataDisplay', Tabs: 'Navigation' } as const;
 
 describe('default theme', () => {
   it('keeps typography in the library layer and token defaults outside it', () => {
@@ -109,8 +109,8 @@ describe('default theme', () => {
       const files = readdirSync(resolve(`packages/themes/src/default/tokens/components/${family}/${component}`));
       const componentDeclarations = declarations(files, `tokens/components/${family}/${component}`);
       expect(componentDeclarations.length).toBeGreaterThan(0);
-      const suffix = component === 'TextArea' ? 'text-area' : component === 'Tabs' ? 'tabs-tab' : component.toLowerCase();
-      const role = component === 'Button' || component === 'Tabs' ? 'label-1' : component === 'Badge' ? 'label-2' : 'body-2';
+      const suffix = component === 'TextArea' ? 'text-area' : component === 'Tabs' ? 'tabs-tab' : component === 'CodeBlock' ? 'code-block' : component.toLowerCase();
+      const role = component === 'Button' || component === 'Tabs' ? 'label-1' : component === 'Badge' ? 'label-2' : component === 'CodeBlock' ? 'body-3' : 'body-2';
       for (const property of ['font-size', 'font-weight', 'line-height']) {
         const name = `--dreadnought-${property}-${suffix}`;
         expect(componentDeclarations.find(([, token]) => token === name)?.[2].trim()).toBe(`var(--dreadnought-${property}-${role})`);
@@ -131,6 +131,7 @@ describe('default theme', () => {
       "@import './components/Fields/Input/index.css';",
       "@import './components/Fields/TextArea/index.css';",
       "@import './components/DataDisplay/Badge/index.css';",
+      "@import './components/DataDisplay/CodeBlock/index.css';",
       "@import './components/DataDisplay/Mark/index.css';",
       "@import './components/DataDisplay/Icon/index.css';",
       "@import './components/Surfaces/Card/index.css';",
@@ -144,6 +145,7 @@ describe('default theme', () => {
       ['Fields', 'Input', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
       ['Fields', 'TextArea', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
       ['DataDisplay', 'Badge', ['colors', 'spacing', 'sizing', 'typography']],
+      ['DataDisplay', 'CodeBlock', ['colors', 'spacing', 'sizing', 'typography']],
       ['Navigation', 'Tabs', ['colors', 'spacing', 'sizing', 'typography', 'effects']],
     ] as const) {
       const tokenEntry = css(`tokens/components/${family}/${component}/index.css`);

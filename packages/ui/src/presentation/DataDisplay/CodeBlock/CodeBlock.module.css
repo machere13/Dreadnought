@@ -1,0 +1,55 @@
+@layer dreadnought {
+  .root {
+    overflow: hidden;
+    color: var(--dreadnought-code-block-text);
+    background: var(--dreadnought-code-block-bg);
+    border: var(--dreadnought-code-block-border-width) solid var(--dreadnought-code-block-border);
+    border-radius: var(--dreadnought-code-block-radius);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--dreadnought-code-block-header-gap);
+    padding: var(--dreadnought-code-block-header-padding-block) var(--dreadnought-code-block-padding-inline);
+    color: var(--dreadnought-code-block-muted-text);
+    border-bottom: var(--dreadnought-code-block-border-width) solid var(--dreadnought-code-block-border);
+  }
+
+  .pre {
+    margin: 0;
+    padding: var(--dreadnought-code-block-padding-block) var(--dreadnought-code-block-padding-inline);
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .code {
+    font-family: var(--dreadnought-font-family-monospace);
+  }
+
+  .copyButton {
+    appearance: none;
+    flex: none;
+    padding: var(--dreadnought-code-block-copy-padding-block) var(--dreadnought-code-block-copy-padding-inline);
+    color: var(--dreadnought-code-block-copy-text);
+    background: var(--dreadnought-code-block-copy-bg);
+    border: var(--dreadnought-code-block-border-width) solid var(--dreadnought-code-block-border);
+    border-radius: var(--dreadnought-code-block-copy-radius);
+    cursor: pointer;
+    font: inherit;
+  }
+
+  .copyButton:hover:not(:disabled) {
+    background: var(--dreadnought-code-block-copy-bg-hover);
+  }
+
+  .copyButton:focus-visible {
+    outline: var(--dreadnought-code-block-focus-width) solid var(--dreadnought-code-block-focus);
+    outline-offset: var(--dreadnought-code-block-focus-offset);
+  }
+
+  .copyButton:disabled {
+    cursor: default;
+  }
+}

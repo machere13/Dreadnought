@@ -26,10 +26,12 @@ assert.match(js, /buttonPresentation/);
 assert.match(js, /inputPresentation/);
 assert.match(js, /textAreaPresentation/);
 assert.match(js, /badgePresentation/);
+assert.match(js, /codeBlockPresentation/);
 assert.match(css, /--dreadnought-button-primary-bg/);
 assert.match(css, /--dreadnought-input-border-invalid/);
 assert.match(css, /--dreadnought-text-area-text/);
 assert.match(css, /--dreadnought-badge-solid-bg/);
+assert.match(css, /--dreadnought-code-block-bg/);
 assert.match(css, /--dreadnought-input-bg/);
 assert.match(css, /--dreadnought-text-area-bg/);
 assert.match(css, /min-height:calc\(var\(--dreadnought-text-area-min-rows\)/);
@@ -46,6 +48,7 @@ assert.match(artifact('presentation/Controls/Button/buttonPresentation.d.ts'), /
 assert.match(artifact('presentation/Fields/Input/inputPresentation.d.ts'), /inputPresentation/);
 assert.match(artifact('presentation/Fields/TextArea/textAreaPresentation.d.ts'), /textAreaPresentation/);
 assert.match(artifact('presentation/DataDisplay/Badge/badgePresentation.d.ts'), /badgePresentation/);
+assert.match(artifact('presentation/DataDisplay/CodeBlock/codeBlockPresentation.d.ts'), /codeBlockPresentation/);
 assert.doesNotMatch(types, /React|ButtonProps|InputProps|TextAreaProps|BadgeProps/);
 assert.match(reactTypes, /components\/index\.ts/);
 
@@ -54,9 +57,9 @@ const iconDeclaration = readFileSync(iconDeclarationPath, 'utf8');
 assert.match(iconDeclaration, /from ['"]@dreadnought\/ui['"]/, 'IconProps must use the public IconName type');
 
 const presentation = await import('../dist/index.js');
-for (const name of ['buttonPresentation', 'inputPresentation', 'textAreaPresentation', 'badgePresentation']) {
+for (const name of ['buttonPresentation', 'inputPresentation', 'textAreaPresentation', 'badgePresentation', 'codeBlockPresentation']) {
   assert.ok(presentation[name]?.root, `${name} must be exported from the built package`);
 }
-for (const name of ['Button', 'Input', 'TextArea', 'Badge']) {
+for (const name of ['Button', 'Input', 'TextArea', 'Badge', 'CodeBlock']) {
   assert.equal(name in presentation, false, `${name} must only be exported by the React entrypoint`);
 }

@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-font-size-code-block: var(--dreadnought-font-size-body-3);
+  --dreadnought-font-weight-code-block: var(--dreadnought-font-weight-body-3);
+  --dreadnought-line-height-code-block: var(--dreadnought-line-height-body-3);
+}

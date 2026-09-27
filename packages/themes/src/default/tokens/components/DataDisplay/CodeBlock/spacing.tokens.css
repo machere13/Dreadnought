@@ -1,0 +1,9 @@
+:root {
+  --dreadnought-code-block-padding-block: var(--dreadnought-spacing-x4);
+  --dreadnought-code-block-padding-inline: var(--dreadnought-spacing-x4);
+  --dreadnought-code-block-header-padding-block: var(--dreadnought-spacing-x2);
+  --dreadnought-code-block-header-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-code-block-copy-padding-block: var(--dreadnought-spacing-x1);
+  --dreadnought-code-block-copy-padding-inline: var(--dreadnought-spacing-x2);
+  --dreadnought-code-block-focus-offset: var(--dreadnought-spacing-x1);
+}

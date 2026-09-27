@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-code-block-border-width: var(--dreadnought-border-width-outline);
+  --dreadnought-code-block-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-code-block-copy-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-code-block-focus-width: var(--dreadnought-border-width-x2);
+}

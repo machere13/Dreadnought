@@ -8,12 +8,14 @@
     "packages/adapters/react/tests/Fields/Input/InputAdapter.types.tsx",
     "packages/adapters/react/tests/Fields/TextArea/TextAreaAdapter.types.tsx",
     "packages/adapters/react/tests/DataDisplay/Badge/BadgeAdapter.types.tsx",
+    "packages/adapters/react/tests/DataDisplay/CodeBlock/CodeBlockAdapter.types.tsx",
     "packages/adapters/react/tests/Navigation/Tabs/TabsAdapter.types.tsx",
     "packages/adapters/react/tests/Navigation/Tabs/TabsPublic.types.ts",
     "packages/ui/tests/adapters/react/components/Controls/Button/Button.types.tsx",
     "packages/ui/tests/adapters/react/components/Fields/Input/Input.types.tsx",
     "packages/ui/tests/adapters/react/components/Fields/TextArea/TextArea.types.tsx",
     "packages/ui/tests/adapters/react/components/DataDisplay/Badge/Badge.types.tsx",
+    "packages/ui/tests/adapters/react/components/DataDisplay/CodeBlock/CodeBlock.types.tsx",
     "packages/ui/tests/index.types.ts"
   ]
 }
