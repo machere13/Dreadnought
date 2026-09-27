@@ -1,6 +1,6 @@
-import { useCallback, useId, useLayoutEffect, useRef } from 'react';
+import { useCallback, useId, useLayoutEffect, useRef, useState } from 'react';
 import type { ComponentPropsWithRef, ReactNode } from 'react';
-import { AccordionRootContext } from './AccordionContext.tsx';
+import { AccordionItemContext, AccordionRootContext } from './AccordionContext.tsx';
 import { AccordionItemAdapter } from './AccordionItemAdapter.tsx';
 import { AccordionTriggerAdapter } from './AccordionTriggerAdapter.tsx';
 import { AccordionPanelAdapter } from './AccordionPanelAdapter.tsx';
@@ -14,6 +14,8 @@ function AccordionRootAdapter(props: AccordionAdapterProps) {
   const selection = useAccordion(props);
   const rootId = useId();
   const items = useRef(new Map<string, symbol>());
+  const mounted = useRef(false);
+  const [, setRevision] = useState(0);
   const { children, value, defaultValue, multiple, onValueChange, ref, ...rootProps } = props;
 
   const registerItem = useCallback((itemValue: string, token: symbol) => {
@@ -21,9 +23,18 @@ function AccordionRootAdapter(props: AccordionAdapterProps) {
       throw new Error(`Duplicate or empty Accordion.Item value: ${itemValue}`);
     }
     items.current.set(itemValue, token);
+    if (mounted.current) setRevision((revision) => revision + 1);
     return () => {
-      if (items.current.get(itemValue) === token) items.current.delete(itemValue);
+      if (items.current.get(itemValue) === token) {
+        items.current.delete(itemValue);
+        if (mounted.current) setRevision((revision) => revision + 1);
+      }
     };
+  }, []);
+
+  useLayoutEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
   }, []);
 
   useLayoutEffect(() => {
@@ -38,7 +49,9 @@ function AccordionRootAdapter(props: AccordionAdapterProps) {
     : selection.value === itemValue;
 
   return <AccordionRootContext.Provider value={{ rootId, isOpen, toggle: selection.toggle, registerItem }}>
-    <div {...rootProps} ref={ref} data-ui="accordion">{children}</div>
+    <AccordionItemContext.Provider value={null}>
+      <div {...rootProps} ref={ref} data-ui="accordion">{children}</div>
+    </AccordionItemContext.Provider>
   </AccordionRootContext.Provider>;
 }
 

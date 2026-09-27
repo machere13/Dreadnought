@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import type { ComponentPropsWithRef, ReactNode } from 'react';
 import { AccordionItemContext, useAccordionRootContext } from './AccordionContext.tsx';
 
@@ -12,6 +12,8 @@ export function AccordionItemAdapter({ value, children, ref, ...itemProps }: Acc
   const itemToken = useRef(Symbol('accordion-item'));
   const triggerTokens = useRef(new Set<symbol>());
   const panelTokens = useRef(new Set<symbol>());
+  const mounted = useRef(false);
+  const [, setRevision] = useState(0);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const open = root.isOpen(value);
@@ -20,10 +22,18 @@ export function AccordionItemAdapter({ value, children, ref, ...itemProps }: Acc
   const registerPart = useCallback((part: 'trigger' | 'panel', token: symbol) => {
     const tokens = part === 'trigger' ? triggerTokens.current : panelTokens.current;
     tokens.add(token);
-    return () => { tokens.delete(token); };
+    if (mounted.current) setRevision((revision) => revision + 1);
+    return () => {
+      tokens.delete(token);
+      if (mounted.current) setRevision((revision) => revision + 1);
+    };
   }, []);
 
   useLayoutEffect(() => root.registerItem(value, itemToken.current), [root.registerItem, value]);
+  useLayoutEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
+  }, []);
   useLayoutEffect(() => {
     if (triggerTokens.current.size !== 1 || panelTokens.current.size !== 1) {
       throw new Error(`Accordion.Item ${value} needs exactly one Trigger and one Panel.`);

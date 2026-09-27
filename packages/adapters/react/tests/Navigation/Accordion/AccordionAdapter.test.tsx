@@ -140,4 +140,61 @@ describe('AccordionAdapter', () => {
     rerender(view(null));
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'a' }));
   });
+
+  it('rejects a Trigger removed by state below Item', () => {
+    function DynamicTrigger() {
+      const [visible, setVisible] = useState(true);
+      return <><button onClick={() => setVisible(false)}>remove trigger</button>
+        {visible && <AccordionAdapter.Trigger>answer</AccordionAdapter.Trigger>}</>;
+    }
+    render(<AccordionAdapter><AccordionAdapter.Item value="a">
+      <DynamicTrigger /><AccordionAdapter.Panel>content</AccordionAdapter.Panel>
+    </AccordionAdapter.Item></AccordionAdapter>);
+    expect(() => fireEvent.click(screen.getByRole('button', { name: 'remove trigger' }))).toThrow();
+  });
+
+  it('rejects a selected Item removed by state below the root', () => {
+    function DynamicItem() {
+      const [visible, setVisible] = useState(true);
+      return <><button onClick={() => setVisible(false)}>remove item</button>{visible && pair('a')}</>;
+    }
+    render(<AccordionAdapter value="a"><DynamicItem /></AccordionAdapter>);
+    expect(() => fireEvent.click(screen.getByRole('button', { name: 'remove item' }))).toThrow();
+  });
+
+  it('does not let a nested root borrow its outer Item context', () => {
+    expect(() => render(<AccordionAdapter><AccordionAdapter.Item value="a">
+      <AccordionAdapter.Trigger>outer</AccordionAdapter.Trigger>
+      <AccordionAdapter><AccordionAdapter.Panel>orphan</AccordionAdapter.Panel></AccordionAdapter>
+    </AccordionAdapter.Item></AccordionAdapter>)).toThrow();
+  });
+
+  it('runs callback-ref cleanup for Trigger and Panel on unmount', () => {
+    const triggerCleanup = vi.fn();
+    const panelCleanup = vi.fn();
+    const { unmount } = render(<AccordionAdapter>{<AccordionAdapter.Item value="a">
+      <AccordionAdapter.Trigger ref={() => triggerCleanup}>a</AccordionAdapter.Trigger>
+      <AccordionAdapter.Panel ref={() => panelCleanup}>content</AccordionAdapter.Panel>
+    </AccordionAdapter.Item>}</AccordionAdapter>);
+    unmount();
+    expect(triggerCleanup).toHaveBeenCalledTimes(1);
+    expect(panelCleanup).toHaveBeenCalledTimes(1);
+  });
+
+  it('runs old callback-ref cleanup when the consumer replaces a ref', () => {
+    const oldCleanup = vi.fn();
+    const nextCleanup = vi.fn();
+    const oldRef = () => oldCleanup;
+    const nextRef = () => nextCleanup;
+    const view = (ref: typeof oldRef) => <AccordionAdapter><AccordionAdapter.Item value="a">
+      <AccordionAdapter.Trigger ref={ref}>a</AccordionAdapter.Trigger>
+      <AccordionAdapter.Panel>content</AccordionAdapter.Panel>
+    </AccordionAdapter.Item></AccordionAdapter>;
+    const { rerender, unmount } = render(view(oldRef));
+    rerender(view(nextRef));
+    expect(oldCleanup).toHaveBeenCalledTimes(1);
+    expect(nextCleanup).not.toHaveBeenCalled();
+    unmount();
+    expect(nextCleanup).toHaveBeenCalledTimes(1);
+  });
 });
