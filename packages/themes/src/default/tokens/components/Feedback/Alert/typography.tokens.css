@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-font-size-alert-title: var(--dreadnought-font-size-label-1);
+  --dreadnought-font-weight-alert-title: var(--dreadnought-font-weight-label-1);
+  --dreadnought-line-height-alert-title: var(--dreadnought-line-height-label-1);
+  --dreadnought-font-size-alert-description: var(--dreadnought-font-size-body-2);
+  --dreadnought-font-weight-alert-description: var(--dreadnought-font-weight-body-2);
+  --dreadnought-line-height-alert-description: var(--dreadnought-line-height-body-2);
+}

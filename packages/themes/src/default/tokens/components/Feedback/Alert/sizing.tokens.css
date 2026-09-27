@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-alert-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-alert-close-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-alert-border-width: var(--dreadnought-border-width-outline);
+  --dreadnought-alert-focus-width: var(--dreadnought-border-width-x2);
+}

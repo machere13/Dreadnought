@@ -18,6 +18,7 @@
     "packages/ui/tests/adapters/react/components/Fields/TextArea/TextArea.types.tsx",
     "packages/ui/tests/adapters/react/components/DataDisplay/Badge/Badge.types.tsx",
     "packages/ui/tests/adapters/react/components/DataDisplay/CodeBlock/CodeBlock.types.tsx",
+    "packages/ui/tests/adapters/react/components/Feedback/Alert/Alert.types.tsx",
     "packages/ui/tests/index.types.ts"
   ]
 }

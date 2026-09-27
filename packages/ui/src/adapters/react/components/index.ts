@@ -8,3 +8,4 @@ export * from './DataDisplay/Icon/index.ts';
 export * from './Surfaces/Card/index.ts';
 export * from './Navigation/Tabs/index.ts';
 export * from './Navigation/Accordion/index.ts';
+export * from './Feedback/Alert/index.ts';

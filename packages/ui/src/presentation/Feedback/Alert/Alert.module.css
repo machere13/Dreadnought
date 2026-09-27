@@ -1,0 +1,48 @@
+@layer dreadnought {
+  .root {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    column-gap: var(--dreadnought-alert-gap);
+    padding: var(--dreadnought-alert-padding-block) var(--dreadnought-alert-padding-inline);
+    border: var(--dreadnought-alert-border-width) solid var(--dreadnought-alert-border-color);
+    border-radius: var(--dreadnought-alert-radius);
+    background: var(--dreadnought-alert-bg);
+    color: var(--dreadnought-alert-fg);
+  }
+
+  .root[data-type="info"] { --dreadnought-alert-accent: var(--dreadnought-alert-info-accent); }
+  .root[data-type="success"] { --dreadnought-alert-accent: var(--dreadnought-alert-success-accent); }
+  .root[data-type="warning"] { --dreadnought-alert-accent: var(--dreadnought-alert-warning-accent); }
+  .root[data-type="error"] { --dreadnought-alert-accent: var(--dreadnought-alert-error-accent); }
+
+  .root[data-variant="outlined"] {
+    --dreadnought-alert-bg: var(--dreadnought-alert-outlined-bg);
+    --dreadnought-alert-border-color: var(--dreadnought-alert-accent);
+  }
+
+  .root[data-variant="filled"] {
+    --dreadnought-alert-bg: color-mix(in srgb, var(--dreadnought-alert-accent) 14%, var(--dreadnought-alert-filled-base));
+    --dreadnought-alert-border-color: var(--dreadnought-alert-filled-border);
+  }
+
+  .icon { grid-column: 1; align-self: start; color: var(--dreadnought-alert-accent); }
+  .title, .description { grid-column: 2; min-width: 0; }
+  .actions { grid-column: 3; grid-row: 1 / span 2; }
+  .close {
+    grid-column: 4;
+    grid-row: 1 / span 2;
+    align-self: start;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--dreadnought-alert-close-padding);
+    border: 0;
+    border-radius: var(--dreadnought-alert-close-radius);
+    background: transparent;
+    color: var(--dreadnought-alert-close-fg);
+    cursor: pointer;
+  }
+  .close:hover { background: var(--dreadnought-alert-close-bg-hover); }
+  .close:focus-visible { outline: var(--dreadnought-alert-focus-width) solid var(--dreadnought-alert-focus-ring); }
+}

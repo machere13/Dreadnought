@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-alert-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-alert-padding-block: var(--dreadnought-spacing-x2);
+  --dreadnought-alert-padding-inline: var(--dreadnought-spacing-x4);
+  --dreadnought-alert-close-padding: var(--dreadnought-spacing-x1);
+}

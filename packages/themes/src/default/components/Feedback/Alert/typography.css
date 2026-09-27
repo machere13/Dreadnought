@@ -1,0 +1,15 @@
+@layer dreadnought {
+  .dreadnought-text-alert-title {
+    font-family: var(--dreadnought-font-family-ui);
+    font-size: var(--dreadnought-font-size-alert-title);
+    font-weight: var(--dreadnought-font-weight-alert-title);
+    line-height: var(--dreadnought-line-height-alert-title);
+  }
+
+  .dreadnought-text-alert-description {
+    font-family: var(--dreadnought-font-family-ui);
+    font-size: var(--dreadnought-font-size-alert-description);
+    font-weight: var(--dreadnought-font-weight-alert-description);
+    line-height: var(--dreadnought-line-height-alert-description);
+  }
+}

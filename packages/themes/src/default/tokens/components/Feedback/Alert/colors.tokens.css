@@ -1,0 +1,13 @@
+:root {
+  --dreadnought-alert-info-accent: var(--dreadnought-color-status-info);
+  --dreadnought-alert-success-accent: var(--dreadnought-color-status-success);
+  --dreadnought-alert-warning-accent: var(--dreadnought-color-status-warning);
+  --dreadnought-alert-error-accent: var(--dreadnought-color-status-error);
+  --dreadnought-alert-outlined-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-alert-filled-base: var(--dreadnought-color-surface-default);
+  --dreadnought-alert-filled-border: var(--dreadnought-color-border-subtle);
+  --dreadnought-alert-fg: var(--dreadnought-color-text-primary);
+  --dreadnought-alert-close-fg: var(--dreadnought-color-text-primary);
+  --dreadnought-alert-close-bg-hover: var(--dreadnought-color-surface-hover);
+  --dreadnought-alert-focus-ring: var(--dreadnought-color-focus-ring);
+}

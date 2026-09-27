@@ -21,4 +21,5 @@
   --dreadnought-color-status-error: rgb(255 117 117 / 100%);
   --dreadnought-color-status-warning: rgb(245 188 102 / 100%);
   --dreadnought-color-status-success: rgb(118 211 160 / 100%);
+  --dreadnought-color-status-info: rgb(125 177 245 / 100%);
 }
