@@ -4,7 +4,10 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
 import { TextAreaAdapter } from '../../../src/Fields/TextArea/TextAreaAdapter.tsx';
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+});
 
 it('preserves label, native attributes, ref, and controlled onChange', async () => {
   const user = userEvent.setup();
@@ -71,6 +74,28 @@ it('remeasures controlled content and restores manual mode', () => {
   expect(area.style.height).toBe('');
   expect(area.style.resize).toBe('vertical');
   expect(area.getAttribute('rows')).toBe('2');
+});
+
+it('keeps one resize subscription while controlled content changes', () => {
+  const addListener = vi.spyOn(window, 'addEventListener');
+  const removeListener = vi.spyOn(window, 'removeEventListener');
+  let contentHeight = 100;
+  const ref = (node: HTMLTextAreaElement | null) => {
+    if (node) Object.defineProperty(node, 'scrollHeight', { configurable: true, get: () => contentHeight });
+  };
+  const style = { boxSizing: 'content-box' as const, lineHeight: '20px', padding: 0, border: 0 };
+  const { rerender, unmount } = render(<TextAreaAdapter aria-label="Notes" ref={ref} autoSize rows={1} maxRows={2} value="a" onChange={() => {}} style={style} />);
+  const area = screen.getByRole('textbox', { name: 'Notes' }) as HTMLTextAreaElement;
+  expect(area.style.height).toBe('40px');
+
+  contentHeight = 120;
+  rerender(<TextAreaAdapter aria-label="Notes" ref={ref} autoSize rows={1} maxRows={3} value="b" onChange={() => {}} style={style} />);
+  expect(area.style.height).toBe('60px');
+  expect(addListener.mock.calls.filter(([type]) => type === 'resize')).toHaveLength(1);
+  expect(removeListener.mock.calls.filter(([type]) => type === 'resize')).toHaveLength(0);
+
+  unmount();
+  expect(removeListener.mock.calls.filter(([type]) => type === 'resize')).toHaveLength(1);
 });
 
 it('calculates row height from unitless line-height and font size', () => {

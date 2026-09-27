@@ -1,6 +1,6 @@
 import { getTextAreaState } from '@dreadnought/core';
 import type { TextAreaCore } from '@dreadnought/core';
-import { useCallback, useLayoutEffect, useRef } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import type { InputEvent, RefCallback, TextareaHTMLAttributes } from 'react';
 import { resizeTextArea } from './resizeTextArea.ts';
 
@@ -29,14 +29,15 @@ export function useTextArea({
   state: TextAreaCore;
 } {
   const state = getTextAreaState({ disabled, readOnly, required, invalid, rows, minRows, maxRows, autoSize });
-  const elementRef = useRef<HTMLTextAreaElement | null>(null);
+  const [element, setElement] = useState<HTMLTextAreaElement | null>(null);
+  const currentState = useRef(state);
   const wasAutoSized = useRef(false);
-  const textAreaRef = useCallback((element: HTMLTextAreaElement | null) => {
-    elementRef.current = element;
+  const textAreaRef = useCallback((node: HTMLTextAreaElement | null) => {
+    setElement(node);
   }, []);
 
   useLayoutEffect(() => {
-    const element = elementRef.current;
+    currentState.current = state;
     if (!element) return;
     if (!state.autoSize) {
       if (wasAutoSized.current) {
@@ -48,8 +49,13 @@ export function useTextArea({
     }
 
     wasAutoSized.current = true;
-    const update = () => resizeTextArea(element, state);
-    update();
+    resizeTextArea(element, state);
+  });
+
+  useLayoutEffect(() => {
+    if (!state.autoSize || !element) return;
+
+    const update = () => resizeTextArea(element, currentState.current);
     const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(update);
     observer?.observe(element);
     window.addEventListener('resize', update);
@@ -57,7 +63,7 @@ export function useTextArea({
       observer?.disconnect();
       window.removeEventListener('resize', update);
     };
-  });
+  }, [state.autoSize, element]);
 
   function handleInput(event: InputEvent<HTMLTextAreaElement>) {
     onInput?.(event);
