@@ -36,4 +36,9 @@ describe('default Alert theme', () => {
     for (const variant of ['outlined', 'filled']) expect(styles).toContain(`[data-variant="${variant}"]`);
     expect(styles).not.toContain('!important');
   });
+
+  it('moves the action below the message on a narrow viewport', () => {
+    const styles = read('packages/ui/src/presentation/Feedback/Alert/Alert.module.css');
+    expect(styles).toMatch(/@media\s*\(max-width:\s*30rem\)[\s\S]*?\.actions\s*\{[^}]*grid-column:\s*2\s*\/\s*-1;[^}]*grid-row:\s*3;/);
+  });
 });

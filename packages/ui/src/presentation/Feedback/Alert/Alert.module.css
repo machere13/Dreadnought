@@ -45,4 +45,13 @@
   }
   .close:hover { background: var(--dreadnought-alert-close-bg-hover); }
   .close:focus-visible { outline: var(--dreadnought-alert-focus-width) solid var(--dreadnought-alert-focus-ring); }
+
+  @media (max-width: 30rem) {
+    .actions {
+      grid-column: 2 / -1;
+      grid-row: 3;
+      justify-self: start;
+      margin-top: var(--dreadnought-alert-gap);
+    }
+  }
 }
