@@ -1,4 +1,4 @@
-import { useCallback, useId, useLayoutEffect, useRef, useState } from 'react';
+import { useId } from 'react';
 import type { ComponentPropsWithRef, ReactNode } from 'react';
 import { AccordionItemContext, AccordionRootContext } from './AccordionContext.tsx';
 import { AccordionItemAdapter } from './AccordionItemAdapter.tsx';
@@ -6,6 +6,7 @@ import { AccordionTriggerAdapter } from './AccordionTriggerAdapter.tsx';
 import { AccordionPanelAdapter } from './AccordionPanelAdapter.tsx';
 import { useAccordion } from './useAccordion.ts';
 import type { UseAccordionOptions } from './useAccordion.ts';
+import { useAccordionItems } from './useAccordionItems.ts';
 
 export type AccordionAdapterProps = Omit<ComponentPropsWithRef<'div'>, 'defaultValue' | 'onChange' | 'children'>
   & UseAccordionOptions & { children: ReactNode };
@@ -13,36 +14,8 @@ export type AccordionAdapterProps = Omit<ComponentPropsWithRef<'div'>, 'defaultV
 function AccordionRootAdapter(props: AccordionAdapterProps) {
   const selection = useAccordion(props);
   const rootId = useId();
-  const items = useRef(new Map<string, symbol>());
-  const mounted = useRef(false);
-  const [, setRevision] = useState(0);
+  const registerItem = useAccordionItems(selection.value);
   const { children, value, defaultValue, multiple, onValueChange, ref, ...rootProps } = props;
-
-  const registerItem = useCallback((itemValue: string, token: symbol) => {
-    if (!itemValue || items.current.has(itemValue)) {
-      throw new Error(`Duplicate or empty Accordion.Item value: ${itemValue}`);
-    }
-    items.current.set(itemValue, token);
-    if (mounted.current) setRevision((revision) => revision + 1);
-    return () => {
-      if (items.current.get(itemValue) === token) {
-        items.current.delete(itemValue);
-        if (mounted.current) setRevision((revision) => revision + 1);
-      }
-    };
-  }, []);
-
-  useLayoutEffect(() => {
-    mounted.current = true;
-    return () => { mounted.current = false; };
-  }, []);
-
-  useLayoutEffect(() => {
-    const selected = Array.isArray(selection.value) ? selection.value : selection.value === null ? [] : [selection.value];
-    if (new Set(selected).size !== selected.length || selected.some((itemValue) => !itemValue || !items.current.has(itemValue))) {
-      throw new Error('Accordion value must reference unique existing items.');
-    }
-  });
 
   const isOpen = (itemValue: string) => Array.isArray(selection.value)
     ? selection.value.includes(itemValue)
