@@ -1,12 +1,13 @@
 import { createRoot } from 'react-dom/client';
 import { useState } from 'react';
-import { Badge, Button, Input, TextArea } from '@dreadnought/ui/react';
+import { Badge, Button, CodeBlock, Input, TextArea } from '@dreadnought/ui/react';
 import { ButtonAdapter } from '@dreadnought/react/unstyled';
 import { useButton } from '@dreadnought/react/logic';
 import './page.css';
 
 function App() {
   const [count, setCount] = useState(0);
+  const [snippet, setSnippet] = useState('ready');
   const { buttonProps } = useButton({ onClick: () => setCount((value) => value + 1) });
 
   return (
@@ -54,6 +55,15 @@ function App() {
           <label htmlFor="demo-auto-notes">Автоматическая высота</label>
           <TextArea id="demo-auto-notes" rows={2} maxRows={6} autoSize placeholder="Растёт вместе с текстом" />
         </div>
+      </section>
+      <section>
+        <h2>Код</h2>
+        <Button variant="secondary" onClick={() => setSnippet((value) => value === 'ready' ? 'adapter' : 'ready')}>
+          Сменить пример
+        </Button>
+        <CodeBlock language="tsx" code={snippet === 'ready'
+          ? "import { Button } from '@dreadnought/ui/react';\n\n<Button>Нажать</Button>;\n"
+          : "import { ButtonAdapter } from '@dreadnought/react/unstyled';\n\n<ButtonAdapter>Нажать</ButtonAdapter>;\n"} />
       </section>
     </main>
   );
