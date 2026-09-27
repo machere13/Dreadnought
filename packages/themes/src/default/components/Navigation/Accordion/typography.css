@@ -1,0 +1,21 @@
+@layer dreadnought {
+  .dreadnought-text-accordion-trigger {
+    font-family: var(--dreadnought-font-family-ui);
+    font-size: var(--dreadnought-font-size-accordion-trigger);
+    font-weight: var(--dreadnought-font-weight-accordion-trigger);
+    line-height: var(--dreadnought-line-height-accordion-trigger);
+    letter-spacing: var(--dreadnought-font-letter-spacing-accordion-trigger);
+    font-style: var(--dreadnought-font-style-accordion-trigger);
+    text-transform: var(--dreadnought-font-text-transform-accordion-trigger);
+  }
+
+  .dreadnought-text-accordion-panel {
+    font-family: var(--dreadnought-font-family-ui);
+    font-size: var(--dreadnought-font-size-accordion-panel);
+    font-weight: var(--dreadnought-font-weight-accordion-panel);
+    line-height: var(--dreadnought-line-height-accordion-panel);
+    letter-spacing: var(--dreadnought-font-letter-spacing-accordion-panel);
+    font-style: var(--dreadnought-font-style-accordion-panel);
+    text-transform: var(--dreadnought-font-text-transform-accordion-panel);
+  }
+}

@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-accordion-disabled-opacity: var(--dreadnought-opacity-disabled);
+  --dreadnought-accordion-indicator-rotation-closed: 45deg;
+  --dreadnought-accordion-indicator-rotation-open: 225deg;
+}

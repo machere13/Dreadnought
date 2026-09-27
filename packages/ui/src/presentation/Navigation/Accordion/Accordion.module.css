@@ -1,0 +1,71 @@
+@layer dreadnought {
+  .root {
+    display: grid;
+    gap: var(--dreadnought-accordion-root-gap);
+  }
+
+  .item {
+    overflow: hidden;
+    border: var(--dreadnought-accordion-border-width) solid var(--dreadnought-accordion-border-color);
+    border-radius: var(--dreadnought-accordion-radius);
+    background: var(--dreadnought-accordion-bg);
+  }
+
+  .item > :is(h1, h2, h3, h4, h5, h6) {
+    margin: 0;
+  }
+
+  .trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: var(--dreadnought-accordion-trigger-min-height);
+    gap: var(--dreadnought-accordion-trigger-gap);
+    padding: var(--dreadnought-accordion-trigger-padding-y) var(--dreadnought-accordion-trigger-padding-x);
+    border: 0;
+    background: transparent;
+    color: var(--dreadnought-accordion-trigger-fg);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .trigger:hover:not(:disabled) {
+    background: var(--dreadnought-accordion-trigger-bg-hover);
+  }
+
+  .trigger:focus-visible {
+    outline: var(--dreadnought-accordion-focus-width) solid var(--dreadnought-accordion-focus-ring);
+    outline-offset: calc(-1 * var(--dreadnought-accordion-focus-width));
+  }
+
+  .trigger:disabled {
+    opacity: var(--dreadnought-accordion-disabled-opacity);
+    cursor: not-allowed;
+  }
+
+  .indicator {
+    box-sizing: border-box;
+    flex: none;
+    width: var(--dreadnought-accordion-indicator-size);
+    height: var(--dreadnought-accordion-indicator-size);
+    border-right: var(--dreadnought-accordion-indicator-stroke) solid currentColor;
+    border-bottom: var(--dreadnought-accordion-indicator-stroke) solid currentColor;
+    transform: rotate(var(--dreadnought-accordion-indicator-rotation-closed));
+  }
+
+  .trigger[data-state="open"] .indicator {
+    transform: rotate(var(--dreadnought-accordion-indicator-rotation-open));
+  }
+
+  .panel {
+    display: block;
+    padding: var(--dreadnought-accordion-panel-padding-y) var(--dreadnought-accordion-panel-padding-x);
+    border-top: var(--dreadnought-accordion-border-width) solid var(--dreadnought-accordion-border-color);
+    color: var(--dreadnought-accordion-panel-fg);
+  }
+
+  .panel[hidden] {
+    display: none;
+  }
+}

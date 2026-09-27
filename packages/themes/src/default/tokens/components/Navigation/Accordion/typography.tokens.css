@@ -1,0 +1,14 @@
+:root {
+  --dreadnought-font-size-accordion-trigger: var(--dreadnought-font-size-label-1);
+  --dreadnought-font-weight-accordion-trigger: var(--dreadnought-font-weight-label-1);
+  --dreadnought-line-height-accordion-trigger: var(--dreadnought-line-height-label-1);
+  --dreadnought-font-letter-spacing-accordion-trigger: normal;
+  --dreadnought-font-style-accordion-trigger: normal;
+  --dreadnought-font-text-transform-accordion-trigger: none;
+  --dreadnought-font-size-accordion-panel: var(--dreadnought-font-size-body-2);
+  --dreadnought-font-weight-accordion-panel: var(--dreadnought-font-weight-body-2);
+  --dreadnought-line-height-accordion-panel: var(--dreadnought-line-height-body-2);
+  --dreadnought-font-letter-spacing-accordion-panel: normal;
+  --dreadnought-font-style-accordion-panel: normal;
+  --dreadnought-font-text-transform-accordion-panel: none;
+}

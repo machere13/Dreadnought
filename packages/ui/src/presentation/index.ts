@@ -7,3 +7,4 @@ export * from './DataDisplay/Mark/index.ts';
 export * from './DataDisplay/Icon/index.ts';
 export * from './Surfaces/Card/index.ts';
 export * from './Navigation/Tabs/index.ts';
+export * from './Navigation/Accordion/index.ts';

@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-accordion-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-accordion-border-color: var(--dreadnought-color-border-subtle);
+  --dreadnought-accordion-trigger-fg: var(--dreadnought-color-text-primary);
+  --dreadnought-accordion-trigger-bg-hover: var(--dreadnought-color-surface-hover);
+  --dreadnought-accordion-panel-fg: var(--dreadnought-color-text-primary);
+  --dreadnought-accordion-focus-ring: var(--dreadnought-color-focus-ring);
+}

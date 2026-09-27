@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-accordion-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-accordion-border-width: var(--dreadnought-border-width-outline);
+  --dreadnought-accordion-trigger-min-height: var(--dreadnought-size-control-min-height);
+  --dreadnought-accordion-focus-width: var(--dreadnought-border-width-x2);
+  --dreadnought-accordion-indicator-size: var(--dreadnought-size-inline-graphic);
+  --dreadnought-accordion-indicator-stroke: var(--dreadnought-border-width-x2);
+}

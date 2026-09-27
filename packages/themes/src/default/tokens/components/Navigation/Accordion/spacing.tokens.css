@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-accordion-root-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-accordion-trigger-gap: var(--dreadnought-spacing-x4);
+  --dreadnought-accordion-trigger-padding-y: var(--dreadnought-spacing-x3);
+  --dreadnought-accordion-trigger-padding-x: var(--dreadnought-spacing-x4);
+  --dreadnought-accordion-panel-padding-y: var(--dreadnought-spacing-x4);
+  --dreadnought-accordion-panel-padding-x: var(--dreadnought-spacing-x4);
+}

@@ -136,6 +136,7 @@ describe('default theme', () => {
       "@import './components/DataDisplay/Icon/index.css';",
       "@import './components/Surfaces/Card/index.css';",
       "@import './components/Navigation/Tabs/index.css';",
+      "@import './components/Navigation/Accordion/index.css';",
     ]);
     for (const file of ['colors', 'spacing', 'sizing', 'typography', 'effects', 'motion']) {
       expect(css('tokens/global/index.css')).toContain(`@import './${file}.tokens.css'`);
@@ -147,6 +148,7 @@ describe('default theme', () => {
       ['DataDisplay', 'Badge', ['colors', 'spacing', 'sizing', 'typography']],
       ['DataDisplay', 'CodeBlock', ['colors', 'spacing', 'sizing', 'typography']],
       ['Navigation', 'Tabs', ['colors', 'spacing', 'sizing', 'typography', 'effects']],
+      ['Navigation', 'Accordion', ['colors', 'spacing', 'sizing', 'typography', 'effects']],
     ] as const) {
       const tokenEntry = css(`tokens/components/${family}/${component}/index.css`);
       for (const file of files) expect(tokenEntry).toContain(`@import './${file}.tokens.css'`);
