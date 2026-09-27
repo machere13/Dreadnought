@@ -106,4 +106,41 @@ describe('CodeBlockAdapter', () => {
     await waitFor(() => expect(screen.getByRole('button', { name: 'Copy' })).toBeTruthy());
     expect(onCopy).not.toHaveBeenCalled();
   });
+
+  it('does not resurrect pending copy state when code changes A to B to A', async () => {
+    let resolveWrite!: () => void;
+    const writeText = vi.fn(() => new Promise<void>((resolve) => { resolveWrite = resolve; }));
+    clipboard(writeText);
+    const { rerender } = render(<CodeBlockAdapter code="A" />);
+    fireEvent.click(screen.getByRole('button', { name: 'Copy' }));
+    expect(screen.getByRole('button', { name: 'Copy' }).getAttribute('aria-busy')).toBe('true');
+    rerender(<CodeBlockAdapter code="B" />);
+    rerender(<CodeBlockAdapter code="A" />);
+    resolveWrite();
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Copy' }).getAttribute('aria-busy')).toBeNull());
+    expect(screen.getByRole('button', { name: 'Copy' }).getAttribute('aria-disabled')).toBeNull();
+  });
+
+  it('resets a completed copy status after code changes A to B to A', async () => {
+    clipboard(vi.fn(async () => {}));
+    const { rerender } = render(<CodeBlockAdapter code="A" />);
+    fireEvent.click(screen.getByRole('button', { name: 'Copy' }));
+    expect(await screen.findByRole('button', { name: 'Copied' })).toBeTruthy();
+    rerender(<CodeBlockAdapter code="B" />);
+    rerender(<CodeBlockAdapter code="A" />);
+    expect(screen.getByRole('button', { name: 'Copy' })).toBeTruthy();
+  });
+
+  it('copies empty and HTML-like strings exactly', async () => {
+    const writeText = vi.fn(async () => {});
+    clipboard(writeText);
+    const { rerender } = render(<CodeBlockAdapter code="" />);
+    fireEvent.click(screen.getByRole('button', { name: 'Copy' }));
+    expect(await screen.findByRole('button', { name: 'Copied' })).toBeTruthy();
+    expect(writeText).toHaveBeenLastCalledWith('');
+    rerender(<CodeBlockAdapter code={'<script>alert(1)</script>\n'} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Copy' }));
+    expect(await screen.findByRole('button', { name: 'Copied' })).toBeTruthy();
+    expect(writeText).toHaveBeenLastCalledWith('<script>alert(1)</script>\n');
+  });
 });
