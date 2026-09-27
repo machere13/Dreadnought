@@ -1,0 +1,36 @@
+@layer dreadnought {
+  .root { color: var(--dreadnought-breadcrumb-current-fg); }
+
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--dreadnought-breadcrumb-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .item {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .item + .item::before {
+    content: var(--dreadnought-breadcrumb-separator-content);
+    margin-inline-end: var(--dreadnought-breadcrumb-gap);
+    color: var(--dreadnought-breadcrumb-separator-fg);
+  }
+
+  .link {
+    color: var(--dreadnought-breadcrumb-link-fg);
+    text-decoration: none;
+  }
+
+  .link:hover { color: var(--dreadnought-breadcrumb-link-fg-hover); text-decoration: underline; }
+  .link:focus-visible { outline: var(--dreadnought-breadcrumb-focus-width) solid var(--dreadnought-breadcrumb-focus-ring); }
+  .current { color: var(--dreadnought-breadcrumb-current-fg); }
+}

@@ -1,0 +1,7 @@
+:root {
+  --dreadnought-font-size-breadcrumb: var(--dreadnought-font-size-body-3);
+  --dreadnought-font-weight-breadcrumb: var(--dreadnought-font-weight-body-3);
+  --dreadnought-line-height-breadcrumb: var(--dreadnought-line-height-body-3);
+  --dreadnought-font-weight-breadcrumb-current: var(--dreadnought-font-weight-label-2);
+  --dreadnought-breadcrumb-separator-content: "/";
+}

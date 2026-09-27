@@ -1,0 +1,7 @@
+:root {
+  --dreadnought-breadcrumb-link-fg: var(--dreadnought-color-text-placeholder);
+  --dreadnought-breadcrumb-link-fg-hover: var(--dreadnought-color-text-primary);
+  --dreadnought-breadcrumb-current-fg: var(--dreadnought-color-text-primary);
+  --dreadnought-breadcrumb-separator-fg: var(--dreadnought-color-border-default);
+  --dreadnought-breadcrumb-focus-ring: var(--dreadnought-color-focus-ring);
+}
