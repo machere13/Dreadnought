@@ -1,6 +1,7 @@
-import { createRef } from 'react';
+import { createRef, type FormEvent } from 'react';
 import { cleanup, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AlertAdapter } from '@dreadnought/react/unstyled';
 
 afterEach(cleanup);
@@ -52,5 +53,45 @@ describe('AlertAdapter', () => {
     expect(alert.className).toBe('consumer');
     expect(ref.current).toBe(alert);
     expect(alert.querySelector('[data-slot="description"]')).toBeNull();
+  });
+
+  it('closes only its own alert and does not submit the surrounding form', async () => {
+    const user = userEvent.setup();
+    const submit = vi.fn((event: FormEvent<HTMLFormElement>) => event.preventDefault());
+    const onClose = vi.fn();
+    render(<form onSubmit={submit}>
+      <AlertAdapter title="First" closable={{ onClose, 'aria-label': 'Close first', closeIcon: <svg /> }} slotClassNames={{ close: 'own-close' }} />
+      <AlertAdapter title="Second" closable />
+    </form>);
+
+    const close = screen.getByRole('button', { name: 'Close first' });
+    expect(close.className).toContain('own-close');
+    expect(close.getAttribute('type')).toBe('button');
+    await user.click(close);
+    expect(screen.queryByText('First')).toBeNull();
+    expect(screen.getByText('Second')).not.toBeNull();
+    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(submit).not.toHaveBeenCalled();
+  });
+
+  it('does not show a close button unless requested and names the default button', () => {
+    render(<><AlertAdapter title="Fixed" /><AlertAdapter title="Dismissible" closable /></>);
+
+    expect(screen.getAllByRole('button')).toHaveLength(1);
+    expect(screen.getByRole('button', { name: 'Close alert' })).not.toBeNull();
+  });
+
+  it('closes with keyboard activation without invoking the content action or reopening on rerender', async () => {
+    const user = userEvent.setup();
+    const action = vi.fn();
+    const { rerender } = render(<AlertAdapter title="Before" closable action={<button type="button" onClick={action}>Retry</button>} />);
+
+    screen.getByRole('button', { name: 'Close alert' }).focus();
+    await user.keyboard('{Enter}');
+    expect(screen.queryByText('Before')).toBeNull();
+    expect(action).not.toHaveBeenCalled();
+
+    rerender(<AlertAdapter title="After" closable />);
+    expect(screen.queryByText('After')).toBeNull();
   });
 });
