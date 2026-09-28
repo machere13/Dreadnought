@@ -149,7 +149,7 @@
 .footnote { margin: var(--dreadnought-spacing-x4) 0 0; font-size: var(--dreadnought-font-size-body-3); }
 
 .layerList { display: grid; gap: var(--dreadnought-spacing-x2); margin-block: calc(var(--dreadnought-spacing-x4) * 2); }
-.layerList p { display: grid; gap: var(--dreadnought-spacing-x1); margin: 0; padding: var(--dreadnought-spacing-x4); border: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle); border-radius: var(--dreadnought-border-radius-x1); }
+.layerCard { display: grid; gap: var(--dreadnought-spacing-x1); border: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle); }
 .layerList strong { color: var(--dreadnought-color-text-primary); }
 .layerList span { color: var(--dreadnought-color-text-placeholder); }
 .overviewAction { display: inline-flex; }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Badge, Breadcrumb, Button, CodeBlock, Layout } from '@dreadnought/ui/react';
+import { Badge, Breadcrumb, Button, Card, CodeBlock, Layout } from '@dreadnought/ui/react';
 import styles from './DocsPage.module.css';
 
 type DocsSection = 'overview' | 'button';
@@ -68,10 +68,10 @@ function Overview() {
     <PageHeading eyebrow="БИБЛИОТЕКА КОМПОНЕНТОВ" title="Начните с готового компонента" description="Dreadnought объединяет общую логику, адаптеры под фреймворк и оформленные компоненты. Берите ровно тот слой, который нужен вашему проекту." />
     <section className={styles.section} aria-labelledby="overview-layers">
       <h2 id="overview-layers" className={styles.sectionTitle}>Три уровня использования</h2>
-      <div className={styles.layerList}>
-        <p><strong>Готовый компонент</strong><span>Подключайте с темой и меняйте внешний вид через токены.</span></p>
-        <p><strong>Адаптер</strong><span>Оставляйте разметку и поведение, задавая свои стили.</span></p>
-        <p><strong>Логика</strong><span>Собирайте собственный компонент на базовом поведении.</span></p>
+      <div className={styles.layerList} role="list" aria-label="Три уровня использования">
+        <Card role="listitem" className={styles.layerCard}><strong>Готовый компонент</strong><span>Подключайте с темой и меняйте внешний вид через токены.</span></Card>
+        <Card role="listitem" className={styles.layerCard}><strong>Адаптер</strong><span>Оставляйте разметку и поведение, задавая свои стили.</span></Card>
+        <Card role="listitem" className={styles.layerCard}><strong>Логика</strong><span>Собирайте собственный компонент на базовом поведении.</span></Card>
       </div>
       <Button href="/components/button/" className={styles.overviewAction}>Посмотреть Button</Button>
     </section>

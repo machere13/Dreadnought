@@ -10,6 +10,7 @@ describe('documentation pages', () => {
 
     expect(screen.getByRole('heading', { name: 'Начните с готового компонента' })).toBeTruthy();
     expect(screen.getByRole('link', { name: 'Посмотреть Button' }).getAttribute('href')).toBe('/components/button/');
+    expect(screen.getByRole('list', { name: 'Три уровня использования' }).querySelectorAll('[role="listitem"]')).toHaveLength(3);
   });
 
   it('renders Button API and updates the live example', () => {
