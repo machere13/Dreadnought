@@ -41,6 +41,19 @@ describe('CodeBlock', () => {
     expect(writeText).toHaveBeenCalledExactlyOnceWith('const x = 1;');
   });
 
+  it('uses an icon with an accessible name instead of visible copy text', async () => {
+    vi.stubGlobal('navigator', { clipboard: { writeText: vi.fn(async () => {}) } });
+    render(<CodeBlock code="example" />);
+    const copy = screen.getByRole('button', { name: 'Copy' });
+    expect(copy.textContent).toBe('');
+    expect(copy.querySelector('svg')).toBeTruthy();
+
+    fireEvent.click(copy);
+    const copied = await screen.findByRole('button', { name: 'Copied' });
+    expect(copied.textContent).toBe('');
+    expect(copied.querySelector('svg')).toBeTruthy();
+  });
+
   it('uses the ready Button visual contract for its compact copy action', () => {
     render(<>
       <CodeBlock code="example" />

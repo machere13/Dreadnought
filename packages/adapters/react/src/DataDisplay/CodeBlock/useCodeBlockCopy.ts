@@ -2,6 +2,7 @@ import { copy } from '@dreadnought/core';
 import { useEffect, useRef, useState } from 'react';
 
 type CopyStatus = 'idle' | 'pending' | 'copied' | 'error';
+const feedbackDurationMs = 2000;
 
 export function useCodeBlockCopy(
   code: string,
@@ -21,6 +22,17 @@ export function useCodeBlockCopy(
   }, []);
 
   const status = result.generation === current.current.generation ? result.status : 'idle';
+
+  useEffect(() => {
+    if (status !== 'copied' && status !== 'error') return;
+    const generation = current.current.generation;
+    const timer = setTimeout(() => {
+      setResult((previous) => previous.generation === generation
+        ? { generation, status: 'idle' }
+        : previous);
+    }, feedbackDurationMs);
+    return () => clearTimeout(timer);
+  }, [result.generation, status]);
 
   async function handleCopy() {
     if (current.current.pending) return;

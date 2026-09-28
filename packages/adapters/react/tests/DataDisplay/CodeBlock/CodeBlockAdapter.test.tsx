@@ -1,10 +1,11 @@
 import { createRef } from 'react';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CodeBlockAdapter } from '../../../src/unstyled.ts';
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.unstubAllGlobals();
 });
 
@@ -56,6 +57,21 @@ describe('CodeBlockAdapter', () => {
     expect(writeText).toHaveBeenCalledExactlyOnceWith('a\n');
     expect(onCopy).toHaveBeenCalledExactlyOnceWith('a\n');
     expect(submit).not.toHaveBeenCalled();
+  });
+
+  it('returns to the copy action after briefly confirming success', async () => {
+    vi.useFakeTimers();
+    clipboard(vi.fn(async () => {}));
+    render(<CodeBlockAdapter code="example" />);
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Copy' }));
+      await Promise.resolve();
+    });
+    expect(screen.getByRole('button', { name: 'Copied' })).toBeTruthy();
+
+    act(() => { vi.advanceTimersByTime(2000); });
+    expect(screen.getByRole('button', { name: 'Copy' })).toBeTruthy();
   });
 
   it('shows failure and allows retry after clipboard rejection', async () => {
