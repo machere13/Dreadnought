@@ -1,11 +1,13 @@
 :root {
   --dreadnought-layout-bg: var(--dreadnought-color-surface-canvas);
   --dreadnought-layout-fg: var(--dreadnought-color-text-primary);
-  --dreadnought-layout-header-bg: var(--dreadnought-color-surface-default);
-  --dreadnought-layout-footer-bg: var(--dreadnought-color-surface-default);
-  --dreadnought-layout-sidebar-bg: var(--dreadnought-color-surface-subtle);
-  --dreadnought-layout-trigger-bg: var(--dreadnought-color-surface-subtle);
-  --dreadnought-layout-trigger-bg-hover: var(--dreadnought-color-surface-hover);
+  --dreadnought-layout-header-bg: var(--dreadnought-color-surface-canvas);
+  --dreadnought-layout-footer-bg: var(--dreadnought-color-surface-canvas);
+  --dreadnought-layout-footer-fg: var(--dreadnought-color-text-placeholder);
+  --dreadnought-layout-sidebar-bg: var(--dreadnought-color-surface-canvas);
+  --dreadnought-layout-divider: var(--dreadnought-color-border-subtle);
+  --dreadnought-layout-trigger-bg: var(--dreadnought-color-surface-canvas);
+  --dreadnought-layout-trigger-bg-hover: var(--dreadnought-color-surface-default);
   --dreadnought-layout-trigger-fg: var(--dreadnought-color-text-primary);
   --dreadnought-layout-trigger-focus-ring: var(--dreadnought-color-focus-ring);
 }

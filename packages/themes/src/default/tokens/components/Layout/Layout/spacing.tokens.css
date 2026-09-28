@@ -3,4 +3,5 @@
   --dreadnought-layout-content-padding: var(--dreadnought-spacing-x4);
   --dreadnought-layout-footer-padding: var(--dreadnought-spacing-x4);
   --dreadnought-layout-sidebar-body-padding: var(--dreadnought-spacing-x4);
+  --dreadnought-layout-trigger-inset: var(--dreadnought-spacing-x1);
 }

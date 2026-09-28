@@ -3,5 +3,7 @@
   --dreadnought-layout-sidebar-width: var(--dreadnought-size-x3);
   --dreadnought-layout-sidebar-collapsed-width: var(--dreadnought-size-x1);
   --dreadnought-layout-trigger-min-height: var(--dreadnought-size-control-min-height);
+  --dreadnought-layout-trigger-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-layout-divider-width: var(--dreadnought-border-width-outline);
   --dreadnought-layout-trigger-focus-width: var(--dreadnought-border-width-x2);
 }

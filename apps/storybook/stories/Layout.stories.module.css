@@ -1,0 +1,140 @@
+.shell {
+  min-height: 34rem;
+  max-width: 80rem;
+  overflow: hidden;
+  border: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle);
+  border-radius: var(--dreadnought-border-radius-x1);
+  font-family: var(--dreadnought-font-family-ui);
+}
+
+.headerContent,
+.footerContent,
+.brand {
+  display: flex;
+  align-items: center;
+}
+
+.headerContent,
+.footerContent { gap: var(--dreadnought-spacing-x4); }
+
+.brand {
+  gap: var(--dreadnought-spacing-x2);
+  color: var(--dreadnought-color-text-primary);
+  font-size: var(--dreadnought-font-size-label-2);
+  font-weight: var(--dreadnought-font-weight-label-1);
+  white-space: nowrap;
+}
+
+.brandMark {
+  display: inline-grid;
+  width: var(--dreadnought-size-control-compact-min-height);
+  height: var(--dreadnought-size-control-compact-min-height);
+  place-items: center;
+  border-radius: var(--dreadnought-border-radius-x1);
+  background: var(--dreadnought-color-surface-inverse);
+  color: var(--dreadnought-color-text-inverse);
+  font-weight: var(--dreadnought-font-weight-label-1);
+}
+
+.headerDivider {
+  align-self: stretch;
+  border-inline-start: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle);
+}
+
+.headerSection,
+.headerMeta,
+.footerContent {
+  color: var(--dreadnought-color-text-placeholder);
+  font-size: var(--dreadnought-font-size-caption-1);
+}
+
+.headerMeta { margin-inline-start: auto; white-space: nowrap; }
+.footerContent { justify-content: space-between; }
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dreadnought-spacing-x1);
+}
+
+.navigationLabel {
+  margin-block-end: var(--dreadnought-spacing-x2);
+  color: var(--dreadnought-color-text-placeholder);
+  font-size: var(--dreadnought-font-size-caption-2);
+}
+
+.navigationLink {
+  padding: var(--dreadnought-spacing-x2) var(--dreadnought-spacing-x4);
+  border-radius: var(--dreadnought-border-radius-x1);
+  color: var(--dreadnought-color-text-placeholder);
+  font-size: var(--dreadnought-font-size-label-2);
+  text-decoration: none;
+}
+
+.navigationLink:hover { background: var(--dreadnought-color-surface-default); }
+.navigationLink:focus-visible { outline: var(--dreadnought-border-width-x2) solid var(--dreadnought-color-focus-ring); }
+
+.navigationCurrent {
+  background: var(--dreadnought-color-surface-default);
+  color: var(--dreadnought-color-text-primary);
+  font-weight: var(--dreadnought-font-weight-label-2);
+}
+
+.article {
+  max-width: 65ch;
+  padding: var(--dreadnought-spacing-x4);
+}
+
+.breadcrumb,
+.detailIndex {
+  color: var(--dreadnought-color-text-placeholder);
+  font-size: var(--dreadnought-font-size-caption-2);
+}
+
+.breadcrumb span { margin-inline: var(--dreadnought-spacing-x2); }
+
+.title {
+  margin: calc(var(--dreadnought-spacing-x4) * 2) 0 var(--dreadnought-spacing-x4);
+  color: var(--dreadnought-color-text-primary);
+  font-size: var(--dreadnought-font-size-h3);
+  font-weight: var(--dreadnought-font-weight-h3);
+  line-height: var(--dreadnought-line-height-h3);
+  text-wrap: balance;
+}
+
+.lead {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--dreadnought-color-text-placeholder);
+  font-size: var(--dreadnought-font-size-body-2);
+  line-height: var(--dreadnought-line-height-body-2);
+  text-wrap: pretty;
+}
+
+.detail {
+  margin-block-start: calc(var(--dreadnought-spacing-x4) * 3);
+  padding-block-start: calc(var(--dreadnought-spacing-x4) * 2);
+  border-block-start: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle);
+}
+
+.detailTitle {
+  margin: var(--dreadnought-spacing-x4) 0 var(--dreadnought-spacing-x2);
+  color: var(--dreadnought-color-text-primary);
+  font-size: var(--dreadnought-font-size-h6);
+  font-weight: var(--dreadnought-font-weight-h6);
+  line-height: var(--dreadnought-line-height-h6);
+}
+
+.detailText {
+  margin: 0;
+  color: var(--dreadnought-color-text-placeholder);
+  font-size: var(--dreadnought-font-size-body-3);
+  line-height: var(--dreadnought-line-height-body-3);
+}
+
+@media (max-width: 40rem) {
+  .headerMeta { display: none; }
+  .footerContent { align-items: flex-start; flex-direction: column; gap: var(--dreadnought-spacing-x1); }
+  .article { padding: var(--dreadnought-spacing-x2); }
+  .title { font-size: var(--dreadnought-font-size-h4); line-height: var(--dreadnought-line-height-h4); }
+}

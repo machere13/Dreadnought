@@ -9,6 +9,7 @@
   }
 
   .root[data-direction="horizontal"] { flex-direction: row; }
+  .root > .root[data-direction="horizontal"] { flex: 1 1 auto; }
 
   .header {
     box-sizing: border-box;
@@ -16,6 +17,7 @@
     padding: var(--dreadnought-layout-header-padding);
     background: var(--dreadnought-layout-header-bg);
     color: var(--dreadnought-layout-fg);
+    border-block-end: var(--dreadnought-layout-divider-width) solid var(--dreadnought-layout-divider);
   }
 
   .content {
@@ -30,7 +32,8 @@
     box-sizing: border-box;
     padding: var(--dreadnought-layout-footer-padding);
     background: var(--dreadnought-layout-footer-bg);
-    color: var(--dreadnought-layout-fg);
+    color: var(--dreadnought-layout-footer-fg);
+    border-block-start: var(--dreadnought-layout-divider-width) solid var(--dreadnought-layout-divider);
   }
 
   .sidebar {
@@ -40,6 +43,7 @@
     min-width: 0;
     background: var(--dreadnought-layout-sidebar-bg);
     color: var(--dreadnought-layout-fg);
+    border-inline-end: var(--dreadnought-layout-divider-width) solid var(--dreadnought-layout-divider);
   }
 
   .sidebar[data-collapsed="true"] { width: var(--dreadnought-layout-sidebar-collapsed-width); }
@@ -62,6 +66,7 @@
     overflow-y: auto;
     padding-top: calc(var(--dreadnought-layout-trigger-min-height) + var(--dreadnought-layout-sidebar-body-padding));
     background: var(--dreadnought-layout-sidebar-bg);
+    border-inline-end: var(--dreadnought-layout-divider-width) solid var(--dreadnought-layout-divider);
   }
 
   .sidebar[data-mobile="true"] .trigger {
@@ -76,10 +81,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: calc(var(--dreadnought-layout-sidebar-collapsed-width) - 2 * var(--dreadnought-layout-trigger-inset));
     min-height: var(--dreadnought-layout-trigger-min-height);
+    margin: var(--dreadnought-layout-trigger-inset);
     padding: 0;
     border: 0;
+    border-radius: var(--dreadnought-layout-trigger-radius);
     background: var(--dreadnought-layout-trigger-bg);
     color: var(--dreadnought-layout-trigger-fg);
     cursor: pointer;
