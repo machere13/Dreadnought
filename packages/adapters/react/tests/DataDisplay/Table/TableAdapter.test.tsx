@@ -6,6 +6,23 @@ import { TableAdapter } from '../../../src/DataDisplay/Table/index.ts';
 afterEach(cleanup);
 
 describe('TableAdapter', () => {
+  it('renders columns and records from a data source', () => {
+    render(<TableAdapter
+      aria-label="Пользователи"
+      rowKey="id"
+      columns={[
+        { key: 'name', title: 'Имя', dataIndex: 'name' },
+        { key: 'role', title: 'Роль', dataIndex: 'role', render: (value) => <strong>{String(value)}</strong> },
+      ]}
+      dataSource={[{ id: 1, name: 'Анна', role: 'Редактор' }]}
+    />);
+
+    expect(screen.getByRole('table', { name: 'Пользователи' })).toBeTruthy();
+    expect(screen.getByRole('columnheader', { name: 'Имя' })).toBeTruthy();
+    expect(screen.getByRole('cell', { name: 'Анна' })).toBeTruthy();
+    expect(screen.getByRole('cell', { name: 'Редактор' }).querySelector('strong')).toBeTruthy();
+  });
+
   it('preserves native table semantics, refs and consumer classes', () => {
     const ref = createRef<HTMLTableElement>();
     render(<TableAdapter ref={ref} className="custom-table" aria-label="Свойства">

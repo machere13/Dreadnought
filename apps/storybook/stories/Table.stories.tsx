@@ -28,3 +28,20 @@ export const Compact: Story = {
   ...Default,
   args: { size: 'small' },
 };
+
+export const DataSource: Story = {
+  render: () => <Table
+    aria-label="Команда"
+    rowKey="id"
+    columns={[
+      { key: 'name', title: 'Имя', dataIndex: 'name' },
+      { key: 'role', title: 'Роль', dataIndex: 'role' },
+      { key: 'status', title: 'Статус', dataIndex: 'status' },
+    ]}
+    dataSource={[
+      { id: 1, name: 'Анна', role: 'Дизайнер', status: 'Активна' },
+      { id: 2, name: 'Марк', role: 'Разработчик', status: 'Активен' },
+      { id: 3, name: 'Нина', role: 'Редактор', status: 'В отпуске' },
+    ]}
+  />,
+};

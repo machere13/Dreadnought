@@ -1,6 +1,9 @@
 import type { ComponentPropsWithRef } from 'react';
+import { DataTableAdapter } from './DataTableAdapter.tsx';
+import type { TableDataAdapterProps } from './DataTableAdapter.tsx';
 
-export type TableAdapterProps = ComponentPropsWithRef<'table'>;
+export type TableMarkupAdapterProps = ComponentPropsWithRef<'table'>;
+export type TableAdapterProps<RecordType extends object = Record<string, unknown>> = TableMarkupAdapterProps | TableDataAdapterProps<RecordType>;
 export type TableHeadAdapterProps = ComponentPropsWithRef<'thead'>;
 export type TableBodyAdapterProps = ComponentPropsWithRef<'tbody'>;
 export type TableRowAdapterProps = ComponentPropsWithRef<'tr'>;
@@ -13,7 +16,12 @@ export function TableRowAdapter(props: TableRowAdapterProps) { return <tr {...pr
 export function TableHeaderCellAdapter(props: TableHeaderCellAdapterProps) { return <th {...props} />; }
 export function TableCellAdapter(props: TableCellAdapterProps) { return <td {...props} />; }
 
-function TableRootAdapter(props: TableAdapterProps) { return <table {...props} data-ui="table" />; }
+function TableRootAdapter<RecordType extends object>(props: TableDataAdapterProps<RecordType>): React.JSX.Element;
+function TableRootAdapter(props: TableMarkupAdapterProps): React.JSX.Element;
+function TableRootAdapter<RecordType extends object>(props: TableAdapterProps<RecordType>) {
+  if ('columns' in props && 'dataSource' in props) return <DataTableAdapter {...props} />;
+  return <table {...props} data-ui="table" />;
+}
 
 export const TableAdapter = Object.assign(TableRootAdapter, {
   Head: TableHeadAdapter,

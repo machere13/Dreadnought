@@ -6,6 +6,18 @@ import { Table } from '@dreadnought/ui/react';
 afterEach(cleanup);
 
 describe('Table', () => {
+  it('renders data-driven columns through the ready component', () => {
+    render(<Table
+      aria-label="Команда"
+      rowKey="id"
+      columns={[{ key: 'name', title: 'Имя', dataIndex: 'name' }]}
+      dataSource={[{ id: 7, name: 'Мария' }]}
+    />);
+
+    expect(screen.getByRole('columnheader', { name: 'Имя' })).toBeTruthy();
+    expect(screen.getByRole('cell', { name: 'Мария' })).toBeTruthy();
+  });
+
   it('exposes density, borders and row hover settings on the ready table', () => {
     render(<Table size="small" bordered rowHoverable={false} aria-label="Свойства">
       <Table.Head><Table.Row><Table.HeaderCell scope="col">Имя</Table.HeaderCell></Table.Row></Table.Head>
