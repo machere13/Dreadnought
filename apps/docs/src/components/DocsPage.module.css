@@ -137,12 +137,7 @@
 .bodyText { margin: var(--dreadnought-spacing-x2) 0 var(--dreadnought-spacing-x4); }
 
 .tableScroll { overflow-x: auto; }
-.apiTable { width: 100%; border-collapse: collapse; text-align: left; font-size: var(--dreadnought-font-size-body-3); }
-.apiTable th,
-.apiTable td { padding: var(--dreadnought-spacing-x4); border-block-end: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle); vertical-align: top; }
-.apiTable thead th { color: var(--dreadnought-color-text-placeholder); font-weight: var(--dreadnought-font-weight-label-2); white-space: nowrap; }
-.apiTable tbody th { color: var(--dreadnought-color-text-primary); font-weight: var(--dreadnought-font-weight-label-2); }
-.apiTable tbody td { color: var(--dreadnought-color-text-placeholder); }
+.apiTable thead th { white-space: nowrap; }
 .apiTable code,
 .footnote code { font-family: var(--dreadnought-font-family-monospace); }
 .apiTable code { white-space: nowrap; }

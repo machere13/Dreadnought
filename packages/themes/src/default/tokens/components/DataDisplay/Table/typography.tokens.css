@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-font-size-table: var(--dreadnought-font-size-body-3);
+  --dreadnought-font-weight-table: var(--dreadnought-font-weight-body-3);
+  --dreadnought-line-height-table: var(--dreadnought-line-height-body-3);
+  --dreadnought-table-header-font-weight: var(--dreadnought-font-weight-label-2);
+}

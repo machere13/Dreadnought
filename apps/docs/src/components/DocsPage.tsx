@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Badge, Breadcrumb, Button, Card, CodeBlock, Layout } from '@dreadnought/ui/react';
+import { Badge, Breadcrumb, Button, Card, CodeBlock, Layout, Table } from '@dreadnought/ui/react';
 import styles from './DocsPage.module.css';
 
 type DocsSection = 'overview' | 'button';
@@ -131,10 +131,10 @@ function ButtonDocumentation() {
         <span className={styles.sectionMeta}>Button</span>
       </div>
       <div className={styles.tableScroll}>
-        <table className={styles.apiTable}>
-          <thead><tr><th scope="col">Свойство</th><th scope="col">Значения</th><th scope="col">По умолчанию</th><th scope="col">Назначение</th></tr></thead>
-          <tbody>{apiRows.map(([name, values, fallback, meaning]) => <tr key={name}><th scope="row"><code>{name}</code></th><td><code>{values}</code></td><td>{fallback}</td><td>{meaning}</td></tr>)}</tbody>
-        </table>
+        <Table className={styles.apiTable}>
+          <Table.Head><Table.Row><Table.HeaderCell scope="col">Свойство</Table.HeaderCell><Table.HeaderCell scope="col">Значения</Table.HeaderCell><Table.HeaderCell scope="col">По умолчанию</Table.HeaderCell><Table.HeaderCell scope="col">Назначение</Table.HeaderCell></Table.Row></Table.Head>
+          <Table.Body>{apiRows.map(([name, values, fallback, meaning]) => <Table.Row key={name}><Table.HeaderCell scope="row"><code>{name}</code></Table.HeaderCell><Table.Cell><code>{values}</code></Table.Cell><Table.Cell>{fallback}</Table.Cell><Table.Cell>{meaning}</Table.Cell></Table.Row>)}</Table.Body>
+        </Table>
       </div>
       <p className={styles.footnote}>Поддерживаются также стандартные свойства <code>&lt;button&gt;</code> и <code>&lt;a&gt;</code>. Для кнопки только с иконкой задайте доступное имя через <code>aria-label</code>.</p>
     </section>

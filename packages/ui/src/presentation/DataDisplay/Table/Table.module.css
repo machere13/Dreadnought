@@ -1,0 +1,7 @@
+@layer dreadnought {
+  .root { width: 100%; border-collapse: collapse; text-align: left; color: var(--dreadnought-table-text); }
+  .headerCell, .cell { padding: var(--dreadnought-table-cell-padding); border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); vertical-align: top; }
+  .headerCell { color: var(--dreadnought-table-header-text); font-weight: var(--dreadnought-table-header-font-weight); }
+  .headerCell[scope='row'] { color: var(--dreadnought-table-text); }
+  .cell { color: var(--dreadnought-table-text); }
+}

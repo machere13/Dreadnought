@@ -21,5 +21,6 @@ describe('documentation pages', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Нажать' }));
     expect(screen.getByText('Нажатий: 1')).toBeTruthy();
     expect(screen.getByRole('rowheader', { name: 'loading' })).toBeTruthy();
+    expect(screen.getByRole('table').getAttribute('data-ui')).toBe('table');
   });
 });

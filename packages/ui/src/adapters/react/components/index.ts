@@ -3,6 +3,7 @@ export * from './Fields/Input/index.ts';
 export * from './Fields/TextArea/index.ts';
 export * from './DataDisplay/Badge/index.ts';
 export * from './DataDisplay/CodeBlock/index.ts';
+export * from './DataDisplay/Table/index.ts';
 export * from './DataDisplay/Mark/index.ts';
 export * from './DataDisplay/Icon/index.ts';
 export * from './Surfaces/Card/index.ts';

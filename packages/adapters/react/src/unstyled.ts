@@ -8,6 +8,7 @@ export { BadgeAdapter } from './DataDisplay/Badge/BadgeAdapter.tsx';
 export type { BadgeAdapterProps } from './DataDisplay/Badge/BadgeAdapter.tsx';
 export { CodeBlockAdapter } from './DataDisplay/CodeBlock/index.ts';
 export type { CodeBlockAdapterProps } from './DataDisplay/CodeBlock/index.ts';
+export * from './DataDisplay/Table/index.ts';
 export * from './DataDisplay/Mark/index.ts';
 export * from './DataDisplay/Icon/index.ts';
 export { CardAdapter } from './Surfaces/Card/CardAdapter.tsx';
