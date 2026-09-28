@@ -1,4 +1,5 @@
 :root {
   --dreadnought-table-border-width: var(--dreadnought-border-width-outline);
   --dreadnought-table-header-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-table-selection-width: var(--dreadnought-size-x1);
 }

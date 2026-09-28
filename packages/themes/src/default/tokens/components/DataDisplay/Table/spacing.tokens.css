@@ -5,4 +5,5 @@
   --dreadnought-table-cell-padding-inline-middle: var(--dreadnought-spacing-x2);
   --dreadnought-table-cell-padding-block-small: var(--dreadnought-spacing-x2);
   --dreadnought-table-cell-padding-inline-small: var(--dreadnought-spacing-x2);
+  --dreadnought-table-control-gap: var(--dreadnought-spacing-x2);
 }

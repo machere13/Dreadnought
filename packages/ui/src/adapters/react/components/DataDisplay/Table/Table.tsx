@@ -1,16 +1,19 @@
 import { TableAdapter, TableBodyAdapter, TableCellAdapter, TableHeadAdapter, TableHeaderCellAdapter, TableRowAdapter } from '@dreadnought/react/unstyled';
-import type { TableAdapterProps, TableCellAdapterProps, TableHeaderCellAdapterProps } from '@dreadnought/react/unstyled';
+import type { TableAdapterProps, TableDataAdapterProps, TableMarkupAdapterProps, TableCellAdapterProps, TableHeaderCellAdapterProps } from '@dreadnought/react/unstyled';
 import { tablePresentation } from '#presentation/DataDisplay/Table/tablePresentation.ts';
 
 function classes(library: string, consumer?: string) { return [library, consumer].filter(Boolean).join(' '); }
 
-export type TableProps = TableAdapterProps & {
+type TableAppearance = {
   size?: 'default' | 'middle' | 'small';
   bordered?: boolean;
   rowHoverable?: boolean;
 };
+export type TableProps<RecordType extends object = Record<string, unknown>> = TableAdapterProps<RecordType> & TableAppearance;
 
-function TableRoot({ className, size = 'default', bordered = false, rowHoverable = true, ...props }: TableProps) {
+function TableRoot<RecordType extends object>(props: TableDataAdapterProps<RecordType> & TableAppearance): React.JSX.Element;
+function TableRoot(props: TableMarkupAdapterProps & TableAppearance): React.JSX.Element;
+function TableRoot<RecordType extends object>({ className, size = 'default', bordered = false, rowHoverable = true, ...props }: TableProps<RecordType>) {
   return <TableAdapter
     {...props}
     className={classes(`dreadnought-text-table ${tablePresentation.root}`, className)}

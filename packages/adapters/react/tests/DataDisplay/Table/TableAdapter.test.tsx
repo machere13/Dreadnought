@@ -1,11 +1,92 @@
 import { createRef } from 'react';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { TableAdapter } from '../../../src/DataDisplay/Table/index.ts';
 
 afterEach(cleanup);
 
 describe('TableAdapter', () => {
+  it('cycles an interactive sortable column through ascending, descending and original order', () => {
+    render(<TableAdapter
+      aria-label="Возраст"
+      rowKey="id"
+      columns={[{ key: 'age', title: 'Возраст', dataIndex: 'age', sorter: (a, b) => a.age - b.age }]}
+      dataSource={[{ id: 1, age: 42 }, { id: 2, age: 18 }]}
+    />);
+
+    const ages = () => screen.getAllByRole('cell').map((cell) => cell.textContent);
+    const header = screen.getByRole('columnheader', { name: /Возраст/ });
+    const sort = screen.getByRole('button', { name: 'Сортировать Возраст' });
+    expect(ages()).toEqual(['42', '18']);
+    fireEvent.click(sort);
+    expect(ages()).toEqual(['18', '42']);
+    expect(header.getAttribute('aria-sort')).toBe('ascending');
+    fireEvent.click(sort);
+    expect(ages()).toEqual(['42', '18']);
+    expect(header.getAttribute('aria-sort')).toBe('descending');
+    fireEvent.click(sort);
+    expect(ages()).toEqual(['42', '18']);
+    expect(header.getAttribute('aria-sort')).toBe('none');
+  });
+
+  it('filters rows and restores them when the filter is cleared', () => {
+    render(<TableAdapter aria-label="Команда" rowKey="id"
+      columns={[{ key: 'role', title: 'Роль', dataIndex: 'role', filters: [{ text: 'Дизайнер', value: 'designer' }], onFilter: (value, row) => row.role === (value === 'designer' ? 'Дизайнер' : '') }]}
+      dataSource={[{ id: 1, role: 'Дизайнер' }, { id: 2, role: 'Разработчик' }]}
+    />);
+    fireEvent.click(screen.getByRole('button', { name: 'Фильтр Роль' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Дизайнер' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Применить' }));
+    expect(screen.getAllByRole('cell')).toHaveLength(1);
+    fireEvent.click(screen.getByRole('button', { name: 'Фильтр Роль' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Сбросить' }));
+    expect(screen.getAllByRole('cell')).toHaveLength(2);
+  });
+
+  it('paginates records and selects rows across pages', () => {
+    const changes: unknown[] = [];
+    render(<TableAdapter aria-label="Команда" rowKey="id"
+      columns={[{ key: 'name', title: 'Имя', dataIndex: 'name' }]}
+      dataSource={[{ id: 1, name: 'Анна' }, { id: 2, name: 'Марк' }, { id: 3, name: 'Нина' }]}
+      pagination={{ pageSize: 2 }}
+      rowSelection={{ onChange: (keys) => changes.push(keys) }}
+    />);
+    expect(screen.queryByText('Нина')).toBeNull();
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Выбрать строку 1' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Следующая страница' }));
+    expect(screen.getByText('Нина')).toBeTruthy();
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Выбрать строку 3' }));
+    expect(changes).toEqual([[1], [1, 3]]);
+  });
+
+  it('exposes sticky header and cumulative offsets for fixed columns', () => {
+    render(<TableAdapter aria-label="Широкая таблица" rowKey="id" sticky scroll={{ x: 700, y: 300 }}
+      columns={[{ key: 'name', title: 'Имя', dataIndex: 'name', width: 120, fixed: 'left' }, { key: 'age', title: 'Возраст', dataIndex: 'age', width: 80, fixed: 'left' }, { key: 'city', title: 'Город', dataIndex: 'city', width: 160, fixed: 'right' }]}
+      dataSource={[{ id: 1, name: 'Анна', age: 25, city: 'Москва' }]}
+    />);
+    const table = screen.getByRole('table');
+    expect(table.getAttribute('data-sticky')).toBe('true');
+    expect(table.parentElement?.getAttribute('data-slot')).toBe('scroll-container');
+    const headers = screen.getAllByRole('columnheader');
+    expect(headers[0]?.getAttribute('data-fixed')).toBe('left');
+    expect(headers[1]?.style.left).toBe('120px');
+    expect(headers[2]?.getAttribute('data-fixed')).toBe('right');
+  });
+
+  it('keeps the selection column before a fixed left column', () => {
+    render(<TableAdapter aria-label="Команда" rowKey="id" rowSelection={{}} scroll={{ x: 500 }}
+      columns={[{ key: 'name', title: 'Имя', dataIndex: 'name', width: 120, fixed: 'left' }]}
+      dataSource={[{ id: 1, name: 'Анна' }]}
+    />);
+    expect(screen.getByRole('columnheader', { name: 'Выбор строк' }).getAttribute('data-fixed')).toBe('left');
+    expect(screen.getByRole('columnheader', { name: 'Имя' }).style.left).toContain('dreadnought-table-selection-width');
+  });
+
+  it('renders a configurable empty state', () => {
+    render(<TableAdapter aria-label="Пустая таблица" columns={[{ key: 'name', title: 'Имя' }]} dataSource={[]} locale={{ emptyText: 'Пока никого' }} />);
+    expect(screen.getByRole('cell', { name: 'Пока никого' })).toBeTruthy();
+  });
+
   it('renders columns and records from a data source', () => {
     render(<TableAdapter
       aria-label="Пользователи"

@@ -5,4 +5,7 @@
   --dreadnought-table-bg: var(--dreadnought-color-surface-canvas);
   --dreadnought-table-header-bg: var(--dreadnought-color-surface-default);
   --dreadnought-table-row-bg-hover: var(--dreadnought-color-surface-default);
+  --dreadnought-table-row-bg-selected: var(--dreadnought-color-surface-default);
+  --dreadnought-table-control-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-table-control-text: var(--dreadnought-color-text-primary);
 }

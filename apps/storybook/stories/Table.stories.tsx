@@ -45,3 +45,30 @@ export const DataSource: Story = {
     ]}
   />,
 };
+
+const people = [
+  { id: 1, name: 'Анна', role: 'Дизайнер', age: 29, city: 'Москва' },
+  { id: 2, name: 'Марк', role: 'Разработчик', age: 32, city: 'Казань' },
+  { id: 3, name: 'Нина', role: 'Дизайнер', age: 25, city: 'Санкт-Петербург' },
+  { id: 4, name: 'Лев', role: 'Разработчик', age: 27, city: 'Москва' },
+  { id: 5, name: 'Ира', role: 'Редактор', age: 34, city: 'Екатеринбург' },
+];
+
+export const Interactive: Story = {
+  render: () => <Table<(typeof people)[number]>
+    aria-label="Команда"
+    rowKey="id"
+    bordered
+    sticky
+    scroll={{ x: 800, y: 220 }}
+    pagination={{ pageSize: 3 }}
+    rowSelection={{}}
+    columns={[
+      { key: 'name', title: 'Имя', dataIndex: 'name', width: 180, fixed: 'left' },
+      { key: 'role', title: 'Роль', dataIndex: 'role', width: 190, filters: [{ text: 'Дизайнер', value: 'Дизайнер' }, { text: 'Разработчик', value: 'Разработчик' }], onFilter: (value, row) => row.role === value },
+      { key: 'age', title: 'Возраст', dataIndex: 'age', width: 130, sorter: (a, b) => a.age - b.age },
+      { key: 'city', title: 'Город', dataIndex: 'city', width: 220, fixed: 'right' },
+    ]}
+    dataSource={people}
+  />,
+};
