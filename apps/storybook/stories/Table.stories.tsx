@@ -18,3 +18,13 @@ export const Default: Story = {
     </Table.Body>
   </Table>,
 };
+
+export const Bordered: Story = {
+  ...Default,
+  args: { bordered: true },
+};
+
+export const Compact: Story = {
+  ...Default,
+  args: { size: 'small' },
+};

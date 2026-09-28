@@ -1,7 +1,16 @@
 @layer dreadnought {
-  .root { width: 100%; border-collapse: collapse; text-align: left; color: var(--dreadnought-table-text); }
-  .headerCell, .cell { padding: var(--dreadnought-table-cell-padding); border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); vertical-align: top; }
+  .root { --dreadnought-table-active-padding-block: var(--dreadnought-table-cell-padding-block); --dreadnought-table-active-padding-inline: var(--dreadnought-table-cell-padding-inline); width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; color: var(--dreadnought-table-text); background: var(--dreadnought-table-bg); font-variant-numeric: tabular-nums; }
+  .headerCell, .cell { padding-block: var(--dreadnought-table-active-padding-block); padding-inline: var(--dreadnought-table-active-padding-inline); border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); vertical-align: middle; }
   .headerCell { color: var(--dreadnought-table-header-text); font-weight: var(--dreadnought-table-header-font-weight); }
+  .root thead .headerCell { background: var(--dreadnought-table-header-bg); }
+  .root thead .headerCell:first-child { border-start-start-radius: var(--dreadnought-table-header-radius); }
+  .root thead .headerCell:last-child { border-start-end-radius: var(--dreadnought-table-header-radius); }
+  .root[data-row-hoverable='true'] tbody tr:hover > * { background: var(--dreadnought-table-row-bg-hover); }
+  .root[data-size='middle'] { --dreadnought-table-active-padding-block: var(--dreadnought-table-cell-padding-block-middle); --dreadnought-table-active-padding-inline: var(--dreadnought-table-cell-padding-inline-middle); }
+  .root[data-size='small'] { --dreadnought-table-active-padding-block: var(--dreadnought-table-cell-padding-block-small); --dreadnought-table-active-padding-inline: var(--dreadnought-table-cell-padding-inline-small); }
+  .root[data-bordered='true'] { border: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); border-radius: var(--dreadnought-table-header-radius); }
+  .root[data-bordered='true'] > * > tr > *:not(:last-child) { border-inline-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); }
+  .root[data-bordered='true'] tbody tr:last-child > * { border-block-end: 0; }
   .headerCell[scope='row'] { color: var(--dreadnought-table-text); }
   .cell { color: var(--dreadnought-table-text); }
 }

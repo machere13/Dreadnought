@@ -1,5 +1,8 @@
 :root {
   --dreadnought-table-text: var(--dreadnought-color-text-primary);
-  --dreadnought-table-header-text: var(--dreadnought-color-text-placeholder);
+  --dreadnought-table-header-text: var(--dreadnought-color-text-primary);
   --dreadnought-table-border: var(--dreadnought-color-border-subtle);
+  --dreadnought-table-bg: var(--dreadnought-color-surface-canvas);
+  --dreadnought-table-header-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-table-row-bg-hover: var(--dreadnought-color-surface-default);
 }

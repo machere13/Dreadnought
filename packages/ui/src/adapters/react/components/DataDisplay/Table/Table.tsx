@@ -4,8 +4,20 @@ import { tablePresentation } from '#presentation/DataDisplay/Table/tablePresenta
 
 function classes(library: string, consumer?: string) { return [library, consumer].filter(Boolean).join(' '); }
 
-function TableRoot({ className, ...props }: TableAdapterProps) {
-  return <TableAdapter {...props} className={classes(`dreadnought-text-table ${tablePresentation.root}`, className)} />;
+export type TableProps = TableAdapterProps & {
+  size?: 'default' | 'middle' | 'small';
+  bordered?: boolean;
+  rowHoverable?: boolean;
+};
+
+function TableRoot({ className, size = 'default', bordered = false, rowHoverable = true, ...props }: TableProps) {
+  return <TableAdapter
+    {...props}
+    className={classes(`dreadnought-text-table ${tablePresentation.root}`, className)}
+    data-size={size}
+    data-bordered={bordered}
+    data-row-hoverable={rowHoverable}
+  />;
 }
 function HeaderCell({ className, ...props }: TableHeaderCellAdapterProps) {
   return <TableHeaderCellAdapter {...props} className={classes(tablePresentation.headerCell, className)} />;
@@ -21,4 +33,3 @@ export const Table = Object.assign(TableRoot, {
   HeaderCell,
   Cell,
 });
-export type TableProps = TableAdapterProps;

@@ -6,6 +6,18 @@ import { Table } from '@dreadnought/ui/react';
 afterEach(cleanup);
 
 describe('Table', () => {
+  it('exposes density, borders and row hover settings on the ready table', () => {
+    render(<Table size="small" bordered rowHoverable={false} aria-label="Свойства">
+      <Table.Head><Table.Row><Table.HeaderCell scope="col">Имя</Table.HeaderCell></Table.Row></Table.Head>
+      <Table.Body><Table.Row><Table.Cell>Button</Table.Cell></Table.Row></Table.Body>
+    </Table>);
+
+    const table = screen.getByRole('table', { name: 'Свойства' });
+    expect(table.getAttribute('data-size')).toBe('small');
+    expect(table.getAttribute('data-bordered')).toBe('true');
+    expect(table.getAttribute('data-row-hoverable')).toBe('false');
+  });
+
   it('styles the ready table and its cells without styling the adapter', () => {
     render(<>
       <Table className="consumer-table"><Table.Body><Table.Row><Table.Cell className="consumer-cell">Готовая ячейка</Table.Cell></Table.Row></Table.Body></Table>
