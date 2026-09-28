@@ -3,5 +3,6 @@ dist/
 storybook-static/
 coverage/
 graphify-out/
-docs/
+/docs/
+.astro/
 assets/

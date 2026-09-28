@@ -9,7 +9,8 @@
     "test": "vitest run",
     "typecheck": "pnpm -r typecheck && tsc -p tsconfig.type-tests.json --noEmit",
     "storybook": "pnpm build && pnpm --filter @dreadnought/storybook dev",
-    "storybook:build": "pnpm build && pnpm --filter @dreadnought/storybook build:storybook"
+    "storybook:build": "pnpm build && pnpm --filter @dreadnought/storybook build:storybook",
+    "docs": "pnpm --filter @dreadnought/docs dev"
   },
   "devDependencies": {
     "@testing-library/react": "^16.0.0",

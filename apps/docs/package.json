@@ -1,0 +1,25 @@
+{
+  "name": "@dreadnought/docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "typecheck": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/react": "^7.0.0",
+    "@dreadnought/react": "workspace:*",
+    "@dreadnought/themes": "workspace:*",
+    "@dreadnought/ui": "workspace:*",
+    "astro": "^7.3.5",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.0"
+  }
+}
