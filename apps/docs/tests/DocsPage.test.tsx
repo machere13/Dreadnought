@@ -1,8 +1,11 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DocsPage } from '../src/components/DocsPage';
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.unstubAllGlobals();
+});
 
 describe('documentation pages', () => {
   it('offers a real route from the overview to Button', () => {
@@ -113,5 +116,31 @@ describe('documentation pages', () => {
     fireEvent.click(trigger);
     expect(trigger.getAttribute('aria-expanded')).toBe('true');
     expect(screen.getByText('Импортируйте готовый компонент из @dreadnought/ui/react.')).toBeTruthy();
+  });
+
+  it('documents CodeBlock with a working copy example', async () => {
+    const writeText = vi.fn(async () => {});
+    vi.stubGlobal('navigator', { clipboard: { writeText } });
+    render(<DocsPage section="codeblock" />);
+
+    expect(screen.getByRole('link', { name: 'CodeBlock' }).getAttribute('href')).toBe('/components/codeblock/');
+    expect(screen.getByRole('heading', { name: 'CodeBlock', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'copyable' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Копировать пример' }));
+    expect(await screen.findByRole('button', { name: 'Пример скопирован' })).toBeTruthy();
+    expect(writeText).toHaveBeenCalledExactlyOnceWith('const answer = 42;\n');
+  });
+
+  it('documents Alert with independent close and retry actions', () => {
+    render(<DocsPage section="alert" />);
+
+    expect(screen.getByRole('link', { name: 'Alert' }).getAttribute('href')).toBe('/components/alert/');
+    expect(screen.getByRole('heading', { name: 'Alert', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'variant' })).toBeTruthy();
+    expect(screen.getByRole('status').textContent).toContain('Полезная подсказка');
+    fireEvent.click(screen.getByRole('button', { name: 'Закрыть подсказку' }));
+    expect(screen.queryByRole('status')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Повторить' }));
+    expect(screen.getByRole('alert').textContent).toContain('Попыток: 1');
   });
 });

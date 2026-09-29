@@ -4,10 +4,12 @@ import { badgeDoc } from './componentDocs/BadgeDoc';
 import { cardDoc } from './componentDocs/CardDoc';
 import { tabsDoc } from './componentDocs/TabsDoc';
 import { accordionDoc } from './componentDocs/AccordionDoc';
+import { codeBlockDoc } from './componentDocs/CodeBlockDoc';
+import { alertDoc } from './componentDocs/AlertDoc';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
-type ComponentSection = 'button' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'accordion';
+type ComponentSection = 'button' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'accordion' | 'codeblock' | 'alert';
 type DocsSection = 'overview' | ComponentSection;
 const readyCode = `import { Button } from '@dreadnought/ui/react';
 
@@ -145,6 +147,8 @@ function Sidebar({ section }: { section: DocsSection }) {
       <a className={styles.navigationLink} href="/components/card/" aria-current={section === 'card' ? 'page' : undefined}>Card</a>
       <a className={styles.navigationLink} href="/components/tabs/" aria-current={section === 'tabs' ? 'page' : undefined}>Tabs</a>
       <a className={styles.navigationLink} href="/components/accordion/" aria-current={section === 'accordion' ? 'page' : undefined}>Accordion</a>
+      <a className={styles.navigationLink} href="/components/codeblock/" aria-current={section === 'codeblock' ? 'page' : undefined}>CodeBlock</a>
+      <a className={styles.navigationLink} href="/components/alert/" aria-current={section === 'alert' ? 'page' : undefined}>Alert</a>
     </nav>
   </Layout.Sidebar>;
 }
@@ -276,6 +280,8 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
   card: cardDoc,
   tabs: tabsDoc,
   accordion: accordionDoc,
+  codeblock: codeBlockDoc,
+  alert: alertDoc,
 };
 
 const copyLabels = { copy: 'Копировать', copied: 'Скопировано', error: 'Ошибка копирования' };

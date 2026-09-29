@@ -132,6 +132,8 @@
 .demoRow { display: flex; flex-wrap: wrap; align-items: center; gap: var(--dreadnought-spacing-x4); }
 .tabsDemoList { width: 100%; overflow-x: auto; }
 .tabsDemoList > button { flex-shrink: 0; }
+.codeBlockDemo,
+.alertDemo { display: grid; gap: var(--dreadnought-spacing-x4); }
 .demoResult { margin: var(--dreadnought-spacing-x4) 0 0; color: var(--dreadnought-color-text-placeholder); font-size: var(--dreadnought-font-size-caption-1); }
 .fieldDemo { display: grid; gap: var(--dreadnought-spacing-x2); }
 .fieldDemo > label { color: var(--dreadnought-color-text-primary); font-size: var(--dreadnought-font-size-label-2); }
