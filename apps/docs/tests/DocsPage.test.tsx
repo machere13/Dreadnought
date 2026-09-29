@@ -43,4 +43,26 @@ describe('documentation pages', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Сортировать Имя' }));
     expect(table.querySelector('tbody tr:first-child td')?.textContent).toBe('Анна');
   });
+
+  it('documents Input with a working password visibility example', () => {
+    render(<DocsPage section="input" />);
+
+    expect(screen.getByRole('heading', { name: 'Input', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'passwordVisibilityLabels' })).toBeTruthy();
+    const password = screen.getByLabelText('Пароль');
+    expect(password.getAttribute('type')).toBe('password');
+    fireEvent.click(screen.getByRole('button', { name: 'Показать пароль' }));
+    expect(password.getAttribute('type')).toBe('text');
+  });
+
+  it('documents TextArea with an editable auto-sizing example', () => {
+    render(<DocsPage section="textarea" />);
+
+    expect(screen.getByRole('heading', { name: 'TextArea', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'autoSize' })).toBeTruthy();
+    const notes = screen.getByRole('textbox', { name: 'Заметки' }) as HTMLTextAreaElement;
+    fireEvent.change(notes, { target: { value: 'Новая заметка' } });
+    expect(notes.value).toBe('Новая заметка');
+    expect(notes.hasAttribute('data-auto-size')).toBe(true);
+  });
 });

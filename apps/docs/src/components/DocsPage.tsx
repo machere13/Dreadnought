@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
-import { Badge, Breadcrumb, Button, Card, CodeBlock, Layout, Table } from '@dreadnought/ui/react';
+import { Badge, Breadcrumb, Button, Card, CodeBlock, Input, Layout, Table, TextArea } from '@dreadnought/ui/react';
 import styles from './DocsPage.module.css';
 
-type ComponentSection = 'button' | 'table';
+type ComponentSection = 'button' | 'input' | 'textarea' | 'table';
 type DocsSection = 'overview' | ComponentSection;
 type ApiRow = readonly [name: string, values: string, fallback: string, meaning: string];
 type ComponentDoc = {
@@ -82,6 +82,54 @@ const tableApiRows = [
   ['bordered', 'boolean', 'false', 'Рамка и разделители колонок'],
 ] as const;
 
+const inputReadyCode = `import { Input } from '@dreadnought/ui/react';
+
+<label htmlFor="email">Электронная почта</label>
+<Input id="email" type="email" name="email" required />;`;
+
+const inputAdapterCode = `import { InputAdapter } from '@dreadnought/react/unstyled';
+
+<InputAdapter type="email" name="email" className={styles.myInput} />;`;
+
+const inputLogicCode = `import { useInput } from '@dreadnought/react/logic';
+
+const { inputProps, visibilityButtonProps } = useInput({ type: 'password' });
+return <div><input {...inputProps} />{visibilityButtonProps && <button {...visibilityButtonProps} />}</div>;`;
+
+const inputApiRows = [
+  ['type', 'text | email | password | search | tel | url', 'text', 'Тип однострочного поля'],
+  ['invalid', 'boolean', 'false', 'Помечает поле как ошибочное через aria-invalid'],
+  ['passwordVisibilityLabels', '{ show, hide }', 'английские подписи', 'Доступные названия кнопки показа пароля'],
+  ['passwordVisibilityContent', '{ show, hide }', 'иконки', 'Содержимое кнопки показа пароля'],
+  ['disabled', 'boolean', 'false', 'Отключает поле и кнопку показа пароля'],
+  ['readOnly', 'boolean', 'false', 'Запрещает редактирование'],
+  ['required', 'boolean', 'false', 'Отмечает поле обязательным'],
+] as const;
+
+const textAreaReadyCode = `import { TextArea } from '@dreadnought/ui/react';
+
+<label htmlFor="notes">Заметки</label>
+<TextArea id="notes" name="notes" rows={3} autoSize maxRows={8} />;`;
+
+const textAreaAdapterCode = `import { TextAreaAdapter } from '@dreadnought/react/unstyled';
+
+<TextAreaAdapter rows={3} autoSize className={styles.myTextArea} />;`;
+
+const textAreaLogicCode = `import { useTextArea } from '@dreadnought/react/logic';
+
+const { textAreaProps, textAreaRef } = useTextArea({ rows: 3, autoSize: true });
+return <textarea {...textAreaProps} ref={textAreaRef} />;`;
+
+const textAreaApiRows = [
+  ['rows', 'positive integer', '2', 'Начальная высота в строках'],
+  ['minRows', 'positive integer', '—', 'Нижняя граница высоты'],
+  ['maxRows', 'positive integer', '—', 'Верхняя граница высоты'],
+  ['autoSize', 'boolean', 'false', 'Подстраивает высоту под содержимое'],
+  ['invalid', 'boolean', 'false', 'Помечает поле как ошибочное через aria-invalid'],
+  ['disabled', 'boolean', 'false', 'Отключает поле'],
+  ['readOnly', 'boolean', 'false', 'Запрещает редактирование'],
+] as const;
+
 function Header() {
   return <Layout.Header className={styles.header}>
     <a className={styles.brand} href="/" aria-label="Dreadnought — на главную">
@@ -101,6 +149,8 @@ function Sidebar({ section }: { section: DocsSection }) {
       <a className={styles.navigationLink} href="/" aria-current={section === 'overview' ? 'page' : undefined}>Обзор</a>
       <span className={styles.navigationGroup}>Компоненты</span>
       <a className={styles.navigationLink} href="/components/button/" aria-current={section === 'button' ? 'page' : undefined}>Button</a>
+      <a className={styles.navigationLink} href="/components/input/" aria-current={section === 'input' ? 'page' : undefined}>Input</a>
+      <a className={styles.navigationLink} href="/components/textarea/" aria-current={section === 'textarea' ? 'page' : undefined}>TextArea</a>
       <a className={styles.navigationLink} href="/components/table/" aria-current={section === 'table' ? 'page' : undefined}>Table</a>
     </nav>
   </Layout.Sidebar>;
@@ -160,6 +210,22 @@ function TableDemo() {
   </div>;
 }
 
+function InputDemo() {
+  return <div className={`${styles.demo} ${styles.fieldDemo}`}>
+    <label htmlFor="demo-email">Электронная почта</label>
+    <Input id="demo-email" type="email" name="demo-email" autoComplete="off" placeholder="name@example.com" />
+    <label htmlFor="demo-password">Пароль</label>
+    <Input id="demo-password" type="password" name="demo-password" autoComplete="new-password" passwordVisibilityLabels={{ show: 'Показать пароль', hide: 'Скрыть пароль' }} />
+  </div>;
+}
+
+function TextAreaDemo() {
+  return <div className={`${styles.demo} ${styles.fieldDemo}`}>
+    <label htmlFor="demo-notes">Заметки</label>
+    <TextArea id="demo-notes" name="demo-notes" rows={3} autoSize maxRows={8} placeholder="Введите текст…" />
+  </div>;
+}
+
 const componentDocs: Record<ComponentSection, ComponentDoc> = {
   button: {
     title: 'Button',
@@ -173,6 +239,32 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
     apiRows: buttonApiRows,
     footnote: <>Поддерживаются также стандартные свойства <code>&lt;button&gt;</code> и <code>&lt;a&gt;</code>. Для кнопки только с иконкой задайте доступное имя через <code>aria-label</code>.</>,
     demo: <ButtonDemo />,
+  },
+  input: {
+    title: 'Input',
+    eyebrow: 'FIELDS / 01',
+    description: 'Однострочное поле с нативным вводом, состоянием ошибки и встроенным переключателем видимости пароля.',
+    readyCode: inputReadyCode,
+    adapterCode: inputAdapterCode,
+    logicCode: inputLogicCode,
+    adapterDescription: 'Адаптер создаёт поле и кнопку пароля без оформления библиотеки.',
+    logicDescription: 'Хук возвращает свойства поля и, для пароля, кнопки переключения видимости.',
+    apiRows: inputApiRows,
+    footnote: <>Поле принимает стандартные свойства <code>&lt;input&gt;</code>. <code>className</code> относится к обёртке; подпись задавайте через <code>&lt;label&gt;</code> или ARIA, а не через placeholder.</>,
+    demo: <InputDemo />,
+  },
+  textarea: {
+    title: 'TextArea',
+    eyebrow: 'FIELDS / 02',
+    description: 'Многострочное поле с ручным изменением высоты или автоматическим ростом по содержимому.',
+    readyCode: textAreaReadyCode,
+    adapterCode: textAreaAdapterCode,
+    logicCode: textAreaLogicCode,
+    adapterDescription: 'Адаптер сохраняет нативное поле и управление высотой, но не задаёт оформление.',
+    logicDescription: <>При своей разметке передайте <code>textAreaRef</code> нативному элементу, чтобы работал autoSize.</>,
+    apiRows: textAreaApiRows,
+    footnote: <>Без <code>autoSize</code> поле можно растягивать мышью в пределах <code>minRows</code> и <code>maxRows</code>. С <code>autoSize</code> высота следует за текстом, а ручное растягивание отключено.</>,
+    demo: <TextAreaDemo />,
   },
   table: {
     title: 'Table',
