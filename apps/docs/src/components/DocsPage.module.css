@@ -145,6 +145,8 @@
   background: var(--dreadnought-color-surface-default);
 }
 .demoRow { display: flex; flex-wrap: wrap; align-items: center; gap: var(--dreadnought-spacing-x4); }
+.layoutDemo { overflow-x: auto; }
+.layoutDemoFrame { min-height: 18rem; border: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle); }
 .tabsDemoList { width: 100%; overflow-x: auto; }
 .tabsDemoList > button { flex-shrink: 0; }
 .codeBlockDemo,

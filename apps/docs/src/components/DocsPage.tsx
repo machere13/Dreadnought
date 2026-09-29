@@ -6,17 +6,20 @@ import { tabsDoc } from './componentDocs/TabsDoc';
 import { accordionDoc } from './componentDocs/AccordionDoc';
 import { codeBlockDoc } from './componentDocs/CodeBlockDoc';
 import { alertDoc } from './componentDocs/AlertDoc';
+import { layoutDoc } from './componentDocs/LayoutDoc';
+import { breadcrumbDoc } from './componentDocs/BreadcrumbDoc';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
-type ComponentSection = 'button' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'accordion' | 'codeblock' | 'alert';
+type ComponentSection = 'button' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'accordion' | 'codeblock' | 'alert' | 'layout' | 'breadcrumb';
 type DocsSection = 'overview' | ComponentSection;
 const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
   { name: 'Controls', sections: ['button'] },
   { name: 'DataDisplay', sections: ['badge', 'codeblock', 'table'] },
   { name: 'Feedback', sections: ['alert'] },
   { name: 'Fields', sections: ['input', 'textarea'] },
-  { name: 'Navigation', sections: ['accordion', 'tabs'] },
+  { name: 'Layout', sections: ['layout'] },
+  { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs'] },
   { name: 'Surfaces', sections: ['card'] },
 ];
 
@@ -285,6 +288,8 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
   accordion: accordionDoc,
   codeblock: codeBlockDoc,
   alert: alertDoc,
+  layout: layoutDoc,
+  breadcrumb: breadcrumbDoc,
 };
 
 const copyLabels = { copy: 'Копировать', copied: 'Скопировано', error: 'Ошибка копирования' };

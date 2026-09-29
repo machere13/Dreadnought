@@ -159,4 +159,30 @@ describe('documentation pages', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Повторить' }));
     expect(screen.getByRole('alert').textContent).toContain('Попыток: 1');
   });
+
+  it('documents Layout with a working collapsible sidebar', () => {
+    render(<DocsPage section="layout" />);
+
+    expect(screen.getByRole('link', { name: 'Layout' }).getAttribute('href')).toBe('/components/layout/');
+    expect(screen.getByRole('heading', { name: 'Layout', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'direction' })).toBeTruthy();
+    const sidebar = screen.getByRole('complementary', { name: 'Пример боковой области' });
+    const toggle = sidebar.querySelector('button[aria-expanded]') as HTMLButtonElement;
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(sidebar.getAttribute('data-collapsed')).toBe('true');
+  });
+
+  it('documents Breadcrumb with linked ancestors and the current page', () => {
+    render(<DocsPage section="breadcrumb" />);
+
+    expect(screen.getByRole('link', { name: 'Breadcrumb' }).getAttribute('href')).toBe('/components/breadcrumb/');
+    expect(screen.getByRole('heading', { name: 'Breadcrumb', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'items' })).toBeTruthy();
+    const trail = screen.getByRole('navigation', { name: 'Пример пути' });
+    expect(trail.querySelectorAll('ol > li')).toHaveLength(3);
+    expect(trail.querySelector('a[href="/"]')?.textContent).toBe('Главная');
+    expect(trail.querySelector('[aria-current="page"]')?.textContent).toBe('Button');
+  });
 });
