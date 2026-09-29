@@ -12,6 +12,8 @@ describe('documentation pages', () => {
     render(<DocsPage section="overview" />);
 
     expect(screen.getByRole('heading', { name: 'Начните с готового компонента' })).toBeTruthy();
+    expect(screen.queryByText('БИБЛИОТЕКА КОМПОНЕНТОВ')).toBeNull();
+    expect(screen.queryByText('v0.1')).toBeNull();
     expect(screen.getByRole('link', { name: 'Посмотреть Button' }).getAttribute('href')).toBe('/components/button/');
     expect(screen.getByRole('list', { name: 'Три уровня использования' }).querySelectorAll('[role="listitem"]')).toHaveLength(3);
   });
@@ -32,6 +34,7 @@ describe('documentation pages', () => {
 
     expect(screen.getByRole('link', { name: 'Table' }).getAttribute('href')).toBe('/components/table/');
     expect(screen.getByRole('heading', { name: 'Table', level: 1 })).toBeTruthy();
+    expect(screen.queryByText('DATA DISPLAY / 01')).toBeNull();
     expect(screen.getByRole('heading', { name: 'Пример' })).toBeTruthy();
     expect(screen.getByRole('heading', { name: 'Когда нужен другой слой' })).toBeTruthy();
     expect(screen.getByRole('heading', { name: 'Основные свойства' })).toBeTruthy();

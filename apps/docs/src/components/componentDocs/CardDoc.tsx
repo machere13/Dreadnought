@@ -18,7 +18,6 @@ function CardDemo() {
 
 export const cardDoc: ComponentDoc = {
   title: 'Card',
-  eyebrow: 'SURFACES / 01',
   description: 'Оформленный контейнер для произвольного содержимого: текста, элементов управления и вложенных компонентов.',
   readyCode: `import { Button, Card } from '@dreadnought/ui/react';
 

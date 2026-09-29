@@ -19,7 +19,6 @@ function AccordionDemo() {
 
 export const accordionDoc: ComponentDoc = {
   title: 'Accordion',
-  eyebrow: 'NAVIGATION / 02',
   description: 'Раскрывающиеся разделы для FAQ и пояснений. Поддерживает один или несколько открытых пунктов.',
   readyCode: `import { Accordion } from '@dreadnought/ui/react';
 

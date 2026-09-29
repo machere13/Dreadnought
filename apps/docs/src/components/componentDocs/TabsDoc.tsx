@@ -19,7 +19,6 @@ function TabsDemo() {
 
 export const tabsDoc: ComponentDoc = {
   title: 'Tabs',
-  eyebrow: 'NAVIGATION / 01',
   description: 'Переключение разделов с клавиатурной навигацией, доступными вкладками и сохранением состояния скрытых панелей.',
   readyCode: `import { Tabs } from '@dreadnought/ui/react';
 

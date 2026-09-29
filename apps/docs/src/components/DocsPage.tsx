@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Badge, Breadcrumb, Button, Card, CodeBlock, Input, Layout, Table, TextArea } from '@dreadnought/ui/react';
+import { Breadcrumb, Button, Card, CodeBlock, Input, Layout, Table, TextArea } from '@dreadnought/ui/react';
 import { badgeDoc } from './componentDocs/BadgeDoc';
 import { cardDoc } from './componentDocs/CardDoc';
 import { tabsDoc } from './componentDocs/TabsDoc';
@@ -129,7 +129,6 @@ function Header() {
     </a>
     <span className={styles.headerDivider} aria-hidden="true" />
     <span className={styles.headerSection}>Документация</span>
-    <Badge appearance="ghosted" className={styles.version}>v0.1</Badge>
   </Layout.Header>;
 }
 
@@ -153,9 +152,8 @@ function Sidebar({ section }: { section: DocsSection }) {
   </Layout.Sidebar>;
 }
 
-function PageHeading({ eyebrow, title, description }: { eyebrow: string; title: string; description: string }) {
+function PageHeading({ title, description }: { title: string; description: string }) {
   return <div className={styles.pageHeading}>
-    <span className={styles.eyebrow}>{eyebrow}</span>
     <h1 className={styles.title}>{title}</h1>
     <p className={styles.lead}>{description}</p>
   </div>;
@@ -164,7 +162,7 @@ function PageHeading({ eyebrow, title, description }: { eyebrow: string; title: 
 function Overview() {
   return <article className={styles.article}>
     <Breadcrumb items={[{ label: 'Документация' }, { label: 'Обзор' }]} aria-label="Путь по документации" />
-    <PageHeading eyebrow="БИБЛИОТЕКА КОМПОНЕНТОВ" title="Начните с готового компонента" description="Dreadnought объединяет общую логику, адаптеры под фреймворк и оформленные компоненты. Берите ровно тот слой, который нужен вашему проекту." />
+    <PageHeading title="Начните с готового компонента" description="Dreadnought объединяет общую логику, адаптеры под фреймворк и оформленные компоненты. Берите ровно тот слой, который нужен вашему проекту." />
     <section className={styles.section} aria-labelledby="overview-layers">
       <h2 id="overview-layers" className={styles.sectionTitle}>Три уровня использования</h2>
       <div className={styles.layerList} role="list" aria-label="Три уровня использования">
@@ -226,7 +224,6 @@ function TextAreaDemo() {
 const componentDocs: Record<ComponentSection, ComponentDoc> = {
   button: {
     title: 'Button',
-    eyebrow: 'CONTROLS / 01',
     description: 'Действие или ссылка с готовыми состояниями, доступной семантикой и оформлением, которое можно заменить без изменения поведения.',
     readyCode,
     adapterCode,
@@ -239,7 +236,6 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
   },
   input: {
     title: 'Input',
-    eyebrow: 'FIELDS / 01',
     description: 'Однострочное поле с нативным вводом, состоянием ошибки и встроенным переключателем видимости пароля.',
     readyCode: inputReadyCode,
     adapterCode: inputAdapterCode,
@@ -252,7 +248,6 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
   },
   textarea: {
     title: 'TextArea',
-    eyebrow: 'FIELDS / 02',
     description: 'Многострочное поле с ручным изменением высоты или автоматическим ростом по содержимому.',
     readyCode: textAreaReadyCode,
     adapterCode: textAreaAdapterCode,
@@ -265,7 +260,6 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
   },
   table: {
     title: 'Table',
-    eyebrow: 'DATA DISPLAY / 01',
     description: 'Структурированные данные с сортировкой, фильтрами, выбором строк, пагинацией и закреплением шапки и колонок.',
     readyCode: tableReadyCode,
     adapterCode: tableAdapterCode,
@@ -290,7 +284,7 @@ function ComponentDocumentation({ component }: { component: ComponentSection }) 
   const doc = componentDocs[component];
   return <article className={styles.article}>
     <Breadcrumb items={[{ label: 'Документация', href: '/' }, { label: 'Компоненты' }, { label: doc.title }]} aria-label="Путь по документации" />
-    <PageHeading eyebrow={doc.eyebrow} title={doc.title} description={doc.description} />
+    <PageHeading title={doc.title} description={doc.description} />
 
     <section className={styles.section} aria-labelledby={`${component}-example`}>
       <div className={styles.sectionHeading}>

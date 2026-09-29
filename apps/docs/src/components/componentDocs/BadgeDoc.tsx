@@ -18,7 +18,6 @@ function BadgeDemo() {
 
 export const badgeDoc: ComponentDoc = {
   title: 'Badge',
-  eyebrow: 'DATA DISPLAY / 02',
   description: 'Короткая метка или счётчик поверх другого элемента. Поддерживает маркер, иконку и три варианта оформления.',
   readyCode: `import { Badge, Button, Mark } from '@dreadnought/ui/react';
 

@@ -11,7 +11,6 @@ function CodeBlockDemo() {
 
 export const codeBlockDoc: ComponentDoc = {
   title: 'CodeBlock',
-  eyebrow: 'DATA DISPLAY / 03',
   description: 'Блок исходного кода с необязательной кнопкой копирования. Выводит код как текст без изменения пробелов и переводов строк.',
   readyCode: `import { CodeBlock } from '@dreadnought/ui/react';
 

@@ -15,7 +15,6 @@ function AlertDemo() {
 
 export const alertDoc: ComponentDoc = {
   title: 'Alert',
-  eyebrow: 'FEEDBACK / 01',
   description: 'Постоянное сообщение внутри страницы: информация, успех, предупреждение или ошибка с необязательным действием и закрытием.',
   readyCode: `import { Alert, Button } from '@dreadnought/ui/react';
 

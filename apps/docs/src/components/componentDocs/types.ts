@@ -4,7 +4,6 @@ type ApiRow = readonly [name: string, values: string, fallback: string, meaning:
 
 export type ComponentDoc = {
   title: string;
-  eyebrow: string;
   description: string;
   readyCode: string;
   adapterCode: string;
