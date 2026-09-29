@@ -185,4 +185,28 @@ describe('documentation pages', () => {
     expect(trail.querySelector('a[href="/"]')?.textContent).toBe('Главная');
     expect(trail.querySelector('[aria-current="page"]')?.textContent).toBe('Button');
   });
+
+  it('documents every public Icon name and an accessible standalone icon', () => {
+    render(<DocsPage section="icon" />);
+
+    expect(screen.getByRole('link', { name: 'Icon' }).getAttribute('href')).toBe('/components/icon/');
+    expect(screen.getByRole('heading', { name: 'Icon', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'name' })).toBeTruthy();
+    const gallery = screen.getByRole('list', { name: 'Набор иконок' });
+    expect(gallery.querySelectorAll('[data-ui="icon"] svg')).toHaveLength(12);
+    expect(screen.getByRole('img', { name: 'Успешно' }).querySelector('svg')).toBeTruthy();
+  });
+
+  it('documents both Mark shapes and a local color override', () => {
+    render(<DocsPage section="mark" />);
+
+    expect(screen.getByRole('link', { name: 'Mark' }).getAttribute('href')).toBe('/components/mark/');
+    expect(screen.getByRole('heading', { name: 'Mark', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'shape' })).toBeTruthy();
+    const gallery = screen.getByRole('list', { name: 'Формы маркера' });
+    expect(gallery.querySelector('[data-shape="circle"]')).toBeTruthy();
+    const square = gallery.querySelector('[data-shape="square"]') as HTMLElement;
+    expect(square.style.getPropertyValue('--dreadnought-mark-color')).toBe('var(--dreadnought-color-status-success)');
+    expect(square.getAttribute('aria-hidden')).toBe('true');
+  });
 });

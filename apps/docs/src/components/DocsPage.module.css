@@ -145,6 +145,10 @@
   background: var(--dreadnought-color-surface-default);
 }
 .demoRow { display: flex; flex-wrap: wrap; align-items: center; gap: var(--dreadnought-spacing-x4); }
+.specimenGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: var(--dreadnought-spacing-x2); margin: 0; padding: 0; list-style: none; }
+.specimen { display: flex; align-items: center; gap: var(--dreadnought-spacing-x4); min-width: 0; padding: var(--dreadnought-spacing-x4); border: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle); border-radius: var(--dreadnought-border-radius-x1); color: var(--dreadnought-color-text-primary); }
+.specimen code { overflow-wrap: anywhere; }
+.specimenNote { display: flex; align-items: center; gap: var(--dreadnought-spacing-x2); margin: var(--dreadnought-spacing-x4) 0 0; color: var(--dreadnought-color-text-placeholder); }
 .layoutDemo { overflow-x: auto; }
 .layoutDemoFrame { min-height: 18rem; border: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle); }
 .tabsDemoList { width: 100%; overflow-x: auto; }
