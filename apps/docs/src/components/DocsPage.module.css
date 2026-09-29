@@ -61,7 +61,26 @@
   font-size: var(--dreadnought-font-size-caption-2);
 }
 
+.navigationFamily { min-width: 0; }
+.familySummary {
+  padding: var(--dreadnought-spacing-x2) var(--dreadnought-spacing-x4);
+  border-radius: var(--dreadnought-border-radius-x1);
+  color: var(--dreadnought-color-text-placeholder);
+  font-size: var(--dreadnought-font-size-label-2);
+  cursor: pointer;
+}
+.familySummary:hover,
+.navigationFamily[open] > .familySummary { color: var(--dreadnought-color-text-primary); }
+.familySummary:focus-visible { outline: var(--dreadnought-border-width-x2) solid var(--dreadnought-color-focus-ring); }
+.familyLinks {
+  display: grid;
+  gap: var(--dreadnought-spacing-x1);
+  margin-block-start: var(--dreadnought-spacing-x1);
+  padding-inline-start: var(--dreadnought-spacing-x4);
+}
+
 .navigationLink {
+  display: block;
   padding: var(--dreadnought-spacing-x2) var(--dreadnought-spacing-x4);
   border-radius: var(--dreadnought-border-radius-x1);
   color: var(--dreadnought-color-text-placeholder);

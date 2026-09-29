@@ -11,6 +11,15 @@ import styles from './DocsPage.module.css';
 
 type ComponentSection = 'button' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'accordion' | 'codeblock' | 'alert';
 type DocsSection = 'overview' | ComponentSection;
+const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
+  { name: 'Controls', sections: ['button'] },
+  { name: 'DataDisplay', sections: ['badge', 'codeblock', 'table'] },
+  { name: 'Feedback', sections: ['alert'] },
+  { name: 'Fields', sections: ['input', 'textarea'] },
+  { name: 'Navigation', sections: ['accordion', 'tabs'] },
+  { name: 'Surfaces', sections: ['card'] },
+];
+
 const readyCode = `import { Button } from '@dreadnought/ui/react';
 
 <Button onClick={() => console.log('Нажато')}>
@@ -138,16 +147,16 @@ function Sidebar({ section }: { section: DocsSection }) {
       <span className={styles.navigationGroup}>Начало</span>
       <a className={styles.navigationLink} href="/" aria-current={section === 'overview' ? 'page' : undefined}>Обзор</a>
       <span className={styles.navigationGroup}>Компоненты</span>
-      <a className={styles.navigationLink} href="/components/button/" aria-current={section === 'button' ? 'page' : undefined}>Button</a>
-      <a className={styles.navigationLink} href="/components/input/" aria-current={section === 'input' ? 'page' : undefined}>Input</a>
-      <a className={styles.navigationLink} href="/components/textarea/" aria-current={section === 'textarea' ? 'page' : undefined}>TextArea</a>
-      <a className={styles.navigationLink} href="/components/table/" aria-current={section === 'table' ? 'page' : undefined}>Table</a>
-      <a className={styles.navigationLink} href="/components/badge/" aria-current={section === 'badge' ? 'page' : undefined}>Badge</a>
-      <a className={styles.navigationLink} href="/components/card/" aria-current={section === 'card' ? 'page' : undefined}>Card</a>
-      <a className={styles.navigationLink} href="/components/tabs/" aria-current={section === 'tabs' ? 'page' : undefined}>Tabs</a>
-      <a className={styles.navigationLink} href="/components/accordion/" aria-current={section === 'accordion' ? 'page' : undefined}>Accordion</a>
-      <a className={styles.navigationLink} href="/components/codeblock/" aria-current={section === 'codeblock' ? 'page' : undefined}>CodeBlock</a>
-      <a className={styles.navigationLink} href="/components/alert/" aria-current={section === 'alert' ? 'page' : undefined}>Alert</a>
+      {componentFamilies.map((family) => <details key={family.name} className={styles.navigationFamily}
+        open={section !== 'overview' && family.sections.includes(section)}>
+        <summary className={styles.familySummary}>{family.name}</summary>
+        <div className={styles.familyLinks}>
+          {family.sections.map((component) => <a key={component} className={styles.navigationLink}
+            href={`/components/${component}/`} aria-current={section === component ? 'page' : undefined}>
+            {componentDocs[component].title}
+          </a>)}
+        </div>
+      </details>)}
     </nav>
   </Layout.Sidebar>;
 }

@@ -8,6 +8,19 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('groups component links by family and opens the current family', () => {
+    render(<DocsPage section="table" />);
+
+    const dataDisplay = screen.getByText('DataDisplay').closest('details');
+    const controls = screen.getByText('Controls').closest('details');
+    expect(dataDisplay?.hasAttribute('open')).toBe(true);
+    expect(controls?.hasAttribute('open')).toBe(false);
+    expect(dataDisplay?.querySelector('a[href="/components/table/"]')?.getAttribute('aria-current')).toBe('page');
+    fireEvent.click(screen.getByText('Controls'));
+    expect(controls?.hasAttribute('open')).toBe(true);
+    expect(controls?.querySelector('a[href="/components/button/"]')).toBeTruthy();
+  });
+
   it('offers a real route from the overview to Button', () => {
     render(<DocsPage section="overview" />);
 
