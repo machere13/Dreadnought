@@ -1,25 +1,12 @@
 import { useState } from 'react';
-import type { ReactNode } from 'react';
 import { Badge, Breadcrumb, Button, Card, CodeBlock, Input, Layout, Table, TextArea } from '@dreadnought/ui/react';
+import { badgeDoc } from './componentDocs/BadgeDoc';
+import { cardDoc } from './componentDocs/CardDoc';
+import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
-type ComponentSection = 'button' | 'input' | 'textarea' | 'table';
+type ComponentSection = 'button' | 'input' | 'textarea' | 'table' | 'badge' | 'card';
 type DocsSection = 'overview' | ComponentSection;
-type ApiRow = readonly [name: string, values: string, fallback: string, meaning: string];
-type ComponentDoc = {
-  title: string;
-  eyebrow: string;
-  description: string;
-  readyCode: string;
-  adapterCode: string;
-  logicCode: string;
-  adapterDescription: string;
-  logicDescription: ReactNode;
-  apiRows: readonly ApiRow[];
-  footnote: ReactNode;
-  demo: ReactNode;
-};
-
 const readyCode = `import { Button } from '@dreadnought/ui/react';
 
 <Button onClick={() => console.log('Нажато')}>
@@ -152,6 +139,8 @@ function Sidebar({ section }: { section: DocsSection }) {
       <a className={styles.navigationLink} href="/components/input/" aria-current={section === 'input' ? 'page' : undefined}>Input</a>
       <a className={styles.navigationLink} href="/components/textarea/" aria-current={section === 'textarea' ? 'page' : undefined}>TextArea</a>
       <a className={styles.navigationLink} href="/components/table/" aria-current={section === 'table' ? 'page' : undefined}>Table</a>
+      <a className={styles.navigationLink} href="/components/badge/" aria-current={section === 'badge' ? 'page' : undefined}>Badge</a>
+      <a className={styles.navigationLink} href="/components/card/" aria-current={section === 'card' ? 'page' : undefined}>Card</a>
     </nav>
   </Layout.Sidebar>;
 }
@@ -279,6 +268,8 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
     footnote: <>Для закреплённых колонок задайте <code>fixed</code> и числовую <code>width</code> в описании колонки. Ключ строки лучше задавать через <code>rowKey</code>.</>,
     demo: <TableDemo />,
   },
+  badge: badgeDoc,
+  card: cardDoc,
 };
 
 const copyLabels = { copy: 'Копировать', copied: 'Скопировано', error: 'Ошибка копирования' };
@@ -301,7 +292,7 @@ function ComponentDocumentation({ component }: { component: ComponentSection }) 
     <section className={styles.section} aria-labelledby={`${component}-layers`}>
       <div className={styles.sectionHeading}>
         <h2 id={`${component}-layers`} className={styles.sectionTitle}>Когда нужен другой слой</h2>
-        <span className={styles.sectionMeta}>Один контракт · три уровня</span>
+        <span className={styles.sectionMeta}>{doc.logicCode ? 'Один контракт · три уровня' : 'Готовый компонент · адаптер'}</span>
       </div>
       <div className={styles.layerExamples}>
         <div>
@@ -309,11 +300,11 @@ function ComponentDocumentation({ component }: { component: ComponentSection }) 
           <p className={styles.bodyText}>{doc.adapterDescription}</p>
           <CodeBlock code={doc.adapterCode} language="tsx" copyLabels={copyLabels} />
         </div>
-        <div>
+        {doc.logicCode && <div>
           <h3 className={styles.subheading}>Своя разметка — логика</h3>
           <p className={styles.bodyText}>{doc.logicDescription}</p>
           <CodeBlock code={doc.logicCode} language="tsx" copyLabels={copyLabels} />
-        </div>
+        </div>}
       </div>
     </section>
 

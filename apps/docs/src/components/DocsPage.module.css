@@ -134,6 +134,9 @@
 .fieldDemo { display: grid; gap: var(--dreadnought-spacing-x2); }
 .fieldDemo > label { color: var(--dreadnought-color-text-primary); font-size: var(--dreadnought-font-size-label-2); }
 .fieldDemo > [data-ui] { width: 100%; }
+.demoCard { max-width: 32rem; }
+.demoCard h3 { margin-block: 0 var(--dreadnought-spacing-x4); color: var(--dreadnought-color-text-primary); }
+.demoCard p { color: var(--dreadnought-color-text-placeholder); }
 
 .layerExamples { display: grid; gap: calc(var(--dreadnought-spacing-x4) * 2); }
 .layerExamples > div { min-width: 0; }

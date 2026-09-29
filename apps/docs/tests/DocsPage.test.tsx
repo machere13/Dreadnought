@@ -65,4 +65,27 @@ describe('documentation pages', () => {
     expect(notes.value).toBe('Новая заметка');
     expect(notes.hasAttribute('data-auto-size')).toBe(true);
   });
+
+  it('documents Badge variants and keeps the target interactive', () => {
+    render(<DocsPage section="badge" />);
+
+    expect(screen.getByRole('link', { name: 'Badge' }).getAttribute('href')).toBe('/components/badge/');
+    expect(screen.getByRole('heading', { name: 'Badge', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'appearance' })).toBeTruthy();
+    expect(screen.getByText('Ghosted')).toBeTruthy();
+    expect(screen.queryByRole('heading', { name: 'Своя разметка — логика' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Уведомления, 2 новых' }));
+    expect(screen.getByRole('button', { name: 'Уведомления, 3 новых' })).toBeTruthy();
+  });
+
+  it('documents Card composition without inventing a logic API', () => {
+    render(<DocsPage section="card" />);
+
+    expect(screen.getByRole('link', { name: 'Card' }).getAttribute('href')).toBe('/components/card/');
+    expect(screen.getByRole('heading', { name: 'Card', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'children' })).toBeTruthy();
+    expect(screen.queryByRole('heading', { name: 'Своя разметка — логика' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Подробнее' }));
+    expect(screen.getByText('В карточку можно вложить любые компоненты.')).toBeTruthy();
+  });
 });
