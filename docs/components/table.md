@@ -29,6 +29,9 @@ import { Table } from '@dreadnought/ui/react';
   dataSource={people}
   pagination={{ pageSize: 10 }}
   rowSelection={{ onChange: (keys, rows) => console.log(keys, rows) }}
+  onChange={(page, filters, sorter, extra) => {
+    console.log(page.current, filters, sorter.order, extra.currentDataSource);
+  }}
   sticky
   scroll={{ x: 900, y: 400 }}
   columns={[
@@ -40,5 +43,7 @@ import { Table } from '@dreadnought/ui/react';
 ```
 
 `sticky={{ offsetHeader: 64 }}` задаёт отступ закреплённой шапки. Для `fixed: 'left' | 'right'` задавайте числовую `width` каждой закреплённой колонке: ширины используются для расчёта смещения, если закреплено несколько столбцов. `pagination={false}` показывает все строки. В `rowSelection` доступны `type: 'radio'`, управляемые `selectedRowKeys` и `getCheckboxProps` для отключения выбора отдельных строк. Пустое состояние настраивается через `locale.emptyText`.
+
+Общий `onChange` вызывается при изменении сортировки, фильтров и страницы. Он получает запрошенную страницу, значения фильтров, колонку и направление сортировки, а также строки после фильтрации и сортировки (до разбиения на страницы). `sortOrder`, `filteredValue` и `pagination.current` — управляемые свойства: при их передаче таблица сообщает желаемое значение через `onChange`, но отображает новое состояние только после обновления пропсов. Для выбора строк используется отдельный `rowSelection.onChange`.
 
 Готовая таблица использует выделенную шапку и подсветку строки при наведении. `size="default" | "middle" | "small"` меняет плотность, `bordered` добавляет рамку и разделители колонок, `rowHoverable={false}` отключает подсветку. Оформление меняется токенами `--dreadnought-table-*`. Каждый слот принимает нативные свойства, `className` и `ref`. Для таблицы без библиотечных стилей используйте `TableAdapter` из `@dreadnought/react/unstyled` с теми же слотами.

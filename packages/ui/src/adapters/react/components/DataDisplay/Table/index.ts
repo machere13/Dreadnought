@@ -1,2 +1,2 @@
 export * from './Table.tsx';
-export type { TableColumn, TableFilterValue, TablePagination, TableRowKey, TableRowSelection } from '@dreadnought/react/unstyled';
+export type { TableChangeFilters, TableChangeSorter, TableColumn, TableFilterValue, TablePagination, TableRowKey, TableRowSelection } from '@dreadnought/react/unstyled';

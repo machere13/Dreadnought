@@ -14,13 +14,14 @@ export type TableProps<RecordType extends object = Record<string, unknown>> = Ta
 function TableRoot<RecordType extends object>(props: TableDataAdapterProps<RecordType> & TableAppearance): React.JSX.Element;
 function TableRoot(props: TableMarkupAdapterProps & TableAppearance): React.JSX.Element;
 function TableRoot<RecordType extends object>({ className, size = 'default', bordered = false, rowHoverable = true, ...props }: TableProps<RecordType>) {
-  return <TableAdapter
-    {...props}
-    className={classes(`dreadnought-text-table ${tablePresentation.root}`, className)}
-    data-size={size}
-    data-bordered={bordered}
-    data-row-hoverable={rowHoverable}
-  />;
+  const appearance = {
+    className: classes(`dreadnought-text-table ${tablePresentation.root}`, className),
+    'data-size': size,
+    'data-bordered': bordered,
+    'data-row-hoverable': rowHoverable,
+  };
+  if ('columns' in props && 'dataSource' in props) return <TableAdapter {...props} {...appearance} />;
+  return <TableAdapter {...props} {...appearance} />;
 }
 function HeaderCell({ className, ...props }: TableHeaderCellAdapterProps) {
   return <TableHeaderCellAdapter {...props} className={classes(tablePresentation.headerCell, className)} />;

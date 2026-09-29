@@ -6,6 +6,48 @@ import { TableAdapter } from '../../../src/DataDisplay/Table/index.ts';
 afterEach(cleanup);
 
 describe('TableAdapter', () => {
+  it('reports requested sorting while a controlled column waits for new props', () => {
+    const changes: Array<{ order: string | null; rows: number[] }> = [];
+    const dataSource = [{ id: 1, age: 42 }, { id: 2, age: 18 }];
+    const columns = (order: 'ascend' | null) => [{ key: 'age', title: 'Возраст', dataIndex: 'age' as const, sorter: (a: typeof dataSource[number], b: typeof dataSource[number]) => a.age - b.age, sortOrder: order }];
+    const onChange = (_page: unknown, _filters: unknown, sorter: { order: 'ascend' | 'descend' | null }, extra: { currentDataSource: readonly typeof dataSource[number][] }) => changes.push({ order: sorter.order, rows: extra.currentDataSource.map((row) => row.id) });
+    const view = render(<TableAdapter rowKey="id" columns={columns(null)} dataSource={dataSource} onChange={onChange} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Сортировать Возраст' }));
+    expect(changes).toEqual([{ order: 'ascend', rows: [2, 1] }]);
+    expect(screen.getAllByRole('cell').map((cell) => cell.textContent)).toEqual(['42', '18']);
+    view.rerender(<TableAdapter rowKey="id" columns={columns('ascend')} dataSource={dataSource} onChange={onChange} />);
+    expect(screen.getAllByRole('cell').map((cell) => cell.textContent)).toEqual(['18', '42']);
+  });
+
+  it('reports a controlled filter without applying it until props change', () => {
+    const changes: Array<{ filters: readonly (string | number)[]; rows: number[] }> = [];
+    const dataSource = [{ id: 1, role: 'designer' }, { id: 2, role: 'developer' }];
+    const columns = (values: readonly string[]) => [{ key: 'role', title: 'Роль', dataIndex: 'role' as const, filters: [{ text: 'Дизайнер', value: 'designer' }], onFilter: (value: string | number, row: typeof dataSource[number]) => row.role === value, filteredValue: values }];
+    const onChange = (_page: unknown, filters: Record<string, readonly (string | number)[]>, _sorter: unknown, extra: { currentDataSource: readonly typeof dataSource[number][] }) => changes.push({ filters: filters.role ?? [], rows: extra.currentDataSource.map((row) => row.id) });
+    const view = render(<TableAdapter rowKey="id" columns={columns([])} dataSource={dataSource} onChange={onChange} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Фильтр Роль' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Дизайнер' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Применить' }));
+    expect(changes).toEqual([{ filters: ['designer'], rows: [1] }]);
+    expect(screen.getAllByRole('cell')).toHaveLength(2);
+    view.rerender(<TableAdapter rowKey="id" columns={columns(['designer'])} dataSource={dataSource} onChange={onChange} />);
+    expect(screen.getAllByRole('cell')).toHaveLength(1);
+  });
+
+  it('reports a controlled page without moving until current changes', () => {
+    const changes: number[] = [];
+    const dataSource = [{ id: 1, name: 'Анна' }, { id: 2, name: 'Марк' }];
+    const onChange = (page: { current: number }) => changes.push(page.current);
+    const view = render(<TableAdapter rowKey="id" columns={[{ key: 'name', title: 'Имя', dataIndex: 'name' }]} dataSource={dataSource} pagination={{ current: 1, pageSize: 1 }} onChange={onChange} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Следующая страница' }));
+    expect(changes).toEqual([2]);
+    expect(screen.getByRole('cell', { name: 'Анна' })).toBeTruthy();
+    view.rerender(<TableAdapter rowKey="id" columns={[{ key: 'name', title: 'Имя', dataIndex: 'name' }]} dataSource={dataSource} pagination={{ current: 2, pageSize: 1 }} onChange={onChange} />);
+    expect(screen.getByRole('cell', { name: 'Марк' })).toBeTruthy();
+  });
+
   it('cycles an interactive sortable column through ascending, descending and original order', () => {
     render(<TableAdapter
       aria-label="Возраст"

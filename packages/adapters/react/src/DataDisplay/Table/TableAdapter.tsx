@@ -1,6 +1,6 @@
 import type { ComponentPropsWithRef } from 'react';
 import { DataTableAdapter } from './DataTableAdapter.tsx';
-import type { TableDataAdapterProps } from './DataTableAdapter.tsx';
+import type { TableDataAdapterProps } from './table.types.ts';
 
 export type TableMarkupAdapterProps = ComponentPropsWithRef<'table'>;
 export type TableAdapterProps<RecordType extends object = Record<string, unknown>> = TableMarkupAdapterProps | TableDataAdapterProps<RecordType>;
