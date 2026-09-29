@@ -130,6 +130,8 @@
   background: var(--dreadnought-color-surface-default);
 }
 .demoRow { display: flex; flex-wrap: wrap; align-items: center; gap: var(--dreadnought-spacing-x4); }
+.tabsDemoList { width: 100%; overflow-x: auto; }
+.tabsDemoList > button { flex-shrink: 0; }
 .demoResult { margin: var(--dreadnought-spacing-x4) 0 0; color: var(--dreadnought-color-text-placeholder); font-size: var(--dreadnought-font-size-caption-1); }
 .fieldDemo { display: grid; gap: var(--dreadnought-spacing-x2); }
 .fieldDemo > label { color: var(--dreadnought-color-text-primary); font-size: var(--dreadnought-font-size-label-2); }
@@ -165,5 +167,6 @@
   .pageHeading { margin-block: calc(var(--dreadnought-spacing-x4) * 2); }
   .title { font-size: var(--dreadnought-font-size-h4); line-height: var(--dreadnought-line-height-h4); }
   .demo { padding: var(--dreadnought-spacing-x4); }
+  .tabsDemoList { --dreadnought-tabs-tab-padding-x: var(--dreadnought-spacing-x1); }
   .sectionMeta { display: none; }
 }

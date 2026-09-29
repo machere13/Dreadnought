@@ -88,4 +88,30 @@ describe('documentation pages', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Подробнее' }));
     expect(screen.getByText('В карточку можно вложить любые компоненты.')).toBeTruthy();
   });
+
+  it('documents Tabs with a working, accessible layered example', () => {
+    render(<DocsPage section="tabs" />);
+
+    expect(screen.getByRole('link', { name: 'Tabs' }).getAttribute('href')).toBe('/components/tabs/');
+    expect(screen.getByRole('heading', { name: 'Tabs', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'defaultValue' })).toBeTruthy();
+    expect(screen.getByRole('tablist', { name: 'Уровень библиотеки' })).toBeTruthy();
+    expect(screen.getByRole('tab', { name: 'Компонент' }).getAttribute('aria-selected')).toBe('true');
+    fireEvent.click(screen.getByRole('tab', { name: 'Адаптер' }));
+    expect(screen.getByRole('tab', { name: 'Адаптер' }).getAttribute('aria-selected')).toBe('true');
+    expect(screen.getByRole('tabpanel').textContent).toContain('Разметка и поведение без готовых стилей.');
+  });
+
+  it('documents Accordion and opens the live FAQ', () => {
+    render(<DocsPage section="accordion" />);
+
+    expect(screen.getByRole('link', { name: 'Accordion' }).getAttribute('href')).toBe('/components/accordion/');
+    expect(screen.getByRole('heading', { name: 'Accordion', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'multiple' })).toBeTruthy();
+    const trigger = screen.getByRole('button', { name: 'Как подключить компонент?' });
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    fireEvent.click(trigger);
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getByText('Импортируйте готовый компонент из @dreadnought/ui/react.')).toBeTruthy();
+  });
 });
