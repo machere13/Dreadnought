@@ -23,4 +23,24 @@ describe('documentation pages', () => {
     expect(screen.getByRole('rowheader', { name: 'loading' })).toBeTruthy();
     expect(screen.getByRole('table').getAttribute('data-ui')).toBe('table');
   });
+
+  it('links to Table and uses the same documentation structure', () => {
+    render(<DocsPage section="table" />);
+
+    expect(screen.getByRole('link', { name: 'Table' }).getAttribute('href')).toBe('/components/table/');
+    expect(screen.getByRole('heading', { name: 'Table', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Пример' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Когда нужен другой слой' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Основные свойства' })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'dataSource' })).toBeTruthy();
+  });
+
+  it('lets readers sort the live Table example', () => {
+    render(<DocsPage section="table" />);
+
+    const table = screen.getByRole('table', { name: 'Пример таблицы' });
+    expect(table.querySelector('tbody tr:first-child td')?.textContent).toBe('Борис');
+    fireEvent.click(screen.getByRole('button', { name: 'Сортировать Имя' }));
+    expect(table.querySelector('tbody tr:first-child td')?.textContent).toBe('Анна');
+  });
 });
