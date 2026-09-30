@@ -1,3 +1,4 @@
+import { getCatalogDoc } from '../../catalog/getCatalogDoc';
 import { useState } from 'react';
 import { Badge, Button, Mark } from '@dreadnought/ui/react';
 import type { ComponentDoc } from './types';
@@ -17,23 +18,10 @@ function BadgeDemo() {
 }
 
 export const badgeDoc: ComponentDoc = {
+  ...getCatalogDoc('badge'),
   title: 'Badge',
   description: 'Короткая метка или счётчик поверх другого элемента. Поддерживает маркер, иконку и три варианта оформления.',
-  readyCode: `import { Badge, Button, Mark } from '@dreadnought/ui/react';
-
-<Badge appearance="ghosted" icon={<Mark shape="circle" />}>Новый</Badge>
-<Badge target={<Button aria-label="Уведомления, 2 новых">Уведомления</Button>}>2</Badge>`,
-  adapterCode: `import { BadgeAdapter } from '@dreadnought/react/unstyled';
-
-<BadgeAdapter className={styles.myBadge} icon={<span aria-hidden="true">●</span>}>Новый</BadgeAdapter>`,
   adapterDescription: 'Адаптер собирает метку и расположение иконки без оформления. Отдельной логики в core для Badge нет.',
-  apiRows: [
-    ['appearance', 'solid | outline | ghosted', 'solid', 'Оформление готовой метки'],
-    ['children', 'ReactNode', '—', 'Содержимое метки'],
-    ['icon', 'ReactNode', '—', 'Маркер или иконка рядом с текстом'],
-    ['iconPosition', 'start | end', 'start', 'Положение маркера или иконки'],
-    ['target', 'ReactElement', '—', 'Элемент, поверх которого размещается счётчик'],
-  ],
   footnote: <>Метка поверх <code>target</code> скрыта от скринридера. Включайте значение счётчика в доступное имя самого целевого элемента.</>,
   demo: <BadgeDemo />,
 };

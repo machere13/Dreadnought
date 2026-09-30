@@ -1,0 +1,66 @@
+{
+  "componentId": "component:accordion",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Accordion",
+      "description": "Раскрывающиеся разделы для FAQ и пояснений; поддерживает один или несколько открытых пунктов.",
+      "propertyDescriptions": {
+        "defaultValue": "Первоначально открытые пункты.",
+        "value": "Открытые пункты в управляемом режиме.",
+        "onValueChange": "Уведомление об изменении.",
+        "multiple": "Разрешает открыть несколько пунктов."
+      },
+      "defaults": {},
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Accordion } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Accordion><Accordion.Item value=\"install\"><Accordion.Trigger>Как установить?</Accordion.Trigger><Accordion.Panel>Установите пакет и импортируйте компонент.</Accordion.Panel></Accordion.Item></Accordion>;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-ui-item",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Accordion",
+      "propertyPath": [
+        "Item"
+      ],
+      "propertyDescriptions": {
+        "value": "Уникальное значение пункта."
+      }
+    },
+    {
+      "id": "react-ui-trigger",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Accordion",
+      "propertyPath": [
+        "Trigger"
+      ],
+      "propertyDescriptions": {
+        "headingLevel": "Уровень заголовка.",
+        "disabled": "Блокирует раскрытие."
+      }
+    },
+    {
+      "id": "react-ui-panel",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Accordion",
+      "propertyPath": [
+        "Panel"
+      ],
+      "propertyDescriptions": {
+        "children": "Содержимое панели."
+      }
+    }
+  ]
+}

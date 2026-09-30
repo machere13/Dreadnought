@@ -1,0 +1,30 @@
+{
+  "componentId": "component:badge",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Badge",
+      "description": "Короткая метка или счётчик поверх другого элемента.",
+      "propertyDescriptions": {
+        "appearance": "Вариант оформления.",
+        "children": "Содержимое метки.",
+        "icon": "Иконка рядом с текстом.",
+        "iconPosition": "Положение иконки.",
+        "target": "Элемент, поверх которого расположен счётчик."
+      },
+      "defaults": {
+        "appearance": "solid",
+        "iconPosition": "start"
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Badge } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Badge appearance=\"ghosted\">Новый</Badge>;\n}"
+        }
+      ]
+    }
+  ]
+}

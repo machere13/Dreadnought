@@ -1,0 +1,65 @@
+{
+  "componentId": "component:tabs",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Tabs",
+      "description": "Разделы с клавиатурной навигацией и сохранением состояния скрытых панелей.",
+      "propertyDescriptions": {
+        "defaultValue": "Начальная вкладка.",
+        "value": "Текущая вкладка в управляемом режиме.",
+        "onValueChange": "Уведомление о смене вкладки."
+      },
+      "defaults": {},
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Tabs } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Tabs defaultValue=\"first\"><Tabs.List aria-label=\"Разделы\"><Tabs.Tab value=\"first\">Первый</Tabs.Tab><Tabs.Tab value=\"second\">Второй</Tabs.Tab></Tabs.List><Tabs.Panel value=\"first\">Первый раздел</Tabs.Panel><Tabs.Panel value=\"second\">Второй раздел</Tabs.Panel></Tabs>;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-ui-list",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Tabs",
+      "propertyPath": [
+        "List"
+      ],
+      "propertyDescriptions": {
+        "aria-label": "Доступное имя списка вкладок."
+      }
+    },
+    {
+      "id": "react-ui-tab",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Tabs",
+      "propertyPath": [
+        "Tab"
+      ],
+      "propertyDescriptions": {
+        "value": "Уникальное значение вкладки.",
+        "disabled": "Исключает вкладку из навигации."
+      }
+    },
+    {
+      "id": "react-ui-panel",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Tabs",
+      "propertyPath": [
+        "Panel"
+      ],
+      "propertyDescriptions": {
+        "value": "Связывает панель с вкладкой."
+      }
+    }
+  ]
+}

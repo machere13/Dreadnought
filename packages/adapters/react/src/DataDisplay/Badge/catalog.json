@@ -1,0 +1,26 @@
+{
+  "id": "component:badge",
+  "kind": "component",
+  "name": "Badge",
+  "family": "DataDisplay",
+  "description": "Короткая метка или счётчик поверх другого элемента.",
+  "docsUrl": "/components/badge/#badge-api",
+  "states": [],
+  "constraints": ["Счётчик поверх target скрыт от скринридера: включите значение в доступное имя целевого элемента."],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "BadgeAdapter",
+      "description": "Доступная разметка и поведение без готового оформления.",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { BadgeAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  return <BadgeAdapter icon={<span aria-hidden=\"true\">●</span>}>Новый</BadgeAdapter>;\n}"
+        }
+      ]
+    }
+  ]
+}

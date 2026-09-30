@@ -1,0 +1,25 @@
+{
+  "id": "component:table",
+  "kind": "component",
+  "name": "Table",
+  "family": "DataDisplay",
+  "description": "Таблица данных с сортировкой, фильтрацией, выбором строк и пагинацией; поддерживает также составную разметку.",
+  "docsUrl": "/components/table/#table-api",
+  "states": [],
+  "constraints": ["Задайте устойчивый rowKey. Режим columns/dataSource и составная разметка — альтернативные способы построения таблицы."],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "sortTableRows",
+      "examples": [
+        {
+          "id": "state",
+          "code": "import { sortTableRows } from '@dreadnought/core';\nconst people = [{ id: 1, name: 'Борис' }, { id: 2, name: 'Анна' }];\nconst sorted = sortTableRows(people, (a, b) => a.name.localeCompare(b.name), 'ascend');"
+        }
+      ]
+    }
+  ]
+}

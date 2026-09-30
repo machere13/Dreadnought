@@ -1,0 +1,26 @@
+{
+  "id": "component:alert",
+  "kind": "component",
+  "name": "Alert",
+  "family": "Feedback",
+  "description": "Сообщение внутри страницы с необязательным действием и закрытием.",
+  "docsUrl": "/components/alert/#alert-api",
+  "states": [],
+  "constraints": ["Нужен title или description. Warning и error по умолчанию имеют роль alert, info и success — status. Локально закрытое сообщение возвращается повторным монтированием."],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "AlertAdapter",
+      "description": "Доступная разметка и поведение без готового оформления.",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { AlertAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  return <AlertAdapter type=\"warning\" title=\"Внимание\" description=\"Проверьте данные.\" closable />;\n}"
+        }
+      ]
+    }
+  ]
+}

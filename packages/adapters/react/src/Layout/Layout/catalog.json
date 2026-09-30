@@ -1,0 +1,72 @@
+{
+  "id": "component:layout",
+  "kind": "component",
+  "name": "Layout",
+  "family": "Layout",
+  "description": "Каркас страницы: шапка, боковая область, содержимое и подвал.",
+  "docsUrl": "/components/layout/#layout-api",
+  "states": [],
+  "constraints": ["Готовый Sidebar на экранах до 40rem по умолчанию свёрнут; collapsed имеет приоритет. Подписи кнопки: expandLabel и collapseLabel."],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "LayoutAdapter",
+      "description": "Доступная разметка и поведение без готового оформления.",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { LayoutAdapter, LayoutHeaderAdapter, LayoutSidebarAdapter, LayoutContentAdapter, LayoutFooterAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  return <LayoutAdapter><LayoutHeaderAdapter>Шапка</LayoutHeaderAdapter><LayoutAdapter direction=\"horizontal\"><LayoutSidebarAdapter aria-label=\"Навигация\" expandLabel=\"Открыть меню\" collapseLabel=\"Свернуть меню\"><nav>Разделы</nav></LayoutSidebarAdapter><LayoutContentAdapter>Содержимое</LayoutContentAdapter></LayoutAdapter><LayoutFooterAdapter>Подвал</LayoutFooterAdapter></LayoutAdapter>;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-adapter-header",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "LayoutHeaderAdapter",
+      "propertyDescriptions": {
+        "children": "Содержимое шапки."
+      }
+    },
+    {
+      "id": "react-adapter-sidebar",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "LayoutSidebarAdapter",
+      "propertyDescriptions": {
+        "collapsed": "Свёрнутое состояние.",
+        "defaultCollapsed": "Начальное свёрнутое состояние; у готового компонента зависит от ширины экрана.",
+        "onCollapsedChange": "Уведомление о сворачивании.",
+        "expandLabel": "Подпись раскрытия.",
+        "collapseLabel": "Подпись сворачивания.",
+        "triggerIcon": "Содержимое кнопки.",
+        "slotClassNames": "Классы частей."
+      }
+    },
+    {
+      "id": "react-adapter-content",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "LayoutContentAdapter",
+      "propertyDescriptions": {
+        "children": "Основное содержимое."
+      }
+    },
+    {
+      "id": "react-adapter-footer",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "LayoutFooterAdapter",
+      "propertyDescriptions": {
+        "children": "Содержимое подвала."
+      }
+    }
+  ]
+}

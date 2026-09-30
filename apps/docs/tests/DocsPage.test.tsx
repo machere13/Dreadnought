@@ -2,6 +2,11 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DocsPage } from '../src/components/DocsPage';
 
+vi.mock('../src/knowledge/useKnowledge.ts', () => {
+  const state = { entries: [{ id: 'catalog:table:sticky', sourceKind: 'catalog', sourceId: 'catalog:table', title: 'Table · sticky', url: '/components/table/#table-api', text: 'sticky: закреплённая шапка', code: [] }], loading: false, error: null, retry: vi.fn() };
+  return { useKnowledge: () => state };
+});
+
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
@@ -26,7 +31,7 @@ describe('documentation pages', () => {
     const search = screen.getByRole('searchbox', { name: 'Поиск по документации' });
 
     fireEvent.change(search, { target: { value: 'sticky' } });
-    expect(screen.getByRole('link', { name: /Table/ }).getAttribute('href')).toBe('/components/table/');
+    expect(screen.getByRole('link', { name: /Table/ }).getAttribute('href')).toBe('/components/table/#table-api');
     expect(screen.queryByRole('navigation', { name: 'Страницы документации' })).toBeNull();
 
     fireEvent.change(search, { target: { value: 'несуществующийраздел' } });
@@ -216,9 +221,9 @@ describe('documentation pages', () => {
     expect(screen.getByRole('link', { name: 'Alert' }).getAttribute('href')).toBe('/components/alert/');
     expect(screen.getByRole('heading', { name: 'Alert', level: 1 })).toBeTruthy();
     expect(screen.getByRole('rowheader', { name: 'variant' })).toBeTruthy();
-    expect(screen.getByRole('status').textContent).toContain('Полезная подсказка');
+    expect(screen.getByText('Полезная подсказка').closest('[role="status"]')).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'Закрыть подсказку' }));
-    expect(screen.queryByRole('status')).toBeNull();
+    expect(screen.queryByText('Полезная подсказка')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Повторить' }));
     expect(screen.getByRole('alert').textContent).toContain('Попыток: 1');
   });

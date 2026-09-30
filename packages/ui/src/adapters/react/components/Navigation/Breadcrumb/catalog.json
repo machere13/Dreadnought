@@ -1,0 +1,27 @@
+{
+  "componentId": "component:breadcrumb",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Breadcrumb",
+      "description": "Путь от главной страницы до текущей с доступным обозначением текущего уровня.",
+      "propertyDescriptions": {
+        "items": "Уровни пути по порядку.",
+        "aria-label": "Доступное имя навигационной области.",
+        "slotClassNames": "Классы частей пути."
+      },
+      "defaults": {
+        "aria-label": "Breadcrumb"
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Breadcrumb } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Breadcrumb aria-label=\"Путь по сайту\" items={[{ label: 'Главная', href: '/' }, { label: 'Компоненты' }, { label: 'Button' }]} />;\n}"
+        }
+      ]
+    }
+  ]
+}

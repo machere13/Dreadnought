@@ -1,0 +1,36 @@
+{
+  "componentId": "component:codeblock",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "CodeBlock",
+      "description": "Блок кода с необязательной кнопкой копирования. Сохраняет пробелы и переводы строк.",
+      "propertyDescriptions": {
+        "code": "Точный текст кода.",
+        "language": "Подпись языка.",
+        "copyable": "Показывает кнопку копирования.",
+        "copyLabels": "Подписи состояний кнопки.",
+        "onCopy": "Уведомление об успешном копировании.",
+        "onCopyError": "Ошибка копирования.",
+        "slotClassNames": "Классы отдельных частей."
+      },
+      "defaults": {
+        "copyable": true,
+        "copyLabels": {
+          "copy": "Copy",
+          "copied": "Copied",
+          "error": "Copy failed"
+        }
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { CodeBlock } from '@dreadnought/ui/react';\nexport function Example() {\n  return <CodeBlock code={'const answer = 42;\\n'} language=\"ts\" />;\n}"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "componentId": "component:table",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Table",
+      "description": "Таблица данных с сортировкой, фильтрацией, выбором строк и пагинацией; поддерживает также составную разметку.",
+      "propertyDescriptions": {
+        "columns": "Колонки и правила отображения, сортировки и фильтрации.",
+        "dataSource": "Строки таблицы.",
+        "rowKey": "Устойчивый ключ строки.",
+        "pagination": "Параметры разбиения на страницы.",
+        "rowSelection": "Управление выбором строк.",
+        "sticky": "Закрепление шапки.",
+        "scroll": "Границы прокрутки.",
+        "onChange": "Изменение сортировки, фильтров или страницы.",
+        "size": "Плотность готовой таблицы.",
+        "bordered": "Рамка и разделители колонок."
+      },
+      "defaults": {},
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Table } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Table rowKey=\"id\" dataSource={[{ id: 1, name: 'Борис' }, { id: 2, name: 'Анна' }]} columns={[{ key: 'name', title: 'Имя', dataIndex: 'name', sorter: (a, b) => a.name.localeCompare(b.name) }]} />;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-ui-head",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Table",
+      "propertyPath": [
+        "Head"
+      ],
+      "propertyDescriptions": {
+        "children": "Строки заголовка."
+      }
+    },
+    {
+      "id": "react-ui-body",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Table",
+      "propertyPath": [
+        "Body"
+      ],
+      "propertyDescriptions": {
+        "children": "Строки данных."
+      }
+    },
+    {
+      "id": "react-ui-row",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Table",
+      "propertyPath": [
+        "Row"
+      ],
+      "propertyDescriptions": {
+        "children": "Ячейки строки."
+      }
+    },
+    {
+      "id": "react-ui-headercell",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Table",
+      "propertyPath": [
+        "HeaderCell"
+      ],
+      "propertyDescriptions": {
+        "scope": "Область заголовка.",
+        "children": "Содержимое заголовка."
+      }
+    },
+    {
+      "id": "react-ui-cell",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Table",
+      "propertyPath": [
+        "Cell"
+      ],
+      "propertyDescriptions": {
+        "children": "Содержимое ячейки."
+      }
+    }
+  ]
+}

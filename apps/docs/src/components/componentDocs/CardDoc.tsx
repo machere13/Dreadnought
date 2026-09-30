@@ -1,3 +1,4 @@
+import { getCatalogDoc } from '../../catalog/getCatalogDoc';
 import { useState } from 'react';
 import { Button, Card } from '@dreadnought/ui/react';
 import type { ComponentDoc } from './types';
@@ -17,20 +18,10 @@ function CardDemo() {
 }
 
 export const cardDoc: ComponentDoc = {
+  ...getCatalogDoc('card'),
   title: 'Card',
   description: 'Оформленный контейнер для произвольного содержимого: текста, элементов управления и вложенных компонентов.',
-  readyCode: `import { Button, Card } from '@dreadnought/ui/react';
-
-<Card><h3>Заголовок</h3><p>Содержимое карточки</p><Button>Открыть</Button></Card>`,
-  adapterCode: `import { CardAdapter } from '@dreadnought/react/unstyled';
-
-<CardAdapter className={styles.myCard}><h3>Заголовок</h3></CardAdapter>`,
   adapterDescription: 'Адаптер даёт контейнер без темы. Card не требует отдельной логики или состояния в core.',
-  apiRows: [
-    ['children', 'ReactNode', '—', 'Любое содержимое карточки'],
-    ['className', 'string', '—', 'Локальное оформление или токены темы'],
-    ['ref', 'Ref<HTMLDivElement>', '—', 'Ссылка на корневой элемент'],
-  ],
   footnote: <>Поддерживаются стандартные свойства <code>&lt;div&gt;</code>. Если карточка целиком выполняет действие, используйте подходящий интерактивный элемент внутри.</>,
   demo: <CardDemo />,
 };

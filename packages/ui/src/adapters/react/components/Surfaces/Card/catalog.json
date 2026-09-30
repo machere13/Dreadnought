@@ -1,0 +1,25 @@
+{
+  "componentId": "component:card",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Card",
+      "description": "Контейнер для текста, элементов управления и вложенных компонентов.",
+      "propertyDescriptions": {
+        "children": "Содержимое карточки.",
+        "className": "Локальное оформление.",
+        "ref": "Ссылка на корневой элемент."
+      },
+      "defaults": {},
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Card } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Card><h3>Заголовок</h3><p>Содержимое карточки</p></Card>;\n}"
+        }
+      ]
+    }
+  ]
+}

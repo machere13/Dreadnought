@@ -3,8 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "dev": "node scripts/buildDocs.mjs --public && astro dev",
+    "build": "node scripts/buildDocs.mjs",
+    "refresh:knowledge": "node scripts/buildDocs.mjs --public",
     "typecheck": "astro check"
   },
   "dependencies": {
@@ -13,6 +14,7 @@
     "@dreadnought/react": "workspace:*",
     "@dreadnought/themes": "workspace:*",
     "@dreadnought/ui": "workspace:*",
+    "@mlc-ai/web-llm": "0.2.85",
     "astro": "^7.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

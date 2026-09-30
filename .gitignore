@@ -6,3 +6,7 @@ graphify-out/
 /docs/
 .astro/
 assets/
+apps/docs/src/generated/
+apps/docs/public/catalog.json
+apps/docs/public/rag-index.json
+apps/docs/public/knowledge-manifest.json

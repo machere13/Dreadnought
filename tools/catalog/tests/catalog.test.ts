@@ -52,9 +52,10 @@ describe('public catalog', () => {
   });
 
   it('extracts theme tokens and only the explicitly listed components', () => {
-    expect(catalog.entries.map((entry) => entry.name)).toEqual(['Button', 'Input']);
-    expect(catalog.entries[0].tokens).toContainEqual({ name: '--dreadnought-button-primary-bg', value: 'var(--dreadnought-color-action-primary)' });
-    expect(catalog.entries[1].tokens.length).toBeGreaterThan(0);
+    expect(catalog.entries.map((entry) => entry.name)).toEqual(components.map((component) => component.name).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())));
+    expect(catalog.entries).toHaveLength(14);
+    expect(catalog.entries.find((entry) => entry.name === 'Button').tokens).toContainEqual({ name: '--dreadnought-button-primary-bg', value: 'var(--dreadnought-color-action-primary)' });
+    expect(catalog.entries.every((entry) => entry.tokens.length > 0)).toBe(true);
     expect(catalog.packageVersions['@dreadnought/themes']).toBe(readJson(path.join(root, 'packages/themes/package.json')).version);
   });
 
@@ -98,6 +99,18 @@ describe('public catalog', () => {
   it('rejects private imports and suppressed example errors', () => {
     expect(() => checkExamples(context, [{ id: 'private', code: "import { getButtonState } from './internal.ts';" }])).toThrow('Non-public import');
     expect(() => checkExamples(context, [{ id: 'unchecked', code: '// @ts-nocheck\nconst x: string = 1;' }])).toThrow('Suppressed type check');
+  });
+
+  it('extracts compound public members and positional core signatures without synthetic layers', () => {
+    const layout = catalog.entries.find((entry) => entry.name === 'Layout');
+    expect(layout.bindings.every((binding) => binding.layer !== 1)).toBe(true);
+    const sidebar = layout.bindings.find((binding) => binding.id === 'react-ui-sidebar');
+    expect(sidebar.propertyPath).toEqual(['Sidebar']);
+    expect(sidebar.contracts[0].variants[0].properties.find((prop) => prop.name === 'collapsed').type).toBe('boolean | undefined');
+    const table = catalog.entries.find((entry) => entry.name === 'Table');
+    expect(table.bindings.find((binding) => binding.id === 'core').contracts[0].parameters.map((parameter) => parameter.name)).toEqual(['rows', 'sorter', 'order']);
+    expect(table.bindings.find((binding) => binding.id === 'react-ui-headercell').contracts[0].variants[0].properties.find((prop) => prop.name === 'scope')).toBeDefined();
+    expect(() => describeContract(context, { importPath: '@dreadnought/ui/react', exportName: 'Layout', propertyPath: ['Removed'] })).toThrow('Missing public member');
   });
 });
 

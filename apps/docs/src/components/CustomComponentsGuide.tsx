@@ -85,13 +85,13 @@ export function CustomComponentsGuide() {
       <p className={styles.lead}>Если готового компонента нет или нужна своя разметка, возьмите из ядра отдельные правила и действия. Оно не привязано к React и не рисует интерфейс за вас.</p>
     </div>
 
-    <section className={styles.section} aria-labelledby="core-parts">
+    <section data-knowledge className={styles.section} aria-labelledby="core-parts">
       <h2 id="core-parts" className={styles.sectionTitle}>Что берём из ядра, а что пишем сами</h2>
       <p className={styles.bodyText}><code>getButtonState</code> вычисляет, когда действие заблокировано и какие признаки состояния нужны кнопке. <code>copy</code> выполняет само копирование. JSX, CSS Module, текст результата и обработка ошибки принадлежат вашему компоненту.</p>
       <p className={styles.bodyText}>Так можно сочетать возможности ядра с собственной структурой, не импортируя готовый Button или React-адаптер. Если разметка стандартной кнопки подходит, начните с <a href="/components/button/">Button</a> или <code>ButtonAdapter</code> — к ядру стоит спускаться, когда действительно нужна своя реализация.</p>
     </section>
 
-    <section className={styles.section} aria-labelledby="core-example">
+    <section data-knowledge className={styles.section} aria-labelledby="core-example">
       <h2 id="core-example" className={styles.sectionTitle}>Пример: собственная кнопка копирования</h2>
       <p className={styles.bodyText}>Ниже обычная кнопка приложения: её поведение собрано из двух экспортов <code>@dreadnought/core</code>, а оформление остаётся в вашем CSS Module.</p>
       <CoreDemo />
@@ -99,7 +99,7 @@ export function CustomComponentsGuide() {
       <p className={styles.footnote}>Для буфера обмена нужен защищённый контекст: HTTPS или localhost. Ошибка доступа не скрывается ядром — покажите её пользователю, как в примере.</p>
     </section>
 
-    <section className={styles.section} aria-labelledby="other-actions">
+    <section data-knowledge className={styles.section} aria-labelledby="other-actions">
       <h2 id="other-actions" className={styles.sectionTitle}>Другие самостоятельные действия</h2>
       <p className={styles.bodyText}><code>pickFiles</code> открывает выбор файлов, <code>readClipboard</code> читает текст из буфера, <code>download</code> запускает скачивание Blob. Эти функции не требуют компонента библиотеки и не управляют его визуальным состоянием.</p>
       <CodeBlock code={otherActionsCode} language="ts" copyLabels={copyLabels} />

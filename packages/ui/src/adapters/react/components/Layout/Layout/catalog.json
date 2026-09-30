@@ -1,0 +1,83 @@
+{
+  "componentId": "component:layout",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Layout",
+      "description": "Каркас страницы: шапка, боковая область, содержимое и подвал.",
+      "propertyDescriptions": {
+        "direction": "Направление вложенного контейнера."
+      },
+      "defaults": {
+        "direction": "vertical"
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Layout } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Layout><Layout.Header>Шапка</Layout.Header><Layout direction=\"horizontal\"><Layout.Sidebar aria-label=\"Навигация\" expandLabel=\"Открыть меню\" collapseLabel=\"Свернуть меню\"><nav>Разделы</nav></Layout.Sidebar><Layout.Content>Содержимое</Layout.Content></Layout><Layout.Footer>Подвал</Layout.Footer></Layout>;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-ui-header",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Layout",
+      "propertyPath": [
+        "Header"
+      ],
+      "propertyDescriptions": {
+        "children": "Содержимое шапки."
+      }
+    },
+    {
+      "id": "react-ui-sidebar",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Layout",
+      "propertyPath": [
+        "Sidebar"
+      ],
+      "propertyDescriptions": {
+        "collapsed": "Свёрнутое состояние.",
+        "defaultCollapsed": "Начальное свёрнутое состояние; у готового компонента зависит от ширины экрана.",
+        "onCollapsedChange": "Уведомление о сворачивании.",
+        "expandLabel": "Подпись раскрытия.",
+        "collapseLabel": "Подпись сворачивания.",
+        "triggerIcon": "Содержимое кнопки.",
+        "slotClassNames": "Классы частей."
+      }
+    },
+    {
+      "id": "react-ui-content",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Layout",
+      "propertyPath": [
+        "Content"
+      ],
+      "propertyDescriptions": {
+        "children": "Основное содержимое."
+      }
+    },
+    {
+      "id": "react-ui-footer",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Layout",
+      "propertyPath": [
+        "Footer"
+      ],
+      "propertyDescriptions": {
+        "children": "Содержимое подвала."
+      }
+    }
+  ]
+}

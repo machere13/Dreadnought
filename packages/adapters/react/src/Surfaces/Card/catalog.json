@@ -1,0 +1,26 @@
+{
+  "id": "component:card",
+  "kind": "component",
+  "name": "Card",
+  "family": "Surfaces",
+  "description": "Контейнер для текста, элементов управления и вложенных компонентов.",
+  "docsUrl": "/components/card/#card-api",
+  "states": [],
+  "constraints": ["Карточка не интерактивна: действие оформляйте кнопкой или ссылкой внутри."],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "CardAdapter",
+      "description": "Доступная разметка и поведение без готового оформления.",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { CardAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  return <CardAdapter><h3>Заголовок</h3><p>Содержимое карточки</p></CardAdapter>;\n}"
+        }
+      ]
+    }
+  ]
+}

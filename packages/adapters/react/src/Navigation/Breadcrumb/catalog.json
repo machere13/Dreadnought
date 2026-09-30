@@ -1,0 +1,26 @@
+{
+  "id": "component:breadcrumb",
+  "kind": "component",
+  "name": "Breadcrumb",
+  "family": "Navigation",
+  "description": "Путь от главной страницы до текущей с доступным обозначением текущего уровня.",
+  "docsUrl": "/components/breadcrumb/#breadcrumb-api",
+  "states": [],
+  "constraints": ["Последний элемент получает aria-current=page. Без href уровень выводится текстом; пустой список не создаёт навигацию."],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "BreadcrumbAdapter",
+      "description": "Доступная разметка и поведение без готового оформления.",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { BreadcrumbAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  return <BreadcrumbAdapter aria-label=\"Путь по сайту\" items={[{ label: 'Главная', href: '/' }, { label: 'Компоненты' }, { label: 'Button' }]} />;\n}"
+        }
+      ]
+    }
+  ]
+}

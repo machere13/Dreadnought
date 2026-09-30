@@ -31,6 +31,7 @@ export function generateCatalog(context, metadata) {
     const bindings = entry.bindings.map((binding) => {
       if (![1, 2, 3].includes(binding.layer)) throw new Error(`Invalid layer: ${binding.id}`);
       if (binding.framework !== null && binding.framework !== 'react') throw new Error(`Unsupported framework: ${binding.id}`);
+      if (binding.propertyPath && (!Array.isArray(binding.propertyPath) || binding.propertyPath.some((member) => typeof member !== 'string' || !/^[A-Za-z][A-Za-z0-9]*$/.test(member)))) throw new Error(`Invalid property path: ${binding.id}`);
       const contracts = describeContract(context, binding);
       const propertyNames = new Set(contracts.flatMap((contract) => contract.variants.flatMap((variant) => variant.properties.map((prop) => prop.name))));
       for (const [name, description] of Object.entries(binding.propertyDescriptions ?? {})) {
@@ -41,7 +42,7 @@ export function generateCatalog(context, metadata) {
         if (!propertyNames.has(name)) throw new Error(`Unknown default property: ${binding.exportName}.${name}`);
         defaultChecks.push({
           id: `${entry.id}/${binding.id}/default:${name}`,
-          code: `import { ${binding.exportName} } from '${binding.importPath}';\nconst value: NonNullable<Parameters<typeof ${binding.exportName}>[0]>[${JSON.stringify(name)}] = ${JSON.stringify(value)};`,
+          code: `import { ${binding.exportName} } from '${binding.importPath}';\nconst value: NonNullable<Parameters<typeof ${[binding.exportName, ...(binding.propertyPath ?? [])].join('.')}>[0]>[${JSON.stringify(name)}] = ${JSON.stringify(value)};`,
         });
       }
       for (const example of binding.examples ?? []) {
@@ -52,6 +53,7 @@ export function generateCatalog(context, metadata) {
       return {
         id: binding.id, layer: binding.layer, framework: binding.framework,
         importPath: binding.importPath, exportName: binding.exportName,
+        ...(binding.propertyPath ? { propertyPath: binding.propertyPath } : {}),
         description: binding.description ?? entry.description,
         propertyDescriptions: binding.propertyDescriptions ?? {}, defaults: binding.defaults ?? {},
         examples: binding.examples ?? [], contracts,

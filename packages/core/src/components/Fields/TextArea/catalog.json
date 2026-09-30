@@ -1,0 +1,25 @@
+{
+  "id": "component:textarea",
+  "kind": "component",
+  "name": "TextArea",
+  "family": "Fields",
+  "description": "Многострочное текстовое поле с автоматической высотой и ограничением числа строк.",
+  "docsUrl": "/components/textarea/#textarea-api",
+  "states": [],
+  "constraints": ["rows, minRows и maxRows — положительные целые числа; minRows не превышает maxRows. Полю нужно доступное имя."],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "getTextAreaState",
+      "examples": [
+        {
+          "id": "state",
+          "code": "import { getTextAreaState } from '@dreadnought/core';\nconst state = getTextAreaState({ rows: 3, autoSize: true, maxRows: 8 });"
+        }
+      ]
+    }
+  ]
+}

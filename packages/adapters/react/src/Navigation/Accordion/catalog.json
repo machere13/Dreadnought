@@ -1,0 +1,73 @@
+{
+  "componentId": "component:accordion",
+  "bindings": [
+    {
+      "id": "react-logic",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/logic",
+      "exportName": "useAccordion",
+      "description": "Управляет состоянием; при своей разметке семантику и клавиатурное поведение нужно реализовать отдельно.",
+      "examples": [
+        {
+          "id": "custom",
+          "code": "import { useAccordion } from '@dreadnought/react/logic';\nexport function Example() {\n  const { value, toggle } = useAccordion({});\n  return <><button aria-expanded={value === 'install'} aria-controls=\"install\" onClick={() => toggle('install')}>Установка</button><div id=\"install\" hidden={value !== 'install'}>Инструкция</div></>;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "AccordionAdapter",
+      "description": "Доступная разметка и поведение без готового оформления.",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { AccordionAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  return <AccordionAdapter><AccordionAdapter.Item value=\"install\"><AccordionAdapter.Trigger>Как установить?</AccordionAdapter.Trigger><AccordionAdapter.Panel>Установите пакет и импортируйте компонент.</AccordionAdapter.Panel></AccordionAdapter.Item></AccordionAdapter>;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-adapter-item",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "AccordionAdapter",
+      "propertyPath": [
+        "Item"
+      ],
+      "propertyDescriptions": {
+        "value": "Уникальное значение пункта."
+      }
+    },
+    {
+      "id": "react-adapter-trigger",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "AccordionAdapter",
+      "propertyPath": [
+        "Trigger"
+      ],
+      "propertyDescriptions": {
+        "headingLevel": "Уровень заголовка.",
+        "disabled": "Блокирует раскрытие."
+      }
+    },
+    {
+      "id": "react-adapter-panel",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "AccordionAdapter",
+      "propertyPath": [
+        "Panel"
+      ],
+      "propertyDescriptions": {
+        "children": "Содержимое панели."
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "componentId": "component:alert",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Alert",
+      "description": "Сообщение внутри страницы с необязательным действием и закрытием.",
+      "propertyDescriptions": {
+        "type": "Смысл сообщения и роль для скринридера.",
+        "variant": "Оформление сообщения.",
+        "title": "Заголовок.",
+        "description": "Текст сообщения.",
+        "action": "Дополнительное действие.",
+        "showIcon": "Показывает значок.",
+        "icon": "Собственный значок.",
+        "closable": "Кнопка локального закрытия.",
+        "slotClassNames": "Классы частей сообщения."
+      },
+      "defaults": {
+        "type": "info",
+        "variant": "outlined",
+        "showIcon": false
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Alert } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Alert type=\"warning\" title=\"Внимание\" description=\"Проверьте введённые данные.\" showIcon closable={{ 'aria-label': 'Закрыть сообщение' }} />;\n}"
+        }
+      ]
+    }
+  ]
+}

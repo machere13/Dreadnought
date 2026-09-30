@@ -18,7 +18,12 @@ export function describeContract(context, binding) {
   const { checker } = context;
   const symbol = getExport(context, binding.importPath, binding.exportName);
   const declaration = symbol.valueDeclaration ?? symbol.declarations?.[0];
-  const type = checker.getTypeOfSymbolAtLocation(symbol, declaration);
+  let type = checker.getTypeOfSymbolAtLocation(symbol, declaration);
+  for (const member of binding.propertyPath ?? []) {
+    const property = checker.getPropertyOfType(type, member);
+    if (!property) throw new Error(`Missing public member: ${binding.exportName}.${member}`);
+    type = checker.getTypeOfSymbolAtLocation(property, property.valueDeclaration ?? declaration);
+  }
   const signatures = type.getCallSignatures();
   if (!signatures.length) throw new Error(`Not a callable export: ${binding.exportName}`);
   // Preserve both overloads and union branches rather than merging their props.
@@ -28,8 +33,14 @@ export function describeContract(context, binding) {
     const input = checker.getNonNullableType(checker.getTypeOfSymbolAtLocation(parameter, declaration));
     const branches = input.isUnion() ? input.types : [input];
     return {
+      parameters: signature.parameters.map((parameter) => ({
+        name: parameter.name,
+        type: printType(checker, checker.getTypeOfSymbolAtLocation(parameter, declaration)),
+        optional: Boolean(parameter.flags & ts.SymbolFlags.Optional) || Boolean(parameter.valueDeclaration?.questionToken) || Boolean(parameter.valueDeclaration?.initializer),
+      })),
+      returnType: printType(checker, checker.getReturnTypeOfSignature(signature)),
       variants: branches.map((branch) => ({
-        properties: checker.getPropertiesOfType(branch)
+        properties: ((branch.flags & ts.TypeFlags.Object || branch.isIntersection()) && !checker.isArrayType(branch) && !checker.isTupleType(branch) ? checker.getPropertiesOfType(branch) : [])
           .sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
           .map((property) => {
             const value = checker.getTypeOfSymbolAtLocation(property, declaration);

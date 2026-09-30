@@ -16,6 +16,8 @@
 }
 
 .header { gap: var(--dreadnought-spacing-x4); }
+.assistantLink { margin-inline-start: auto; color: var(--dreadnought-color-text-primary); text-underline-offset: .2em; }
+.assistantArea { max-width: 76rem; margin-inline: auto; padding: var(--dreadnought-spacing-x4) calc(var(--dreadnought-spacing-x4) * 2); scroll-margin-top: var(--dreadnought-spacing-x4); }
 
 .brand {
   gap: var(--dreadnought-spacing-x2);
@@ -221,6 +223,7 @@
 .footer { justify-content: space-between; gap: var(--dreadnought-spacing-x4); font-size: var(--dreadnought-font-size-caption-1); }
 
 @media (max-width: 40rem) {
+  .assistantArea { padding-inline: var(--dreadnought-spacing-x2); }
   .headerDivider,
   .footer span { display: none; }
   .article { padding: var(--dreadnought-spacing-x4) var(--dreadnought-spacing-x2) calc(var(--dreadnought-spacing-x4) * 3); }

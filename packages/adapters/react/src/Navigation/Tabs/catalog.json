@@ -1,0 +1,73 @@
+{
+  "componentId": "component:tabs",
+  "bindings": [
+    {
+      "id": "react-logic",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/logic",
+      "exportName": "useTabs",
+      "description": "Управляет состоянием; при своей разметке семантику и клавиатурное поведение нужно реализовать отдельно.",
+      "examples": [
+        {
+          "id": "custom",
+          "code": "import { useTabs } from '@dreadnought/react/logic';\nexport function Example() {\n  const { value, setValue } = useTabs({ defaultValue: 'first' });\n  return <button onClick={() => setValue('second')} aria-pressed={value === 'second'}>Второй раздел</button>;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "TabsAdapter",
+      "description": "Доступная разметка и поведение без готового оформления.",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { TabsAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  return <TabsAdapter defaultValue=\"first\"><TabsAdapter.List aria-label=\"Разделы\"><TabsAdapter.Tab value=\"first\">Первый</TabsAdapter.Tab><TabsAdapter.Tab value=\"second\">Второй</TabsAdapter.Tab></TabsAdapter.List><TabsAdapter.Panel value=\"first\">Первый раздел</TabsAdapter.Panel><TabsAdapter.Panel value=\"second\">Второй раздел</TabsAdapter.Panel></TabsAdapter>;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-adapter-list",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "TabsAdapter",
+      "propertyPath": [
+        "List"
+      ],
+      "propertyDescriptions": {
+        "aria-label": "Доступное имя списка вкладок."
+      }
+    },
+    {
+      "id": "react-adapter-tab",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "TabsAdapter",
+      "propertyPath": [
+        "Tab"
+      ],
+      "propertyDescriptions": {
+        "value": "Уникальное значение вкладки.",
+        "disabled": "Исключает вкладку из навигации."
+      }
+    },
+    {
+      "id": "react-adapter-panel",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "TabsAdapter",
+      "propertyPath": [
+        "Panel"
+      ],
+      "propertyDescriptions": {
+        "value": "Связывает панель с вкладкой."
+      }
+    }
+  ]
+}

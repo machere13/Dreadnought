@@ -1,0 +1,25 @@
+{
+  "componentId": "component:icon",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Icon",
+      "description": "Иконка по стабильному имени с необязательной доступной подписью.",
+      "propertyDescriptions": {
+        "name": "Имя графики из набора.",
+        "aria-label": "Доступное имя самостоятельной иконки.",
+        "className": "Локальное оформление."
+      },
+      "defaults": {},
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Icon } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Icon name=\"check\" aria-label=\"Успешно\" />;\n}"
+        }
+      ]
+    }
+  ]
+}

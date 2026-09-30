@@ -1,0 +1,25 @@
+{
+  "id": "component:accordion",
+  "kind": "component",
+  "name": "Accordion",
+  "family": "Navigation",
+  "description": "Раскрывающиеся разделы для FAQ и пояснений; поддерживает один или несколько открытых пунктов.",
+  "docsUrl": "/components/accordion/#accordion-api",
+  "states": [],
+  "constraints": ["Каждому Accordion.Item нужны один Trigger и один Panel. Скрытые панели остаются в DOM."],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "toggleAccordionValue",
+      "examples": [
+        {
+          "id": "state",
+          "code": "import { toggleAccordionValue } from '@dreadnought/core';\nconst next = toggleAccordionValue(null, 'install');"
+        }
+      ]
+    }
+  ]
+}

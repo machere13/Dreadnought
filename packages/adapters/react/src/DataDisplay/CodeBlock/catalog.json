@@ -1,0 +1,26 @@
+{
+  "id": "component:codeblock",
+  "kind": "component",
+  "name": "CodeBlock",
+  "family": "DataDisplay",
+  "description": "Блок кода с необязательной кнопкой копирования. Сохраняет пробелы и переводы строк.",
+  "docsUrl": "/components/codeblock/#codeblock-api",
+  "states": [],
+  "constraints": ["Код выводится как текст без подсветки синтаксиса. Без language и при copyable=false заголовок не создаётся."],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "CodeBlockAdapter",
+      "description": "Доступная разметка и поведение без готового оформления.",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { CodeBlockAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  return <CodeBlockAdapter code={'const answer = 42;\\n'} language=\"ts\" />;\n}"
+        }
+      ]
+    }
+  ]
+}

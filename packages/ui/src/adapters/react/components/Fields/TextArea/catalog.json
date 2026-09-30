@@ -1,0 +1,32 @@
+{
+  "componentId": "component:textarea",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "TextArea",
+      "description": "Многострочное текстовое поле с автоматической высотой и ограничением числа строк.",
+      "propertyDescriptions": {
+        "rows": "Начальная высота в строках.",
+        "minRows": "Минимальная высота.",
+        "maxRows": "Максимальная высота.",
+        "autoSize": "Подстраивает высоту под текст.",
+        "invalid": "Помечает поле ошибочным.",
+        "disabled": "Отключает поле.",
+        "readOnly": "Запрещает редактирование."
+      },
+      "defaults": {
+        "rows": 2,
+        "autoSize": false
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { TextArea } from '@dreadnought/ui/react';\nexport function Example() {\n  return <><label htmlFor=\"notes\">Заметки</label><TextArea id=\"notes\" name=\"notes\" rows={3} autoSize maxRows={8} /></>;\n}"
+        }
+      ]
+    }
+  ]
+}

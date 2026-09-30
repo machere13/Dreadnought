@@ -6,13 +6,15 @@
   "scripts": {
     "build": "pnpm -r build",
     "catalog": "node tools/catalog/src/cli.mjs",
-    "catalog:test": "vitest run tools/catalog/tests",
+    "catalog:test": "vitest run tools/catalog/tests --maxWorkers=1",
     "dev": "pnpm --filter @dreadnought/example-react dev",
     "test": "vitest run",
     "typecheck": "pnpm -r typecheck && tsc -p tsconfig.type-tests.json --noEmit",
     "storybook": "pnpm build && pnpm --filter @dreadnought/storybook dev",
     "storybook:build": "pnpm build && pnpm --filter @dreadnought/storybook build:storybook",
-    "docs": "pnpm --filter @dreadnought/docs dev"
+    "docs": "pnpm --filter @dreadnought/docs dev",
+    "docs:build": "pnpm --filter @dreadnought/docs build",
+    "docs:refresh": "pnpm --filter @dreadnought/docs refresh:knowledge"
   },
   "devDependencies": {
     "@testing-library/react": "^16.0.0",

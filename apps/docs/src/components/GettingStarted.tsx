@@ -42,13 +42,13 @@ export function GettingStarted() {
       <p className={styles.lead}>Запустите библиотеку локально и выберите, сколько готового поведения и оформления нужно вашему компоненту.</p>
     </div>
 
-    <section className={styles.section} aria-labelledby="setup">
+    <section data-knowledge className={styles.section} aria-labelledby="setup">
       <h2 id="setup" className={styles.sectionTitle}>Запуск в репозитории</h2>
       <p className={styles.bodyText}>Сейчас пакеты связаны внутри монорепозитория. Выполните команды из его корня; это не инструкция по установке опубликованного пакета из реестра.</p>
       <CodeBlock code={setupCode} language="sh" copyLabels={copyLabels} />
     </section>
 
-    <section className={styles.section} aria-labelledby="three-layers">
+    <section data-knowledge className={styles.section} aria-labelledby="three-layers">
       <h2 id="three-layers" className={styles.sectionTitle}>Одна кнопка — три слоя</h2>
       <p className={styles.bodyText}>Во всех примерах кнопка вызывает один и тот же <code>onSave</code>. Различается то, что библиотека берёт на себя.</p>
       <div className={styles.startExamples}>

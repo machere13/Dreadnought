@@ -1,0 +1,25 @@
+{
+  "id": "component:tabs",
+  "kind": "component",
+  "name": "Tabs",
+  "family": "Navigation",
+  "description": "Разделы с клавиатурной навигацией и сохранением состояния скрытых панелей.",
+  "docsUrl": "/components/tabs/#tabs-api",
+  "states": [],
+  "constraints": ["Каждой Tabs.Tab нужна Tabs.Panel с тем же value; дайте Tabs.List доступное имя. Стрелки, Home и End переключают вкладки; скрытые панели остаются в DOM."],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "getNextTabValue",
+      "examples": [
+        {
+          "id": "state",
+          "code": "import { getNextTabValue } from '@dreadnought/core';\nconst next = getNextTabValue([{ value: 'first' }, { value: 'second' }], 'first', 'next');"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "component:mark",
+  "kind": "component",
+  "name": "Mark",
+  "family": "DataDisplay",
+  "description": "Декоративный маркер статуса с выбираемой формой и цветом.",
+  "docsUrl": "/components/mark/#mark-api",
+  "states": [],
+  "constraints": ["Маркер всегда скрыт от скринридера. Значение цвета или формы дублируйте текстом."],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "MarkAdapter",
+      "description": "Доступная разметка и поведение без готового оформления.",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { MarkAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  return <><MarkAdapter shape=\"square\" /><span>Готово</span></>;\n}"
+        }
+      ]
+    }
+  ]
+}

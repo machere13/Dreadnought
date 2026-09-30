@@ -16,11 +16,8 @@ export function mergeMetadata(base, additions) {
 }
 
 export function readMetadata(root, components) {
-  return components.map(({ family, name }) => {
-    const read = (directory) => readJson(path.join(root, directory, family, name, 'catalog.json'));
-    return mergeMetadata(read('packages/core/src/components'), [
-      read('packages/adapters/react/src'),
-      read('packages/ui/src/adapters/react/components'),
-    ]);
+  return components.map(({ family, name, sources }) => {
+    const [base, ...additions] = sources.map((directory) => readJson(path.join(root, directory, family, name, 'catalog.json')));
+    return mergeMetadata(base, additions);
   });
 }

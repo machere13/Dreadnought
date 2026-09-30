@@ -1,3 +1,4 @@
+import { getCatalogDoc } from '../../catalog/getCatalogDoc';
 import { Mark } from '@dreadnought/ui/react';
 import type { ComponentDoc } from './types';
 import styles from '../DocsPage.module.css';
@@ -12,21 +13,10 @@ function MarkDemo() {
 }
 
 export const markDoc: ComponentDoc = {
+  ...getCatalogDoc('mark'),
   title: 'Mark',
   description: 'Небольшой декоративный маркер для статуса или метки. Выбирайте форму и при необходимости задавайте цвет конкретного экземпляра.',
-  readyCode: `import { Mark } from '@dreadnought/ui/react';
-
-<Mark shape="circle" />
-<Mark shape="square" color="var(--dreadnought-color-status-success)" />`,
-  adapterCode: `import { MarkAdapter } from '@dreadnought/react/unstyled';
-
-<MarkAdapter shape="square" className={styles.myMark} />`,
   adapterDescription: 'Адаптер выводит декоративный элемент с выбранной формой; размер и цвет задаются вашими стилями.',
-  apiRows: [
-    ['shape', 'circle | square', 'circle', 'Форма маркера'],
-    ['color', 'CSS-цвет', 'цвет темы', 'Цвет только этого маркера'],
-    ['className', 'string', '—', 'Локальный класс для оформления'],
-  ],
   footnote: <>Mark всегда скрыт от скринридера. Если цвет или форма передают смысл, продублируйте его текстом рядом. Без <code>color</code> используется компонентный токен темы.</>,
   demo: <MarkDemo />,
 };

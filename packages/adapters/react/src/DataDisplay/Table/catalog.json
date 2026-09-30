@@ -1,0 +1,85 @@
+{
+  "componentId": "component:table",
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "TableAdapter",
+      "description": "Доступная разметка и поведение без готового оформления.",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { TableAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  return <TableAdapter rowKey=\"id\" dataSource={[{ id: 1, name: 'Борис' }, { id: 2, name: 'Анна' }]} columns={[{ key: 'name', title: 'Имя', dataIndex: 'name', sorter: (a, b) => a.name.localeCompare(b.name) }]} />;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-adapter-head",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "TableAdapter",
+      "propertyPath": [
+        "Head"
+      ],
+      "propertyDescriptions": {
+        "children": "Строки заголовка."
+      }
+    },
+    {
+      "id": "react-adapter-body",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "TableAdapter",
+      "propertyPath": [
+        "Body"
+      ],
+      "propertyDescriptions": {
+        "children": "Строки данных."
+      }
+    },
+    {
+      "id": "react-adapter-row",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "TableAdapter",
+      "propertyPath": [
+        "Row"
+      ],
+      "propertyDescriptions": {
+        "children": "Ячейки строки."
+      }
+    },
+    {
+      "id": "react-adapter-headercell",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "TableAdapter",
+      "propertyPath": [
+        "HeaderCell"
+      ],
+      "propertyDescriptions": {
+        "scope": "Область заголовка.",
+        "children": "Содержимое заголовка."
+      }
+    },
+    {
+      "id": "react-adapter-cell",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "TableAdapter",
+      "propertyPath": [
+        "Cell"
+      ],
+      "propertyDescriptions": {
+        "children": "Содержимое ячейки."
+      }
+    }
+  ]
+}

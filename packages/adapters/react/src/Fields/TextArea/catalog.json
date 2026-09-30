@@ -1,0 +1,33 @@
+{
+  "componentId": "component:textarea",
+  "bindings": [
+    {
+      "id": "react-logic",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/logic",
+      "exportName": "useTextArea",
+      "description": "Управляет состоянием; при своей разметке семантику и клавиатурное поведение нужно реализовать отдельно.",
+      "examples": [
+        {
+          "id": "custom",
+          "code": "import { useTextArea } from '@dreadnought/react/logic';\nexport function Example() {\n  const { textAreaProps, textAreaRef } = useTextArea({ rows: 3, autoSize: true });\n  return <textarea {...textAreaProps} ref={textAreaRef} aria-label=\"Заметки\" />;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "TextAreaAdapter",
+      "description": "Доступная разметка и поведение без готового оформления.",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { TextAreaAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  return <><label htmlFor=\"notes\">Заметки</label><TextAreaAdapter id=\"notes\" name=\"notes\" rows={3} autoSize maxRows={8} /></>;\n}"
+        }
+      ]
+    }
+  ]
+}

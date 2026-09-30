@@ -1,0 +1,27 @@
+{
+  "componentId": "component:mark",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Mark",
+      "description": "Декоративный маркер статуса с выбираемой формой и цветом.",
+      "propertyDescriptions": {
+        "shape": "Форма маркера.",
+        "color": "Цвет экземпляра.",
+        "className": "Локальное оформление."
+      },
+      "defaults": {
+        "shape": "circle"
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Mark } from '@dreadnought/ui/react';\nexport function Example() {\n  return <><Mark shape=\"square\" color=\"var(--dreadnought-color-status-success)\" /><span>Готово</span></>;\n}"
+        }
+      ]
+    }
+  ]
+}
