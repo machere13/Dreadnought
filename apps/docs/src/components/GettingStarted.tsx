@@ -68,7 +68,7 @@ export function GettingStarted() {
           <CodeBlock code={coreCode} language="tsx" copyLabels={copyLabels} />
         </div>
       </div>
-      <p className={styles.footnote}>Если нужна собственная разметка именно в React, во втором слое также есть хук <code>useButton</code> из <code>@dreadnought/react/logic</code>. Подробности — в <a href="/components/button/">API Button</a>.</p>
+      <p className={styles.footnote}>Если нужна собственная разметка именно в React, во втором слое также есть хук <code>useButton</code> из <code>@dreadnought/react/logic</code>. Подробности — в <a href="/components/button/">API Button</a>. Следующий шаг — <a href="/theming/">Настроить тему</a>.</p>
     </section>
   </article>;
 }

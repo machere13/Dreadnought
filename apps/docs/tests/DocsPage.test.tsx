@@ -46,6 +46,22 @@ describe('documentation pages', () => {
     expect(code[2]).toContain("@dreadnought/react/unstyled");
     expect(code[3]).toContain("@dreadnought/core");
     expect(screen.getByRole('link', { name: 'API Button' }).getAttribute('href')).toBe('/components/button/');
+    expect(screen.getByRole('link', { name: 'Настроить тему' }).getAttribute('href')).toBe('/theming/');
+  });
+
+  it('explains global, component and instance token scopes with a live Button example', () => {
+    const { container } = render(<DocsPage section="theming" />);
+
+    expect(screen.getByRole('heading', { name: 'Тема и токены', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Тема и токены' }).getAttribute('aria-current')).toBe('page');
+    expect(screen.getByRole('heading', { name: 'Общие токены' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Токены компонента' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Один экземпляр' })).toBeTruthy();
+    const code = [...container.querySelectorAll('pre')].map((element) => element.textContent ?? '');
+    expect(code.some((value) => value.includes('--dreadnought-spacing-x4'))).toBe(true);
+    expect(code.some((value) => value.includes('--dreadnought-button-padding-x'))).toBe(true);
+    expect(code.some((value) => value.includes('className={styles.special}'))).toBe(true);
+    expect(screen.getByRole('button', { name: 'Одна кнопка' }).getAttribute('class')).toContain('special');
   });
 
   it('renders Button API and updates the live example', () => {
