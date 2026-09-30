@@ -55,6 +55,25 @@
   gap: var(--dreadnought-spacing-x1);
 }
 
+.search { margin-block: var(--dreadnought-spacing-x2) var(--dreadnought-spacing-x4); }
+.search > [data-ui] { width: 100%; }
+.searchResults { display: grid; gap: var(--dreadnought-spacing-x1); }
+.searchResult {
+  display: grid;
+  gap: var(--dreadnought-spacing-x1);
+  min-width: 0;
+  padding: var(--dreadnought-spacing-x2) var(--dreadnought-spacing-x4);
+  border-radius: var(--dreadnought-border-radius-x1);
+  color: var(--dreadnought-color-text-primary);
+  text-decoration: none;
+}
+.searchResult:hover { background: var(--dreadnought-color-surface-default); }
+.searchResult:focus-visible { outline: var(--dreadnought-border-width-x2) solid var(--dreadnought-color-focus-ring); }
+.searchResult span,
+.searchEmpty { color: var(--dreadnought-color-text-placeholder); font-size: var(--dreadnought-font-size-caption-1); }
+.searchResult span { overflow-wrap: anywhere; }
+.searchEmpty { margin: var(--dreadnought-spacing-x2) var(--dreadnought-spacing-x4); }
+
 .navigationGroup {
   margin: var(--dreadnought-spacing-x4) 0 var(--dreadnought-spacing-x2);
   color: var(--dreadnought-color-text-placeholder);

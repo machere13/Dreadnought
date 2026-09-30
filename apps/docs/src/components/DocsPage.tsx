@@ -13,6 +13,7 @@ import { markDoc } from './componentDocs/MarkDoc';
 import { GettingStarted } from './GettingStarted';
 import { ThemingGuide } from './ThemingGuide';
 import { CustomComponentsGuide } from './CustomComponentsGuide';
+import { searchDocs, type SearchEntry } from './searchDocs';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
@@ -150,8 +151,21 @@ function Header() {
 }
 
 function Sidebar({ section }: { section: DocsSection }) {
+  const [query, setQuery] = useState('');
+  const results = searchDocs(searchIndex, query);
+
   return <Layout.Sidebar aria-label="Разделы документации" expandLabel="Открыть меню" collapseLabel="Свернуть меню">
-    <nav className={styles.navigation} aria-label="Страницы документации">
+    <div role="search" className={styles.search}>
+      <Input type="search" aria-label="Поиск по документации" placeholder="Поиск по документации"
+        value={query} onChange={(event) => setQuery(event.target.value)} />
+    </div>
+    {query.trim() ? <div className={styles.searchResults}>
+      <span className={styles.navigationGroup} role="status">Результаты поиска: {results.length}</span>
+      {results.length ? results.map((result) => <a key={result.href} className={styles.searchResult} href={result.href}>
+        <strong>{result.title}</strong>
+        <span>{result.description}</span>
+      </a>) : <p className={styles.searchEmpty}>Ничего не найдено</p>}
+    </div> : <nav className={styles.navigation} aria-label="Страницы документации">
       <span className={styles.navigationGroup}>Начало</span>
       <a className={styles.navigationLink} href="/" aria-current={section === 'overview' ? 'page' : undefined}>Обзор</a>
       <a className={styles.navigationLink} href="/getting-started/" aria-current={section === 'getting-started' ? 'page' : undefined}>Начало работы</a>
@@ -168,7 +182,7 @@ function Sidebar({ section }: { section: DocsSection }) {
           </a>)}
         </div>
       </details>)}
-    </nav>
+    </nav>}
   </Layout.Sidebar>;
 }
 
@@ -304,6 +318,19 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
   icon: iconDoc,
   mark: markDoc,
 };
+
+const searchIndex: SearchEntry[] = [
+  { href: '/', title: 'Обзор', description: 'Три уровня использования библиотеки', content: 'готовый компонент адаптер логика слои' },
+  { href: '/getting-started/', title: 'Начало работы', description: 'Запуск проекта и выбор слоя', content: 'установка pnpm Button React core' },
+  { href: '/theming/', title: 'Тема и токены', description: 'Глобальные, компонентные и локальные стили', content: 'цвет spacing padding CSS Modules переопределение' },
+  { href: '/custom-components/', title: 'Свой компонент', description: 'Сборка компонента из core', content: 'copy getButtonState download pickFiles readClipboard собственная разметка' },
+  ...Object.entries(componentDocs).map(([slug, doc]) => ({
+    href: `/components/${slug}/`,
+    title: doc.title,
+    description: doc.description,
+    content: [doc.readyCode, doc.adapterCode, doc.logicCode ?? '', ...doc.apiRows.flat()].join(' '),
+  })),
+];
 
 const copyLabels = { copy: 'Копировать', copied: 'Скопировано', error: 'Ошибка копирования' };
 

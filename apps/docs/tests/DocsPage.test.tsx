@@ -21,6 +21,21 @@ describe('documentation pages', () => {
     expect(controls?.querySelector('a[href="/components/button/"]')).toBeTruthy();
   });
 
+  it('searches page content and API properties without losing the regular navigation', () => {
+    render(<DocsPage section="overview" />);
+    const search = screen.getByRole('searchbox', { name: 'Поиск по документации' });
+
+    fireEvent.change(search, { target: { value: 'sticky' } });
+    expect(screen.getByRole('link', { name: /Table/ }).getAttribute('href')).toBe('/components/table/');
+    expect(screen.queryByRole('navigation', { name: 'Страницы документации' })).toBeNull();
+
+    fireEvent.change(search, { target: { value: 'несуществующийраздел' } });
+    expect(screen.getByText('Ничего не найдено')).toBeTruthy();
+
+    fireEvent.change(search, { target: { value: '' } });
+    expect(screen.getByRole('navigation', { name: 'Страницы документации' })).toBeTruthy();
+  });
+
   it('offers a real route from the overview to Button', () => {
     render(<DocsPage section="overview" />);
 
