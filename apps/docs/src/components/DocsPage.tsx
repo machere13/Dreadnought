@@ -10,11 +10,12 @@ import { layoutDoc } from './componentDocs/LayoutDoc';
 import { breadcrumbDoc } from './componentDocs/BreadcrumbDoc';
 import { iconDoc } from './componentDocs/IconDoc';
 import { markDoc } from './componentDocs/MarkDoc';
+import { GettingStarted } from './GettingStarted';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
 type ComponentSection = 'button' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'accordion' | 'codeblock' | 'alert' | 'layout' | 'breadcrumb' | 'icon' | 'mark';
-type DocsSection = 'overview' | ComponentSection;
+type DocsSection = 'overview' | 'getting-started' | ComponentSection;
 const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
   { name: 'Controls', sections: ['button'] },
   { name: 'DataDisplay', sections: ['badge', 'codeblock', 'icon', 'mark', 'table'] },
@@ -151,9 +152,10 @@ function Sidebar({ section }: { section: DocsSection }) {
     <nav className={styles.navigation} aria-label="Страницы документации">
       <span className={styles.navigationGroup}>Начало</span>
       <a className={styles.navigationLink} href="/" aria-current={section === 'overview' ? 'page' : undefined}>Обзор</a>
+      <a className={styles.navigationLink} href="/getting-started/" aria-current={section === 'getting-started' ? 'page' : undefined}>Начало работы</a>
       <span className={styles.navigationGroup}>Компоненты</span>
       {componentFamilies.map((family) => <details key={family.name} className={styles.navigationFamily}
-        open={section !== 'overview' && family.sections.includes(section)}>
+        open={section !== 'overview' && section !== 'getting-started' && family.sections.includes(section)}>
         <summary className={styles.familySummary}>{family.name}</summary>
         <div className={styles.familyLinks}>
           {family.sections.map((component) => <a key={component} className={styles.navigationLink}
@@ -184,7 +186,10 @@ function Overview() {
         <Card role="listitem" className={styles.layerCard}><strong>Адаптер</strong><span>Оставляйте разметку и поведение, задавая свои стили.</span></Card>
         <Card role="listitem" className={styles.layerCard}><strong>Логика</strong><span>Собирайте собственный компонент на базовом поведении.</span></Card>
       </div>
-      <Button href="/components/button/" className={styles.overviewAction}>Посмотреть Button</Button>
+      <div className={styles.overviewActions}>
+        <Button href="/getting-started/" className={styles.overviewAction}>Начать работу</Button>
+        <Button href="/components/button/" variant="secondary" className={styles.overviewAction}>Посмотреть Button</Button>
+      </div>
     </section>
   </article>;
 }
@@ -354,9 +359,15 @@ export function DocsPage({ section }: { section: DocsSection }) {
     <Layout direction="horizontal" className={styles.body}>
       <Sidebar section={section} />
       <Layout.Content className={styles.main}>
-        {section === 'overview' ? <Overview /> : <ComponentDocumentation component={section} />}
+        <DocsContent section={section} />
       </Layout.Content>
     </Layout>
     <Layout.Footer className={styles.footer}>Dreadnought · Документация <span>Структура · Поведение · Тема</span></Layout.Footer>
   </Layout>;
+}
+
+function DocsContent({ section }: { section: DocsSection }) {
+  if (section === 'overview') return <Overview />;
+  if (section === 'getting-started') return <GettingStarted />;
+  return <ComponentDocumentation component={section} />;
 }

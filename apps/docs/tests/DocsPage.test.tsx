@@ -28,7 +28,24 @@ describe('documentation pages', () => {
     expect(screen.queryByText('БИБЛИОТЕКА КОМПОНЕНТОВ')).toBeNull();
     expect(screen.queryByText('v0.1')).toBeNull();
     expect(screen.getByRole('link', { name: 'Посмотреть Button' }).getAttribute('href')).toBe('/components/button/');
+    expect(screen.getByRole('link', { name: 'Начать работу' }).getAttribute('href')).toBe('/getting-started/');
     expect(screen.getByRole('list', { name: 'Три уровня использования' }).querySelectorAll('[role="listitem"]')).toHaveLength(3);
+  });
+
+  it('explains local setup and shows the same Button across three layers', () => {
+    const { container } = render(<DocsPage section="getting-started" />);
+
+    expect(screen.getByRole('heading', { name: 'Начало работы', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Начало работы' }).getAttribute('aria-current')).toBe('page');
+    expect(screen.getByRole('heading', { name: 'Запуск в репозитории' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Одна кнопка — три слоя' })).toBeTruthy();
+    const code = [...container.querySelectorAll('pre')].map((element) => element.textContent ?? '');
+    expect(code).toHaveLength(4);
+    expect(code[0]).toContain('pnpm install');
+    expect(code[1]).toContain("@dreadnought/ui/react");
+    expect(code[2]).toContain("@dreadnought/react/unstyled");
+    expect(code[3]).toContain("@dreadnought/core");
+    expect(screen.getByRole('link', { name: 'API Button' }).getAttribute('href')).toBe('/components/button/');
   });
 
   it('renders Button API and updates the live example', () => {

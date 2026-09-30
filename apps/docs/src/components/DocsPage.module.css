@@ -179,7 +179,13 @@
 .layerCard { display: grid; gap: var(--dreadnought-spacing-x1); border: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle); }
 .layerList strong { color: var(--dreadnought-color-text-primary); }
 .layerList span { color: var(--dreadnought-color-text-placeholder); }
+.overviewActions { display: flex; flex-wrap: wrap; gap: var(--dreadnought-spacing-x2); }
 .overviewAction { display: inline-flex; }
+.startExamples { display: grid; gap: calc(var(--dreadnought-spacing-x4) * 2); margin-block-start: calc(var(--dreadnought-spacing-x4) * 2); }
+.startExamples > div { min-width: 0; }
+.startExamples .bodyText code { font-family: var(--dreadnought-font-family-monospace); overflow-wrap: anywhere; }
+.footnote a { color: var(--dreadnought-color-text-primary); }
+.footnote a:focus-visible { outline: var(--dreadnought-border-width-x2) solid var(--dreadnought-color-focus-ring); }
 .footer { justify-content: space-between; gap: var(--dreadnought-spacing-x4); font-size: var(--dreadnought-font-size-caption-1); }
 
 @media (max-width: 40rem) {
