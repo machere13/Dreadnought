@@ -145,6 +145,17 @@
   background: var(--dreadnought-color-surface-default);
 }
 .demoRow { display: flex; flex-wrap: wrap; align-items: center; gap: var(--dreadnought-spacing-x4); }
+.coreDemoButton {
+  padding: var(--dreadnought-spacing-x2) var(--dreadnought-spacing-x4);
+  border: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle);
+  border-radius: var(--dreadnought-border-radius-x1);
+  background: var(--dreadnought-color-surface-default);
+  color: var(--dreadnought-color-text-primary);
+  cursor: pointer;
+}
+.coreDemoButton:hover { background: var(--dreadnought-color-surface-hover); }
+.coreDemoButton:focus-visible { outline: var(--dreadnought-border-width-x2) solid var(--dreadnought-color-focus-ring); }
+.coreDemoButton[aria-busy='true'] { cursor: wait; }
 .specimenGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: var(--dreadnought-spacing-x2); margin: 0; padding: 0; list-style: none; }
 .specimen { display: flex; align-items: center; gap: var(--dreadnought-spacing-x4); min-width: 0; padding: var(--dreadnought-spacing-x4); border: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle); border-radius: var(--dreadnought-border-radius-x1); color: var(--dreadnought-color-text-primary); }
 .specimen code { overflow-wrap: anywhere; }

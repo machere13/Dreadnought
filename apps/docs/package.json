@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^7.0.0",
+    "@dreadnought/core": "workspace:*",
     "@dreadnought/react": "workspace:*",
     "@dreadnought/themes": "workspace:*",
     "@dreadnought/ui": "workspace:*",

@@ -12,11 +12,12 @@ import { iconDoc } from './componentDocs/IconDoc';
 import { markDoc } from './componentDocs/MarkDoc';
 import { GettingStarted } from './GettingStarted';
 import { ThemingGuide } from './ThemingGuide';
+import { CustomComponentsGuide } from './CustomComponentsGuide';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
 type ComponentSection = 'button' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'accordion' | 'codeblock' | 'alert' | 'layout' | 'breadcrumb' | 'icon' | 'mark';
-type DocsSection = 'overview' | 'getting-started' | 'theming' | ComponentSection;
+type DocsSection = 'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
 const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
   { name: 'Controls', sections: ['button'] },
   { name: 'DataDisplay', sections: ['badge', 'codeblock', 'icon', 'mark', 'table'] },
@@ -155,9 +156,10 @@ function Sidebar({ section }: { section: DocsSection }) {
       <a className={styles.navigationLink} href="/" aria-current={section === 'overview' ? 'page' : undefined}>Обзор</a>
       <a className={styles.navigationLink} href="/getting-started/" aria-current={section === 'getting-started' ? 'page' : undefined}>Начало работы</a>
       <a className={styles.navigationLink} href="/theming/" aria-current={section === 'theming' ? 'page' : undefined}>Тема и токены</a>
+      <a className={styles.navigationLink} href="/custom-components/" aria-current={section === 'custom-components' ? 'page' : undefined}>Свой компонент</a>
       <span className={styles.navigationGroup}>Компоненты</span>
       {componentFamilies.map((family) => <details key={family.name} className={styles.navigationFamily}
-        open={section !== 'overview' && section !== 'getting-started' && section !== 'theming' && family.sections.includes(section)}>
+        open={section !== 'overview' && section !== 'getting-started' && section !== 'theming' && section !== 'custom-components' && family.sections.includes(section)}>
         <summary className={styles.familySummary}>{family.name}</summary>
         <div className={styles.familyLinks}>
           {family.sections.map((component) => <a key={component} className={styles.navigationLink}
@@ -372,5 +374,6 @@ function DocsContent({ section }: { section: DocsSection }) {
   if (section === 'overview') return <Overview />;
   if (section === 'getting-started') return <GettingStarted />;
   if (section === 'theming') return <ThemingGuide />;
+  if (section === 'custom-components') return <CustomComponentsGuide />;
   return <ComponentDocumentation component={section} />;
 }

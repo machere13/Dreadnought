@@ -64,6 +64,21 @@ describe('documentation pages', () => {
     expect(screen.getByRole('button', { name: 'Одна кнопка' }).getAttribute('class')).toContain('special');
   });
 
+  it('shows how to compose core actions and state into a custom component', async () => {
+    const writeText = vi.fn(async () => {});
+    vi.stubGlobal('navigator', { clipboard: { writeText } });
+    const { container } = render(<DocsPage section="custom-components" />);
+
+    expect(screen.getByRole('heading', { name: 'Свой компонент из core', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Свой компонент' }).getAttribute('aria-current')).toBe('page');
+    const code = [...container.querySelectorAll('pre')].map((element) => element.textContent ?? '');
+    expect(code[0]).toContain("import { copy, getButtonState } from '@dreadnought/core'");
+    expect(code[1]).toContain('pickFiles');
+    fireEvent.click(screen.getByRole('button', { name: 'Скопировать значение' }));
+    expect(await screen.findByText('Скопировано: Dreadnought')).toBeTruthy();
+    expect(writeText).toHaveBeenCalledExactlyOnceWith('Dreadnought');
+  });
+
   it('renders Button API and updates the live example', () => {
     render(<DocsPage section="button" />);
 
