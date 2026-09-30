@@ -1,0 +1,56 @@
+{
+  "componentId": "component:button",
+  "states": [],
+  "parts": [
+    {
+      "name": "root",
+      "description": "button или a; className и style относятся к корню."
+    },
+    {
+      "name": "icon",
+      "description": "Декоративная иконка, data-slot=icon."
+    },
+    {
+      "name": "label",
+      "description": "Содержимое children, data-slot=label."
+    }
+  ],
+  "constraints": [
+    "useButton предназначен для нативного button. Для ссылки используйте ButtonAdapter или Button с href.",
+    "Для кнопки только с иконкой задайте доступное имя через aria-label.",
+    "При loading действие блокируется, но фокус сохраняется; disabled отключает контроль.",
+    "Порядок иконки задаёт второй слой, визуальные варианты и размер — третий."
+  ],
+  "bindings": [
+    {
+      "id": "react-logic",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/logic",
+      "exportName": "useButton",
+      "examples": [
+        {
+          "id": "native",
+          "code": "import { useButton } from '@dreadnought/react/logic';\nexport function Example() {\n  const { buttonProps } = useButton({ loading: false });\n  return <button {...buttonProps}>Сохранить</button>;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "ButtonAdapter",
+      "propertyDescriptions": {
+        "href": "Создаёт ссылку вместо кнопки.",
+        "iconPosition": "Положение иконки относительно текста."
+      },
+      "examples": [
+        {
+          "id": "link",
+          "code": "import { createRef } from 'react';\nimport { ButtonAdapter } from '@dreadnought/react/unstyled';\nconst ref = createRef<HTMLAnchorElement>();\nconst example = <ButtonAdapter href='/docs' ref={ref}>Документация</ButtonAdapter>;"
+        }
+      ]
+    }
+  ]
+}

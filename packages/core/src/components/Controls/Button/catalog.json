@@ -1,0 +1,35 @@
+{
+  "id": "component:button",
+  "kind": "component",
+  "name": "Button",
+  "family": "Controls",
+  "description": "Состояние действия: отключение и ожидание выполнения.",
+  "docsUrl": "/components/button/#button-api",
+  "states": [
+    "disabled",
+    "loading"
+  ],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "getButtonState",
+      "propertyDescriptions": {
+        "disabled": "Отключает действие.",
+        "loading": "Блокирует действие на время выполнения."
+      },
+      "defaults": {
+        "disabled": false,
+        "loading": false
+      },
+      "examples": [
+        {
+          "id": "state",
+          "code": "import { getButtonState } from '@dreadnought/core';\nconst state = getButtonState({ loading: true });\nconst blocked: boolean = state.actionBlocked;"
+        }
+      ]
+    }
+  ]
+}

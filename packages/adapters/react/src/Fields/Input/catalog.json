@@ -1,0 +1,60 @@
+{
+  "componentId": "component:input",
+  "states": [
+    "passwordVisible"
+  ],
+  "parts": [
+    {
+      "name": "root",
+      "description": "Обёртка поля; className и style относятся к ней."
+    },
+    {
+      "name": "control",
+      "description": "Нативный input, data-slot=control; ref указывает на него."
+    },
+    {
+      "name": "visibility-toggle",
+      "description": "Кнопка видимости пароля, присутствует только при type=password."
+    }
+  ],
+  "constraints": [
+    "Поддерживаемые текстовые типы определены публичным контрактом; number и checkbox не входят в Input.",
+    "Доступное имя задаётся связанным label или aria-label.",
+    "При использовании useInput разметку поля и visibilityButtonProps связывает потребитель.",
+    "Управляемый value требует обработчика onChange либо readOnly."
+  ],
+  "bindings": [
+    {
+      "id": "react-logic",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/logic",
+      "exportName": "useInput",
+      "defaults": {
+        "type": "text"
+      },
+      "examples": [
+        {
+          "id": "password",
+          "code": "import { useInput } from '@dreadnought/react/logic';\nexport function Example() {\n  const { inputProps, visibilityButtonProps } = useInput({ type: 'password', 'aria-label': 'Пароль' });\n  return <div><input {...inputProps} />{visibilityButtonProps && <button {...visibilityButtonProps} />}</div>;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "InputAdapter",
+      "propertyDescriptions": {
+        "passwordVisibilityContent": "Содержимое кнопки показа и скрытия пароля."
+      },
+      "examples": [
+        {
+          "id": "password",
+          "code": "import { InputAdapter } from '@dreadnought/react/unstyled';\nconst example = <InputAdapter type='password' aria-label='Пароль' />;"
+        }
+      ]
+    }
+  ]
+}

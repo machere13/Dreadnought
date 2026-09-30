@@ -1,0 +1,35 @@
+{
+  "id": "component:input",
+  "kind": "component",
+  "name": "Input",
+  "family": "Fields",
+  "description": "Состояние текстового поля: доступность, обязательность и ошибка.",
+  "docsUrl": "/components/input/#input-api",
+  "states": [
+    "disabled",
+    "readOnly",
+    "required",
+    "invalid"
+  ],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "getInputState",
+      "defaults": {
+        "disabled": false,
+        "readOnly": false,
+        "required": false,
+        "invalid": false
+      },
+      "examples": [
+        {
+          "id": "state",
+          "code": "import { getInputState } from '@dreadnought/core';\nconst state = getInputState({ invalid: true });\nconst invalid: boolean = state.invalid;"
+        }
+      ]
+    }
+  ]
+}

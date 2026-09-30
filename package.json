@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "pnpm -r build",
+    "catalog": "node tools/catalog/src/cli.mjs",
+    "catalog:test": "vitest run tools/catalog/tests",
     "dev": "pnpm --filter @dreadnought/example-react dev",
     "test": "vitest run",
     "typecheck": "pnpm -r typecheck && tsc -p tsconfig.type-tests.json --noEmit",

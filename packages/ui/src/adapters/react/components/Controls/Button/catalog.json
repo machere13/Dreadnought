@@ -1,0 +1,32 @@
+{
+  "componentId": "component:button",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Button",
+      "propertyDescriptions": {
+        "variant": "Вариант оформления.",
+        "size": "Размер готовой кнопки.",
+        "icon": "Иконка рядом с текстом или без текста."
+      },
+      "defaults": {
+        "variant": "primary",
+        "size": "default"
+      },
+      "examples": [
+        {
+          "id": "action",
+          "code": "import { Button } from '@dreadnought/ui/react';\nconst example = <Button variant='primary' size='compact'>Сохранить</Button>;"
+        },
+        {
+          "id": "link",
+          "code": "import { createRef } from 'react';\nimport { Button } from '@dreadnought/ui/react';\nconst example = <Button href='/docs' ref={createRef<HTMLAnchorElement>()}>Документация</Button>;"
+        }
+      ],
+      "description": "Действие или ссылка с состояниями disabled и loading. Готовый React-компонент поддерживает варианты оформления, размер и иконку."
+    }
+  ]
+}

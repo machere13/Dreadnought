@@ -1,0 +1,24 @@
+{
+  "componentId": "component:input",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Input",
+      "propertyDescriptions": {
+        "type": "Текстовый тип поля; password добавляет переключатель видимости.",
+        "invalid": "Состояние ошибки.",
+        "passwordVisibilityLabels": "Доступные названия кнопки показа и скрытия пароля."
+      },
+      "examples": [
+        {
+          "id": "password",
+          "code": "import { Input } from '@dreadnought/ui/react';\nconst example = <Input type='password' aria-label='Пароль' passwordVisibilityLabels={{ show: 'Показать пароль', hide: 'Скрыть пароль' }} />;"
+        }
+      ],
+      "description": "Однострочное текстовое поле. При type=password адаптер показывает кнопку видимости пароля, готовый компонент использует иконку."
+    }
+  ]
+}
