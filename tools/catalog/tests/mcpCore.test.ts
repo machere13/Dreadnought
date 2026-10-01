@@ -72,4 +72,17 @@ describe('MCP catalog reply', () => {
     expect(reply.structuredContent.error.code).toBe('INVALID_JSON');
     expect(JSON.stringify(reply)).not.toContain('at loadCatalog');
   });
+  it('sanitizes an unexpected exception in both MCP response forms', () => {
+    const config = {
+      get catalogPath() { throw new Error('sensitive internal detail'); },
+      projectPath: fixture().projectPath,
+    };
+    const reply = invokeCatalog('list', {}, config);
+    expect(reply.isError).toBe(true);
+    expect(reply.structuredContent).toEqual({responseVersion: 1, operation: 'list', error: {
+      code: 'INTERNAL_ERROR', message: 'Unexpected catalog error', details: {},
+    }});
+    expect(reply.content).toEqual([{type: 'text', text: JSON.stringify(reply.structuredContent)}]);
+    expect(JSON.stringify(reply)).not.toContain('sensitive internal detail');
+  });
 });

@@ -2,11 +2,12 @@
 import {afterAll, beforeAll, describe, expect, it, vi} from 'vitest';
 import {Client} from '@modelcontextprotocol/client';
 import {StdioClientTransport} from '@modelcontextprotocol/client/stdio';
-import {spawnSync} from 'node:child_process';
+import {spawn, spawnSync} from 'node:child_process';
 import {mkdirSync, mkdtempSync, rmSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {createInterface} from 'node:readline';
 import {makeCatalog} from './queryFixtures';
 import {executeQuery} from '../src/query/executeQuery.mjs';
 import {createContext} from '../src/compiler.mjs';
@@ -72,6 +73,37 @@ describe('local MCP stdio server', () => {
       expect((reply.structuredContent as any).compatibility.status).toBe('compatible');
     } finally {
       await client.close();
+    }
+  });
+
+  it('emits only JSON-RPC frames on stdout while serving a tool', async () => {
+    const child = spawn(process.execPath, [serverPath, '--catalog', catalogPath, '--project', projectPath],
+      {stdio: ['pipe', 'pipe', 'ignore']});
+    const lines = createInterface({input: child.stdout});
+    let checked = false;
+    try {
+      child.stdin.write(`${JSON.stringify({jsonrpc: '2.0', id: 1, method: 'initialize', params: {
+        protocolVersion: '2025-06-18', capabilities: {}, clientInfo: {name: 'stdout-test', version: '1.0.0'},
+      }})}\n`);
+      for await (const line of lines) {
+        const message = JSON.parse(line);
+        expect(message.jsonrpc).toBe('2.0');
+        if (message.id === 1) {
+          expect(message.result.serverInfo.name).toBe('dreadnought-catalog');
+          child.stdin.write(`${JSON.stringify({jsonrpc: '2.0', method: 'notifications/initialized'})}\n`);
+          child.stdin.write(`${JSON.stringify({jsonrpc: '2.0', id: 2, method: 'tools/call',
+            params: {name: 'dreadnought_check', arguments: {}}})}\n`);
+        } else if (message.id === 2) {
+          expect(message.result.structuredContent.compatibility.status).toBe('compatible');
+          checked = true;
+          break;
+        }
+      }
+      expect(checked).toBe(true);
+    } finally {
+      lines.close();
+      child.stdin.end();
+      child.kill();
     }
   });
 
