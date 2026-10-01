@@ -1,8 +1,8 @@
 export const packages = [
-  { directory: 'packages/core', entrypoints: ['.'] },
-  { directory: 'packages/adapters/react', entrypoints: ['./logic', './unstyled'] },
-  { directory: 'packages/ui', entrypoints: ['./react'] },
-  { directory: 'packages/themes', entrypoints: [] },
+  { name: '@dreadnought/core', directory: 'packages/core', entrypoints: ['.'] },
+  { name: '@dreadnought/react', directory: 'packages/adapters/react', entrypoints: ['./logic', './unstyled'] },
+  { name: '@dreadnought/ui', directory: 'packages/ui', entrypoints: ['./react'] },
+  { name: '@dreadnought/themes', directory: 'packages/themes', entrypoints: [] },
 ];
 
 // Explicit inputs: adding a file elsewhere never publishes it automatically.
