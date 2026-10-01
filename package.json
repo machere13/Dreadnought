@@ -7,6 +7,7 @@
     "build": "pnpm -r build",
     "catalog": "node tools/catalog/src/cli.mjs",
     "catalog:query": "node tools/catalog/src/query.mjs",
+    "catalog:mcp": "node tools/catalog/src/mcp.mjs",
     "catalog:test": "vitest run tools/catalog/tests --maxWorkers=1",
     "dev": "pnpm --filter @dreadnought/example-react dev",
     "test": "vitest run",
@@ -18,6 +19,8 @@
     "docs:refresh": "pnpm --filter @dreadnought/docs refresh:knowledge"
   },
   "devDependencies": {
+    "@modelcontextprotocol/client": "^2",
+    "@modelcontextprotocol/server": "^2",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.0",
     "@types/react": "^19.0.0",
@@ -27,6 +30,7 @@
     "react-dom": "^19.0.0",
     "typescript": "^5.7.0",
     "vite": "^7.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^3.0.0",
+    "zod": "^4"
   }
 }
