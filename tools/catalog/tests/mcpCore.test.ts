@@ -37,6 +37,14 @@ describe('MCP startup paths', () => {
   ])('rejects invalid startup flags %j', (...args) => {
     expect(() => parseServerArgs(args)).toThrow(expect.objectContaining({code: 'INVALID_ARGUMENTS'}));
   });
+  it.skipIf(process.platform !== 'win32')('rejects Windows root-relative paths but accepts a fully qualified UNC path', () => {
+    for (const catalogPath of ['\\catalog.json', '/catalog.json']) {
+      expect(() => parseServerArgs(['--catalog', catalogPath, '--project', 'C:\\project']))
+        .toThrow(expect.objectContaining({code: 'INVALID_ARGUMENTS'}));
+    }
+    expect(parseServerArgs(['--catalog', '\\\\server\\share\\catalog.json', '--project', 'C:\\project']))
+      .toEqual({catalogPath: '\\\\server\\share\\catalog.json', projectPath: 'C:\\project'});
+  });
 });
 
 describe('MCP catalog reply', () => {
