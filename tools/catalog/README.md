@@ -11,6 +11,24 @@ pnpm catalog:test
 
 Результат — `tools/catalog/dist/catalog.json`. Это производный файл: он не хранится в Git и не редактируется вручную. Ошибка проверки завершает команду с ненулевым кодом; потребитель должен использовать только результат успешной сборки. Предварительная сборка пакетов не требуется: генератор работает с текущими исходниками, а не с потенциально устаревшим `dist`.
 
+## Локальные запросы для агента
+
+Сначала создайте актуальный каталог командой `pnpm catalog`. Команды запросов читают его локально и не обращаются к сети:
+
+```sh
+node tools/catalog/src/query.mjs --help
+node tools/catalog/src/query.mjs check --project "C:/path/to/project"
+node tools/catalog/src/query.mjs search button --framework react --layer 3
+node tools/catalog/src/query.mjs get Button --binding react-ui --section api --property href
+node tools/catalog/src/query.mjs get Layout --binding react-ui-sidebar --section examples
+```
+
+Для другого расположения инструмента и каталога используйте абсолютный путь к `query.mjs` и `--catalog "C:/path/to/catalog.json"`. Для машинного потребителя запускайте Node напрямую: `pnpm catalog:query` тоже работает, но pnpm может добавить собственный заголовок в stdout.
+
+`list` и `search` поддерживают `--family`, `--layer`, `--framework`, `--limit` (1–50) и `--offset` (от 0). `get` поддерживает `--section overview|api|examples|tokens`, `--binding`, `--property`, `--example`, `--include-inherited`. Без `--project` статус совместимости — `unchecked`, а не подтверждённая совместимость. `check` требует `--project`; несовпадение версий возвращает отчёт и ненулевой код завершения. Для других команд несовместимость блокирует выдачу данных. При обработке проекта читаются реально установленные пакеты, а не диапазоны зависимостей в его `package.json`.
+
+Каждый прямой вызов Node печатает ровно один JSON-объект. Успешный ответ содержит `responseVersion`, `operation`, `packageVersions`, `compatibility` и `result`; ошибка — `responseVersion`, `operation` и `error` с кодом. Оболочку shell для передачи аргументов или исполнения содержимого каталога инструмент не использует.
+
 ## Источники
 
 `src/config.mjs` явно перечисляет пакеты, публичные точки входа и компоненты. Их декларации из `package.json#exports` сопоставляются с исходными точками входа по текущему правилу монорепозитория `dist/*.d.ts → src/*.ts`. Неподдерживаемая структура вызывает ошибку.
