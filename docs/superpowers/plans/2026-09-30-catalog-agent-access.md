@@ -10,6 +10,8 @@
 
 **Spec:** `docs/superpowers/specs/2026-09-30-catalog-agent-access-design.md`.
 
+**Результат:** реализация завершена локально в `main`, без push. Каталог содержит 14 компонентов; итоговый полный прогон — 67 файлов и 310 тестов без ошибок, затем отдельный прогон 26 тестов CLI/валидации включил последний регрессионный случай. `pnpm docs:build` собрал 18 страниц, `pnpm typecheck` и `git diff --check` прошли. Отдельный ревьюер нашёл два дефекта обработки повреждённого JSON; оба исправлены и покрыты тестами. Исходное удаление `packages/core/src/behaviors/.keep` не включалось в коммиты.
+
 ## Global Constraints
 
 - «Runtime чтения использует только встроенные модули Node.js.»
@@ -55,7 +57,7 @@ Skill — `tools/skills/dreadnought/SKILL.md`; результаты сценар
 
 **Interfaces:** потребляет `packages` из config; производит `validateCatalog(value)`, `loadCatalog(filename)` и `CatalogQueryError` для всех следующих задач.
 
-- [ ] Написать фикстуру небольшого каталога с независимыми литеральными значениями. `makeCatalog()` каждый раз возвращает новую структуру следующей формы:
+- [x] Написать фикстуру небольшого каталога с независимыми литеральными значениями. `makeCatalog()` каждый раз возвращает новую структуру следующей формы:
 
 ```js
 return {
@@ -78,7 +80,7 @@ return {
 };
 ```
 
-- [ ] Написать тесты: корректная фикстура принимается; unsupported schema, повтор ID, повтор binding, не-массив properties, нестроковый code, неизвестный пакет, приватный импорт отвергаются. Пример конкретной проверки:
+- [x] Написать тесты: корректная фикстура принимается; unsupported schema, повтор ID, повтор binding, не-массив properties, нестроковый code, неизвестный пакет, приватный импорт отвергаются. Пример конкретной проверки:
 
 ```ts
 it('rejects private imports before querying', () => {
@@ -88,8 +90,8 @@ it('rejects private imports before querying', () => {
 });
 ```
 
-- [ ] Выполнить `node node_modules/vitest/vitest.mjs run tools/catalog/tests/queryValidation.test.ts --maxWorkers=1`; убедиться, что тесты красные из-за отсутствующей реализации.
-- [ ] Реализовать класс ошибки и обход структуры. Проверять известные packageVersions с одинаковыми непустыми версиями; разрешённые импорты строить как `pkg.name + entrypoint.slice(1)` для `./react`, а для `.` брать имя пакета. Проверять layer 1–3, framework null/string, строковые идентификаторы, массивы contracts/variants/properties, типы полей prop, examples и tokens, уникальность имён свойств внутри ветви и ID примеров внутри binding. Не читать указанные в JSON пути. Ошибки чтения файла → `CATALOG_READ_FAILED`, парсинга → `INVALID_JSON`, схемы → `UNSUPPORTED_SCHEMA`, структуры → `INVALID_CATALOG`.
+- [x] Выполнить `node node_modules/vitest/vitest.mjs run tools/catalog/tests/queryValidation.test.ts --maxWorkers=1`; убедиться, что тесты красные из-за отсутствующей реализации.
+- [x] Реализовать класс ошибки и обход структуры. Проверять известные packageVersions с одинаковыми непустыми версиями; разрешённые импорты строить как `pkg.name + entrypoint.slice(1)` для `./react`, а для `.` брать имя пакета. Проверять layer 1–3, framework null/string, строковые идентификаторы, массивы contracts/variants/properties, типы полей prop, examples и tokens, уникальность имён свойств внутри ветви и ID примеров внутри binding. Не читать указанные в JSON пути. Ошибки чтения файла → `CATALOG_READ_FAILED`, парсинга → `INVALID_JSON`, схемы → `UNSUPPORTED_SCHEMA`, структуры → `INVALID_CATALOG`.
 
 ```js
 export class CatalogQueryError extends Error {
@@ -102,8 +104,8 @@ export class CatalogQueryError extends Error {
 }
 ```
 
-- [ ] Прогнать новый тест и существующий `catalog.test.ts`; дополнить проверкой настоящего сгенерированного каталога, чтобы валидатор не отвергал используемые поля.
-- [ ] Сохранить только файлы задачи коммитом `feat(catalog): validate local query inputs`.
+- [x] Прогнать новый тест и существующий `catalog.test.ts`; дополнить проверкой настоящего сгенерированного каталога, чтобы валидатор не отвергал используемые поля.
+- [x] Сохранить только файлы задачи коммитом `feat(catalog): validate local query inputs`.
 
 ## Task 2: Выборка без потери контрактов
 
@@ -111,8 +113,8 @@ export class CatalogQueryError extends Error {
 
 **Interfaces:** потребляет проверенный каталог и CatalogQueryError; производит selectEntries/getEntry с сигнатурами из раздела «Файлы и интерфейсы».
 
-- [ ] Добавить фикстуры двух ветвей Button: `href?: undefined` с `Ref<HTMLButtonElement>` и `href: string` с `Ref<HTMLAnchorElement>`. В первой ветви добавить dependency-свойство formAction. Создать Layout с binding `react-ui-sidebar`, exportName Layout и propertyPath `['Sidebar']`.
-- [ ] Написать тесты точного имени/ID, фильтров, пустого поиска, сортировки и пагинации, отсутствующего binding/property/example, неизменности входа и составного экспорта. Зафиксировать сохранение ветвей:
+- [x] Добавить фикстуры двух ветвей Button: `href?: undefined` с `Ref<HTMLButtonElement>` и `href: string` с `Ref<HTMLAnchorElement>`. В первой ветви добавить dependency-свойство formAction. Создать Layout с binding `react-ui-sidebar`, exportName Layout и propertyPath `['Sidebar']`.
+- [x] Написать тесты точного имени/ID, фильтров, пустого поиска, сортировки и пагинации, отсутствующего binding/property/example, неизменности входа и составного экспорта. Зафиксировать сохранение ветвей:
 
 ```ts
 const result = getEntry(catalog, 'Button', {
@@ -125,11 +127,11 @@ expect(() => getEntry(catalog, 'Button', {
 })).toThrow(expect.objectContaining({code: 'PROPERTY_FILTERED'}));
 ```
 
-- [ ] Выполнить `node node_modules/vitest/vitest.mjs run tools/catalog/tests/querySelection.test.ts --maxWorkers=1`, увидеть ожидаемые падения.
-- [ ] Реализовать фильтрацию по binding одновременно: слой и framework должны совпасть на одной привязке. Неизвестное семейство или слой вне 1–3 дают `INVALID_FILTER`; framework без совпадений — пустую выдачу. Для ещё не реализованного Angular возвращать пустой список, а не React; framework допускает любое непустое имя, чтобы поиск отсутствующей реализации не был ошибкой синтаксиса. Значение `core` у фильтра framework обозначает `framework: null`, но не React-хуки.
-- [ ] Реализовать текстовый поиск: нормализовать регистр, токены запроса должны встретиться в объединённом тексте имени/назначения/экспортов/импортов; точное имя выше точного экспорта, затем совпадения текста, затем стабильная сортировка по ID. `items` содержит только краткий обзор и доступные отфильтрованные привязки.
-- [ ] Реализовать get через точное совпадение; неоднозначность → `AMBIGUOUS_COMPONENT`, отсутствие → `UNKNOWN_COMPONENT`. Overview выдаёт описание, constraints и список привязок. API сохраняет параметры, returnType, индексы перегрузок и ветвей. При фильтре свойства пустая ветвь остаётся в массиве с `propertyPresent: false`. Examples возвращаются целиком. Tokens возвращает `{scope: 'component', componentId, tokens, parts}`. `--binding` обязателен для API/examples. Неизвестные секции и несовместимые опции — `INVALID_ARGUMENTS`.
-- [ ] Запустить тесты задачи, проверить реальные Button и Layout после `pnpm catalog`. Сохранить коммит `feat(catalog): query component contracts and examples`.
+- [x] Выполнить `node node_modules/vitest/vitest.mjs run tools/catalog/tests/querySelection.test.ts --maxWorkers=1`, увидеть ожидаемые падения.
+- [x] Реализовать фильтрацию по binding одновременно: слой и framework должны совпасть на одной привязке. Неизвестное семейство или слой вне 1–3 дают `INVALID_FILTER`; framework без совпадений — пустую выдачу. Для ещё не реализованного Angular возвращать пустой список, а не React; framework допускает любое непустое имя, чтобы поиск отсутствующей реализации не был ошибкой синтаксиса. Значение `core` у фильтра framework обозначает `framework: null`, но не React-хуки.
+- [x] Реализовать текстовый поиск: нормализовать регистр, токены запроса должны встретиться в объединённом тексте имени/назначения/экспортов/импортов; точное имя выше точного экспорта, затем совпадения текста, затем стабильная сортировка по ID. `items` содержит только краткий обзор и доступные отфильтрованные привязки.
+- [x] Реализовать get через точное совпадение; неоднозначность → `AMBIGUOUS_COMPONENT`, отсутствие → `UNKNOWN_COMPONENT`. Overview выдаёт описание, constraints и список привязок. API сохраняет параметры, returnType, индексы перегрузок и ветвей. При фильтре свойства пустая ветвь остаётся в массиве с `propertyPresent: false`. Examples возвращаются целиком. Tokens возвращает `{scope: 'component', componentId, tokens, parts}`. `--binding` обязателен для API/examples. Неизвестные секции и несовместимые опции — `INVALID_ARGUMENTS`.
+- [x] Запустить тесты задачи, проверить реальные Button и Layout после `pnpm catalog`. Сохранить коммит `feat(catalog): query component contracts and examples`.
 
 ## Task 3: Проверка пакетов целевого проекта
 
@@ -137,8 +139,8 @@ expect(() => getEntry(catalog, 'Button', {
 
 **Interfaces:** потребляет каталог и доверенные имена packages. `checkProject` возвращает status `compatible` или `incompatible`, installed как отображение имя → версия, missing как список имён, mismatches как список `{name, expected, actual}`. Ошибки доступа/разрешения бросаются; requireBindingPackage возвращает void или бросает `MISSING_BINDING_PACKAGE`.
 
-- [ ] В тестах создавать временные внешние проекты через mkdtemp. Для каждого разрешённого имени создавать `node_modules/<name>/package.json`; диапазон зависимости целевого package.json намеренно отличать от реально установленной версии. Cleanup удаляет только созданные тестом временные директории.
-- [ ] Написать тесты совпадения, другой версии, полного отсутствия, частичного набора и запрещённого package.json export. Для pnpm-подобного размещения создать directory junction/symlink из node_modules в временное хранилище и проверить realpath. Проверить родительский node_modules обычного workspace, отсутствие fallback к репозиторию инструмента и явный отказ при `.pnp.cjs` без node_modules.
+- [x] В тестах создавать временные внешние проекты через mkdtemp. Для каждого разрешённого имени создавать `node_modules/<name>/package.json`; диапазон зависимости целевого package.json намеренно отличать от реально установленной версии. Cleanup удаляет только созданные тестом временные директории.
+- [x] Написать тесты совпадения, другой версии, полного отсутствия, частичного набора и запрещённого package.json export. Для pnpm-подобного размещения создать directory junction/symlink из node_modules в временное хранилище и проверить realpath. Проверить родительский node_modules обычного workspace, отсутствие fallback к репозиторию инструмента и явный отказ при `.pnp.cjs` без node_modules.
 
 ```ts
 expect(checkProject(catalog, project)).toMatchObject({
@@ -150,10 +152,10 @@ expect(() => requireBindingPackage(checkProject(catalog, project), {
 })).toThrow(expect.objectContaining({code: 'MISSING_BINDING_PACKAGE'}));
 ```
 
-- [ ] Прогнать `queryProject.test.ts`, подтвердить падение до реализации.
-- [ ] Проверить существование projectPath и его package.json. Построить `createRequire(path.join(projectPath, 'package.json')).resolve.paths(name)`, читать кандидаты `<node_modules-path>/<name>/package.json` только для доверенных имён. При доступном пакете использовать realpath, проверить совпадение manifest.name, прочитать version. Это не исполняет пакет и не требует открытого package.json export. Не использовать require/import самого пакета. Ошибки доступа не приравнивать к отсутствию. Обнаружение PnP без поддерживаемого node_modules → `UNSUPPORTED_RESOLUTION`.
-- [ ] Вернуть incompatible при нулевом числе установленных пакетов либо несовпадении любой найденной версии; missing не прятать. Проверять пакет импорта по двум сегментам scoped package, не через подстроку.
-- [ ] Прогнать тесты и сохранить коммит `feat(catalog): verify target project package versions`.
+- [x] Прогнать `queryProject.test.ts`, подтвердить падение до реализации.
+- [x] Проверить существование projectPath и его package.json. Построить `createRequire(path.join(projectPath, 'package.json')).resolve.paths(name)`, читать кандидаты `<node_modules-path>/<name>/package.json` только для доверенных имён. При доступном пакете использовать realpath, проверить совпадение manifest.name, прочитать version. Это не исполняет пакет и не требует открытого package.json export. Не использовать require/import самого пакета. Ошибки доступа не приравнивать к отсутствию. Обнаружение PnP без поддерживаемого node_modules → `UNSUPPORTED_RESOLUTION`.
+- [x] Вернуть incompatible при нулевом числе установленных пакетов либо несовпадении любой найденной версии; missing не прятать. Проверять пакет импорта по двум сегментам scoped package, не через подстроку.
+- [x] Прогнать тесты и сохранить коммит `feat(catalog): verify target project package versions`.
 
 ## Task 4: Машиночитаемый CLI
 
@@ -161,7 +163,7 @@ expect(() => requireBindingPackage(checkProject(catalog, project), {
 
 **Interfaces:** потребляет функции задач 1–3. executeQuery возвращает `{responseVersion: 1, operation, packageVersions, compatibility, result}`. Без проекта compatibility — `{status: 'unchecked'}`. Ошибки обрабатывает entrypoint и выводит `{responseVersion: 1, operation, error: {code, message, details}}` с exitCode 1. Никаких stack trace или сообщений сборки в stdout.
 
-- [ ] Написать subprocess-тесты через `spawnSync(process.execPath, [cliPath, ...args], {cwd: externalProject, encoding: 'utf8'})`. Проверить пути с пробелами, JSON stdout, ненулевой exit при ошибке, пустую выдачу с exit 0, `--limit 0`, дробное значение, отрицательный offset, неизвестный/повторный флаг, пропущенное значение и неожиданную позиционную строку. Windows не использует shell для запуска.
+- [x] Написать subprocess-тесты через `spawnSync(process.execPath, [cliPath, ...args], {cwd: externalProject, encoding: 'utf8'})`. Проверить пути с пробелами, JSON stdout, ненулевой exit при ошибке, пустую выдачу с exit 0, `--limit 0`, дробное значение, отрицательный offset, неизвестный/повторный флаг, пропущенное значение и неожиданную позиционную строку. Windows не использует shell для запуска.
 
 ```ts
 const child = spawnSync(process.execPath,
@@ -174,9 +176,9 @@ expect(JSON.parse(child.stdout)).toMatchObject({
 });
 ```
 
-- [ ] Запустить queryCli, увидеть ожидаемые падения.
-- [ ] Реализовать parseArgs с явным списком флагов и таблицей допустимости по операции; не допускать повторов и лишних аргументов. `--include-inherited` — boolean, остальные флаги требуют отдельного значения. `--help` выдаёт JSON с командами и флагами, exit 0. list/search принимают фильтры и пагинацию; get — binding/section/property/example/include-inherited; check требует project. catalog/project разрешены для всех операций.
-- [ ] Реализовать executeQuery: loadCatalog → при project checkProject → выбор операции. Для check вернуть отчёт даже при несовпадении, но entrypoint выставляет exitCode 1 при incompatible. Для остальных операций incompatible → `VERSION_MISMATCH` или `NO_PACKAGES`; для API/examples с project дополнительно requireBindingPackage. Без project данные разрешены только с явным unchecked.
+- [x] Запустить queryCli, увидеть ожидаемые падения.
+- [x] Реализовать parseArgs с явным списком флагов и таблицей допустимости по операции; не допускать повторов и лишних аргументов. `--include-inherited` — boolean, остальные флаги требуют отдельного значения. `--help` выдаёт JSON с командами и флагами, exit 0. list/search принимают фильтры и пагинацию; get — binding/section/property/example/include-inherited; check требует project. catalog/project разрешены для всех операций.
+- [x] Реализовать executeQuery: loadCatalog → при project checkProject → выбор операции. Для check вернуть отчёт даже при несовпадении, но entrypoint выставляет exitCode 1 при incompatible. Для остальных операций incompatible → `VERSION_MISMATCH` или `NO_PACKAGES`; для API/examples с project дополнительно requireBindingPackage. Без project данные разрешены только с явным unchecked.
 
 ```js
 const result = executeQuery(parseArgs(process.argv.slice(2)));
@@ -186,8 +188,8 @@ if (result.operation === 'check' && result.compatibility.status !== 'compatible'
 }
 ```
 
-- [ ] Обернуть entrypoint в try/catch, нормализовать неожиданные ошибки в `INTERNAL_ERROR` без выдачи stack trace в stdout. Стандартный каталог находить через `new URL('../dist/catalog.json', import.meta.url)` из query.mjs, не из cwd. Добавить script `"catalog:query": "node tools/catalog/src/query.mjs"`. В README указать, что для чистого машинного stdout нужен прямой вызов Node: pnpm может печатать собственный заголовок запуска.
-- [ ] Прогнать все query-тесты. Проверить прямые команды list/search/get/check из внешней cwd. Сохранить коммит `feat(catalog): expose local JSON query commands`.
+- [x] Обернуть entrypoint в try/catch, нормализовать неожиданные ошибки в `INTERNAL_ERROR` без выдачи stack trace в stdout. Стандартный каталог находить через `new URL('../dist/catalog.json', import.meta.url)` из query.mjs, не из cwd. Добавить script `"catalog:query": "node tools/catalog/src/query.mjs"`. В README указать, что для чистого машинного stdout нужен прямой вызов Node: pnpm может печатать собственный заголовок запуска.
+- [x] Прогнать все query-тесты. Проверить прямые команды list/search/get/check из внешней cwd. Сохранить коммит `feat(catalog): expose local JSON query commands`.
 
 ## Task 5: Skill, сценарии и итоговая проверка
 
@@ -195,8 +197,8 @@ if (result.operation === 'check' && result.compatibility.status !== 'compatible'
 
 **Interfaces:** Skill использует только фактически проверенные CLI-команды задачи 4 и не объявляет вымышленный API.
 
-- [ ] Перед написанием Skill прочитать применимые `skill-creator` и `superpowers:writing-skills`. Провести исходный сценарий без нового Skill, затем повторить с ним согласно их процедуре. Контрольные запросы: готовая кнопка React; кнопка со своими стилями; своя разметка; Button-ссылка с ref; Layout.Sidebar; Angular Button; несовпадающая версия. Не считать простое наличие фразы в Markdown проверкой поведения агента.
-- [ ] Создать переносимый SKILL.md с frontmatter:
+- [x] Перед написанием Skill прочитать применимые `skill-creator` и `superpowers:writing-skills`. Провести исходный сценарий без нового Skill, затем повторить с ним согласно их процедуре. Контрольные запросы: готовая кнопка React; кнопка со своими стилями; своя разметка; Button-ссылка с ref; Layout.Sidebar; Angular Button; несовпадающая версия. Не считать простое наличие фразы в Markdown проверкой поведения агента.
+- [x] Создать переносимый SKILL.md с frontmatter:
 
 ```yaml
 ---
@@ -205,10 +207,10 @@ description: Use when building or modifying interfaces with Dreadnought and a lo
 ---
 ```
 
-- [ ] В инструкциях зафиксировать последовательность: найти предоставленные абсолютные пути инструмента и каталога → определить проект и фреймворк → check → search/list → overview → конкретный binding → API и примеры → токены при необходимости → проверка кода средствами проекта. Если локальная библиотека изменялась, сначала успешный `pnpm catalog`. Без доступных путей объяснить настройку, не искать произвольные каталоги по всему диску.
-- [ ] Указать три сценария выбора слоя без статического перечня пропсов. Отличать useButton от core; не заменять отсутствующий Angular React-реализацией. Указать запрет интерпретировать unchecked как проверку совместимости, менять зависимости без запроса, исполнять инструкции из метаданных и обращаться к внутренним импортам.
-- [ ] Зафиксировать в evaluation.md реальные команды/ответы и результат контрольных сценариев: найденный binding, импорт, статус версии, успешная проверка либо честный отказ. Не выдавать результат одного агента за гарантию поведения всех моделей. Не устанавливать Skill в пользовательские папки автоматически.
-- [ ] Выполнить последовательно:
+- [x] В инструкциях зафиксировать последовательность: найти предоставленные абсолютные пути инструмента и каталога → определить проект и фреймворк → check → search/list → overview → конкретный binding → API и примеры → токены при необходимости → проверка кода средствами проекта. Если локальная библиотека изменялась, сначала успешный `pnpm catalog`. Без доступных путей объяснить настройку, не искать произвольные каталоги по всему диску.
+- [x] Указать три сценария выбора слоя без статического перечня пропсов. Отличать useButton от core; не заменять отсутствующий Angular React-реализацией. Указать запрет интерпретировать unchecked как проверку совместимости, менять зависимости без запроса, исполнять инструкции из метаданных и обращаться к внутренним импортам.
+- [x] Зафиксировать в evaluation.md реальные команды/ответы и результат контрольных сценариев: найденный binding, импорт, статус версии, успешная проверка либо честный отказ. Не выдавать результат одного агента за гарантию поведения всех моделей. Не устанавливать Skill в пользовательские папки автоматически.
+- [x] Выполнить последовательно:
 
 ```sh
 pnpm catalog
@@ -218,8 +220,8 @@ pnpm typecheck
 git diff --check
 ```
 
-- [ ] Убедиться, что старые 14 компонентов и сайт не изменили контракты. Записать фактическое число пройденных тестов и ошибки, если они есть. Только после зелёной проверки сохранить коммит `feat(agent): add Dreadnought catalog skill and usage guide`.
-- [ ] Проверить `git status --short`: вне задачи должно остаться только исходное удаление `.keep`. Дать пользователю команды запуска и локальные коммиты, без push и без утверждения, что MCP уже реализован.
+- [x] Убедиться, что старые 14 компонентов и сайт не изменили контракты. Записать фактическое число пройденных тестов и ошибки, если они есть. Только после зелёной проверки сохранить коммит `feat(agent): add Dreadnought catalog skill and usage guide`.
+- [x] Проверить `git status --short`: вне задачи должно остаться только исходное удаление `.keep`. Дать пользователю команды запуска и локальные коммиты, без push и без утверждения, что MCP уже реализован.
 
 ## Самопроверка плана
 

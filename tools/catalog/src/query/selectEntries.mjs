@@ -24,6 +24,6 @@ export function selectEntries(catalog, {query = '', family, layer, framework, li
       docsUrl: entry.docsUrl, bindings: bindings.map(({id, layer, framework, importPath, exportName, propertyPath}) =>
         ({id, layer, framework, importPath, exportName, ...(propertyPath ? {propertyPath} : {})}))}];
   });
-  entries.sort((a, b) => a.rank - b.rank || a.id.localeCompare(b.id));
+  entries.sort((a, b) => a.rank - b.rank || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   return {total: entries.length, offset, limit, items: entries.slice(offset, offset + limit).map(({rank, ...item}) => item)};
 }

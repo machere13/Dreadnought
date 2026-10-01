@@ -68,4 +68,15 @@ describe('JSON catalog CLI', () => {
     expect(result.payload.compatibility.mismatches).toEqual([{name: '@dreadnought/ui', expected: '0.1.0', actual: '0.2.0'}]);
     writeFileSync(pkg, JSON.stringify({name: '@dreadnought/ui', version: '0.1.0'}));
   });
+
+  it('classifies malformed catalog entries without exposing an internal error', () => {
+    const badPath = path.join(root, 'malformed.json');
+    const bad = makeCatalog();
+    (bad.entries as any)[0] = null;
+    writeFileSync(badPath, JSON.stringify(bad));
+    const result = run('list', '--catalog', badPath);
+    expect(result.status).toBe(1);
+    expect(result.payload.error.code).toBe('INVALID_CATALOG');
+    expect(result.lines).toHaveLength(1);
+  });
 });

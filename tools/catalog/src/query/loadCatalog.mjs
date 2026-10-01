@@ -19,15 +19,16 @@ const boolean = (value, at) => {
 };
 const unique = (items, at) => {
   const seen = new Set();
-  for (const item of items) {
-    string(item.id, `${at}.id`);
+  for (const [index, item] of items.entries()) {
+    object(item, `${at}[${index}]`);
+    string(item.id, `${at}[${index}].id`);
     if (seen.has(item.id)) fail('Duplicate id', at);
     seen.add(item.id);
   }
 };
 const strings = (items, at) => array(items, at).forEach((item, i) => string(item, `${at}[${i}]`));
-const publicImports = new Set(packages.flatMap((pkg) => pkg.entrypoints.map((entry) =>
-  entry === '.' ? pkg.name : `${pkg.name}/${entry.slice(2)}`)));
+const publicImports = new Map(packages.flatMap((pkg) => pkg.entrypoints.map((entry) =>
+  [entry === '.' ? pkg.name : `${pkg.name}/${entry.slice(2)}`, {layer: pkg.layer, framework: pkg.framework}])));
 const packageNames = packages.map((pkg) => pkg.name);
 
 export function validateCatalog(value) {
@@ -66,6 +67,10 @@ export function validateCatalog(value) {
       if (binding.framework !== null) string(binding.framework, `${bat}.framework`);
       for (const field of ['id', 'importPath', 'exportName', 'description']) string(binding[field], `${bat}.${field}`);
       if (!publicImports.has(binding.importPath)) fail('Non-public import', `${bat}.importPath`);
+      const kind = publicImports.get(binding.importPath);
+      if (!kind || binding.layer !== kind.layer || binding.framework !== kind.framework) {
+        fail('Binding layer/framework does not match public import', bat);
+      }
       if (binding.propertyPath !== undefined) strings(binding.propertyPath, `${bat}.propertyPath`);
       for (const field of ['propertyDescriptions', 'defaults']) object(binding[field], `${bat}.${field}`);
       Object.entries(binding.propertyDescriptions).forEach(([name, description]) => string(description, `${bat}.propertyDescriptions.${name}`));
@@ -85,7 +90,9 @@ export function validateCatalog(value) {
           string(parameter.type, `${pat}.type`);
           boolean(parameter.optional, `${pat}.optional`);
         });
-        array(contract.variants, `${cat}.variants`).forEach((variant, vi) => {
+        const variants = array(contract.variants, `${cat}.variants`);
+        if (!variants.length) fail('Missing contract variants', `${cat}.variants`);
+        variants.forEach((variant, vi) => {
           const vat = `${cat}.variants[${vi}]`;
           object(variant, vat);
           const props = array(variant.properties, `${vat}.properties`);

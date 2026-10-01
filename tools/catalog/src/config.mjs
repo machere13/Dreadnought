@@ -1,7 +1,7 @@
 export const packages = [
-  { name: '@dreadnought/core', directory: 'packages/core', entrypoints: ['.'] },
-  { name: '@dreadnought/react', directory: 'packages/adapters/react', entrypoints: ['./logic', './unstyled'] },
-  { name: '@dreadnought/ui', directory: 'packages/ui', entrypoints: ['./react'] },
+  { name: '@dreadnought/core', directory: 'packages/core', entrypoints: ['.'], layer: 1, framework: null },
+  { name: '@dreadnought/react', directory: 'packages/adapters/react', entrypoints: ['./logic', './unstyled'], layer: 2, framework: 'react' },
+  { name: '@dreadnought/ui', directory: 'packages/ui', entrypoints: ['./react'], layer: 3, framework: 'react' },
   { name: '@dreadnought/themes', directory: 'packages/themes', entrypoints: [] },
 ];
 
