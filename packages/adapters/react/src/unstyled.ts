@@ -29,4 +29,3 @@ export { BreadcrumbAdapter } from './Navigation/Breadcrumb/index.ts';
 export type { BreadcrumbAdapterProps, BreadcrumbItem, BreadcrumbSlotClassNames } from './Navigation/Breadcrumb/index.ts';
 export * from './Layout/Layout/index.ts';
 export * from './Navigation/Menu/index.ts';
-

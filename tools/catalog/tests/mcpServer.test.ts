@@ -55,20 +55,29 @@ function replyPayload(reply: any) {
 }
 
 describe('local MCP stdio server', () => {
+  it('serves both context formats through real MCP without dropping compatibility', async () => {
+    await withClient(catalogPath, projectPath, async client => {
+      for (const format of ['usage', 'contract']) {
+        const reply = await client.callTool({name:'dreadnought_context',arguments:{components:['Button'],format}});
+        expect(reply.isError).toBeUndefined();
+        expect(replyPayload(reply)).toMatchObject({compatibility:{status:'compatible'},result:{format}});
+      }
+    });
+  });
   it('keeps stdout empty when startup arguments are invalid', () => {
     const child = spawnSync(process.execPath, [serverPath], {encoding: 'utf8'});
     expect(child.status).toBe(1);
     expect(child.stdout).toBe('');
     expect(child.stderr).toContain('Absolute catalog and project paths are required');
   });
-  it('lists four tools and checks the fixed target project', async () => {
+  it('lists five tools and checks the fixed target project', async () => {
     const client = new Client({name: 'catalog-test', version: '1.0.0'});
     const transport = new StdioClientTransport({command: process.execPath,
       args: [serverPath, '--catalog', catalogPath, '--project', projectPath]});
     try {
       await client.connect(transport);
       expect((await client.listTools()).tools.map((tool) => tool.name).sort()).toEqual([
-        'dreadnought_check', 'dreadnought_get', 'dreadnought_list', 'dreadnought_search']);
+        'dreadnought_check', 'dreadnought_context', 'dreadnought_get', 'dreadnought_list', 'dreadnought_search']);
       const reply = await client.callTool({name: 'dreadnought_check', arguments: {}});
       expect((reply.structuredContent as any).compatibility.status).toBe('compatible');
     } finally {

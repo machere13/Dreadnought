@@ -1,6 +1,7 @@
 import { loadCatalog } from './loadCatalog.mjs';
 import { selectEntries } from './selectEntries.mjs';
 import { getEntry } from './getEntry.mjs';
+import { getContext } from './getContext.mjs';
 import { checkProject, requireBindingPackage } from './checkProject.mjs';
 import { CatalogQueryError } from './errors.mjs';
 
@@ -9,6 +10,7 @@ export function executeQuery({operation, component, query, catalogPath, projectP
     list: 'list [--family NAME] [--layer 1|2|3] [--framework NAME] [--limit 1..50] [--offset N]',
     search: 'search QUERY [list filters]',
     get: 'get COMPONENT [--binding ID] [--section overview|api|examples|tokens] [--property NAME] [--example ID] [--include-inherited]',
+    context: 'context --components Button,Input [--layer 1|2|3] [--framework NAME] [--format usage|contract] [--max-bytes 1024..32768] [--include-tokens]',
     check: 'check --project PATH',
   }, commonFlags: ['--catalog PATH', '--project PATH']};
   const catalog = loadCatalog(catalogPath);
@@ -20,6 +22,14 @@ export function executeQuery({operation, component, query, catalogPath, projectP
   }
   let result;
   if (operation === 'list' || operation === 'search') result = selectEntries(catalog, {...options, query: operation === 'search' ? query : ''});
+  else if (operation === 'context') {
+    const maxBytes = options.maxBytes ?? 8192;
+    const envelope = {responseVersion: 1, operation, packageVersions: catalog.packageVersions, compatibility, result: null};
+    const resultBudget = maxBytes - Buffer.byteLength(JSON.stringify(envelope), 'utf8') + 4;
+    if (resultBudget < 256) throw new CatalogQueryError('BUDGET_TOO_SMALL', 'Context reply exceeds maxBytes');
+    result = getContext(catalog, {...options, maxBytes: resultBudget});
+    if (projectPath) for (const item of result.items) requireBindingPackage(compatibility, item.binding);
+  }
   else if (operation === 'get') {
     result = getEntry(catalog, component, options);
     if (projectPath && result.binding) requireBindingPackage(compatibility, result.binding);

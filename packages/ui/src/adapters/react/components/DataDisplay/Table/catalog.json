@@ -25,6 +25,10 @@
         {
           "id": "basic",
           "code": "import { Table } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Table rowKey=\"id\" dataSource={[{ id: 1, name: 'Борис' }, { id: 2, name: 'Анна' }]} columns={[{ key: 'name', title: 'Имя', dataIndex: 'name', sorter: (a, b) => a.name.localeCompare(b.name) }]} />;\n}"
+        },
+        {
+          "id": "compound",
+          "code": "import { Table } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Table><Table.Head><Table.Row><Table.HeaderCell scope=\"col\">Имя</Table.HeaderCell></Table.Row></Table.Head><Table.Body><Table.Row><Table.Cell>Анна</Table.Cell></Table.Row></Table.Body></Table>;\n}"
         }
       ]
     },

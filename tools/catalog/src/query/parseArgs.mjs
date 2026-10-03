@@ -4,6 +4,7 @@ const allowed = {
   list: new Set(['catalog', 'project', 'family', 'layer', 'framework', 'limit', 'offset']),
   search: new Set(['catalog', 'project', 'family', 'layer', 'framework', 'limit', 'offset']),
   get: new Set(['catalog', 'project', 'binding', 'section', 'property', 'example', 'include-inherited']),
+  context: new Set(['catalog', 'project', 'components', 'layer', 'framework', 'max-bytes', 'include-tokens', 'format']),
   check: new Set(['catalog', 'project']),
 };
 const fail = (message, details = {}) => { throw new CatalogQueryError('INVALID_ARGUMENTS', message, details); };
@@ -12,7 +13,7 @@ export function parseArgs(argv) {
   if (!Array.isArray(argv)) fail('Arguments must be an array');
   if (argv.length === 1 && argv[0] === '--help') return {operation: 'help', options: {}};
   const [operation, ...rest] = argv;
-  if (!allowed[operation]) fail('Expected list, search, get or check', {operation});
+  if (!allowed[operation]) fail('Expected list, search, get, context or check', {operation});
   const fields = {};
   const positionals = [];
   for (let i = 0; i < rest.length; i++) {
@@ -25,7 +26,7 @@ export function parseArgs(argv) {
       const flag = arg.slice(2);
       if (!allowed[operation].has(flag)) fail('Unknown or unsupported flag', {flag, operation});
       if (Object.hasOwn(fields, flag)) fail('Duplicate flag', {flag});
-      if (flag === 'include-inherited') { fields[flag] = true; continue; }
+      if (flag === 'include-inherited' || flag === 'include-tokens') { fields[flag] = true; continue; }
       const value = rest[++i];
       if (value === undefined || value.startsWith('--')) fail('Missing flag value', {flag});
       fields[flag] = value;
@@ -36,10 +37,12 @@ export function parseArgs(argv) {
   const needed = operation === 'search' || operation === 'get' ? 1 : 0;
   if (positionals.length !== needed || (needed && !positionals[0].trim())) fail('Wrong number of positional arguments');
   if (operation === 'check' && !fields.project) fail('check requires --project');
-  for (const flag of ['catalog', 'project', 'family', 'framework', 'binding', 'section', 'property', 'example']) {
+  if (operation === 'context' && !fields.components) fail('context requires --components');
+  if (fields.format !== undefined && !['usage', 'contract'].includes(fields.format)) fail('Unknown context format');
+  for (const flag of ['catalog', 'project', 'family', 'framework', 'binding', 'section', 'property', 'example', 'components']) {
     if (fields[flag] !== undefined && !fields[flag].trim()) fail('Empty flag value', {flag});
   }
-  for (const [flag, min, max] of [['layer', 1, 3], ['limit', 1, 50], ['offset', 0, Number.MAX_SAFE_INTEGER]]) {
+  for (const [flag, min, max] of [['layer', 1, 3], ['limit', 1, 50], ['offset', 0, Number.MAX_SAFE_INTEGER], ['max-bytes', 1024, 32768]]) {
     if (fields[flag] !== undefined) {
       if (!/^\d+$/.test(fields[flag])) fail('Expected integer flag value', {flag});
       fields[flag] = Number(fields[flag]);
@@ -61,6 +64,10 @@ export function parseArgs(argv) {
       ...(fields.property !== undefined ? {property: fields.property} : {}),
       ...(fields.example !== undefined ? {example: fields.example} : {}),
       ...(fields['include-inherited'] ? {includeInherited: true} : {}),
+      ...(fields.components !== undefined ? {components: fields.components.split(',').map((item) => item.trim())} : {}),
+      ...(fields['max-bytes'] !== undefined ? {maxBytes: fields['max-bytes']} : {}),
+      ...(fields['include-tokens'] ? {includeTokens: true} : {}),
+      ...(fields.format !== undefined ? {format: fields.format} : {}),
     },
   };
 }

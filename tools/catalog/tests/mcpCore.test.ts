@@ -55,6 +55,15 @@ describe('MCP catalog reply', () => {
     expect(reply.content).toHaveLength(1);
     expect(JSON.parse(reply.content[0].text)).toEqual(reply.structuredContent);
   });
+  it('returns bounded context through MCP and keeps compatibility checks', () => {
+    const config = fixture();
+    const reply = invokeCatalog('context', {components: ['Button'], maxBytes: 2048}, config);
+    expect(reply.isError).toBeUndefined();
+    expect(reply.structuredContent.result.items[0].binding.exportName).toBe('Button');
+    expect(Buffer.byteLength(reply.content[0].text, 'utf8')).toBeLessThanOrEqual(2048);
+    expect(invokeCatalog('context', {components: ['Button']}, fixture('0.2.0')).structuredContent.error.code)
+      .toBe('VERSION_MISMATCH');
+  });
   it('distinguishes an incompatible check report from rejected list queries', () => {
     const config = fixture('0.2.0');
     const check = invokeCatalog('check', {}, config);

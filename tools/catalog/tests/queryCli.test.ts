@@ -41,6 +41,24 @@ describe('JSON catalog CLI', () => {
     expect(run('check', '--catalog', catalogPath, '--project', root).payload.compatibility.status).toBe('compatible');
   });
 
+  it('returns a bounded context reply with one public binding', () => {
+    const result = run('context', '--catalog', catalogPath, '--project', root,
+      '--components', 'Button', '--max-bytes', '2048');
+    expect(result.status).toBe(0);
+    expect(result.payload.result.items[0].binding.importPath).toBe('@dreadnought/ui/react');
+    expect(Buffer.byteLength(JSON.stringify(result.payload), 'utf8')).toBeLessThanOrEqual(2048);
+  });
+
+  it('selects usage or contract output through the public CLI', () => {
+    for (const format of ['usage', 'contract']) {
+      const reply = run('context', '--catalog', catalogPath, '--project', root, '--components', 'Button', '--format', format);
+      expect(reply.status).toBe(0);
+      expect(reply.payload.result.format).toBe(format);
+    }
+    expect(run('context', '--catalog', catalogPath, '--components', 'Button', '--format', 'typo').payload.error.code)
+      .toBe('INVALID_ARGUMENTS');
+  });
+
   it.each([
     ['--limit', '0'], ['--limit', '1.5'], ['--offset', '-1'], ['--unknown', 'x'],
   ])('rejects invalid %s %s', (flag, value) => {

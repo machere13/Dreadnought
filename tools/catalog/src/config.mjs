@@ -26,4 +26,3 @@ export const components = [
   { family: 'DataDisplay', name: 'Icon', sources: [adapter, ui] },
   { family: 'DataDisplay', name: 'Mark', sources: [adapter, ui] },
 ];
-

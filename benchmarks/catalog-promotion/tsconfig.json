@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "paths": {
+      "@dreadnought/ui/react": ["../token-comparison-v12/with-dreadnought/node_modules/@dreadnought/ui/dist/adapters/react/index.d.ts"]
+    }
+  },
+  "include": ["UsageProbe.tsx"]
+}

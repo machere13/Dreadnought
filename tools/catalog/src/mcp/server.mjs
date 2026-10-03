@@ -36,5 +36,16 @@ export function createCatalogMcpServer(config) {
       includeInherited: z.boolean().optional(),
     }).strict(),
   }, async (args) => invokeCatalog('get', args, config));
+  server.registerTool('dreadnought_context', {
+    description: 'Get checked usage examples and partial primitive prop hints for selected components in one request. format contract adds library API branches; get reads exact or inherited details.',
+    inputSchema: z.object({
+      components: z.array(nonempty).min(1).max(10),
+      layer: z.number().int().min(1).max(3).optional(),
+      framework: nonempty.optional(),
+      maxBytes: z.number().int().min(1024).max(32768).optional(),
+      includeTokens: z.boolean().optional(),
+      format: z.enum(['usage', 'contract']).optional(),
+    }).strict(),
+  }, async (args) => invokeCatalog('context', args, config));
   return server;
 }

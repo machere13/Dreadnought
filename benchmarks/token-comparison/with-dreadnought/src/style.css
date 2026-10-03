@@ -1,0 +1,84 @@
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #f2f2f2;
+  background: #171717;
+  --dreadnought-card-bg: #242424;
+  --dreadnought-card-radius: 16px;
+  --dreadnought-card-padding: 24px;
+  --dreadnought-button-primary-bg: #a9ff79;
+  --dreadnought-button-primary-bg-hover: #c1ff9f;
+  --dreadnought-button-primary-fg: #171717;
+  --dreadnought-button-primary-border-color: #a9ff79;
+  --dreadnought-button-outlined-bg: transparent;
+  --dreadnought-button-outlined-fg: #f2f2f2;
+  --dreadnought-button-outlined-border-color: #444;
+  --dreadnought-button-outlined-bg-hover: #303030;
+  --dreadnought-button-radius: 10px;
+  --dreadnought-button-focus-ring: #a9ff79;
+  --dreadnought-input-bg: #1c1c1c;
+  --dreadnought-input-text: #f2f2f2;
+  --dreadnought-input-placeholder-text: #929292;
+  --dreadnought-input-border-default: #444;
+  --dreadnought-input-border-focus: #a9ff79;
+  --dreadnought-input-radius: 9px;
+  --dreadnought-tabs-list-bg: #1c1c1c;
+  --dreadnought-tabs-tab-fg: #adadad;
+  --dreadnought-tabs-tab-fg-selected: #171717;
+  --dreadnought-tabs-tab-bg-selected: #a9ff79;
+  --dreadnought-tabs-tab-bg-selected-hover: #c1ff9f;
+  --dreadnought-tabs-focus-ring: #a9ff79;
+  --dreadnought-table-bg: #242424;
+  --dreadnought-table-header-bg: #2c2c2c;
+  --dreadnought-table-header-text: #adadad;
+  --dreadnought-table-text: #f2f2f2;
+  --dreadnought-table-border: #444;
+  --dreadnought-table-row-bg-hover: #303030;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+.shell { max-width: 1180px; margin: 0 auto; padding: 56px 28px 80px; }
+.page-header, .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+h1, h2, p { margin: 0; }
+h1 { font-size: clamp(28px, 4vw, 40px); line-height: 1.15; letter-spacing: -.035em; }
+.page-header p { margin-top: 10px; color: #aaa; font-size: 15px; }
+h2 { font-size: 20px; letter-spacing: -.02em; }
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 32px 0 24px; }
+.metric { display: flex; flex-direction: column; gap: 18px; min-height: 132px; border: 1px solid #444; }
+.metric span { color: #aaa; font-size: 14px; }
+.metric strong { color: #a9ff79; font-size: 34px; line-height: 1; font-weight: 650; }
+.board, .form-card { border: 1px solid #444; }
+.board { padding-bottom: 12px; }
+.toolbar { margin-bottom: 24px; }
+.search { width: min(100%, 310px); }
+.search label, .field label { display: block; margin-bottom: 8px; color: #c9c9c9; font-size: 13px; font-weight: 600; }
+.search [data-ui="input"], .field [data-ui="input"] { width: 100%; }
+.table-scroll { width: 100%; overflow-x: auto; }
+.table-scroll table { min-width: 620px; width: 100%; }
+.status { font-weight: 600; }
+.status-done { --dreadnought-badge-solid-bg: #25432a; --dreadnought-badge-solid-fg: #b8f4bd; }
+.status-active { --dreadnought-badge-solid-bg: #3c3721; --dreadnought-badge-solid-fg: #f2dc91; }
+.status-todo { --dreadnought-badge-solid-bg: #343434; --dreadnought-badge-solid-fg: #c9c9c9; }
+.priority { font-size: 13px; font-weight: 600; }
+.priority-high { color: #ffb39f; }
+.priority-medium { color: #f2dc91; }
+.priority-low { color: #aaa; }
+.empty { padding: 16px; color: #aaa; text-align: center; }
+.form-card { margin-top: 24px; }
+.form-card form { display: grid; grid-template-columns: 1fr 1fr auto; align-items: end; gap: 16px; }
+.form-actions { display: flex; gap: 8px; }
+@media (max-width: 750px) {
+  .form-card form { grid-template-columns: 1fr 1fr; }
+  .form-actions { grid-column: 1 / -1; }
+}
+@media (max-width: 550px) {
+  .shell { padding: 28px 16px 48px; }
+  .page-header, .toolbar { align-items: stretch; flex-direction: column; }
+  .page-header > button { align-self: flex-start; }
+  .metrics { gap: 8px; margin: 24px 0 16px; }
+  .metric { min-height: 102px; padding: 14px; gap: 12px; }
+  .metric strong { font-size: 28px; }
+  .board, .form-card { padding: 16px; }
+  .search { width: 100%; }
+  .form-card form { grid-template-columns: 1fr; }
+  .form-actions { grid-column: auto; }
+}

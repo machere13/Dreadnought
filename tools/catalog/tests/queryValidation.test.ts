@@ -51,4 +51,3 @@ describe('catalog query validation', () => {
     }
   });
 });
-

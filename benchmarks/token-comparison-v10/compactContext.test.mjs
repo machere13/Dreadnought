@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {getContext} from '../../tools/catalog/src/query/getContext.mjs';
+import {compactContext} from './compactContext.mjs';
+const catalog = JSON.parse(await readFile(new URL('./catalog.json',import.meta.url),'utf8'));
+const result = getContext(catalog,{components:['Button','Input','Card','Badge','Tabs','Table'],format:'contract',maxBytes:32768});
+const reply = {compatibility:{status:'compatible'},result};
+const compact = compactContext(reply);
+assert.match(compact.components.find(item => item.name === 'Tabs').props.value,/string/);
+assert.match(compact.components.find(item => item.name === 'Button').props.href,/string/);
+assert.match(compact.components.find(item => item.name === 'Badge').props.appearance,/outline/);
+assert.deepEqual(compact.components.map(item => item.example),result.items.map(item => item.example.code));
+assert.throws(() => compactContext({...reply,compatibility:{status:'incompatible'}}));
+assert.throws(() => compactContext({...reply,result:{...result,truncated:true}}));
+console.log('Examples and primitive choices verified, including controlled/uncontrolled branches.');

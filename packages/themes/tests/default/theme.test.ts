@@ -194,4 +194,3 @@ describe('default theme', () => {
     expect(tabsTypography).toContain('font-size: var(--dreadnought-font-size-tabs-panel)');
   });
 });
-

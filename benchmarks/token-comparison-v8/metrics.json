@@ -1,0 +1,42 @@
+[
+  {
+    "agent": "/root/framework_v8",
+    "session": "01a10033-1c48-7e20-9c56-a95171e21c20",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "completed": true,
+    "start": "2026-10-03T05:18:34.613Z",
+    "end": "2026-10-03T05:20:45.146Z",
+    "elapsedSeconds": 131,
+    "input_tokens": 177756,
+    "cached_input_tokens": 165632,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5250,
+    "reasoning_output_tokens": 264,
+    "total_tokens": 183006,
+    "uncached_input_tokens": 12124,
+    "uncached_plus_output": 17374,
+    "responses": 4,
+    "toolCalls": 3
+  },
+  {
+    "agent": "/root/scratch_v8",
+    "session": "01a10032-d81b-7ca3-a5e7-72d0fd5879dc",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "completed": true,
+    "start": "2026-10-03T05:18:17.984Z",
+    "end": "2026-10-03T05:20:32.158Z",
+    "elapsedSeconds": 134,
+    "input_tokens": 173475,
+    "cached_input_tokens": 162432,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 6101,
+    "reasoning_output_tokens": 165,
+    "total_tokens": 179576,
+    "uncached_input_tokens": 11043,
+    "uncached_plus_output": 17144,
+    "responses": 4,
+    "toolCalls": 3
+  }
+]

@@ -1,0 +1,31 @@
+{
+  "name": "benchmark-v11-with-dreadnought",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit && vite build"
+  },
+  "dependencies": {
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "@dreadnought/core": "file:../vendor/dreadnought-core-0.1.0.tgz",
+    "@dreadnought/react": "file:../vendor/dreadnought-react-0.1.0.tgz",
+    "@dreadnought/themes": "file:../vendor/dreadnought-themes-0.1.0.tgz",
+    "@dreadnought/ui": "file:../vendor/dreadnought-ui-0.1.0.tgz"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "typescript": "5.9.3",
+    "vite": "7.3.6"
+  },
+  "pnpm": {
+    "overrides": {
+      "@dreadnought/core": "file:../vendor/dreadnought-core-0.1.0.tgz",
+      "@dreadnought/react": "file:../vendor/dreadnought-react-0.1.0.tgz",
+      "@dreadnought/themes": "file:../vendor/dreadnought-themes-0.1.0.tgz",
+      "@dreadnought/ui": "file:../vendor/dreadnought-ui-0.1.0.tgz"
+    }
+  }
+}

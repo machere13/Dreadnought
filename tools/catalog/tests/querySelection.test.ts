@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
-import { getEntry, selectEntries } from '../src/query/index.mjs';
+import { getContext, getEntry, selectEntries } from '../src/query/index.mjs';
 import { makeCatalog } from './queryFixtures';
 
 function withBranches() {
@@ -26,6 +26,51 @@ function withBranches() {
 }
 
 describe('catalog selection', () => {
+  it('returns compact context for explicit components without flattening API branches', () => {
+    const catalog = withBranches();
+    catalog.entries[0].tokens = [{name: '--button-pad', value: '16px'}] as any;
+    const result = getContext(catalog, {components: ['Button'], maxBytes: 4096, format: 'contract'});
+    expect(result.items[0]).toMatchObject({binding: {importPath: '@dreadnought/ui/react'}, props: ['href', 'ref']});
+    expect(result.items[0].variants[0]).toHaveLength(2);
+    expect(result.items[0].variants[0][1]).toContainEqual({name: 'href', type: 'string', required: true});
+    expect(JSON.stringify(result)).not.toContain('formAction');
+    expect(result.items[0].tokens).toBeUndefined();
+    expect(getContext(catalog, {components: ['Button'], includeTokens: true}).items[0].tokens)
+      .toEqual(['--button-pad']);
+  });
+
+  it('caps context bytes and signals omitted detail', () => {
+    const catalog = withBranches();
+    catalog.entries[0].bindings[0].examples = [{id: 'long', code: 'x'.repeat(2000)}];
+    const result = getContext(catalog, {components: ['Button'], maxBytes: 700, format: 'contract'});
+    expect(Buffer.byteLength(JSON.stringify(result), 'utf8')).toBeLessThanOrEqual(700);
+    expect(result.truncated).toBe(true);
+    expect(result.items[0].example).toBeUndefined();
+    catalog.entries[0].description = 'x'.repeat(500);
+    expect(() => getContext(catalog, {components: ['Button'], maxBytes: 256, format: 'contract'}))
+      .toThrow(expect.objectContaining({code: 'BUDGET_TOO_SMALL'}));
+  });
+
+  it('shows the compound example for a component with public compound parts', () => {
+    const catalog = withBranches();
+    const binding = catalog.entries[1].bindings[0];
+    binding.examples = [
+      {id: 'basic', code: '<Layout items={[]} />'},
+      {id: 'compound', code: '<Layout><Layout.Sidebar>Menu</Layout.Sidebar></Layout>'},
+    ];
+    binding.propertyPath = undefined;
+    catalog.entries[1].bindings.push({...structuredClone(binding), id: 'react-ui-sidebar', propertyPath: ['Sidebar']});
+    const result = getContext(catalog, {components: ['Layout'], maxBytes: 4096});
+    expect(result.items[0].example).toEqual({id: 'compound', code: '<Layout><Layout.Sidebar>Menu</Layout.Sidebar></Layout>'});
+  });
+
+  it('rejects unknown components and unavailable framework bindings', () => {
+    const catalog = withBranches();
+    expect(() => getContext(catalog, {components: ['Missing']})).toThrow(expect.objectContaining({code: 'UNKNOWN_COMPONENT'}));
+    expect(() => getContext(catalog, {components: ['Button'], framework: 'angular'}))
+      .toThrow(expect.objectContaining({code: 'UNKNOWN_BINDING'}));
+  });
+
   it('filters layer and framework on the same binding and ranks exact names', () => {
     const catalog = withBranches();
     expect(selectEntries(catalog, {query: 'button'}).items.map((item: any) => item.name)).toEqual(['Button']);

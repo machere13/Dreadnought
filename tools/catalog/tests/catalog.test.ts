@@ -28,6 +28,14 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('ships type-checked usage examples for text input, controlled tabs and data tables', () => {
+    for (const name of ['Input','Tabs','Table']) {
+      const entry = catalog.entries.find(entry => entry.name === name);
+      const example = entry.bindings.find(binding => binding.id === 'react-ui').examples.find(example => example.id === 'usage');
+      expect(example, name).toBeDefined();
+      expect(() => checkExamples(context, [example])).not.toThrow();
+    }
+  });
   it('keeps the button and anchor contracts distinct, including refs and native props', () => {
     const button = catalog.entries.find((entry) => entry.name === 'Button');
     const variants = button.bindings.find((binding) => binding.id === 'react-ui').contracts[0].variants;
@@ -53,7 +61,7 @@ describe('public catalog', () => {
 
   it('extracts theme tokens and only the explicitly listed components', () => {
     expect(catalog.entries.map((entry) => entry.name)).toEqual(components.map((component) => component.name).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())));
-    expect(catalog.entries).toHaveLength(14);
+    expect(catalog.entries).toHaveLength(components.length);
     expect(catalog.entries.find((entry) => entry.name === 'Button').tokens).toContainEqual({ name: '--dreadnought-button-primary-bg', value: 'var(--dreadnought-color-action-primary)' });
     expect(catalog.entries.every((entry) => entry.tokens.length > 0)).toBe(true);
     expect(catalog.packageVersions['@dreadnought/themes']).toBe(readJson(path.join(root, 'packages/themes/package.json')).version);

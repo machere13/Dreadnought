@@ -279,4 +279,3 @@ function DocsContent({ section }: { section: DocsSection }) {
   if (section === 'custom-components') return <CustomComponentsGuide />;
   return <ComponentDocumentation component={section} />;
 }
-

@@ -1,6 +1,7 @@
 import { describeContract } from './contracts.mjs';
 import { checkExamples } from './examples.mjs';
 import { readComponentTokens } from './tokens.mjs';
+import { usageExamples } from './usageExamples.mjs';
 
 function nonempty(value, label) {
   if (typeof value !== 'string' || !value.trim()) throw new Error(`Missing ${label}`);
@@ -45,7 +46,11 @@ export function generateCatalog(context, metadata) {
           code: `import { ${binding.exportName} } from '${binding.importPath}';\nconst value: NonNullable<Parameters<typeof ${[binding.exportName, ...(binding.propertyPath ?? [])].join('.')}>[0]>[${JSON.stringify(name)}] = ${JSON.stringify(value)};`,
         });
       }
-      for (const example of binding.examples ?? []) {
+      const bindingExamples = [...(binding.examples ?? [])];
+      if (binding.id === 'react-ui' && usageExamples[entry.name] && !bindingExamples.some(example => example.id === 'usage')) {
+        bindingExamples.unshift({id: 'usage', code: usageExamples[entry.name]});
+      }
+      for (const example of bindingExamples) {
         nonempty(example.id, 'example id');
         nonempty(example.code, 'example code');
         examples.push({ ...example, id: `${entry.id}/${binding.id}/${example.id}` });
@@ -56,7 +61,7 @@ export function generateCatalog(context, metadata) {
         ...(binding.propertyPath ? { propertyPath: binding.propertyPath } : {}),
         description: binding.description ?? entry.description,
         propertyDescriptions: binding.propertyDescriptions ?? {}, defaults: binding.defaults ?? {},
-        examples: binding.examples ?? [], contracts,
+        examples: bindingExamples, contracts,
       };
     });
     return {
