@@ -7,12 +7,12 @@ export type TabsTabAdapterProps = Omit<ComponentPropsWithRef<'button'>, 'value' 
   value: string;
 };
 
-export function TabsTabAdapter({ value, disabled = false, onClick, onKeyDown, ref, ...props }: TabsTabAdapterProps) {
+export function TabsTabAdapter({ value, disabled = false, onClick, onKeyDown, ref, children, ...props }: TabsTabAdapterProps) {
   const context = useTabsContext();
   const setRef = useCallback((element: HTMLButtonElement | null) => {
-    context.registerTab(value, element, disabled);
-    return forwardTabsRef(element, ref, () => context.registerTab(value, null, disabled));
-  }, [context.registerTab, disabled, ref, value]);
+    context.registerTab(value, element, disabled, children);
+    return forwardTabsRef(element, ref, () => context.registerTab(value, null, disabled, children));
+  }, [context.registerTab, children, disabled, ref, value]);
 
   function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
     onKeyDown?.(event);
@@ -38,5 +38,5 @@ export function TabsTabAdapter({ value, disabled = false, onClick, onKeyDown, re
       event.currentTarget.focus();
       context.setValue(value);
     }}
-    onKeyDown={handleKeyDown} />;
+    onKeyDown={handleKeyDown}>{children}</button>;
 }

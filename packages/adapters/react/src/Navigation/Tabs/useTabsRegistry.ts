@@ -1,11 +1,12 @@
 import { useCallback, useLayoutEffect, useRef } from 'react';
+import type { ReactNode } from 'react';
 import type { RegisteredTab } from './TabsContext.tsx';
 
 export function useTabsRegistry(selectedValue: string) {
   const tabs = useRef(new Map<string, RegisteredTab>());
   const panels = useRef(new Map<string, HTMLDivElement>());
 
-  const registerTab = useCallback((value: string, element: HTMLButtonElement | null, disabled: boolean) => {
+  const registerTab = useCallback((value: string, element: HTMLButtonElement | null, disabled: boolean, label: ReactNode) => {
     if (element === null) {
       tabs.current.delete(value);
       return;
@@ -13,7 +14,7 @@ export function useTabsRegistry(selectedValue: string) {
     if (value.length === 0 || (tabs.current.has(value) && tabs.current.get(value)?.element !== element)) {
       throw new Error(`Duplicate or empty Tabs.Tab value: ${value}`);
     }
-    tabs.current.set(value, { value, disabled, element });
+    tabs.current.set(value, { value, disabled, element, label });
   }, []);
 
   const registerPanel = useCallback((value: string, element: HTMLDivElement | null) => {

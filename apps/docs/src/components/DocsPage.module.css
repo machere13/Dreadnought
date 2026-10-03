@@ -183,8 +183,6 @@
 .specimenNote { display: flex; align-items: center; gap: var(--dreadnought-spacing-x2); margin: var(--dreadnought-spacing-x4) 0 0; color: var(--dreadnought-color-text-placeholder); }
 .layoutDemo { overflow-x: auto; }
 .layoutDemoFrame { min-height: 18rem; border: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle); }
-.tabsDemoList { width: 100%; overflow-x: auto; }
-.tabsDemoList > button { flex-shrink: 0; }
 .codeBlockDemo,
 .alertDemo { display: grid; gap: var(--dreadnought-spacing-x4); }
 .demoResult { margin: var(--dreadnought-spacing-x4) 0 0; color: var(--dreadnought-color-text-placeholder); font-size: var(--dreadnought-font-size-caption-1); }
@@ -230,6 +228,5 @@
   .pageHeading { margin-block: calc(var(--dreadnought-spacing-x4) * 2); }
   .title { font-size: var(--dreadnought-font-size-h4); line-height: var(--dreadnought-line-height-h4); }
   .demo { padding: var(--dreadnought-spacing-x4); }
-  .tabsDemoList { --dreadnought-tabs-tab-padding-x: var(--dreadnought-spacing-x1); }
   .sectionMeta { display: none; }
 }

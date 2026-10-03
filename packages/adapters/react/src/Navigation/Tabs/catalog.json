@@ -39,7 +39,9 @@
         "List"
       ],
       "propertyDescriptions": {
-        "aria-label": "Доступное имя списка вкладок."
+        "aria-label": "Доступное имя списка вкладок.",
+        "moreLabel": "Доступное имя кнопки и меню скрытых вкладок; по умолчанию Ещё вкладки.",
+        "slotProps": "DOM-свойства и классы частей container, more, menu и item."
       }
     },
     {

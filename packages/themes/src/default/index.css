@@ -9,7 +9,9 @@
 @import './components/DataDisplay/Icon/index.css';
 @import './components/Surfaces/Card/index.css';
 @import './components/Navigation/Tabs/index.css';
+@import './components/Navigation/Menu/index.css';
 @import './components/Navigation/Accordion/index.css';
 @import './components/Feedback/Alert/index.css';
 @import './components/Navigation/Breadcrumb/index.css';
 @import './components/Layout/Layout/index.css';
+

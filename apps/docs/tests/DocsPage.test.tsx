@@ -13,6 +13,14 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('documents the shared Menu and runs its actions', () => {
+    render(<DocsPage section="menu" />);
+    expect(screen.getByRole('menu', { name: 'Действия примера' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Копировать' }));
+    expect(screen.getByText('Действие: copy')).toBeTruthy();
+    expect(screen.getByRole('menuitem', { name: 'Удалить' }).hasAttribute('disabled')).toBe(true);
+  });
+
   it('groups component links by family and opens the current family', () => {
     render(<DocsPage section="table" />);
 

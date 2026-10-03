@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-font-size-menu-item: var(--dreadnought-font-size-body-2);
+  --dreadnought-font-weight-menu-item: var(--dreadnought-font-weight-body-2);
+  --dreadnought-line-height-menu-item: var(--dreadnought-line-height-body-2);
+  --dreadnought-font-letter-spacing-menu-item: normal;
+  --dreadnought-font-style-menu-item: normal;
+  --dreadnought-font-text-transform-menu-item: none;
+}

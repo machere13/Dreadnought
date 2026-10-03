@@ -137,6 +137,7 @@ describe('default theme', () => {
       "@import './components/DataDisplay/Icon/index.css';",
       "@import './components/Surfaces/Card/index.css';",
       "@import './components/Navigation/Tabs/index.css';",
+      "@import './components/Navigation/Menu/index.css';",
       "@import './components/Navigation/Accordion/index.css';",
       "@import './components/Feedback/Alert/index.css';",
       "@import './components/Navigation/Breadcrumb/index.css';",
@@ -153,6 +154,7 @@ describe('default theme', () => {
       ['DataDisplay', 'CodeBlock', ['colors', 'spacing', 'sizing', 'typography']],
       ['DataDisplay', 'Table', ['colors', 'spacing', 'sizing', 'typography']],
       ['Navigation', 'Tabs', ['colors', 'spacing', 'sizing', 'typography', 'effects']],
+      ['Navigation', 'Menu', ['colors', 'spacing', 'sizing', 'typography', 'effects']],
       ['Navigation', 'Accordion', ['colors', 'spacing', 'sizing', 'typography', 'effects']],
       ['Feedback', 'Alert', ['colors', 'spacing', 'sizing', 'typography']],
       ['Navigation', 'Breadcrumb', ['colors', 'spacing', 'sizing', 'typography']],
@@ -192,3 +194,4 @@ describe('default theme', () => {
     expect(tabsTypography).toContain('font-size: var(--dreadnought-font-size-tabs-panel)');
   });
 });
+

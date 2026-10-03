@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Tabs } from '@dreadnought/ui/react';
+import { Button, Tabs } from '@dreadnought/ui/react';
+import styles from './Tabs.stories.module.css';
 
 const meta = {
   title: 'Navigation/Tabs',
@@ -58,4 +59,38 @@ function ControlledExample() {
 export const Controlled: Story = {
   parameters: { controls: { disable: true } },
   render: () => <ControlledExample />,
+};
+
+function OverflowExample() {
+  const [value, setValue] = useState('0');
+  const [narrow, setNarrow] = useState(true);
+  const [labels, setLabels] = useState(['Обзор проекта', 'Недоступный раздел', 'Компоненты библиотеки',
+    'Настройка темы', 'Примеры использования', 'История изменений']);
+  return <div className={styles.example}>
+    <div className={styles.controls}>
+      <Button variant="outlined" size="compact" onClick={() => setNarrow(!narrow)}>
+        {narrow ? 'Расширить' : 'Сузить'}
+      </Button>
+      <Button variant="outlined" size="compact" onClick={() => setLabels([...labels, `Раздел ${labels.length + 1}`])}>
+        Добавить вкладку
+      </Button>
+      <Button variant="outlined" size="compact" disabled={labels.length <= 3} onClick={() => {
+        if (value === String(labels.length - 1)) setValue('0');
+        setLabels(labels.slice(0, -1));
+      }}>Убрать последнюю</Button>
+    </div>
+    <div className={narrow ? styles.narrow : styles.wide}>
+      <Tabs value={value} onValueChange={setValue}>
+        <Tabs.List aria-label="Разделы проекта">
+          {labels.map((label, index) => <Tabs.Tab key={index} value={String(index)} disabled={index === 1}>{label}</Tabs.Tab>)}
+        </Tabs.List>
+        {labels.map((label, index) => <Tabs.Panel key={index} value={String(index)}>{label}</Tabs.Panel>)}
+      </Tabs>
+    </div>
+  </div>;
+}
+
+export const Overflow: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => <OverflowExample />,
 };

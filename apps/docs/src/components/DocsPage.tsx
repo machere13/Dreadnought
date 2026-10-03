@@ -4,6 +4,7 @@ import { Breadcrumb, Button, Card, CodeBlock, Input, Layout, Table, TextArea } f
 import { badgeDoc } from './componentDocs/BadgeDoc';
 import { cardDoc } from './componentDocs/CardDoc';
 import { tabsDoc } from './componentDocs/TabsDoc';
+import { menuDoc } from './componentDocs/MenuDoc';
 import { accordionDoc } from './componentDocs/AccordionDoc';
 import { codeBlockDoc } from './componentDocs/CodeBlockDoc';
 import { alertDoc } from './componentDocs/AlertDoc';
@@ -20,7 +21,7 @@ import { DocsAssistant } from '../assistant/DocsAssistant.tsx';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
-type ComponentSection = 'button' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'accordion' | 'codeblock' | 'alert' | 'layout' | 'breadcrumb' | 'icon' | 'mark';
+type ComponentSection = 'button' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'layout' | 'breadcrumb' | 'icon' | 'mark';
 type DocsSection = 'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
 const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
   { name: 'Controls', sections: ['button'] },
@@ -28,7 +29,7 @@ const componentFamilies: readonly { name: string; sections: readonly ComponentSe
   { name: 'Feedback', sections: ['alert'] },
   { name: 'Fields', sections: ['input', 'textarea'] },
   { name: 'Layout', sections: ['layout'] },
-  { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs'] },
+  { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs', 'menu'] },
   { name: 'Surfaces', sections: ['card'] },
 ];
 
@@ -192,6 +193,7 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
   badge: badgeDoc,
   card: cardDoc,
   tabs: tabsDoc,
+  menu: menuDoc,
   accordion: accordionDoc,
   codeblock: codeBlockDoc,
   alert: alertDoc,
@@ -277,3 +279,4 @@ function DocsContent({ section }: { section: DocsSection }) {
   if (section === 'custom-components') return <CustomComponentsGuide />;
   return <ComponentDocumentation component={section} />;
 }
+

@@ -1,0 +1,16 @@
+{
+  "id": "component:menu",
+  "kind": "component",
+  "name": "Menu",
+  "family": "Navigation",
+  "docsUrl": "/components/menu/#menu-api",
+  "description": "Переиспользуемый список действий или выбора с клавиатурной навигацией; открытие и позиционирование задаёт владелец.",
+  "states": ["disabled", "selected"],
+  "constraints": ["Значения пунктов непустые и уникальные.", "Задайте aria-label или aria-labelledby.", "Menu сам не открывает всплывающее окно."],
+  "bindings": [{
+    "id": "react-adapter", "layer": 2, "framework": "react",
+    "importPath": "@dreadnought/react/unstyled", "exportName": "MenuAdapter",
+    "description": "Разметка и клавиатурное поведение меню без оформления.",
+    "examples": [{ "id": "basic", "code": "import { MenuAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <MenuAdapter aria-label=\"Действия\" items={[{ value: 'copy', label: 'Копировать' }]} onAction={value => console.log(value)} />; }" }]
+  }]
+}

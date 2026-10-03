@@ -1,0 +1,19 @@
+.example {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dreadnought-spacing-x4);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dreadnought-spacing-x2);
+}
+
+.narrow {
+  width: min(100%, var(--dreadnought-size-x3));
+}
+
+.wide {
+  width: 100%;
+}

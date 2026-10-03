@@ -1,0 +1,11 @@
+@layer dreadnought {
+  .dreadnought-text-menu-item {
+    font-family: var(--dreadnought-font-family-ui);
+    font-size: var(--dreadnought-font-size-menu-item);
+    font-weight: var(--dreadnought-font-weight-menu-item);
+    line-height: var(--dreadnought-line-height-menu-item);
+    letter-spacing: var(--dreadnought-font-letter-spacing-menu-item);
+    font-style: var(--dreadnought-font-style-menu-item);
+    text-transform: var(--dreadnought-font-text-transform-menu-item);
+  }
+}

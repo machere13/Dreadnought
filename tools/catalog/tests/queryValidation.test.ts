@@ -15,7 +15,7 @@ describe('catalog query validation', () => {
 
   it('accepts the generated catalog used by the site', () => {
     const file = fileURLToPath(new URL('../dist/catalog.json', import.meta.url));
-    expect(loadCatalog(file).entries).toHaveLength(14);
+    expect(loadCatalog(file).entries).toHaveLength(15);
   });
 
   it.each([
@@ -51,3 +51,4 @@ describe('catalog query validation', () => {
     }
   });
 });
+

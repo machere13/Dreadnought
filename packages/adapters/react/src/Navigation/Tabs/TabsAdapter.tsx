@@ -36,6 +36,7 @@ function TabsRootAdapter({ value, defaultValue, onValueChange, children, ref, ..
     tabId,
     panelId,
     registerTab,
+    orderedTabs,
     registerPanel,
     navigate,
   }}><div {...rootProps} ref={ref} data-ui="tabs">{children}</div></TabsContext.Provider>;

@@ -1,0 +1,15 @@
+{
+  "componentId": "component:menu",
+  "bindings": [{
+    "id": "react-ui", "layer": 3, "framework": "react",
+    "importPath": "@dreadnought/ui/react", "exportName": "Menu",
+    "description": "Оформленный список действий или выбора для самостоятельного использования, Tabs и будущего Dropdown.",
+    "propertyDescriptions": {
+      "items": "Пункты с value, label, необязательными disabled и ariaLabel.",
+      "selectedValue": "Проверенное значение: включает семантику menuitemradio. Без него пункты являются действиями menuitem.",
+      "onAction": "Действие по выбранному значению; выбранное состояние остаётся у владельца.",
+      "slotProps": "DOM-свойства и класс кнопок через slotProps.item."
+    },
+    "examples": [{ "id": "basic", "code": "import { Menu } from '@dreadnought/ui/react';\nexport function Example() { return <Menu aria-label=\"Действия\" items={[{ value: 'copy', label: 'Копировать' }, { value: 'delete', label: 'Удалить', disabled: true }]} onAction={value => console.log(value)} />; }" }]
+  }]
+}

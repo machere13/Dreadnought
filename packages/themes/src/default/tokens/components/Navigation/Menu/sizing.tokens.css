@@ -1,0 +1,7 @@
+:root {
+  --dreadnought-menu-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-menu-border-width: var(--dreadnought-border-width-outline);
+  --dreadnought-menu-item-radius: var(--dreadnought-border-radius-pill);
+  --dreadnought-menu-item-min-height: var(--dreadnought-size-control-min-height);
+  --dreadnought-menu-focus-width: var(--dreadnought-border-width-x2);
+}

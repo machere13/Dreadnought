@@ -2,7 +2,8 @@
   "/", "/getting-started/", "/theming/", "/custom-components/",
   "/components/button/", "/components/input/", "/components/textarea/",
   "/components/badge/", "/components/alert/", "/components/card/",
-  "/components/accordion/", "/components/tabs/", "/components/table/",
+  "/components/accordion/", "/components/tabs/", "/components/menu/", "/components/table/",
   "/components/breadcrumb/", "/components/codeblock/", "/components/icon/",
   "/components/mark/", "/components/layout/"
 ]
+
