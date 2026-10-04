@@ -1,5 +1,20 @@
 [
   {
+    "id": "behavior:get-typeahead-value",
+    "kind": "behavior",
+    "name": "getTypeaheadValue",
+    "family": "Behaviors",
+    "description": "Находит доступный пункт по началу названия без учёта регистра. Поиск по набранным буквам для собственного меню или списка, без изменения выбора и фокуса.",
+    "docsUrl": "/custom-components/#core-typeahead",
+    "composesWith": ["behavior:get-next-enabled-value", "behavior:get-selection-value", "component:menu"],
+    "constraints": ["Чистая функция без React, DOM и состояния. Пункты имеют строковые value и text; ключи должны быть уникальными. Пробелы по краям названия и запроса игнорируются; сравнение использует toLowerCase и startsWith, без нечёткого поиска и удаления диакритики. Поиск начинается после текущего пункта и обходит коллекцию по кругу; includeCurrent: true начинает с текущего пункта. Неизвестный ключ начинает с первого пункта. disabled пропускаются; пустой запрос или отсутствие совпадения возвращает undefined. Сбор текста из разметки, буфер набора, повторные буквы, сброс после паузы, события, фокус и ARIA принадлежат адаптеру."],
+    "bindings": [{
+      "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "getTypeaheadValue",
+      "examples": [{"id": "usage", "code": "import { getTypeaheadValue } from '@dreadnought/core';\nconst items = [{ value: 'news', text: 'Новости' }, { value: 'settings', text: 'Настройки' }];\nconst next = getTypeaheadValue(items, 'news', 'на');\nconst refined = getTypeaheadValue(items, 'settings', 'наст', { includeCurrent: true });\n// Результат — ключ. Хранение запроса и перенос фокуса остаются в вашем компоненте."}]
+    }]
+  },
+  {
     "id": "behavior:get-selection-value",
     "kind": "behavior",
     "name": "getSelectionValue",

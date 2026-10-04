@@ -4,9 +4,9 @@
   "name": "Menu",
   "family": "Navigation",
   "docsUrl": "/components/menu/#menu-api",
-  "description": "Переиспользуемый список действий или выбора с клавиатурной навигацией; открытие и позиционирование задаёт владелец.",
+  "description": "Переиспользуемый список действий или выбора с клавиатурной навигацией и переходом по набранным буквам; открытие и позиционирование задаёт владелец.",
   "states": ["disabled", "selected"],
-  "constraints": ["Значения пунктов непустые и уникальные.", "Задайте aria-label или aria-labelledby.", "Menu сам не открывает всплывающее окно."],
+  "constraints": ["Значения пунктов непустые и уникальные.", "Задайте aria-label или aria-labelledby.", "Menu сам не открывает всплывающее окно.", "Поиск по буквам меняет только фокус: повтор буквы перебирает совпадения, пауза больше 500 мс сбрасывает запрос. Для сложной подписи задайте ariaLabel; иначе поиск использует textContent."],
   "bindings": [{
     "id": "react-adapter", "layer": 2, "framework": "react",
     "importPath": "@dreadnought/react/unstyled", "exportName": "MenuAdapter",

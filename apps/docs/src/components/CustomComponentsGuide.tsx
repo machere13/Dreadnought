@@ -136,6 +136,18 @@ export function CustomComponentsGuide() {
       <CodeBlock code={otherActionsCode} language="ts" copyLabels={copyLabels} />
       <p className={styles.footnote}>Выбор файлов и чтение буфера вызывайте в ответ на действие пользователя. <code>download</code> не загружает данные с сервера: Blob нужно подготовить самостоятельно.</p>
     </section>
+    <section data-knowledge className={styles.section} aria-labelledby="core-typeahead">
+      <h2 id="core-typeahead" className={styles.sectionTitle}>Переход по набранным буквам</h2>
+      <p className={styles.bodyText}><code>getTypeaheadValue(items, currentValue, query, options)</code> возвращает ключ доступного пункта по началу названия. Передайте пункты со строковыми value и text. Отключённые пункты пропускаются; регистр и пробелы по краям не учитываются. Пустой запрос или отсутствие совпадения возвращает undefined.</p>
+      <CodeBlock language="ts" copyLabels={copyLabels} code={`import { getTypeaheadValue } from '@dreadnought/core';
+const items = [
+  { value: 'news', text: 'Новости' },
+  { value: 'settings', text: 'Настройки' },
+];
+const next = getTypeaheadValue(items, 'news', 'на'); // settings
+const refined = getTypeaheadValue(items, 'settings', 'наст', { includeCurrent: true });`} />
+      <p className={styles.footnote}>По умолчанию поиск начинается после текущего пункта и идёт по кругу; includeCurrent начинает с текущего пункта при уточнении запроса. Ядро не хранит набранный текст и не переносит фокус. Готовый <a href="/components/menu/">Menu</a> уже связывает поиск с клавиатурой: повтор одной буквы перебирает совпадения, пауза больше 500 мс сбрасывает запрос. Само действие не запускается.</p>
+    </section>
     <section data-knowledge className={styles.section} aria-labelledby="core-selection">
       <h2 id="core-selection" className={styles.sectionTitle}>Своя разметка выбора</h2>
       <p className={styles.bodyText}><code>getSelectionValue(current, action, options)</code> возвращает новое значение без изменения исходного. Строка, число или null означают одиночный выбор, массив — множественный. Действия: select, deselect, toggle и clear.</p>

@@ -30,7 +30,7 @@ afterAll(() => {
 describe('public catalog', () => {
   it('publishes standalone actions and behaviors with checked public contracts', () => {
     const capabilities = catalog.entries.filter(entry => entry.kind !== 'component');
-    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getNextEnabledValue', 'getSelectionValue', 'pickFiles', 'readClipboard']);
+    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getNextEnabledValue', 'getSelectionValue', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
     expect(capabilities.every(entry => entry.tokens.length === 0 && entry.bindings.length === 1 && entry.bindings[0].layer === 1)).toBe(true);
     const selection = capabilities.find(entry => entry.name === 'getSelectionValue');
     expect(selection.bindings[0].contracts).toHaveLength(3);
@@ -38,6 +38,11 @@ describe('public catalog', () => {
     expect(selection.bindings[0].contracts[0].parameters.slice(0, 2).map(parameter => parameter.name)).toEqual(['current', 'action']);
     expect(selection.composesWith).toContain('behavior:get-next-enabled-value');
     expect(capabilities.find(entry => entry.name === 'readClipboard').bindings[0].contracts[0]).toMatchObject({parameters: [], returnType: 'Promise<string>'});
+    const typeahead = capabilities.find(entry => entry.name === 'getTypeaheadValue');
+    expect(typeahead.composesWith).toContain('component:menu');
+    expect(typeahead.bindings[0].contracts[0].parameters.map(parameter => parameter.name))
+      .toEqual(['items', 'currentValue', 'query', 'options']);
+    expect(() => checkExamples(context, typeahead.bindings[0].examples)).not.toThrow();
   });
 
   it('describes a zero-argument action without inventing an options parameter', () => {

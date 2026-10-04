@@ -21,6 +21,16 @@ export const Actions: Story = {
   render: (args) => <Menu {...args} />,
 };
 
+export const Typeahead: Story = {
+  args: { items: [
+    { value: 'news', label: 'Новости' },
+    { value: 'locked', label: 'Настройки профиля', disabled: true },
+    { value: 'settings', label: 'Настройки' },
+    { value: 'notes', label: 'Наши заметки' },
+  ] },
+  parameters: { docs: { description: { story: 'Перейдите в меню клавишей Tab и наберите «на». Повтор «н» перебирает пункты; Enter запускает действие.' } } },
+};
+
 function SelectionExample(args: MenuProps) {
   const [value, setValue] = useState('copy');
   return <Menu {...args} selectedValue={value} onAction={setValue} />;

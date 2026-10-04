@@ -9,6 +9,51 @@ const items = [{ value: 'copy', label: 'Copy' }, { value: 'delete', label: 'Dele
   { value: 'save', label: 'Save' }];
 
 describe('MenuAdapter', () => {
+  it('focuses by typed prefix and cycles repeated letters without choosing an item', () => {
+    const action = vi.fn();
+    render(<MenuAdapter items={[
+      { value: 'start', label: 'Start' },
+      { value: 'locked', label: 'Settings', disabled: true },
+      { value: 'settings', label: <span>Settings</span> },
+      { value: 'save', label: 'Save' },
+      { value: 'name', label: <span aria-hidden="true">★</span>, ariaLabel: 'Название' },
+    ]} onAction={action} />);
+    const start = screen.getByRole('menuitem', { name: 'Start' });
+    start.focus();
+    fireEvent.keyDown(start, { key: 's' });
+    expect(document.activeElement).toBe(screen.getAllByRole('menuitem', { name: 'Settings' }).find(item => !(item as HTMLButtonElement).disabled));
+    fireEvent.keyDown(document.activeElement!, { key: 'e' });
+    expect(document.activeElement?.textContent).toBe('Settings');
+    fireEvent.keyDown(document.activeElement!, { key: 'Home' });
+    fireEvent.keyDown(start, { key: 's' });
+    fireEvent.keyDown(document.activeElement!, { key: 's' });
+    expect(document.activeElement?.textContent).toBe('Save');
+    fireEvent.keyDown(document.activeElement!, { key: 'Home' });
+    fireEvent.keyDown(start, { key: 'н' });
+    expect(document.activeElement).toBe(screen.getByRole('menuitem', { name: 'Название' }));
+    expect(action).not.toHaveBeenCalled();
+  });
+
+  it('resets a stale query and ignores shortcuts, composition and prevented events', () => {
+    let now = 1000;
+    const clock = vi.spyOn(Date, 'now').mockImplementation(() => now);
+    try {
+      render(<MenuAdapter items={items} onKeyDown={event => { if (event.key === 'x') event.preventDefault(); }} />);
+      const copy = screen.getByRole('menuitem', { name: 'Copy' });
+      copy.focus();
+      for (const extra of [{ ctrlKey: true }, { altKey: true }, { metaKey: true }, { isComposing: true }]) {
+        fireEvent.keyDown(copy, { key: 's', ...extra });
+        expect(document.activeElement).toBe(copy);
+      }
+      fireEvent.keyDown(copy, { key: 'x' });
+      fireEvent.keyDown(copy, { key: 's' });
+      expect(document.activeElement?.textContent).toBe('Save');
+      now += 1000;
+      fireEvent.keyDown(document.activeElement!, { key: 'c' });
+      expect(document.activeElement).toBe(copy);
+    } finally { clock.mockRestore(); }
+  });
+
   it('runs actions with keyboard, skips disabled items and never submits a form', async () => {
     const action = vi.fn();
     const submit = vi.fn((event) => event.preventDefault());
@@ -25,6 +70,23 @@ describe('MenuAdapter', () => {
     expect(screen.getByRole('menuitem', { name: 'Copy' }).tabIndex).toBe(-1);
     fireEvent.click(screen.getByRole('menuitem', { name: 'Delete' }));
     expect(action).toHaveBeenCalledTimes(1);
+  });
+
+  it('clears the query when focus leaves the menu and forwards blur events', () => {
+    const blur = vi.fn();
+    render(<><MenuAdapter items={items} onBlur={blur} /><button>Outside</button></>);
+    const copy = screen.getByRole('menuitem', { name: 'Copy' });
+    copy.focus();
+    fireEvent.keyDown(copy, { key: 's' });
+    expect(document.activeElement?.textContent).toBe('Save');
+    screen.getByRole('button', { name: 'Outside' }).focus();
+    expect(blur).toHaveBeenCalled();
+    const save = screen.getByRole('menuitem', { name: 'Save' });
+    save.focus();
+    fireEvent.keyDown(save, { key: 'c' });
+    expect(document.activeElement).toBe(copy);
+    fireEvent.keyDown(copy, { key: 'o' });
+    expect(document.activeElement).toBe(copy);
   });
 
   it('leaves checked selection to the caller and forwards ref and item properties', () => {
