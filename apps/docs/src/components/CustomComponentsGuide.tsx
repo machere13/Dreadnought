@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { copy, getButtonState } from '@dreadnought/core';
+import { copy, getButtonState, getSelectionValue } from '@dreadnought/core';
 import { Breadcrumb, CodeBlock } from '@dreadnought/ui/react';
 import styles from './DocsPage.module.css';
 
@@ -77,6 +77,37 @@ function CoreDemo() {
   </div>;
 }
 
+const choices = [{ value: 'news', label: 'Новости' }, { value: 'updates', label: 'Обновления' }, { value: 'archive', label: 'Архив', disabled: true }];
+const selectionCode = `import { useState } from 'react';
+import { getSelectionValue } from '@dreadnought/core';
+
+export function TopicPicker() {
+  const [selected, setSelected] = useState<string[]>([]);
+  return <div role="group" aria-label="Темы">
+    {['Новости', 'Обновления'].map(topic =>
+      <button key={topic} type="button" aria-pressed={selected.includes(topic)}
+        onClick={() => setSelected(current =>
+          getSelectionValue(current, { type: 'toggle', value: topic }))}>
+        {topic}
+      </button>)}
+  </div>;
+}`;
+
+function SelectionDemo() {
+  const [selected, setSelected] = useState<string[]>([]);
+  return <div className={styles.demo}>
+    <div role="group" aria-label="Темы" className={styles.demoRow}>
+      {choices.map(choice => <button key={choice.value} type="button" className={styles.coreDemoButton}
+        aria-pressed={selected.includes(choice.value)} disabled={choice.disabled}
+        onClick={() => setSelected(current => getSelectionValue(current,
+          { type: 'toggle', value: choice.value }, { disabledValues: ['archive'] }))}>
+        {choice.label}
+      </button>)}
+    </div>
+    <p role="status" className={styles.demoResult}>Выбрано: {choices.filter(choice => selected.includes(choice.value)).map(choice => choice.label).join(', ') || 'ничего'}</p>
+  </div>;
+}
+
 export function CustomComponentsGuide() {
   return <article className={styles.article}>
     <Breadcrumb items={[{ label: 'Документация', href: '/' }, { label: 'Свой компонент' }]} aria-label="Путь по документации" />
@@ -104,6 +135,13 @@ export function CustomComponentsGuide() {
       <p className={styles.bodyText}><code>pickFiles</code> открывает выбор файлов, <code>readClipboard</code> читает текст из буфера, <code>download</code> запускает скачивание Blob. Эти функции не требуют компонента библиотеки и не управляют его визуальным состоянием.</p>
       <CodeBlock code={otherActionsCode} language="ts" copyLabels={copyLabels} />
       <p className={styles.footnote}>Выбор файлов и чтение буфера вызывайте в ответ на действие пользователя. <code>download</code> не загружает данные с сервера: Blob нужно подготовить самостоятельно.</p>
+    </section>
+    <section data-knowledge className={styles.section} aria-labelledby="core-selection">
+      <h2 id="core-selection" className={styles.sectionTitle}>Своя разметка выбора</h2>
+      <p className={styles.bodyText}><code>getSelectionValue(current, action, options)</code> возвращает новое значение без изменения исходного. Строка, число или null означают одиночный выбор, массив — множественный. Действия: select, deselect, toggle и clear.</p>
+      <SelectionDemo />
+      <div className={styles.startExamples}><CodeBlock code={selectionCode} language="tsx" copyLabels={copyLabels} /></div>
+      <p className={styles.footnote}><code>disabled</code> блокирует изменение целиком, <code>disabledValues</code> запрещает менять указанные пункты и сохраняет их при clear, <code>required</code> не позволяет снять последний выбранный пункт. Пустое начальное значение допустимо: функция не выбирает за пользователя. Семантику, клавиатуру, фокус и хранение состояния обеспечивает ваш компонент.</p>
     </section>
   </article>;
 }

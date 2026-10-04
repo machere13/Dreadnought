@@ -1,4 +1,5 @@
 import { useImperativeHandle, useRef } from 'react';
+import { getSelectionValue } from '@dreadnought/core';
 import type { ComponentPropsWithRef, ReactNode } from 'react';
 import { CheckboxAdapter } from './CheckboxAdapter.tsx';
 import type { CheckboxAdapterProps } from './CheckboxAdapter.tsx';
@@ -24,7 +25,9 @@ export function CheckboxGroupAdapter({ label, options, value, defaultValue = emp
     {options.map(option => <CheckboxAdapter {...slotProps?.item} key={option.value} name={name} form={props.form} value={option.value}
       disabled={disabled || option.disabled} checked={selected.includes(option.value)} onChange={event => {
         slotProps?.item?.onChange?.(event);
-        if (!event.defaultPrevented) setValue(event.currentTarget.checked ? [...selected, option.value] : selected.filter(v => v !== option.value));
+        if (!event.defaultPrevented) setValue(getSelectionValue(selected,
+          { type: event.currentTarget.checked ? 'select' : 'deselect', value: option.value },
+          { disabled: disabled || option.disabled }));
       }}>{option.label}</CheckboxAdapter>)}
   </fieldset>;
 }

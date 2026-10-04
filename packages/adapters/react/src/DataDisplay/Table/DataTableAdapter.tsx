@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
-import { filterTableRows, paginateTableRows, sortTableRows } from '@dreadnought/core';
+import { filterTableRows, getSelectionValue, paginateTableRows, sortTableRows } from '@dreadnought/core';
 import type { TableSortOrder } from '@dreadnought/core';
 import { TableFilterMenu } from './TableFilterMenu.tsx';
 import { cellValue, fixedStyle, recordKey } from './tableData.ts';
@@ -127,8 +127,9 @@ export function DataTableAdapter<RecordType extends object>({
             aria-label={`Выбрать строку ${key}`}
             checked={selectedKeys.includes(key)}
             disabled={rowSelection.getCheckboxProps?.(record)?.disabled}
-            onChange={(event) => changeSelection(rowSelection.type === 'radio' ? [key]
-              : event.target.checked ? [...selectedKeys, key] : selectedKeys.filter((item) => item !== key))}
+            onChange={(event) => changeSelection(rowSelection.type === 'radio'
+              ? [key]
+              : getSelectionValue(selectedKeys, { type: event.target.checked ? 'select' : 'deselect', value: key }))}
           />
         </td>}
         {columns.map((column, index) => {

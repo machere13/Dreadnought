@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getSelectionValue } from '@dreadnought/core';
 import type { TableColumn, TableFilterValue } from './table.types.ts';
 
 export function TableFilterMenu<RecordType extends object>({ column, values, onApply }: {
@@ -31,7 +32,7 @@ export function TableFilterMenu<RecordType extends object>({ column, values, onA
           name={`filter-${column.key}`}
           checked={draft.includes(filter.value)}
           onChange={() => setDraft(column.filterMultiple === false ? [filter.value]
-            : draft.includes(filter.value) ? draft.filter((value) => value !== filter.value) : [...draft, filter.value])}
+            : getSelectionValue(draft, { type: 'toggle', value: filter.value }))}
         />
         {filter.text}
       </label>)}

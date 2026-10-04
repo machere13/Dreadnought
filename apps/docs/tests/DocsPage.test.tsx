@@ -13,6 +13,15 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('builds a custom choice control from core without a ready component', () => {
+    render(<DocsPage section="custom-components" />);
+    const first = screen.getByRole('button', { name: 'Новости' });
+    fireEvent.click(first);
+    expect(first.getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(first);
+    expect(first.getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByRole('button', { name: 'Архив' }).hasAttribute('disabled')).toBe(true);
+  });
   it('documents choice fields with interactive examples', () => {
     const { rerender } = render(<DocsPage section="checkbox" />);
     const checkbox = screen.getByRole('checkbox', { name: 'Получать уведомления' }) as HTMLInputElement;

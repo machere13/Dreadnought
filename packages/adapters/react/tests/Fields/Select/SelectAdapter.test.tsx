@@ -5,6 +5,12 @@ import * as adapters from '../../../src/unstyled.ts';
 afterEach(cleanup);
 const options = [{ value: 'a', label: 'Анна' }, { value: 'b', label: 'Борис', disabled: true }, { value: 'c', label: 'Вера' }];
 
+it('keeps the final required selection when clear is requested', async () => {
+  render(<adapters.SelectAdapter aria-label="Выбор" options={options} defaultValue="a" required allowClear />);
+  await userEvent.click(screen.getByRole('button', { name: 'Очистить выбор' }));
+  expect((screen.getByRole('combobox') as HTMLInputElement).value).toBe('Анна');
+});
+
 it('respects a cancelled form reset and dismisses without committing', async () => {
   render(<form onReset={event => event.preventDefault()}><adapters.SelectAdapter aria-label="Выбор" options={options} defaultValue="a" /></form>);
   const input = screen.getByRole('combobox', { name: 'Выбор' }) as HTMLInputElement;

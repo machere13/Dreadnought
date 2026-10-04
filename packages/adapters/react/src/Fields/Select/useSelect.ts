@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { getNextEnabledValue, getSelectState } from '@dreadnought/core';
-import type { SelectValue } from '@dreadnought/core';
+import { getNextEnabledValue, getSelectState, getSelectionValue } from '@dreadnought/core';
+import type { SelectValue, SelectionAction } from '@dreadnought/core';
 import type { KeyboardEvent } from 'react';
 import type { SelectAdapterProps } from './SelectAdapter.types.ts';
 import { useFieldValue } from '../../shared/useFieldValue.ts';
@@ -29,17 +29,22 @@ export function useSelect(props: SelectAdapterProps) {
   const optionId = (v: string) => `${id}-option-${encodeURIComponent(v)}`;
 
   function close() { setExpanded(false); setQuery(''); }
+  function changeSelection(action: SelectionAction<string>) {
+    setValue(getSelectionValue(props.multiple ? state.values : state.values[0] ?? null, action, {
+      disabled: props.disabled || control.current?.matches(':disabled'), required: props.required,
+      disabledValues: props.options.filter(option => option.disabled).map(option => option.value),
+    }));
+  }
   function choose(v: string) {
     const option = props.options.find(option => option.value === v);
     if (props.disabled || !option || option.disabled || control.current?.matches(':disabled')) return;
-    const next = props.multiple ? (state.values.includes(v) ? state.values.filter(item => item !== v) : [...state.values, v]) : v;
-    setValue(next);
+    changeSelection({ type: props.multiple ? 'toggle' : 'select', value: v });
     setQuery('');
     setValidationInvalid(false);
     if (!props.multiple) close();
     control.current?.focus();
   }
-  function clear() { setValue(props.multiple ? [] : null); setQuery(''); setValidationInvalid(false); close(); control.current?.focus(); }
+  function clear() { changeSelection({ type: 'clear' }); setQuery(''); setValidationInvalid(false); close(); control.current?.focus(); }
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     props.onKeyDown?.(event);
     props.slotProps?.control?.onKeyDown?.(event);
