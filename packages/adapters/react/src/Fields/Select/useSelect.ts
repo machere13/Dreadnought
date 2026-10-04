@@ -63,7 +63,7 @@ export function useSelect(props: SelectAdapterProps) {
     if (!open) {
       setExpanded(true);
       setActive(getNextEnabledValue(state.filteredOptions, '', direction === 'previous' ? 'last' : 'first') ?? '');
-    } else setActive(getNextEnabledValue(state.filteredOptions, activeValue ?? '', direction) ?? '');
+    } else setActive(getNextEnabledValue(state.filteredOptions, activeValue ?? '', direction, { loop: false }) ?? '');
   }
   useAnchoredPopover(open, root, popup);
   useEffect(() => {

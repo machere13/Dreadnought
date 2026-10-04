@@ -5,6 +5,18 @@ import * as adapters from '../../../src/unstyled.ts';
 afterEach(cleanup);
 const options = [{ value: 'a', label: 'Анна' }, { value: 'b', label: 'Борис', disabled: true }, { value: 'c', label: 'Вера' }];
 
+it('stops keyboard navigation at the first and last available options', async () => {
+  render(<adapters.SelectAdapter aria-label="Выбор" options={options} />);
+  const input = screen.getByRole('combobox');
+  input.focus();
+  await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
+  expect(input.getAttribute('aria-activedescendant')).toBe(screen.getByRole('option', { name: 'Вера' }).id);
+  await userEvent.keyboard('{Home}{ArrowUp}');
+  expect(input.getAttribute('aria-activedescendant')).toBe(screen.getByRole('option', { name: 'Анна' }).id);
+  await userEvent.keyboard('{End}{Enter}');
+  expect((input as HTMLInputElement).value).toBe('Вера');
+});
+
 it('keeps the final required selection when clear is requested', async () => {
   render(<adapters.SelectAdapter aria-label="Выбор" options={options} defaultValue="a" required allowClear />);
   await userEvent.click(screen.getByRole('button', { name: 'Очистить выбор' }));

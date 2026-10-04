@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "packages/core/tests/behaviors/navigation.types.ts",
     "packages/core/tests/behaviors/selection.types.ts",
     "packages/ui/tests/choiceFields.types.tsx",
     "packages/adapters/react/tests/Controls/Button/ButtonAdapter.types.tsx",
