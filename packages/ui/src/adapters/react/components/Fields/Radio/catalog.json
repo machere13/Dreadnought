@@ -1,0 +1,55 @@
+{
+  "componentId": "component:radio",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Radio",
+      "propertyDescriptions": {
+        "value": "Значение нативной радиокнопки для отправки формы.",
+        "defaultValue": "Нативное значение поля; начальный выбор задаёт defaultChecked.",
+        "slotProps": "DOM-свойства метки label и декоративного indicator.",
+        "checked": "Управляемое состояние радиокнопки.",
+        "defaultChecked": "Начальное состояние.",
+        "invalid": "Состояние ошибки."
+      },
+      "defaults": {
+        "disabled": false,
+        "required": false,
+        "invalid": false
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Radio } from '@dreadnought/ui/react';\nconst example = <Radio name='plan' value='basic'>Базовый</Radio>;"
+        }
+      ]
+    },
+    {
+      "id": "react-ui-group",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Radio",
+      "propertyPath": [
+        "Group"
+      ],
+      "propertyDescriptions": {
+        "options": "Варианты с уникальным value, label и необязательным disabled.",
+        "value": "Выбранное значение группы.",
+        "defaultValue": "Начальное значение группы.",
+        "onValueChange": "Уведомление об изменении значения группы.",
+        "label": "Заголовок группы.",
+        "slotProps": "Свойства элементов группы."
+      },
+      "examples": [
+        {
+          "id": "group",
+          "code": "import { Radio } from '@dreadnought/ui/react';\nconst example = <Radio.Group label='Тарифы' name='plan' options={[{ value: 'basic', label: 'Базовый' }, { value: 'pro', label: 'Про' }]} />;"
+        }
+      ]
+    }
+  ]
+}

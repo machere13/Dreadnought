@@ -7,5 +7,6 @@
     letter-spacing: var(--dreadnought-font-letter-spacing-button);
     font-style: var(--dreadnought-font-style-button);
     text-transform: var(--dreadnought-font-text-transform-button);
+    font-variation-settings: var(--dreadnought-font-variation-button);
   }
 }

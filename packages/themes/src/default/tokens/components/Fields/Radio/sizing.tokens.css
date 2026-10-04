@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-radio-size: var(--dreadnought-size-choice-control);
+  --dreadnought-radio-radius: var(--dreadnought-border-radius-circle);
+  --dreadnought-radio-border-width: var(--dreadnought-border-width-outline);
+  --dreadnought-radio-focus-width: var(--dreadnought-border-width-x2);
+  --dreadnought-radio-focus-offset: var(--dreadnought-spacing-x1);
+  --dreadnought-radio-dot-size: var(--dreadnought-size-status-mark);
+}

@@ -4,3 +4,6 @@ export * from './Fields/TextArea/index.ts';
 export * from './Navigation/Tabs/index.ts';
 export * from './Navigation/Accordion/index.ts';
 export * from './DataDisplay/Table/index.ts';
+export * from './Fields/Checkbox/index.ts';
+export * from './Fields/Radio/index.ts';
+export * from './Fields/Select/index.ts';

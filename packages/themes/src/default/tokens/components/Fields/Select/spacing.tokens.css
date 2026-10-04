@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-select-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-select-padding-y: var(--dreadnought-spacing-x2);
+  --dreadnought-select-padding-x: var(--dreadnought-spacing-x3);
+  --dreadnought-select-popup-padding: var(--dreadnought-spacing-x1);
+  --dreadnought-select-option-padding-y: var(--dreadnought-spacing-x2);
+  --dreadnought-select-option-padding-x: var(--dreadnought-spacing-x3);
+}

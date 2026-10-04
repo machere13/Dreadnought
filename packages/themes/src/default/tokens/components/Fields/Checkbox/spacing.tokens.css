@@ -1,0 +1,4 @@
+:root {
+  --dreadnought-checkbox-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-checkbox-group-gap: var(--dreadnought-spacing-x4);
+}

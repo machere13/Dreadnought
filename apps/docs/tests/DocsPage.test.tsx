@@ -13,6 +13,19 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('documents choice fields with interactive examples', () => {
+    const { rerender } = render(<DocsPage section="checkbox" />);
+    const checkbox = screen.getByRole('checkbox', { name: 'Получать уведомления' }) as HTMLInputElement;
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toBe(true);
+    rerender(<DocsPage section="radio" />);
+    fireEvent.click(screen.getByRole('radio', { name: 'Про' }));
+    expect(screen.getByText('Выбран тариф: pro')).toBeTruthy();
+    rerender(<DocsPage section="select" />);
+    fireEvent.click(screen.getByRole('combobox', { name: 'Исполнитель' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Вера' }));
+    expect(screen.getByText('Исполнитель: vera')).toBeTruthy();
+  });
   it('documents the shared Menu and runs its actions', () => {
     render(<DocsPage section="menu" />);
     expect(screen.getByRole('menu', { name: 'Действия примера' })).toBeTruthy();

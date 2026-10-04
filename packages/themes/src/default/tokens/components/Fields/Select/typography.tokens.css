@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-font-size-select: var(--dreadnought-font-size-body-2);
+  --dreadnought-font-weight-select: var(--dreadnought-font-weight-body-2);
+  --dreadnought-line-height-select: var(--dreadnought-line-height-body-2);
+}

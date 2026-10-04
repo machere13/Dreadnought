@@ -3,9 +3,23 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const css = (file: string) => readFileSync(resolve('packages/themes/src/default', file), 'utf8');
-const componentFamilies = { Button: 'Controls', Input: 'Fields', TextArea: 'Fields', Badge: 'DataDisplay', CodeBlock: 'DataDisplay', Table: 'DataDisplay', Tabs: 'Navigation' } as const;
+const componentFamilies = { Button: 'Controls', Input: 'Fields', TextArea: 'Fields', Checkbox: 'Fields', Radio: 'Fields', Select: 'Fields', Badge: 'DataDisplay', CodeBlock: 'DataDisplay', Table: 'DataDisplay', Tabs: 'Navigation' } as const;
 
 describe('default theme', () => {
+  it('enables the wide axis only for headings and Button and supports the page setting', () => {
+    const tokens = css('tokens/global/typography.tokens.css');
+    expect(tokens).toContain("--dreadnought-font-family-ui: 'Roboto Flex Variable', system-ui, sans-serif");
+    expect(css('index.css')).toContain("@import '@fontsource-variable/roboto-flex/wdth.css'");
+    expect(tokens).toContain('--dreadnought-font-variation-wide: "wdth" 150');
+    expect(tokens).toMatch(/:root\[data-dreadnought-wide-typography='false'\]\s*\{\s*--dreadnought-font-variation-wide: normal;/);
+    expect(css('typography.css')).toContain(':where(h1, h2, h3, h4, h5, h6)');
+    expect(css('components/Controls/Button/typography.css')).toContain('font-variation-settings: var(--dreadnought-font-variation-button)');
+    expect(css('tokens/components/Controls/Button/typography.tokens.css')).toContain('--dreadnought-font-variation-button: var(--dreadnought-font-variation-wide)');
+    for (const file of ['components/Fields/Input/typography.css', 'components/Fields/TextArea/typography.css', 'components/Navigation/Menu/typography.css']) {
+      expect(css(file)).not.toContain('font-variation-settings');
+    }
+  });
+
   it('keeps typography in the library layer and token defaults outside it', () => {
     for (const [component, family] of Object.entries(componentFamilies)) {
       expect(css(`components/${family}/${component}/typography.css`).trimStart()).toMatch(/^@layer dreadnought\s*\{/);
@@ -126,7 +140,9 @@ describe('default theme', () => {
   it('exposes theme tokens and typography without global Button rules', () => {
     const entry = css('index.css');
     expect(entry.trim().split(/\r?\n/)).toEqual([
+      "@import '@fontsource-variable/roboto-flex/wdth.css';",
       "@import './tokens/global/index.css';",
+      "@import './typography.css';",
       "@import './components/Controls/Button/index.css';",
       "@import './components/Fields/Input/index.css';",
       "@import './components/Fields/TextArea/index.css';",
@@ -142,6 +158,9 @@ describe('default theme', () => {
       "@import './components/Feedback/Alert/index.css';",
       "@import './components/Navigation/Breadcrumb/index.css';",
       "@import './components/Layout/Layout/index.css';",
+      "@import './components/Fields/Checkbox/index.css';",
+      "@import './components/Fields/Radio/index.css';",
+      "@import './components/Fields/Select/index.css';",
     ]);
     for (const file of ['colors', 'spacing', 'sizing', 'typography', 'effects', 'motion']) {
       expect(css('tokens/global/index.css')).toContain(`@import './${file}.tokens.css'`);
@@ -150,6 +169,9 @@ describe('default theme', () => {
       ['Controls', 'Button', ['colors', 'spacing', 'sizing', 'typography', 'effects', 'motion']],
       ['Fields', 'Input', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
       ['Fields', 'TextArea', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
+      ['Fields', 'Checkbox', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
+      ['Fields', 'Radio', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
+      ['Fields', 'Select', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
       ['DataDisplay', 'Badge', ['colors', 'spacing', 'sizing', 'typography']],
       ['DataDisplay', 'CodeBlock', ['colors', 'spacing', 'sizing', 'typography']],
       ['DataDisplay', 'Table', ['colors', 'spacing', 'sizing', 'typography']],

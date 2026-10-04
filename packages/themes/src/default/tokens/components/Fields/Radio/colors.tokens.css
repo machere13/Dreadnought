@@ -1,0 +1,9 @@
+:root {
+  --dreadnought-radio-text: var(--dreadnought-color-text-primary);
+  --dreadnought-radio-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-radio-border: var(--dreadnought-color-border-default);
+  --dreadnought-radio-checked-bg: var(--dreadnought-color-action-primary);
+  --dreadnought-radio-checked-text: var(--dreadnought-color-text-on-action-primary);
+  --dreadnought-radio-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-radio-invalid: var(--dreadnought-color-status-error);
+}

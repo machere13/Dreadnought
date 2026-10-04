@@ -1,0 +1,14 @@
+@layer dreadnought {
+  .root { position: relative; display: inline-flex; align-items: center; gap: var(--dreadnought-radio-gap); color: var(--dreadnought-radio-text); cursor: pointer; }
+  .root [data-slot='control'] { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit; }
+  .root [data-slot='indicator'] { display: grid; place-items: center; flex: none; width: var(--dreadnought-radio-size); height: var(--dreadnought-radio-size); box-sizing: border-box; border: var(--dreadnought-radio-border-width) solid var(--dreadnought-radio-border); border-radius: var(--dreadnought-radio-radius); background: var(--dreadnought-radio-bg); color: var(--dreadnought-radio-checked-text); }
+  .root:has(input:checked) [data-slot='indicator'] { background: var(--dreadnought-radio-checked-bg); border-color: var(--dreadnought-radio-checked-bg); }
+  .root [data-slot='indicator'] > * { visibility: hidden; }
+  .root:has(input:checked) [data-slot='indicator'] > * { visibility: visible; }
+  .root:has(input:focus-visible) [data-slot='indicator'] { outline: var(--dreadnought-radio-focus-width) solid var(--dreadnought-radio-focus); outline-offset: var(--dreadnought-radio-focus-offset); }
+  .root[data-invalid] [data-slot='indicator'] { border-color: var(--dreadnought-radio-invalid); }
+  .root[data-disabled] { opacity: var(--dreadnought-radio-disabled-opacity); cursor: not-allowed; }
+  .group { display: flex; flex-wrap: wrap; gap: var(--dreadnought-radio-group-gap); padding: 0; margin: 0; border: none; min-width: 0; }
+  .group > legend { padding: 0; margin-block-end: var(--dreadnought-radio-gap); color: var(--dreadnought-radio-text); }
+  .dot { width: var(--dreadnought-radio-dot-size); height: var(--dreadnought-radio-dot-size); border-radius: var(--dreadnought-border-radius-circle); background: currentColor; }
+}

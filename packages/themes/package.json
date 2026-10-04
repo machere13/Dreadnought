@@ -1,9 +1,16 @@
 {
   "name": "@dreadnought/themes",
   "version": "0.1.0",
-  "sideEffects": ["*.css"],
-  "files": ["src/default"],
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "src/default"
+  ],
   "exports": {
     "./default.css": "./src/default/index.css"
+  },
+  "dependencies": {
+    "@fontsource-variable/roboto-flex": "5.3.0"
   }
 }

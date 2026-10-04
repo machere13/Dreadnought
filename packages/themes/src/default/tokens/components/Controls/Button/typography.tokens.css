@@ -5,4 +5,5 @@
   --dreadnought-font-letter-spacing-button: normal;
   --dreadnought-font-style-button: normal;
   --dreadnought-font-text-transform-button: none;
+  --dreadnought-font-variation-button: var(--dreadnought-font-variation-wide);
 }

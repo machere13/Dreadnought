@@ -1,0 +1,29 @@
+{
+  "id": "component:radio",
+  "kind": "component",
+  "name": "Radio",
+  "family": "Fields",
+  "description": "Нативная радиокнопка; группа выбирает одно значение и поддерживает стандартную клавиатуру.",
+  "docsUrl": "/components/radio/#radio-api",
+  "states": [
+    "checked",
+    "disabled",
+    "required",
+    "invalid"
+  ],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "getRadioState",
+      "examples": [
+        {
+          "id": "state",
+          "code": "import { getRadioState } from '@dreadnought/core';\nconst state = getRadioState({ checked: true });"
+        }
+      ]
+    }
+  ]
+}

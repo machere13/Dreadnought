@@ -1,0 +1,77 @@
+import { useEffect, useId, useRef, useState } from 'react';
+import { getNextEnabledValue, getSelectState } from '@dreadnought/core';
+import type { SelectValue } from '@dreadnought/core';
+import type { KeyboardEvent } from 'react';
+import type { SelectAdapterProps } from './SelectAdapter.types.ts';
+import { useFieldValue } from '../../shared/useFieldValue.ts';
+import { useAnchoredPopover } from '../../shared/useAnchoredPopover.ts';
+
+const empty: string[] = [];
+export function useSelect(props: SelectAdapterProps) {
+  const id = useId();
+  const control = useRef<HTMLInputElement>(null);
+  const native = useRef<HTMLSelectElement>(null);
+  const root = useRef<HTMLDivElement>(null);
+  const popup = useRef<HTMLDivElement>(null);
+  const [expanded, setExpanded] = useState(false);
+  const [query, setQuery] = useState('');
+  const [active, setActive] = useState('');
+  const [validationInvalid, setValidationInvalid] = useState(false);
+  const [value, setValue] = useFieldValue<SelectValue>(props.value, props.defaultValue ?? (props.multiple ? empty : null), next => {
+    if (props.multiple) props.onValueChange?.(next as string[]);
+    else props.onValueChange?.(next as string | null);
+  }, native);
+  const open = expanded && !props.disabled;
+  const state = getSelectState({ ...props, value, query: open ? query : '', invalid: props.invalid || validationInvalid });
+  const activeValue = state.filteredOptions.find(option => option.value === active && !option.disabled)?.value
+    ?? state.filteredOptions.find(option => state.values.includes(option.value) && !option.disabled)?.value
+    ?? state.filteredOptions.find(option => !option.disabled)?.value;
+  const optionId = (v: string) => `${id}-option-${encodeURIComponent(v)}`;
+
+  function close() { setExpanded(false); setQuery(''); }
+  function choose(v: string) {
+    const option = props.options.find(option => option.value === v);
+    if (props.disabled || !option || option.disabled || control.current?.matches(':disabled')) return;
+    const next = props.multiple ? (state.values.includes(v) ? state.values.filter(item => item !== v) : [...state.values, v]) : v;
+    setValue(next);
+    setQuery('');
+    setValidationInvalid(false);
+    if (!props.multiple) close();
+    control.current?.focus();
+  }
+  function clear() { setValue(props.multiple ? [] : null); setQuery(''); setValidationInvalid(false); close(); control.current?.focus(); }
+  function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    props.onKeyDown?.(event);
+    props.slotProps?.control?.onKeyDown?.(event);
+    if (event.defaultPrevented || event.nativeEvent.isComposing || props.disabled) return;
+    if (event.key === 'Escape') { if (open) { event.preventDefault(); close(); } return; }
+    if (event.key === 'Tab') { close(); return; }
+    if (event.key === 'Enter' || (!props.searchable && event.key === ' ')) {
+      event.preventDefault();
+      if (!open) setExpanded(true); else if (activeValue) choose(activeValue);
+      return;
+    }
+    const direction = event.key === 'ArrowDown' ? 'next' : event.key === 'ArrowUp' ? 'previous'
+      : (!props.searchable && event.key === 'Home') ? 'first' : (!props.searchable && event.key === 'End') ? 'last' : undefined;
+    if (!direction) return;
+    event.preventDefault();
+    if (!open) {
+      setExpanded(true);
+      setActive(getNextEnabledValue(state.filteredOptions, '', direction === 'previous' ? 'last' : 'first') ?? '');
+    } else setActive(getNextEnabledValue(state.filteredOptions, activeValue ?? '', direction) ?? '');
+  }
+  useAnchoredPopover(open, root, popup);
+  useEffect(() => {
+    if (props.disabled) close();
+  }, [props.disabled]);
+  useEffect(() => {
+    if (open && activeValue) document.getElementById(optionId(activeValue))?.scrollIntoView?.({ block: 'nearest' });
+  }, [open, activeValue, id]);
+  useEffect(() => {
+    const form = native.current?.form;
+    function reset() { close(); setValidationInvalid(false); }
+    form?.addEventListener('reset', reset);
+    return () => form?.removeEventListener('reset', reset);
+  }, []);
+  return { id, control, native, root, popup, state, open, query, activeValue, optionId, choose, clear, close, setValue, setExpanded, setQuery, setActive, setValidationInvalid, onKeyDown };
+}

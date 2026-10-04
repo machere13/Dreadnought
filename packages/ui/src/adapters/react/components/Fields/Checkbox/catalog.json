@@ -1,0 +1,57 @@
+{
+  "componentId": "component:checkbox",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Checkbox",
+      "propertyDescriptions": {
+        "value": "Значение нативного флажка для отправки формы, не состояние выбора.",
+        "defaultValue": "Нативное значение поля; начальный выбор задаёт defaultChecked.",
+        "slotProps": "DOM-свойства метки label и декоративного indicator.",
+        "indeterminate": "Неопределённое состояние; не заменяет checked.",
+        "checked": "Управляемое состояние флажка.",
+        "defaultChecked": "Начальное состояние.",
+        "invalid": "Состояние ошибки."
+      },
+      "defaults": {
+        "indeterminate": false,
+        "disabled": false,
+        "required": false,
+        "invalid": false
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Checkbox } from '@dreadnought/ui/react';\nconst example = <Checkbox name='consent'>Согласен с условиями</Checkbox>;"
+        }
+      ]
+    },
+    {
+      "id": "react-ui-group",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Checkbox",
+      "propertyPath": [
+        "Group"
+      ],
+      "propertyDescriptions": {
+        "options": "Варианты с уникальным value, label и необязательным disabled.",
+        "value": "Выбранное значение группы.",
+        "defaultValue": "Начальное значение группы.",
+        "onValueChange": "Уведомление об изменении значения группы.",
+        "label": "Заголовок группы.",
+        "slotProps": "Свойства элементов группы."
+      },
+      "examples": [
+        {
+          "id": "group",
+          "code": "import { Checkbox } from '@dreadnought/ui/react';\nconst example = <Checkbox.Group label='Тарифы' name='plan' options={[{ value: 'basic', label: 'Базовый' }, { value: 'pro', label: 'Про' }]} />;"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+@layer dreadnought {
+  :where(h1, h2, h3, h4, h5, h6),
+  .dreadnought-text-h1,
+  .dreadnought-text-h2,
+  .dreadnought-text-h3,
+  .dreadnought-text-h4,
+  .dreadnought-text-h5,
+  .dreadnought-text-h6 {
+    font-variation-settings: var(--dreadnought-font-variation-wide);
+  }
+}

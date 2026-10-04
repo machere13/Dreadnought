@@ -1,0 +1,30 @@
+{
+  "id": "component:checkbox",
+  "kind": "component",
+  "name": "Checkbox",
+  "family": "Fields",
+  "description": "Нативный флажок с неопределённым состоянием и группой множественного выбора.",
+  "docsUrl": "/components/checkbox/#checkbox-api",
+  "states": [
+    "checked",
+    "disabled",
+    "required",
+    "invalid",
+    "indeterminate"
+  ],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "getCheckboxState",
+      "examples": [
+        {
+          "id": "state",
+          "code": "import { getCheckboxState } from '@dreadnought/core';\nconst state = getCheckboxState({ indeterminate: true });"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+:root {
+  --dreadnought-select-width: var(--dreadnought-size-x3);
+  --dreadnought-select-min-height: var(--dreadnought-size-control-min-height);
+  --dreadnought-select-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-select-border-width: var(--dreadnought-border-width-x2);
+  --dreadnought-select-popup-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-select-popup-border-width: var(--dreadnought-border-width-outline);
+  --dreadnought-select-popup-height: var(--dreadnought-size-x3);
+  --dreadnought-select-option-radius: var(--dreadnought-border-radius-choice);
+}

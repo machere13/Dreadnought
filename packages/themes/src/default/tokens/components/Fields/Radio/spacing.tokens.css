@@ -1,0 +1,4 @@
+:root {
+  --dreadnought-radio-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-radio-group-gap: var(--dreadnought-spacing-x4);
+}

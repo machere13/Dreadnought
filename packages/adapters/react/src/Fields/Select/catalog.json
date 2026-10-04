@@ -1,0 +1,53 @@
+{
+  "componentId": "component:select",
+  "parts": [
+    {
+      "name": "root",
+      "description": "Обёртка компонента; className и style относятся к ней."
+    },
+    {
+      "name": "control",
+      "description": "Поле ввода; ref указывает на него."
+    }
+  ],
+  "constraints": [
+    "Задавайте доступное имя через текст метки, label или aria-label.",
+    "Стили настраиваются через компонентные токены и slotProps.",
+    "При multiple значение и defaultValue — массив строк; иначе строка или null.",
+    "Варианты имеют уникальное непустое value; disabled исключает выбор."
+  ],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "SelectAdapter",
+      "propertyDescriptions": {
+        "options": "Варианты с уникальным непустым value, текстовым label и необязательным disabled.",
+        "value": "Строка или null для одиночного выбора; массив для multiple.",
+        "defaultValue": "Начальное значение в неуправляемом режиме.",
+        "onValueChange": "Возвращает выбранное значение; при очистке null или пустой массив.",
+        "multiple": "Выбор нескольких вариантов.",
+        "searchable": "Фильтрация вариантов по тексту label.",
+        "allowClear": "Кнопка очистки выбора.",
+        "invalid": "Состояние ошибки.",
+        "emptyContent": "Содержимое пустого списка."
+      },
+      "defaults": {
+        "multiple": false,
+        "searchable": false,
+        "allowClear": false,
+        "disabled": false,
+        "required": false,
+        "invalid": false
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { SelectAdapter } from '@dreadnought/react/unstyled';\nconst example = <SelectAdapter aria-label='Исполнитель' options={[{ value: 'anna', label: 'Анна' }, { value: 'vera', label: 'Вера' }]} searchable allowClear />;"
+        }
+      ]
+    }
+  ]
+}

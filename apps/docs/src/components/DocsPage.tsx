@@ -12,6 +12,9 @@ import { layoutDoc } from './componentDocs/LayoutDoc';
 import { breadcrumbDoc } from './componentDocs/BreadcrumbDoc';
 import { iconDoc } from './componentDocs/IconDoc';
 import { markDoc } from './componentDocs/MarkDoc';
+import { checkboxDoc } from './componentDocs/CheckboxDoc';
+import { radioDoc } from './componentDocs/RadioDoc';
+import { selectDoc } from './componentDocs/SelectDoc';
 import { GettingStarted } from './GettingStarted';
 import { ThemingGuide } from './ThemingGuide';
 import { CustomComponentsGuide } from './CustomComponentsGuide';
@@ -21,13 +24,13 @@ import { DocsAssistant } from '../assistant/DocsAssistant.tsx';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
-type ComponentSection = 'button' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'layout' | 'breadcrumb' | 'icon' | 'mark';
+type ComponentSection = 'button' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'radio' | 'select';
 type DocsSection = 'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
 const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
   { name: 'Controls', sections: ['button'] },
   { name: 'DataDisplay', sections: ['badge', 'codeblock', 'icon', 'mark', 'table'] },
   { name: 'Feedback', sections: ['alert'] },
-  { name: 'Fields', sections: ['input', 'textarea'] },
+  { name: 'Fields', sections: ['input', 'textarea', 'checkbox', 'radio', 'select'] },
   { name: 'Layout', sections: ['layout'] },
   { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs', 'menu'] },
   { name: 'Surfaces', sections: ['card'] },
@@ -154,6 +157,9 @@ function TextAreaDemo() {
 }
 
 const componentDocs: Record<ComponentSection, ComponentDoc> = {
+  checkbox: checkboxDoc,
+  radio: radioDoc,
+  select: selectDoc,
   button: {
   ...getCatalogDoc('button'),
     title: 'Button',

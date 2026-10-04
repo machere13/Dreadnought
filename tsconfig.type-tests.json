@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "packages/ui/tests/choiceFields.types.tsx",
     "packages/adapters/react/tests/Controls/Button/ButtonAdapter.types.tsx",
     "packages/adapters/react/tests/Fields/Input/InputAdapter.types.tsx",
     "packages/adapters/react/tests/Fields/TextArea/TextAreaAdapter.types.tsx",

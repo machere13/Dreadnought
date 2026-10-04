@@ -1,0 +1,29 @@
+{
+  "id": "component:select",
+  "kind": "component",
+  "name": "Select",
+  "family": "Fields",
+  "description": "Выбор одного или нескольких вариантов с поиском, очисткой и клавиатурной навигацией.",
+  "docsUrl": "/components/select/#select-api",
+  "states": [
+    "disabled",
+    "required",
+    "invalid",
+    "open"
+  ],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "getSelectState",
+      "examples": [
+        {
+          "id": "state",
+          "code": "import { getSelectState } from '@dreadnought/core';\nconst state = getSelectState({ options: [{ value: 'anna', label: 'Анна' }], value: 'anna' });"
+        }
+      ]
+    }
+  ]
+}

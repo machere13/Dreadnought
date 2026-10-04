@@ -1,0 +1,10 @@
+:root {
+  --dreadnought-select-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-select-text: var(--dreadnought-color-text-primary);
+  --dreadnought-select-border: var(--dreadnought-color-border-default);
+  --dreadnought-select-placeholder: var(--dreadnought-color-text-placeholder);
+  --dreadnought-select-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-select-invalid: var(--dreadnought-color-status-error);
+  --dreadnought-select-hover: var(--dreadnought-color-surface-hover);
+  --dreadnought-select-selected: var(--dreadnought-color-surface-selected);
+}

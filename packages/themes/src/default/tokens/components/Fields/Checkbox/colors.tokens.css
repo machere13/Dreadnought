@@ -1,0 +1,9 @@
+:root {
+  --dreadnought-checkbox-text: var(--dreadnought-color-text-primary);
+  --dreadnought-checkbox-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-checkbox-border: var(--dreadnought-color-border-default);
+  --dreadnought-checkbox-checked-bg: var(--dreadnought-color-action-primary);
+  --dreadnought-checkbox-checked-text: var(--dreadnought-color-text-on-action-primary);
+  --dreadnought-checkbox-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-checkbox-invalid: var(--dreadnought-color-status-error);
+}

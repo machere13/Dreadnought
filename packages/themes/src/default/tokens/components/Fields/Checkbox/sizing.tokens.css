@@ -1,0 +1,7 @@
+:root {
+  --dreadnought-checkbox-size: var(--dreadnought-size-choice-control);
+  --dreadnought-checkbox-radius: var(--dreadnought-border-radius-choice);
+  --dreadnought-checkbox-border-width: var(--dreadnought-border-width-outline);
+  --dreadnought-checkbox-focus-width: var(--dreadnought-border-width-x2);
+  --dreadnought-checkbox-focus-offset: var(--dreadnought-spacing-x1);
+}

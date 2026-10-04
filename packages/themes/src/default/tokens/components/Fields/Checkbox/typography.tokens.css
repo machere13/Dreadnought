@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-font-size-checkbox: var(--dreadnought-font-size-body-2);
+  --dreadnought-font-weight-checkbox: var(--dreadnought-font-weight-body-2);
+  --dreadnought-line-height-checkbox: var(--dreadnought-line-height-body-2);
+}

@@ -41,6 +41,11 @@
   --dreadnought-line-height-caption-1: 1.4;
   --dreadnought-line-height-caption-2: 1.4;
 
-  --dreadnought-font-family-ui: system-ui, sans-serif;
+  --dreadnought-font-family-ui: 'Roboto Flex Variable', system-ui, sans-serif;
   --dreadnought-font-family-monospace: ui-monospace, monospace;
+  --dreadnought-font-variation-wide: "wdth" 150;
+}
+
+:root[data-dreadnought-wide-typography='false'] {
+  --dreadnought-font-variation-wide: normal;
 }

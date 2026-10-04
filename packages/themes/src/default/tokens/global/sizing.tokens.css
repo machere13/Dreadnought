@@ -1,4 +1,6 @@
 :root {
+  --dreadnought-size-choice-control: 1.125rem;
+  --dreadnought-border-radius-choice: 4px;
   --dreadnought-size-control-min-height: 2.75rem;
   --dreadnought-size-control-compact-min-height: 2rem;
   --dreadnought-size-inline-graphic: 1em;

@@ -1,0 +1,14 @@
+@layer dreadnought {
+  .root { position: relative; display: inline-flex; align-items: center; gap: var(--dreadnought-checkbox-gap); color: var(--dreadnought-checkbox-text); cursor: pointer; }
+  .root [data-slot='control'] { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit; }
+  .root [data-slot='indicator'] { display: grid; place-items: center; flex: none; width: var(--dreadnought-checkbox-size); height: var(--dreadnought-checkbox-size); box-sizing: border-box; border: var(--dreadnought-checkbox-border-width) solid var(--dreadnought-checkbox-border); border-radius: var(--dreadnought-checkbox-radius); background: var(--dreadnought-checkbox-bg); color: var(--dreadnought-checkbox-checked-text); }
+  .root:has(input:checked) [data-slot='indicator'], .root:has(input:indeterminate) [data-slot='indicator'] { background: var(--dreadnought-checkbox-checked-bg); border-color: var(--dreadnought-checkbox-checked-bg); }
+  .root [data-slot='indicator'] > * { visibility: hidden; }
+  .root:has(input:checked) [data-slot='indicator'] > *, .root:has(input:indeterminate) [data-slot='indicator'] > * { visibility: visible; }
+  .root:has(input:focus-visible) [data-slot='indicator'] { outline: var(--dreadnought-checkbox-focus-width) solid var(--dreadnought-checkbox-focus); outline-offset: var(--dreadnought-checkbox-focus-offset); }
+  .root[data-invalid] [data-slot='indicator'] { border-color: var(--dreadnought-checkbox-invalid); }
+  .root[data-disabled] { opacity: var(--dreadnought-checkbox-disabled-opacity); cursor: not-allowed; }
+  .group { display: flex; flex-wrap: wrap; gap: var(--dreadnought-checkbox-group-gap); padding: 0; margin: 0; border: none; min-width: 0; }
+  .group > legend { padding: 0; margin-block-end: var(--dreadnought-checkbox-gap); color: var(--dreadnought-checkbox-text); }
+  
+}

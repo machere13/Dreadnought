@@ -1,0 +1,66 @@
+{
+  "componentId": "component:checkbox",
+  "parts": [
+    {
+      "name": "root",
+      "description": "Обёртка компонента; className и style относятся к ней."
+    },
+    {
+      "name": "control",
+      "description": "Поле ввода; ref указывает на него."
+    }
+  ],
+  "constraints": [
+    "Задавайте доступное имя через текст метки, label или aria-label.",
+    "Стили настраиваются через компонентные токены и slotProps.",
+    "Нативные name, value и form участвуют в отправке формы."
+  ],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "CheckboxAdapter",
+      "propertyDescriptions": {
+        "indeterminate": "Неопределённое состояние; не заменяет checked.",
+        "checked": "Управляемое состояние флажка.",
+        "defaultChecked": "Начальное состояние.",
+        "invalid": "Состояние ошибки."
+      },
+      "defaults": {
+        "indeterminate": false,
+        "disabled": false,
+        "required": false,
+        "invalid": false
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { CheckboxAdapter } from '@dreadnought/react/unstyled';\nconst example = <CheckboxAdapter name='consent'>Согласен с условиями</CheckboxAdapter>;"
+        }
+      ]
+    },
+    {
+      "id": "react-adapter-group",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "CheckboxGroupAdapter",
+      "propertyDescriptions": {
+        "options": "Варианты с уникальным value, label и необязательным disabled.",
+        "value": "Выбранное значение группы.",
+        "defaultValue": "Начальное значение группы.",
+        "onValueChange": "Уведомление об изменении значения группы.",
+        "label": "Заголовок группы.",
+        "slotProps": "Свойства элементов группы."
+      },
+      "examples": [
+        {
+          "id": "group",
+          "code": "import { CheckboxGroupAdapter } from '@dreadnought/react/unstyled';\nconst example = <CheckboxGroupAdapter label='Тарифы' name='plan' options={[{ value: 'basic', label: 'Базовый' }, { value: 'pro', label: 'Про' }]} />;"
+        }
+      ]
+    }
+  ]
+}

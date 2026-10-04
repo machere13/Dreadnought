@@ -1,0 +1,8 @@
+@layer dreadnought {
+  .dreadnought-text-radio {
+    font-family: var(--dreadnought-font-family-ui);
+    font-size: var(--dreadnought-font-size-radio);
+    font-weight: var(--dreadnought-font-weight-radio);
+    line-height: var(--dreadnought-line-height-radio);
+  }
+}
