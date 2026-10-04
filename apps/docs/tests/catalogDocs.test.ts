@@ -14,7 +14,7 @@ it('projects current catalog properties and keeps compound defaults separate', (
   try {
     const input = path.join(root, 'tools/catalog/dist/catalog.json');
     mkdirSync(path.dirname(input), { recursive: true });
-    const catalog = { packageVersions: {}, entries: [{ name: 'Layout', bindings: [binding('react-adapter', 2, [], 'enabled', true), binding('react-ui', 3, [], 'enabled', true), binding('sidebar', 3, ['Sidebar'], 'enabled', false)] }] };
+    const catalog = { packageVersions: {}, entries: [{ kind: 'component', name: 'Layout', bindings: [binding('react-adapter', 2, [], 'enabled', true), binding('react-ui', 3, [], 'enabled', true), binding('sidebar', 3, ['Sidebar'], 'enabled', false)] }, {kind: 'action', name: 'copy', bindings: []}] };
     writeFileSync(input, JSON.stringify(catalog));
     prepareCatalogDocs(root);
     const readRows = () => JSON.parse(readFileSync(path.join(root, 'apps/docs/src/generated/catalog-docs.json'), 'utf8')).components.layout.apiRows;

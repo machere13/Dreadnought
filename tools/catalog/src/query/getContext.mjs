@@ -41,6 +41,7 @@ export function getContext(catalog, {components, layer = 3, framework, maxBytes 
 
   const result = {layer, framework, format, apiCoverage: 'partial', items: selected.map(({entry, binding, bindings}) => ({
     name: entry.name,
+    ...(entry.kind !== 'component' ? {kind: entry.kind} : {}),
     binding: {id: binding.id, importPath: binding.importPath, exportName: binding.exportName},
     parts: bindings.filter((item) => item.propertyPath).map((item) => ({
       id: item.id, propertyPath: item.propertyPath,
@@ -56,6 +57,10 @@ export function getContext(catalog, {components, layer = 3, framework, maxBytes 
 
   // Add optional detail only while the complete JSON reply stays inside the byte cap.
   const details = selected.map(({entry, binding, bindings}) => ({
+    description: entry.kind !== 'component' && format === 'usage' ? entry.description : undefined,
+    constraints: entry.kind !== 'component' ? entry.constraints : undefined,
+    composesWith: entry.composesWith,
+    contracts: entry.kind !== 'component' && format === 'contract' ? binding.contracts : undefined,
     example: (() => {
       const example = binding.examples.find(item => item.id === 'usage')
         || (bindings.some((item) => item.propertyPath) && binding.examples.find((item) => item.id === 'compound'))
@@ -69,7 +74,7 @@ export function getContext(catalog, {components, layer = 3, framework, maxBytes 
         })))) : undefined,
     tokens: includeTokens ? entry.tokens.map((token) => token.name) : undefined,
   }));
-  for (const key of ['example', 'props', 'variants', 'tokens']) {
+  for (const key of ['example', 'description', 'constraints', 'composesWith', 'contracts', 'props', 'variants', 'tokens']) {
     for (const [index, detail] of details.entries()) {
       const item = result.items[index];
       const value = detail[key];

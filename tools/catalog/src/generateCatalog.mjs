@@ -24,13 +24,15 @@ export function generateCatalog(context, metadata) {
     nonempty(entry.name, 'name');
     nonempty(entry.description, 'description');
     nonempty(entry.family, 'family');
-    if (!/^[A-Z][A-Za-z0-9]*$/.test(entry.name) || !/^[A-Z][A-Za-z0-9]*$/.test(entry.family)) throw new Error('Invalid component name or family');
-    if (entry.kind !== 'component') throw new Error(`Unsupported catalog kind: ${entry.kind}`);
+    if (!['component', 'action', 'behavior'].includes(entry.kind)) throw new Error(`Unsupported catalog kind: ${entry.kind}`);
+    const namePattern = entry.kind === 'component' ? /^[A-Z][A-Za-z0-9]*$/ : /^[A-Za-z][A-Za-z0-9]*$/;
+    if (!namePattern.test(entry.name) || !/^[A-Z][A-Za-z0-9]*$/.test(entry.family)) throw new Error('Invalid catalog name or family');
     if (!/^\/[a-z0-9/-]+\/#[-a-z0-9]+$/.test(entry.docsUrl)) throw new Error(`Invalid documentation URL: ${entry.docsUrl}`);
     if (!entry.bindings?.length) throw new Error(`Missing bindings: ${entry.id}`);
     unique(entry.bindings, 'binding');
     const bindings = entry.bindings.map((binding) => {
       if (![1, 2, 3].includes(binding.layer)) throw new Error(`Invalid layer: ${binding.id}`);
+      if (entry.kind !== 'component' && (binding.layer !== 1 || binding.framework !== null)) throw new Error(`Core capability must use layer 1: ${entry.id}`);
       if (binding.framework !== null && binding.framework !== 'react') throw new Error(`Unsupported framework: ${binding.id}`);
       if (binding.propertyPath && (!Array.isArray(binding.propertyPath) || binding.propertyPath.some((member) => typeof member !== 'string' || !/^[A-Za-z][A-Za-z0-9]*$/.test(member)))) throw new Error(`Invalid property path: ${binding.id}`);
       const contracts = describeContract(context, binding);
@@ -68,9 +70,15 @@ export function generateCatalog(context, metadata) {
       id: entry.id, kind: entry.kind, name: entry.name, family: entry.family,
       description: entry.description, docsUrl: entry.docsUrl,
       states: entry.states ?? [], parts: entry.parts ?? [], constraints: entry.constraints ?? [],
-      tokens: readComponentTokens(context.root, entry.family, entry.name), bindings,
+      ...(entry.composesWith ? {composesWith: entry.composesWith} : {}),
+      tokens: entry.kind === 'component' ? readComponentTokens(context.root, entry.family, entry.name) : [], bindings,
     };
   });
+  const ids = new Set(entries.map(entry => entry.id));
+  for (const entry of entries) {
+    if (entry.composesWith !== undefined && (!Array.isArray(entry.composesWith) ||
+      entry.composesWith.some(id => !ids.has(id)))) throw new Error(`Unknown composition reference: ${entry.id}`);
+  }
   unique(examples, 'example');
   checkExamples(context, [...examples, ...defaultChecks]);
   return {

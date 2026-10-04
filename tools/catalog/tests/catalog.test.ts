@@ -28,6 +28,32 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes standalone actions and behaviors with checked public contracts', () => {
+    const capabilities = catalog.entries.filter(entry => entry.kind !== 'component');
+    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getNextEnabledValue', 'getSelectionValue', 'pickFiles', 'readClipboard']);
+    expect(capabilities.every(entry => entry.tokens.length === 0 && entry.bindings.length === 1 && entry.bindings[0].layer === 1)).toBe(true);
+    const selection = capabilities.find(entry => entry.name === 'getSelectionValue');
+    expect(selection.bindings[0].contracts).toHaveLength(3);
+    expect(selection.bindings[0].contracts[0].parameters).toHaveLength(3);
+    expect(selection.bindings[0].contracts[0].parameters.slice(0, 2).map(parameter => parameter.name)).toEqual(['current', 'action']);
+    expect(selection.composesWith).toContain('behavior:get-next-enabled-value');
+    expect(capabilities.find(entry => entry.name === 'readClipboard').bindings[0].contracts[0]).toMatchObject({parameters: [], returnType: 'Promise<string>'});
+  });
+
+  it('describes a zero-argument action without inventing an options parameter', () => {
+    expect(describeContract(context, {importPath: '@dreadnought/core', exportName: 'readClipboard'})[0])
+      .toMatchObject({parameters: [], returnType: 'Promise<string>', variants: [{properties: []}]});
+  });
+
+  it('exposes options and action branches beyond the first positional argument', () => {
+    const selection = describeContract(context, {importPath: '@dreadnought/core', exportName: 'getSelectionValue'})[0];
+    expect(selection.parameters[1].variants).toBeDefined();
+    expect(selection.parameters[1].variants.flatMap(variant => variant.properties.find(prop => prop.name === 'type')?.values ?? []))
+      .toEqual(expect.arrayContaining(['select', 'deselect', 'toggle', 'clear']));
+    expect(selection.parameters[2].variants[0].properties.map(prop => prop.name)).toEqual(['disabled', 'disabledValues', 'required']);
+    const navigation = describeContract(context, {importPath: '@dreadnought/core', exportName: 'getNextEnabledValue'})[0];
+    expect(navigation.parameters[3].variants[0].properties).toContainEqual(expect.objectContaining({name: 'loop', type: 'boolean | undefined', optional: true}));
+  });
   it('ships type-checked usage examples for text input, controlled tabs and data tables', () => {
     for (const name of ['Input','Tabs','Table']) {
       const entry = catalog.entries.find(entry => entry.name === name);
@@ -60,10 +86,11 @@ describe('public catalog', () => {
   });
 
   it('extracts theme tokens and only the explicitly listed components', () => {
-    expect(catalog.entries.map((entry) => entry.name)).toEqual(components.map((component) => component.name).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())));
-    expect(catalog.entries).toHaveLength(components.length);
+    const componentEntries = catalog.entries.filter(entry => entry.kind === 'component');
+    expect(componentEntries.map((entry) => entry.name)).toEqual(components.map((component) => component.name).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())));
+    expect(componentEntries).toHaveLength(components.length);
     expect(catalog.entries.find((entry) => entry.name === 'Button').tokens).toContainEqual({ name: '--dreadnought-button-primary-bg', value: 'var(--dreadnought-color-action-primary)' });
-    expect(catalog.entries.every((entry) => entry.tokens.length > 0)).toBe(true);
+    expect(componentEntries.every((entry) => entry.tokens.length > 0)).toBe(true);
     expect(catalog.packageVersions['@dreadnought/themes']).toBe(readJson(path.join(root, 'packages/themes/package.json')).version);
   });
 

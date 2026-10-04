@@ -28,6 +28,7 @@ export function prepareCatalogDocs(root) {
   const catalog = JSON.parse(readFileSync(path.join(root, 'tools/catalog/dist/catalog.json'), 'utf8'));
   const components = {};
   for (const entry of catalog.entries) {
+    if (entry.kind !== 'component') continue;
     const ready = entry.bindings.find((binding) => binding.id === 'react-ui');
     const adapter = entry.bindings.find((binding) => binding.id === 'react-adapter');
     const logic = entry.bindings.find((binding) => binding.id === 'react-logic') ?? entry.bindings.find((binding) => binding.layer === 1);

@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
-import { getContext, getEntry, selectEntries } from '../src/query/index.mjs';
+import { getContext, getEntry, selectEntries, validateCatalog, parseArgs } from '../src/query/index.mjs';
 import { makeCatalog } from './queryFixtures';
 
 function withBranches() {
@@ -26,6 +26,29 @@ function withBranches() {
 }
 
 describe('catalog selection', () => {
+  it('filters standalone actions and exposes their parameters in bounded core context', () => {
+    const catalog = makeCatalog();
+    catalog.entries.push({
+      ...structuredClone(catalog.entries[0]), id: 'action:copy', kind: 'action', name: 'copy', family: 'Actions',
+      composesWith: ['component:button'],
+      bindings: [{...structuredClone(catalog.entries[0].bindings[0]), id: 'core', layer: 1, framework: null,
+        importPath: '@dreadnought/core', exportName: 'copy', examples: [{id: 'usage', code: "import { copy } from '@dreadnought/core'; await copy('Hello');"}],
+        contracts: [{parameters: [{name: 'text', type: 'string', optional: false}], returnType: 'Promise<void>', variants: [{properties: []}]}]}],
+    } as any);
+    expect(() => validateCatalog(catalog)).not.toThrow();
+    expect(selectEntries(catalog, {kind: 'action'}).items.map(item => item.name)).toEqual(['copy']);
+    expect(selectEntries(catalog, {kind: 'component'}).items.map(item => item.name)).toEqual(['Button']);
+    expect(() => selectEntries(catalog, {kind: 'unknown'})).toThrow(expect.objectContaining({code: 'INVALID_FILTER'}));
+    expect(parseArgs(['search', 'copy', '--kind', 'action']).options.kind).toBe('action');
+    expect(getEntry(catalog, 'copy')).toMatchObject({kind: 'action', composesWith: ['component:button']});
+    const result = getContext(catalog, {components: ['copy'], layer: 1, format: 'contract', maxBytes: 2048});
+    expect(result.items[0]).toMatchObject({kind: 'action', composesWith: ['component:button'],
+      contracts: [{parameters: [{name: 'text', type: 'string', optional: false}], returnType: 'Promise<void>'}]});
+    expect(Buffer.byteLength(JSON.stringify(result))).toBeLessThanOrEqual(2048);
+    const usage = getContext(catalog, {components: ['copy'], layer: 1});
+    expect(usage.items[0].example?.id).toBe('usage');
+    expect(usage.items[0].contracts).toBeUndefined();
+  });
   it('returns compact context for explicit components without flattening API branches', () => {
     const catalog = withBranches();
     catalog.entries[0].tokens = [{name: '--button-pad', value: '16px'}] as any;

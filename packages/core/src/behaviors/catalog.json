@@ -1,0 +1,35 @@
+[
+  {
+    "id": "behavior:get-selection-value",
+    "kind": "behavior",
+    "name": "getSelectionValue",
+    "family": "Behaviors",
+    "description": "Вычисляет одиночный или множественный выбор элементов. Действия select/deselect/toggle/clear; disabled, disabledValues и required. Для своего списка, переключателей или выбора строк.",
+    "docsUrl": "/custom-components/#core-selection",
+    "composesWith": ["behavior:get-next-enabled-value", "component:select", "component:checkbox", "component:accordion", "component:table"],
+    "constraints": ["Чистая функция без React, DOM и собственного хранилища. Ключи — строки или числа; одиночное значение — ключ/null, множественное — массив. Возвращает новое значение, не изменяя вход, и удаляет дубликаты. disabled блокирует всё; disabledValues блокирует действия над указанными ключами и сохраняет их при clear (замена одиночного выбора другим доступным ключом разрешена). required запрещает снять последний выбранный ключ, но не заполняет пустой выбор автоматически. Проверка существования ключей, состояние, события, фокус и ARIA принадлежат вызывающему коду."],
+    "bindings": [{
+      "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "getSelectionValue",
+      "examples": [
+        {"id": "usage", "code": "import { getSelectionValue } from '@dreadnought/core';\nconst single = getSelectionValue<string>(null, { type: 'select', value: 'news' });\nconst multiple = getSelectionValue(['news'], { type: 'toggle', value: 'updates' }, { required: true, disabledValues: ['archive'] });"},
+        {"id": "composition", "code": "import { getNextEnabledValue, getSelectionValue } from '@dreadnought/core';\nconst items = [{ value: 'news' }, { value: 'archive', disabled: true }, { value: 'updates' }];\nconst focused = getNextEnabledValue(items, 'news', 'next', { loop: false });\nconst selected = focused === undefined ? null : getSelectionValue<string>(null, { type: 'select', value: focused });\n// Связывайте фокус и выбор только если это нужно вашему компоненту."}
+      ]
+    }]
+  },
+  {
+    "id": "behavior:get-next-enabled-value",
+    "kind": "behavior",
+    "name": "getNextEnabledValue",
+    "family": "Behaviors",
+    "description": "Находит следующий доступный пункт коллекции, пропуская disabled. Направления previous/next/first/last; loop управляет круговым переходом. Для клавиатурной навигации своего списка, меню или панели.",
+    "docsUrl": "/custom-components/#core-parts",
+    "composesWith": ["behavior:get-selection-value", "component:tabs", "component:select", "component:menu"],
+    "constraints": ["Чистая функция без DOM, фокуса и выбора. Ключи пунктов — строки. loop по умолчанию true; false останавливается на крайнем пункте. Пустая или полностью disabled коллекция возвращает undefined. Если текущий ключ отсутствует или disabled, next начинает с первого доступного, previous — с последнего. Направление по клавише, preventDefault, ARIA и перенос фокуса определяет адаптер."],
+    "bindings": [{
+      "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "getNextEnabledValue",
+      "examples": [{"id": "usage", "code": "import { getNextEnabledValue } from '@dreadnought/core';\nconst items = [{ value: 'first' }, { value: 'disabled', disabled: true }, { value: 'last' }];\nconst next = getNextEnabledValue(items, 'first', 'next', { loop: false });\nconst first = getNextEnabledValue(items, 'last', 'first');\n// Результат — ключ; actual focus и обработчик клавиатуры остаются в вашем коде."}]
+    }]
+  }
+]

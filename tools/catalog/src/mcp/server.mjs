@@ -4,6 +4,7 @@ import {invokeCatalog} from './invoke.mjs';
 
 const nonempty = z.string().trim().min(1);
 const listShape = {
+  kind: z.enum(['component', 'action', 'behavior']).optional(),
   family: nonempty.optional(),
   layer: z.number().int().min(1).max(3).optional(),
   framework: nonempty.optional(),
@@ -18,15 +19,15 @@ export function createCatalogMcpServer(config) {
     inputSchema: z.object({}).strict(),
   }, async () => invokeCatalog('check', {}, config));
   server.registerTool('dreadnought_list', {
-    description: 'List bindings in the local catalog after checking installed versions; framework core is layer 1',
+    description: 'List components, actions or behaviors with kind filter. Standalone core capabilities use layer 1 and framework core. Checks installed versions.',
     inputSchema: z.object(listShape).strict(),
   }, async (args) => invokeCatalog('list', args, config));
   server.registerTool('dreadnought_search', {
-    description: 'Search local catalog bindings after checking installed versions; framework core is layer 1',
+    description: 'Search components, standalone actions or behaviors by name or purpose; narrow with kind. Framework core is layer 1. Checks installed versions.',
     inputSchema: z.object({query: nonempty, ...listShape}).strict(),
   }, async (args) => invokeCatalog('search', args, config));
   server.registerTool('dreadnought_get', {
-    description: 'Read a component section from the local catalog after checking installed versions; API and examples require an explicit binding',
+    description: 'Read any catalog entry by name or id; component accepts component, action and behavior names. Overview includes constraints and composition links. API/examples require an explicit binding (core for actions/behaviors). Checks installed versions.',
     inputSchema: z.object({
       component: nonempty,
       binding: nonempty.optional(),
@@ -37,7 +38,7 @@ export function createCatalogMcpServer(config) {
     }).strict(),
   }, async (args) => invokeCatalog('get', args, config));
   server.registerTool('dreadnought_context', {
-    description: 'Get checked usage examples and partial primitive prop hints for selected components in one request. format contract adds library API branches; get reads exact or inherited details.',
+    description: 'Get checked examples for selected entries; components accepts component, action and behavior names. Use layer 1 for standalone core capabilities: examples, constraints and composition links. format contract adds signatures and API branches. Replies are byte-bounded and may be partial.',
     inputSchema: z.object({
       components: z.array(nonempty).min(1).max(10),
       layer: z.number().int().min(1).max(3).optional(),

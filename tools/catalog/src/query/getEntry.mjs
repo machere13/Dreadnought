@@ -13,14 +13,14 @@ export function getEntry(catalog, component, {binding, section = 'overview', pro
   if (!matches.length) error('UNKNOWN_COMPONENT', 'Unknown component', {component});
   if (matches.length > 1) error('AMBIGUOUS_COMPONENT', 'Ambiguous component name', {component});
   const entry = matches[0];
-  const common = {id: entry.id, name: entry.name, family: entry.family, description: entry.description, docsUrl: entry.docsUrl};
+  const common = {id: entry.id, kind: entry.kind, name: entry.name, family: entry.family, description: entry.description, docsUrl: entry.docsUrl};
   if (section === 'tokens') {
     if (binding !== undefined) error('INVALID_ARGUMENTS', 'Tokens belong to component, not binding');
     return {scope: 'component', componentId: entry.id, tokens: entry.tokens, parts: entry.parts};
   }
   if (section === 'overview') {
     if (binding !== undefined) error('INVALID_ARGUMENTS', 'Binding is not used for overview');
-    return {...common, states: entry.states, parts: entry.parts, constraints: entry.constraints,
+    return {...common, ...(entry.composesWith ? {composesWith: entry.composesWith} : {}), states: entry.states, parts: entry.parts, constraints: entry.constraints,
       bindings: entry.bindings.map(({id, layer, framework, importPath, exportName, propertyPath, description}) =>
         ({id, layer, framework, importPath, exportName, ...(propertyPath ? {propertyPath} : {}), description}))};
   }

@@ -14,6 +14,25 @@ function literalValues(type) {
   return members.map((item) => item.value);
 }
 
+function describeVariants(checker, input, declaration) {
+  if (!input) return [{properties: []}];
+  const type = checker.getNonNullableType(input);
+  return (type.isUnion() ? type.types : [type]).map(branch => ({
+    properties: ((branch.flags & ts.TypeFlags.Object || branch.isIntersection()) && !checker.isArrayType(branch) && !checker.isTupleType(branch)
+      ? checker.getPropertiesOfType(branch) : [])
+      .sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
+      .map(property => {
+        const value = checker.getTypeOfSymbolAtLocation(property, declaration);
+        return {
+          name: property.name, type: printType(checker, value), optional: Boolean(property.flags & ts.SymbolFlags.Optional),
+          values: literalValues(value),
+          origin: property.declarations?.some(node => node.getSourceFile().fileName.replaceAll('\\', '/').includes('/node_modules/'))
+            ? 'dependency' : 'library',
+        };
+      }),
+  }));
+}
+
 export function describeContract(context, binding) {
   const { checker } = context;
   const symbol = getExport(context, binding.importPath, binding.exportName);
@@ -29,31 +48,19 @@ export function describeContract(context, binding) {
   // Preserve both overloads and union branches rather than merging their props.
   return signatures.map((signature) => {
     const parameter = signature.parameters[0];
-    if (!parameter) throw new Error(`No options parameter: ${binding.exportName}`);
-    const input = checker.getNonNullableType(checker.getTypeOfSymbolAtLocation(parameter, declaration));
-    const branches = input.isUnion() ? input.types : [input];
+    const input = parameter && checker.getTypeOfSymbolAtLocation(parameter, declaration);
     return {
-      parameters: signature.parameters.map((parameter) => ({
-        name: parameter.name,
-        type: printType(checker, checker.getTypeOfSymbolAtLocation(parameter, declaration)),
-        optional: Boolean(parameter.flags & ts.SymbolFlags.Optional) || Boolean(parameter.valueDeclaration?.questionToken) || Boolean(parameter.valueDeclaration?.initializer),
-      })),
+      parameters: signature.parameters.map((parameter, index) => {
+        const type = checker.getTypeOfSymbolAtLocation(parameter, declaration);
+        const variants = index > 0 ? describeVariants(checker, type, declaration) : undefined;
+        return {
+          name: parameter.name, type: printType(checker, type),
+          optional: Boolean(parameter.flags & ts.SymbolFlags.Optional) || Boolean(parameter.valueDeclaration?.questionToken) || Boolean(parameter.valueDeclaration?.initializer),
+          ...(variants?.some(variant => variant.properties.length) ? {variants} : {}),
+        };
+      }),
       returnType: printType(checker, checker.getReturnTypeOfSignature(signature)),
-      variants: branches.map((branch) => ({
-        properties: ((branch.flags & ts.TypeFlags.Object || branch.isIntersection()) && !checker.isArrayType(branch) && !checker.isTupleType(branch) ? checker.getPropertiesOfType(branch) : [])
-          .sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
-          .map((property) => {
-            const value = checker.getTypeOfSymbolAtLocation(property, declaration);
-            return {
-              name: property.name,
-              type: printType(checker, value),
-              optional: Boolean(property.flags & ts.SymbolFlags.Optional),
-              values: literalValues(value),
-              origin: property.declarations?.some((node) => node.getSourceFile().fileName.replaceAll('\\', '/').includes('/node_modules/'))
-                ? 'dependency' : 'library',
-            };
-          }),
-      })),
+      variants: describeVariants(checker, input, declaration),
     };
   });
 }

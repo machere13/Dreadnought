@@ -205,6 +205,26 @@ describe('generated catalog over MCP', () => {
     const catalog = generateCatalog(createContext(repoRoot, packages), readMetadata(repoRoot, components));
     generatedCatalogPath = path.join(projectPath, 'generated.json');
     writeFileSync(generatedCatalogPath, JSON.stringify(catalog));
+    const core = path.join(projectPath, 'node_modules', '@dreadnought', 'core');
+    mkdirSync(core, {recursive: true});
+    writeFileSync(path.join(core, 'package.json'), JSON.stringify({name: '@dreadnought/core', version: '0.1.0'}));
+  });
+  it('discovers core capabilities by kind and returns signatures and composition examples', async () => {
+    await withClient(generatedCatalogPath, projectPath, async client => {
+      const actions = await client.callTool({name: 'dreadnought_list', arguments: {kind: 'action', layer: 1}});
+      expect(actions.isError).toBeUndefined();
+      expect(replyPayload(actions).result.items.map((item: any) => item.name).sort()).toEqual(['copy', 'download', 'pickFiles', 'readClipboard']);
+      const search = await client.callTool({name: 'dreadnought_search', arguments: {query: 'getSelectionValue', kind: 'behavior'}});
+      expect(search.isError).toBeUndefined();
+      expect(replyPayload(search).result.items[0]).toMatchObject({kind: 'behavior', bindings: [{exportName: 'getSelectionValue', importPath: '@dreadnought/core'}]});
+      const context = await client.callTool({name: 'dreadnought_context', arguments: {
+        components: ['getSelectionValue', 'getNextEnabledValue', 'readClipboard'], layer: 1, format: 'contract', maxBytes: 8192}});
+      expect(context.isError).toBeUndefined();
+      expect(replyPayload(context).result.items[0].contracts).toHaveLength(3);
+      expect(replyPayload(context).result.items[2].contracts[0].parameters).toEqual([]);
+      const overview = replyPayload(await client.callTool({name: 'dreadnought_get', arguments: {component: 'getSelectionValue'}}));
+      expect(overview.result.composesWith).toContain('behavior:get-next-enabled-value');
+    });
   });
   it('preserves ref variants, compound exports, examples and component tokens', async () => {
     await withClient(generatedCatalogPath, projectPath, async (client) => {

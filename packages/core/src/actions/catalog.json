@@ -1,0 +1,64 @@
+[
+  {
+    "id": "action:copy",
+    "kind": "action",
+    "name": "copy",
+    "family": "Actions",
+    "description": "Копирует текст в буфер обмена. Используйте в своей кнопке копирования или панели команд; возвращает Promise<void>.",
+    "docsUrl": "/custom-components/#core-example",
+    "composesWith": ["component:button", "component:codeblock"],
+    "constraints": ["Нужен браузер с Clipboard API и защищённый контекст (HTTPS или localhost). Вызывайте из действия пользователя; обработайте отказ доступа. Состояние успеха/ошибки и разметку хранит вызывающий код."],
+    "bindings": [{
+      "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "copy",
+      "examples": [{"id": "usage", "code": "import { copy } from '@dreadnought/core';\nasync function onCopy(text: string) {\n  try { await copy(text); }\n  catch (error) { console.error('Не удалось скопировать', error); }\n}"}]
+    }]
+  },
+  {
+    "id": "action:download",
+    "kind": "action",
+    "name": "download",
+    "family": "Actions",
+    "description": "Скачивает уже подготовленный Blob с указанным именем файла. Для экспорта данных из своего интерфейса; не загружает данные с сервера.",
+    "docsUrl": "/custom-components/#other-actions",
+    "composesWith": ["component:button", "component:table"],
+    "constraints": ["Браузерное действие: нужны DOM и URL.createObjectURL. Вызывайте из обработчика пользователя. Blob и filename готовит вызывающий код. Возвращает void: это не подтверждение завершения сохранения файла."],
+    "bindings": [{
+      "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "download",
+      "examples": [{"id": "usage", "code": "import { download } from '@dreadnought/core';\nfunction onExport() {\n  download(new Blob(['name,value\\nExample,1'], { type: 'text/csv;charset=utf-8' }), 'report.csv');\n}"}]
+    }]
+  },
+  {
+    "id": "action:pick-files",
+    "kind": "action",
+    "name": "pickFiles",
+    "family": "Actions",
+    "description": "Открывает системный выбор файлов и возвращает Promise<File[]>. Для собственной загрузки файлов; accept и multiple ограничивают выбор.",
+    "docsUrl": "/custom-components/#other-actions",
+    "composesWith": ["component:button"],
+    "constraints": ["Нужен браузер и действие пользователя. Отмена возвращает пустой массив. Функция не отправляет файлы на сервер; accept — подсказка выбора, а не проверка безопасности содержимого. Обрабатывайте ошибки и проверяйте файлы в приложении."],
+    "bindings": [{
+      "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "pickFiles",
+      "propertyDescriptions": {"accept": "Подсказка допустимых типов файлов", "multiple": "Разрешить выбор нескольких файлов"},
+      "defaults": {"accept": "", "multiple": false},
+      "examples": [{"id": "usage", "code": "import { pickFiles } from '@dreadnought/core';\nasync function onAttach() {\n  try {\n    const files = await pickFiles({ accept: 'image/*', multiple: true });\n    if (files.length) console.log(files);\n  } catch (error) { console.error('Не удалось выбрать файлы', error); }\n}"}]
+    }]
+  },
+  {
+    "id": "action:read-clipboard",
+    "kind": "action",
+    "name": "readClipboard",
+    "family": "Actions",
+    "description": "Читает текст буфера обмена без аргументов и возвращает Promise<string>. Для команды Вставить в собственном поле или редакторе.",
+    "docsUrl": "/custom-components/#other-actions",
+    "composesWith": ["component:input", "component:textarea"],
+    "constraints": ["Нужны Clipboard API, защищённый контекст и разрешение браузера. Вызывайте из действия пользователя и обрабатывайте отказ. Изменение значения поля, валидацию и отображение ошибок выполняет вызывающий код."],
+    "bindings": [{
+      "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "readClipboard",
+      "examples": [{"id": "usage", "code": "import { readClipboard } from '@dreadnought/core';\nasync function onPaste(setValue: (text: string) => void) {\n  try { setValue(await readClipboard()); }\n  catch (error) { console.error('Не удалось прочитать буфер', error); }\n}"}]
+    }]
+  }
+]

@@ -15,10 +15,16 @@ describe('catalog query validation', () => {
 
   it('accepts the generated catalog used by the site', () => {
     const file = fileURLToPath(new URL('../dist/catalog.json', import.meta.url));
-    expect(loadCatalog(file).entries).toHaveLength(18);
+    const entries = loadCatalog(file).entries;
+    expect(entries.filter(entry => entry.kind === 'component')).toHaveLength(18);
+    expect(entries.filter(entry => entry.kind !== 'component')).toHaveLength(6);
   });
 
   it.each([
+    ['unknown kind', (data: ReturnType<typeof makeCatalog>) => { data.entries[0].kind = 'service'; }, 'INVALID_CATALOG'],
+    ['unknown composition reference', (data: ReturnType<typeof makeCatalog>) => { (data.entries[0] as any).composesWith = ['action:missing']; }, 'INVALID_CATALOG'],
+    ['action with a styled binding', (data: ReturnType<typeof makeCatalog>) => { data.entries[0].kind = 'action'; }, 'INVALID_CATALOG'],
+    ['malformed positional variants', (data: ReturnType<typeof makeCatalog>) => { (data.entries[0].bindings[0].contracts[0].parameters as any).push({name: 'options', type: 'Options', optional: true, variants: [{properties: {}}]}); }, 'INVALID_CATALOG'],
     ['unsupported schema', (data: ReturnType<typeof makeCatalog>) => { data.schemaVersion = 2; }, 'UNSUPPORTED_SCHEMA'],
     ['duplicate entry', (data: ReturnType<typeof makeCatalog>) => { data.entries.push(structuredClone(data.entries[0])); }, 'INVALID_CATALOG'],
     ['null entry', (data: ReturnType<typeof makeCatalog>) => { (data.entries as any)[0] = null; }, 'INVALID_CATALOG'],

@@ -1,8 +1,8 @@
 import { CatalogQueryError } from './errors.mjs';
 
 const allowed = {
-  list: new Set(['catalog', 'project', 'family', 'layer', 'framework', 'limit', 'offset']),
-  search: new Set(['catalog', 'project', 'family', 'layer', 'framework', 'limit', 'offset']),
+  list: new Set(['catalog', 'project', 'kind', 'family', 'layer', 'framework', 'limit', 'offset']),
+  search: new Set(['catalog', 'project', 'kind', 'family', 'layer', 'framework', 'limit', 'offset']),
   get: new Set(['catalog', 'project', 'binding', 'section', 'property', 'example', 'include-inherited']),
   context: new Set(['catalog', 'project', 'components', 'layer', 'framework', 'max-bytes', 'include-tokens', 'format']),
   check: new Set(['catalog', 'project']),
@@ -39,6 +39,7 @@ export function parseArgs(argv) {
   if (operation === 'check' && !fields.project) fail('check requires --project');
   if (operation === 'context' && !fields.components) fail('context requires --components');
   if (fields.format !== undefined && !['usage', 'contract'].includes(fields.format)) fail('Unknown context format');
+  if (fields.kind !== undefined && !['component', 'action', 'behavior'].includes(fields.kind)) fail('Unknown catalog kind');
   for (const flag of ['catalog', 'project', 'family', 'framework', 'binding', 'section', 'property', 'example', 'components']) {
     if (fields[flag] !== undefined && !fields[flag].trim()) fail('Empty flag value', {flag});
   }
@@ -54,6 +55,7 @@ export function parseArgs(argv) {
     query: operation === 'search' ? positionals[0] : undefined,
     catalogPath: fields.catalog, projectPath: fields.project,
     options: {
+      ...(fields.kind !== undefined ? {kind: fields.kind} : {}),
       ...(fields.family !== undefined ? {family: fields.family} : {}),
       ...(fields.layer !== undefined ? {layer: fields.layer} : {}),
       ...(fields.framework !== undefined ? {framework: fields.framework} : {}),

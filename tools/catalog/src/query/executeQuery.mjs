@@ -7,7 +7,7 @@ import { CatalogQueryError } from './errors.mjs';
 
 export function executeQuery({operation, component, query, catalogPath, projectPath, options = {}}) {
   if (operation === 'help') return {responseVersion: 1, operation: 'help', commands: {
-    list: 'list [--family NAME] [--layer 1|2|3] [--framework NAME] [--limit 1..50] [--offset N]',
+    list: 'list [--kind component|action|behavior] [--family NAME] [--layer 1|2|3] [--framework NAME] [--limit 1..50] [--offset N]',
     search: 'search QUERY [list filters]',
     get: 'get COMPONENT [--binding ID] [--section overview|api|examples|tokens] [--property NAME] [--example ID] [--include-inherited]',
     context: 'context --components Button,Input [--layer 1|2|3] [--framework NAME] [--format usage|contract] [--max-bytes 1024..32768] [--include-tokens]',

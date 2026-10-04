@@ -27,6 +27,29 @@ const unique = (items, at) => {
   }
 };
 const strings = (items, at) => array(items, at).forEach((item, i) => string(item, `${at}[${i}]`));
+function validateVariants(value, at) {
+  const variants = array(value, at);
+  if (!variants.length) fail('Missing contract variants', at);
+  variants.forEach((variant, vi) => {
+    const vat = `${at}[${vi}]`;
+    object(variant, vat);
+    const props = array(variant.properties, `${vat}.properties`);
+    const names = new Set();
+    props.forEach((prop, pi) => {
+      const pat = `${vat}.properties[${pi}]`;
+      object(prop, pat);
+      string(prop.name, `${pat}.name`);
+      string(prop.type, `${pat}.type`);
+      boolean(prop.optional, `${pat}.optional`);
+      if (!['library', 'dependency'].includes(prop.origin)) fail('Invalid origin', `${pat}.origin`);
+      if (prop.values !== undefined) array(prop.values, `${pat}.values`).forEach(v => {
+        if (typeof v !== 'string' && typeof v !== 'number') fail('Invalid literal', `${pat}.values`);
+      });
+      if (names.has(prop.name)) fail('Duplicate property', vat);
+      names.add(prop.name);
+    });
+  });
+}
 const publicImports = new Map(packages.flatMap((pkg) => pkg.entrypoints.map((entry) =>
   [entry === '.' ? pkg.name : `${pkg.name}/${entry.slice(2)}`, {layer: pkg.layer, framework: pkg.framework}])));
 const packageNames = packages.map((pkg) => pkg.name);
@@ -44,7 +67,11 @@ export function validateCatalog(value) {
     const at = `entries[${ei}]`;
     object(entry, at);
     for (const field of ['id', 'kind', 'name', 'family', 'description', 'docsUrl']) string(entry[field], `${at}.${field}`);
-    if (entry.kind !== 'component') fail('Unsupported entry kind', `${at}.kind`);
+    if (!['component', 'action', 'behavior'].includes(entry.kind)) fail('Unsupported entry kind', `${at}.kind`);
+    if (entry.composesWith !== undefined) {
+      strings(entry.composesWith, `${at}.composesWith`);
+      if (entry.composesWith.some(id => !entries.some(other => other?.id === id))) fail('Unknown composition reference', `${at}.composesWith`);
+    }
     strings(entry.states, `${at}.states`);
     strings(entry.constraints, `${at}.constraints`);
     array(entry.parts, `${at}.parts`).forEach((part, i) => {
@@ -64,6 +91,7 @@ export function validateCatalog(value) {
       const bat = `${at}.bindings[${bi}]`;
       object(binding, bat);
       if (![1, 2, 3].includes(binding.layer)) fail('Invalid layer', `${bat}.layer`);
+      if (entry.kind !== 'component' && (binding.layer !== 1 || binding.framework !== null)) fail('Core capability must use layer 1', bat);
       if (binding.framework !== null) string(binding.framework, `${bat}.framework`);
       for (const field of ['id', 'importPath', 'exportName', 'description']) string(binding[field], `${bat}.${field}`);
       if (!publicImports.has(binding.importPath)) fail('Non-public import', `${bat}.importPath`);
@@ -89,28 +117,9 @@ export function validateCatalog(value) {
           string(parameter.name, `${pat}.name`);
           string(parameter.type, `${pat}.type`);
           boolean(parameter.optional, `${pat}.optional`);
+          if (parameter.variants !== undefined) validateVariants(parameter.variants, `${pat}.variants`);
         });
-        const variants = array(contract.variants, `${cat}.variants`);
-        if (!variants.length) fail('Missing contract variants', `${cat}.variants`);
-        variants.forEach((variant, vi) => {
-          const vat = `${cat}.variants[${vi}]`;
-          object(variant, vat);
-          const props = array(variant.properties, `${vat}.properties`);
-          const names = new Set();
-          props.forEach((prop, pi) => {
-            const pat = `${vat}.properties[${pi}]`;
-            object(prop, pat);
-            string(prop.name, `${pat}.name`);
-            string(prop.type, `${pat}.type`);
-            boolean(prop.optional, `${pat}.optional`);
-            if (!['library', 'dependency'].includes(prop.origin)) fail('Invalid origin', `${pat}.origin`);
-            if (prop.values !== undefined) array(prop.values, `${pat}.values`).forEach((v) => {
-              if (typeof v !== 'string' && typeof v !== 'number') fail('Invalid literal', `${pat}.values`);
-            });
-            if (names.has(prop.name)) fail('Duplicate property', vat);
-            names.add(prop.name);
-          });
-        });
+        validateVariants(contract.variants, `${cat}.variants`);
       });
     });
   });

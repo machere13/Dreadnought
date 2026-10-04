@@ -1,6 +1,6 @@
 # Каталог публичного API
 
-Общий JSON-каталог 18 опубликованных компонентов для сайта, RAG и локального MCP. Генератор запускается только при разработке/сборке; runtime библиотеки не получает новых зависимостей.
+Общий JSON-каталог опубликованных компонентов, actions и behaviors для сайта, RAG и локального MCP. Генератор запускается только при разработке/сборке; runtime библиотеки не получает новых зависимостей.
 
 Из корня репозитория:
 
@@ -21,11 +21,23 @@ node tools/catalog/src/query.mjs search button --framework react --layer 3
 node tools/catalog/src/query.mjs context --components Button,Input,Card --project "C:/path/to/project" --max-bytes 8192
 node tools/catalog/src/query.mjs get Button --binding react-ui --section api --property href
 node tools/catalog/src/query.mjs get Layout --binding react-ui-sidebar --section examples
+node tools/catalog/src/query.mjs list --kind action --layer 1
+node tools/catalog/src/query.mjs search getSelectionValue --kind behavior
+node tools/catalog/src/query.mjs context --components getSelectionValue,getNextEnabledValue --layer 1 --format contract --max-bytes 8192
+node tools/catalog/src/query.mjs get readClipboard --binding core --section api
 ```
 
 Для другого расположения инструмента и каталога используйте абсолютный путь к `query.mjs` и `--catalog "C:/path/to/catalog.json"`. Для машинного потребителя запускайте Node напрямую: `pnpm catalog:query` тоже работает, но pnpm может добавить собственный заголовок в stdout.
 
-`list` и `search` поддерживают `--family`, `--layer`, `--framework`, `--limit` (1–50) и `--offset` (от 0). `context` принимает 1–10 имён в `--components`, а также `--layer`, `--framework`, `--format usage|contract`, `--max-bytes` (1024–32768) и `--include-tokens`. Отдельный `check` перед ним не нужен: совместимость проверяется в том же запросе.
+`list` и `search` поддерживают `--kind component|action|behavior`, `--family`, `--layer`, `--framework`, `--limit` (1–50) и `--offset` (от 0). `context` принимает 1–10 имён или ID записей в `--components`, а также `--layer`, `--framework`, `--format usage|contract`, `--max-bytes` (1024–32768) и `--include-tokens`. Название аргумента `components` сохранено для совместимости: он принимает также actions и behaviors. Отдельный `check` перед ним не нужен: совместимость проверяется в том же запросе.
+
+## Самостоятельные возможности core
+
+Опубликованы четыре actions (`copy`, `download`, `pickFiles`, `readClipboard`) и два behaviors (`getSelectionValue`, `getNextEnabledValue`). Они имеют одну привязку `core`, слой 1, `framework: null` и не получают фиктивных UI-токенов или React-привязок. Actions независимы от фреймворка, но требуют браузерных API; behaviors — чистые вычисления.
+
+Ищите возможность по имени или назначению, при необходимости с `kind`. Затем запросите `dreadnought_context` с `components: ["getSelectionValue", "getNextEnabledValue"]` и `layer: 1`. Для core-записей usage-ответ содержит назначение, проверенный пример, ограничения и `composesWith` — ID записей, с которыми возможность можно сочетать. Это рекомендуемые сочетания, а не граф обязательных зависимостей. Полные позиционные контракты добавляются только при `format: "contract"`. При `truncated: true` запрашивайте недостающий точный контракт через `dreadnought_get` с `binding: "core"`, `section: "api"`, а примеры — через `section: "examples"`.
+
+Состояние, события, DOM, фокус и ARIA не добавляются к чистым behaviors. Например, переход фокуса и изменение выбора — отдельные решения вызывающего кода; их можно соединить, но навигация сама не выбирает элемент.
 
 По умолчанию `format: "usage"` возвращает публичные импорты, составные части, один проверенный пример и `props` — короткую карту простых значений свойств. Это **не полный контракт**: `apiCoverage: "partial"` сохраняется даже при `truncated: false`. Карта не описывает обязательность и совместимость сочетаний свойств между ветвями. Сложные типы и одиночное `undefined` не выдаются как ложный полный тип. Для ветвей библиотечных свойств доступен `--format contract`; для точного свойства, ref или наследуемого HTML API — `get --binding react-ui --section api --property NAME`, при необходимости `--include-inherited`.
 
@@ -70,22 +82,26 @@ TypeScript извлекает входной контракт экспортир
 
 Сборщик объединяет эти записи по `componentId`. Для каждого компонента `sources` явно задаёт базовый файл и дополнения: компоненты без core начинают с адаптера и не получают фиктивный первый слой. Файлы метаданных не импортируются библиотекой. Типы пропсов в метаданных не дублируются. Токены и их значения извлекаются из файлов темы соответствующего компонента.
 
+Самостоятельные core-записи явно подключены через `capabilitySources` в `src/config.mjs`: массивы `actions/catalog.json` и `behaviors/catalog.json` рядом с реализацией. Добавление произвольного файла не публикует экспорт автоматически. `composesWith` проверяется на существование записей каталога.
+
 Описания свойств проверяются на существование в текущем контракте. Явные `defaults` проверяются на существование свойства и совместимость с его типом; соответствие реальному поведению подтверждается при редактировании метаданных и тестами компонентов, а не выводится из optional-типа. Примеры компилируются в памяти через разрешённые публичные импорты, без выполнения. Подавление ошибок TypeScript и внутренние импорты запрещены.
 
 ## Формат версии 1
 
 Верхний уровень: `schemaVersion`, `packageVersions`, `entries`. Версии библиотечных пакетов должны совпадать в соответствии с текущей политикой совместного выпуска.
 
-Запись компонента содержит `id`, `kind`, `name`, `family`, `description`, `docsUrl`, `states`, `parts`, `constraints`, `tokens` и `bindings`.
+Запись содержит `id`, `kind` (`component`, `action` или `behavior`), `name`, `family`, `description`, `docsUrl`, `states`, `parts`, `constraints`, `tokens` и `bindings`; необязательное `composesWith` ссылается на существующие ID каталога. Генератор страниц компонентов обрабатывает только `kind: component`.
 
 Каждая привязка содержит `id`, `layer`, `framework`, `importPath`, `exportName`, `description`, `propertyDescriptions`, `defaults`, `examples` и `contracts`. `framework: null` означает независимый от фреймворка Core. Наличие React-привязки не подразумевает других фреймворков.
 
 `contracts` — перегрузки вызова. В каждом контракте `variants` — альтернативные формы входных параметров. Их `properties` содержат `name`, текст типа `type`, `optional`, `origin` (`library` или `dependency`) и при наличии литерального набора `values`. Свойство, отсутствующее в ветви, не добавляется в неё из соседней ветви. Текст типа может ссылаться на стандартные TypeScript/React-типы; каталог не подменяет декларации пакета и проверку TypeScript.
 
+`parameters` и `returnType` сохраняют позиционные аргументы и возвращаемый тип. Варианты свойств первого аргумента находятся в `contracts[].variants`; для последующих объектных аргументов есть необязательное `parameters[].variants`, например ветви action и свойства options у выбора. Для функции без аргументов `parameters` пуст; синтетический options не добавляется. При чтении API опирайтесь на весь контракт перегрузки, не объединяйте аргументы разных перегрузок.
+
 Порядок записей, свойств и токенов стабилен; временных меток и локальных путей в результате нет. Целые примеры сохраняются в исходном виде. Полный каталог включает нативные пропсы, поэтому для контекста модели впоследствии выбираются релевантные фрагменты, а не весь файл.
 
 ## Граница текущего этапа
 
-Включены Button, Input, TextArea, Table, Badge, Card, Tabs, Menu, Accordion, CodeBlock, Alert, Layout, Breadcrumb, Icon и Mark. Составные части Table, Tabs, Accordion и Layout имеют отдельные привязки с `propertyPath` относительно публичного экспорта. Основная привязка готового компонента сохраняет id `react-ui`. Контракты также содержат `parameters` и `returnType`, извлечённые из TypeScript; это сохраняет все позиционные аргументы функций core. Для примитивных и массивных аргументов таблица свойств пуста. `variants` по-прежнему описывает свойства первого объектного аргумента.
+Включены Button, Input, TextArea, Checkbox, Radio, Select, Table, Badge, Card, Tabs, Menu, Accordion, CodeBlock, Alert, Layout, Breadcrumb, Icon и Mark, а также шесть самостоятельных core-записей выше. Составные части Table, Tabs, Accordion и Layout имеют отдельные привязки с `propertyPath` относительно публичного экспорта. Основная привязка готового компонента сохраняет id `react-ui`. Для примитивных и массивных аргументов таблица свойств пуста. `variants` по-прежнему описывает свойства первого аргумента, а свойства последующих объектных аргументов доступны в `parameters[].variants`.
 
 Ссылки документации здесь проверяются по форме; существование страницы и якоря проверяет потребитель при сборке сайта. Каталог не заменяет полные декларации типов пакета.
