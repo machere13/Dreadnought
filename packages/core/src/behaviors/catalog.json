@@ -1,5 +1,36 @@
 [
   {
+    "id": "behavior:get-disclosure-state",
+    "kind": "behavior",
+    "name": "getDisclosureState",
+    "family": "Behaviors",
+    "description": "Вычисляет состояние раскрывающейся секции и согласованные triggerProps/panelProps с ARIA и hidden. Для собственного компонента с любой разметкой и фреймворком.",
+    "docsUrl": "/custom-components/#core-disclosure",
+    "composesWith": ["behavior:get-disclosure-open", "component:accordion"],
+    "constraints": ["Чистая функция без React, DOM и хранилища. open и disabled по умолчанию false. Обязательные triggerId/panelId принадлежат вызывающему коду: непустые разные строки без ASCII whitespace; уникальность на странице обеспечивает владелец. Unicode и двоеточия допустимы. disabled не закрывает открытую панель. Состояние, события, их отмена и фокус обеспечивает компонент; это не полноценный popup."],
+    "bindings": [{
+      "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "getDisclosureState",
+      "defaults": {"open": false, "disabled": false},
+      "examples": [{"id": "usage", "code": "import { getDisclosureState } from '@dreadnought/core';\nconst state = getDisclosureState({ open: true, triggerId: 'settings-trigger', panelId: 'settings-panel' });\n// Примените state.triggerProps и state.panelProps в своём фреймворке."}]
+    }]
+  },
+  {
+    "id": "behavior:get-disclosure-open",
+    "kind": "behavior",
+    "name": "getDisclosureOpen",
+    "family": "Behaviors",
+    "description": "Возвращает следующее boolean-состояние раскрытия по действию open/close/toggle, учитывая disabled. Не меняет состояние сам и не вызывает события.",
+    "docsUrl": "/custom-components/#core-disclosure",
+    "composesWith": ["behavior:get-disclosure-state"],
+    "constraints": ["Чистая функция: currentOpen и action обязательны. DisclosureAction — open, close или toggle. options.disabled по умолчанию false; true сохраняет currentOpen для любого действия. Внешний controlled-владелец может изменить open независимо от disabled. Хранилище, callback, проверка defaultPrevented, DOM и фокус принадлежат потребителю. Кнопке достаточно нативных Enter/Space без собственного keydown."],
+    "bindings": [{
+      "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "getDisclosureOpen",
+      "examples": [{"id": "composition", "code": "import { getDisclosureOpen, getDisclosureState } from '@dreadnought/core';\nconst next = getDisclosureOpen(false, 'toggle');\nconst state = getDisclosureState({ open: next, triggerId: 'details-trigger', panelId: 'details-panel' });\nconst blocked = getDisclosureOpen(true, 'close', { disabled: true }); // true"}]
+    }]
+  },
+  {
     "id": "behavior:get-navigation-direction",
     "kind": "behavior",
     "name": "getNavigationDirection",

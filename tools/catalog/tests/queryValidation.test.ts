@@ -17,7 +17,7 @@ describe('catalog query validation', () => {
     const file = fileURLToPath(new URL('../dist/catalog.json', import.meta.url));
     const entries = loadCatalog(file).entries;
     expect(entries.filter(entry => entry.kind === 'component')).toHaveLength(19);
-    expect(entries.filter(entry => entry.kind !== 'component')).toHaveLength(8);
+    expect(entries.filter(entry => entry.kind !== 'component')).toHaveLength(10);
   });
 
   it.each([

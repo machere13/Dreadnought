@@ -6,6 +6,7 @@
   "description": "Раскрывающиеся разделы для FAQ и пояснений; поддерживает один или несколько открытых пунктов.",
   "docsUrl": "/components/accordion/#accordion-api",
   "states": [],
+  "composesWith": ["behavior:get-disclosure-state"],
   "constraints": ["Каждому Accordion.Item нужны один Trigger и один Panel. Скрытые панели остаются в DOM."],
   "bindings": [
     {

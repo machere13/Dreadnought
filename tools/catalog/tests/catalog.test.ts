@@ -10,6 +10,7 @@ import { describeContract } from '../src/contracts.mjs';
 import { checkExamples } from '../src/examples.mjs';
 import { components, packages } from '../src/config.mjs';
 import { mergeMetadata, readMetadata } from '../src/metadata.mjs';
+import { disclosureCode } from '../../../apps/docs/src/components/disclosureCode.ts';
 
 vi.setConfig({ testTimeout: 120_000, hookTimeout: 120_000 });
 const root = fileURLToPath(new URL('../../../', import.meta.url));
@@ -28,6 +29,35 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes standalone Disclosure contracts and a type-checked custom composition', () => {
+    const examples: { id: string; code: string }[] = [];
+    for (const name of ['getDisclosureState', 'getDisclosureOpen']) {
+      const entry = catalog.entries.find(entry => entry.name === name);
+      expect(entry?.kind).toBe('behavior');
+      expect(entry?.docsUrl).toBe('/custom-components/#core-disclosure');
+      expect(entry?.bindings).toHaveLength(1);
+      expect(entry?.bindings[0]).toMatchObject({ layer: 1, framework: null,
+        importPath: '@dreadnought/core', exportName: name });
+      expect(entry!.bindings[0].examples.every(example => !example.code.includes('react'))).toBe(true);
+      examples.push(...entry!.bindings[0].examples.map(example => ({ ...example, id: `${name}/${example.id}` })));
+    }
+    const state = catalog.entries.find(entry => entry.name === 'getDisclosureState')!;
+    expect(state.composesWith).toEqual(expect.arrayContaining(['behavior:get-disclosure-open', 'component:accordion']));
+    expect(state.bindings[0].defaults).toEqual({ open: false, disabled: false });
+    for (const name of ['triggerId', 'panelId']) {
+      expect(state.bindings[0].contracts[0].variants[0].properties).toContainEqual(expect.objectContaining({ name, optional: false }));
+    }
+    const transition = catalog.entries.find(entry => entry.name === 'getDisclosureOpen')!;
+    expect(transition.composesWith).toContain('behavior:get-disclosure-state');
+    const parameters = transition.bindings[0].contracts[0].parameters;
+    expect(parameters.slice(0, 2).map(parameter => parameter.name)).toEqual(['currentOpen', 'action']);
+    expect(parameters[1].type).toBe('DisclosureAction');
+    examples.push({ id: 'disclosure-actions', code:
+      "import { getDisclosureOpen } from '@dreadnought/core';\ngetDisclosureOpen(false, 'open');\ngetDisclosureOpen(true, 'close');\ngetDisclosureOpen(false, 'toggle');" });
+    expect(parameters[2].variants[0].properties).toContainEqual(expect.objectContaining({ name: 'disabled', optional: true }));
+    examples.push({ id: 'own-disclosure', code: disclosureCode });
+    expect(() => checkExamples(context, examples)).not.toThrow();
+  });
   it('publishes Toolbar across four honest layer bindings with typed composition examples', () => {
     const toolbar = catalog.entries.find(entry => entry.id === 'component:toolbar');
     expect(toolbar?.family).toBe('Controls');
@@ -40,7 +70,7 @@ describe('public catalog', () => {
   });
   it('publishes standalone actions and behaviors with checked public contracts', () => {
     const capabilities = catalog.entries.filter(entry => entry.kind !== 'component');
-    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
+    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getDisclosureOpen', 'getDisclosureState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
     expect(capabilities.every(entry => entry.tokens.length === 0 && entry.bindings.length === 1 && entry.bindings[0].layer === 1)).toBe(true);
     const selection = capabilities.find(entry => entry.name === 'getSelectionValue');
     expect(selection.bindings[0].contracts).toHaveLength(3);
