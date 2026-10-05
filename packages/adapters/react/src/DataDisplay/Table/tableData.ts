@@ -22,15 +22,17 @@ export function paginationNumber(value: number | undefined, fallback: number): n
   return value;
 }
 
-export function fixedStyle<RecordType extends object>(columns: readonly TableColumn<RecordType>[], index: number, hasSelection: boolean): CSSProperties | undefined {
+export function fixedStyle<RecordType extends object>(columns: readonly TableColumn<RecordType>[], index: number, widths: readonly number[], selectionWidth: number): CSSProperties | undefined {
   const column = columns[index];
   if (!column) return undefined;
   const style: CSSProperties = column.width ? { width: column.width, minWidth: column.width } : {};
   if (column.fixed) {
-    const siblings = column.fixed === 'left' ? columns.slice(0, index) : columns.slice(index + 1);
-    const offset = siblings.filter((item) => item.fixed === column.fixed).reduce((sum, item) => sum + (item.width ?? 0), 0);
-    style[column.fixed] = column.fixed === 'left' && hasSelection
-      ? `calc(var(--dreadnought-table-selection-width) + ${offset}px)` : offset;
+    const offset = columns.reduce((sum, item, sibling) => item.fixed === column.fixed
+      && (column.fixed === 'left' ? sibling < index : sibling > index)
+      ? sum + (widths[sibling] || item.width || 0) : sum, 0);
+    style[column.fixed] = offset + (column.fixed === 'left' ? selectionWidth : 0);
+    style.position = 'sticky';
+    style.zIndex = 1;
   }
   return style;
 }

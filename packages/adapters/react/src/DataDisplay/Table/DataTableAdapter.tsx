@@ -1,9 +1,10 @@
-import { useId, useState } from 'react';
+import { useId, useImperativeHandle, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { filterTableRows, getSelectionValue, paginateTableRows, sortTableRows } from '@dreadnought/core';
 import type { TableSortOrder } from '@dreadnought/core';
 import { CheckboxAdapter } from '../../Fields/Checkbox/index.ts';
 import { TableFilterMenu } from './TableFilterMenu.tsx';
+import { useTableWidths } from './useTableWidths.ts';
 import { cellValue, fixedStyle, paginationNumber, recordKey } from './tableData.ts';
 import type { TableChangeFilters, TableChangeSorter, TableColumn, TableDataAdapterProps, TableFilterValue, TableRowKey } from './table.types.ts';
 
@@ -11,6 +12,10 @@ export function DataTableAdapter<RecordType extends object>({
   columns, dataSource, rowKey, pagination, rowSelection, sticky, scroll, locale, onChange, ...tableProps
 }: TableDataAdapterProps<RecordType>) {
   const selectionName = useId();
+  const { table: tableRef, widths, selectionWidth } = useTableWidths(columns, Boolean(rowSelection));
+  useImperativeHandle(tableProps.ref, () => tableRef.current!);
+  const headerStyle: CSSProperties = sticky
+    ? { position: 'sticky', top: typeof sticky === 'object' ? sticky.offsetHeader ?? 0 : 0, zIndex: 2 } : {};
   const defaultSorted = columns.find((column) => column.defaultSortOrder);
   const [sorting, setSorting] = useState<{ key: string; order: TableSortOrder }>({ key: defaultSorted?.key ?? '', order: defaultSorted?.defaultSortOrder ?? null });
   const [filters, setFilters] = useState<Record<string, readonly TableFilterValue[]>>(() =>
@@ -98,12 +103,11 @@ export function DataTableAdapter<RecordType extends object>({
   const tableStyle = {
     ...tableProps.style,
     ...(scroll?.x ? { minWidth: scroll.x } : {}),
-    '--dreadnought-table-sticky-header-offset': typeof sticky === 'object' ? `${sticky.offsetHeader ?? 0}px` : '0px',
   } as CSSProperties;
 
-  const table = <table {...tableProps} data-ui="table" data-sticky={Boolean(sticky)} style={tableStyle}>
+  const table = <table {...tableProps} ref={tableRef} data-ui="table" data-sticky={Boolean(sticky)} style={tableStyle}>
     <thead><tr>
-      {rowSelection && <th scope="col" data-slot="selection-cell" data-fixed="left" style={{ left: 0 }} aria-label="Выбор строк">
+      {rowSelection && <th scope="col" data-slot="selection-cell" data-fixed="left" style={{ ...headerStyle, position: 'sticky', left: 0, zIndex: 3 }} aria-label="Выбор строк">
         {rowSelection.type !== 'radio' && <CheckboxAdapter
           aria-label="Выбрать все строки на странице"
           checked={keysOnPage.length > 0 && selectedOnPage === keysOnPage.length}
@@ -126,7 +130,7 @@ export function DataTableAdapter<RecordType extends object>({
           data-slot="header-cell"
           data-fixed={column.fixed}
           aria-sort={ariaSort}
-          style={fixedStyle(columns, index, Boolean(rowSelection))}
+          style={{ ...fixedStyle(columns, index, widths, selectionWidth), ...headerStyle, ...(column.fixed ? { zIndex: 3 } : {}) }}
         >
           {column.sorter ? <button
             type="button"
@@ -144,7 +148,7 @@ export function DataTableAdapter<RecordType extends object>({
     <tbody>{rows.length ? rows.map((record, rowIndex) => {
       const key = recordKey(record, rowKey, rowSelection ? undefined : (currentPage - 1) * pageSize + rowIndex);
       return <tr key={key} data-selected={selectedKeys.includes(key)}>
-        {rowSelection && <td data-slot="selection-cell" data-fixed="left" style={{ left: 0 }}>
+        {rowSelection && <td data-slot="selection-cell" data-fixed="left" style={{ position: 'sticky', left: 0, zIndex: 1 }}>
           <input
             type={rowSelection.type === 'radio' ? 'radio' : 'checkbox'}
             name={rowSelection.type === 'radio' ? selectionName : undefined}
@@ -158,7 +162,7 @@ export function DataTableAdapter<RecordType extends object>({
         </td>}
         {columns.map((column, index) => {
           const value = cellValue(record, column.dataIndex);
-          return <td key={column.key} data-slot="cell" data-fixed={column.fixed} style={fixedStyle(columns, index, Boolean(rowSelection))}>
+          return <td key={column.key} data-slot="cell" data-fixed={column.fixed} style={fixedStyle(columns, index, widths, selectionWidth)}>
             {column.render ? column.render(value, record, rowIndex) : String(value ?? '')}
           </td>;
         })}

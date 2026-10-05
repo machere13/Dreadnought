@@ -167,7 +167,7 @@ describe('TableAdapter', () => {
       dataSource={[{ id: 1, name: 'Анна' }]}
     />);
     expect(screen.getByRole('columnheader', { name: 'Выбор строк' }).getAttribute('data-fixed')).toBe('left');
-    expect(screen.getByRole('columnheader', { name: 'Имя' }).style.left).toContain('dreadnought-table-selection-width');
+    expect(screen.getByRole('columnheader', { name: 'Имя' }).style.left).toBe('0px');
   });
 
   it('renders a configurable empty state', () => {

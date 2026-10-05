@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Table } from '@dreadnought/ui/react';
+import { TableAdapter } from '@dreadnought/react/unstyled';
+import { useState } from 'react';
 
 const meta = {
   title: 'DataDisplay/Table',
@@ -85,3 +87,26 @@ export const RadioSelection: Story = {
       ]} />
   </section>)}</>,
 };
+
+function StickyWidthsExample() {
+  const [narrow, setNarrow] = useState(false);
+  const columns = [
+    { key: 'name', title: 'Имя', dataIndex: 'name' as const, fixed: 'left' as const },
+    { key: 'role', title: 'Роль', dataIndex: 'role' as const, fixed: 'left' as const },
+    { key: 'age', title: 'Возраст', dataIndex: 'age' as const, width: 80 },
+    { key: 'city', title: 'Город', dataIndex: 'city' as const, fixed: 'right' as const },
+  ];
+  return <>
+    <button onClick={() => setNarrow(!narrow)}>Изменить ширину контейнера</button>
+    <section style={{ width: narrow ? 640 : 900, maxWidth: '100%' }}>
+      <h3>Закреплённые колонки без заданной ширины</h3>
+      <Table aria-label="Измеряемая таблица" rowKey="id" columns={columns} dataSource={people}
+        rowSelection={{}} sticky scroll={{ x: 700, y: 160 }} pagination={{ pageSize: 4 }} />
+      <h3>Адаптер без оформления</h3>
+      <TableAdapter aria-label="Неоформленная таблица" rowKey="id" columns={columns} dataSource={people}
+        rowSelection={{}} sticky scroll={{ x: 700, y: 160 }} pagination={{ pageSize: 4 }} />
+    </section>
+  </>;
+}
+
+export const StickyWidths: Story = { render: () => <StickyWidthsExample /> };

@@ -194,7 +194,7 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
     description: 'Структурированные данные с сортировкой, фильтрами, выбором строк, пагинацией и закреплением шапки и колонок.',
     adapterDescription: 'Адаптер сохраняет семантику и поведение таблицы, но позволяет оформить её самостоятельно.',
     logicDescription: 'Функции ядра обрабатывают строки данных, если нужна собственная разметка таблицы.',
-    footnote: <>Для закреплённых колонок задайте <code>fixed</code> и числовую <code>width</code>. При <code>rowSelection</code> обязателен уникальный ключ из <code>rowKey</code> или <code>record.key</code>: строка либо конечное число. <code>filteredValue: null</code> очищает управляемый фильтр. Фильтрация запрашивает страницу 1, сортировка сохраняет страницу; причина изменения доступна в <code>extra.action</code>.</>,
+    footnote: <>Для закреплённых колонок задайте <code>fixed</code>; их ширина измеряется автоматически, <code>width</code> задаёт необязательный минимум. <code>scroll</code> создаёт собственный контейнер прокрутки. При <code>rowSelection</code> обязателен уникальный ключ из <code>rowKey</code> или <code>record.key</code>: строка либо конечное число. <code>filteredValue: null</code> очищает управляемый фильтр. Фильтрация запрашивает страницу 1, сортировка сохраняет страницу; причина изменения доступна в <code>extra.action</code>.</>,
     demo: <TableDemo />,
   },
   badge: badgeDoc,
