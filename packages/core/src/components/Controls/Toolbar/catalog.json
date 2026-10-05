@@ -1,0 +1,45 @@
+{
+  "id": "component:toolbar",
+  "kind": "component",
+  "name": "Toolbar",
+  "family": "Controls",
+  "description": "Панель из библиотечных или собственных контролов: явные участники roving либо обычная группа native.",
+  "docsUrl": "/components/toolbar/#toolbar-api",
+  "states": [
+    "disabled"
+  ],
+  "constraints": [
+    "Каждый участник roving связывает useToolbarItem с настоящим фокусируемым узлом; обычные children автоматически не подключаются.",
+    "Для Input, Select и составных контролов с собственными стрелками используйте navigation=native и роль group.",
+    "RTL-навигация не поддерживается в первом контракте. Готового Angular-адаптера нет."
+  ],
+  "composesWith": [
+    "behavior:get-next-enabled-value",
+    "behavior:get-navigation-direction"
+  ],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "getToolbarState",
+      "propertyDescriptions": {
+        "items": "Участники с непустыми уникальными value и необязательным disabled.",
+        "activeValue": "Последний активный ключ, не выбранная команда.",
+        "navigation": "roving: одна остановка Tab и стрелки; native: обычная группа с нативной клавиатурой контролов.",
+        "orientation": "Ориентация ARIA-toolbar в roving."
+      },
+      "defaults": {
+        "navigation": "roving",
+        "orientation": "horizontal"
+      },
+      "examples": [
+        {
+          "id": "state-and-focus",
+          "code": "import { getToolbarState, getNavigationDirection, getNextEnabledValue } from '@dreadnought/core';\nconst items = [{ value: 'save' }, { value: 'copy' }];\nexport function tabIndexes(activeValue?: string) {\n  const state = getToolbarState({ items, activeValue });\n  return items.map(item => ({ value: item.value, tabIndex: item.value === state.tabStopValue ? 0 : -1 }));\n}\nexport function onKeyDown(event: KeyboardEvent, currentValue: string, buttons: ReadonlyMap<string, HTMLButtonElement>) {\n  if (event.defaultPrevented || event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;\n  const direction = getNavigationDirection(event.key, { orientation: 'horizontal' });\n  if (!direction) return;\n  const nextValue = getNextEnabledValue(items, currentValue, direction);\n  event.preventDefault();\n  if (nextValue) buttons.get(nextValue)?.focus();\n}"
+        }
+      ]
+    }
+  ]
+}

@@ -28,6 +28,16 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes Toolbar across four honest layer bindings with typed composition examples', () => {
+    const toolbar = catalog.entries.find(entry => entry.id === 'component:toolbar');
+    expect(toolbar?.family).toBe('Controls');
+    expect(toolbar?.bindings.map(binding => binding.id)).toEqual(['core', 'react-logic', 'react-adapter', 'react-ui']);
+    expect(toolbar?.bindings[0].framework).toBeNull();
+    expect(toolbar?.bindings[0].examples[0].code).not.toContain('react');
+    const adapter = toolbar?.bindings.find(binding => binding.id === 'react-adapter');
+    expect(adapter?.contracts[0].variants[0].properties.find(prop => prop.name === 'navigation')?.values).toEqual(expect.arrayContaining(['roving', 'native']));
+    expect(toolbar?.tokens).toContainEqual({ name: '--dreadnought-toolbar-gap', value: 'var(--dreadnought-spacing-x2)' });
+  });
   it('publishes standalone actions and behaviors with checked public contracts', () => {
     const capabilities = catalog.entries.filter(entry => entry.kind !== 'component');
     expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);

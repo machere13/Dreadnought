@@ -1,0 +1,53 @@
+{
+  "componentId": "component:toolbar",
+  "bindings": [
+    {
+      "id": "react-logic",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/logic",
+      "exportName": "useToolbarItem",
+      "description": "Подключает один настоящий фокусируемый узел внутри ToolbarAdapter или Toolbar; без провайдера выдаёт ошибку.",
+      "propertyDescriptions": {
+        "value": "Уникальный непустой ключ участника.",
+        "disabled": "Исключает участника из навигации, но не заменяет disabled самого контрола.",
+        "ref": "Ref настоящего фокусируемого узла; object и callback cleanup сохраняются.",
+        "onFocus": "Потребительский обработчик выполняется первым; preventDefault отменяет активацию.",
+        "onKeyDown": "Потребительский обработчик выполняется первым; preventDefault отменяет навигацию."
+      },
+      "defaults": {
+        "disabled": false
+      },
+      "examples": [
+        {
+          "id": "custom-control",
+          "code": "import { useToolbarItem } from '@dreadnought/react/logic';\nimport { ToolbarAdapter } from '@dreadnought/react/unstyled';\nfunction Tool({ value }: { value: string }) {\n  const { itemProps } = useToolbarItem<HTMLButtonElement>({ value });\n  return <button {...itemProps}>{value}</button>;\n}\nexport function Example() {\n  return <ToolbarAdapter aria-label='Команды'><Tool value='save' /><Tool value='copy' /><Tool value='download' /></ToolbarAdapter>;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "ToolbarAdapter",
+      "propertyDescriptions": {
+        "navigation": "roving: одна остановка Tab и стрелки; native: обычная группа с нативной клавиатурой контролов.",
+        "orientation": "Ориентация панели и стрелок в roving; в native влияет только на оформление.",
+        "loop": "Зацикливает переходы по участникам только в roving.",
+        "aria-label": "Доступное название панели; альтернативно используйте aria-labelledby."
+      },
+      "defaults": {
+        "navigation": "roving",
+        "orientation": "horizontal",
+        "loop": true
+      },
+      "examples": [
+        {
+          "id": "roving",
+          "code": "import { useToolbarItem } from '@dreadnought/react/logic';\nimport { ToolbarAdapter } from '@dreadnought/react/unstyled';\nfunction Tool({ value }: { value: string }) {\n  const { itemProps } = useToolbarItem<HTMLButtonElement>({ value });\n  return <button {...itemProps}>{value}</button>;\n}\nexport function Example() {\n  return <ToolbarAdapter aria-label='Команды'><Tool value='save' /><Tool value='copy' /><Tool value='download' /></ToolbarAdapter>;\n}"
+        }
+      ]
+    }
+  ]
+}

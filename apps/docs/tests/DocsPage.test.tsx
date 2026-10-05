@@ -13,6 +13,15 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('documents Toolbar composition, its API anchor and the Controls navigation link', () => {
+    render(<DocsPage section="toolbar" />);
+    expect(screen.getByRole('toolbar', { name: 'Действия документа' })).toBeTruthy();
+    expect(screen.getByRole('group', { name: 'Фильтры документа' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Toolbar' }).getAttribute('href')).toBe('/components/toolbar/');
+    expect(document.getElementById('toolbar-api')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Сохранить' }));
+    expect(screen.getByText('Действие: save')).toBeTruthy();
+  });
   it('builds a custom choice control from core without a ready component', () => {
     render(<DocsPage section="custom-components" />);
     const first = screen.getByRole('button', { name: 'Новости' });

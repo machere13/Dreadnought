@@ -1,0 +1,33 @@
+{
+  "componentId": "component:toolbar",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Toolbar",
+      "propertyDescriptions": {
+        "navigation": "roving: одна остановка Tab и стрелки; native: обычная группа с нативной клавиатурой контролов.",
+        "orientation": "Ориентация панели и стрелок в roving; в native влияет только на оформление.",
+        "loop": "Зацикливает переходы по участникам только в roving.",
+        "aria-label": "Доступное название панели; альтернативно используйте aria-labelledby."
+      },
+      "defaults": {
+        "navigation": "roving",
+        "orientation": "horizontal",
+        "loop": true
+      },
+      "examples": [
+        {
+          "id": "roving",
+          "code": "import { useToolbarItem } from '@dreadnought/react/logic';\nimport { Button, Toolbar } from '@dreadnought/ui/react';\nfunction Command({ value, label }: { value: string; label: string }) {\n  const { itemProps } = useToolbarItem<HTMLButtonElement>({ value });\n  return <Button {...itemProps} size='compact'>{label}</Button>;\n}\nexport function Example() {\n  return <Toolbar aria-label='Действия документа'><Command value='save' label='Сохранить' /><Command value='copy' label='Копировать' /><Command value='download' label='Скачать' /></Toolbar>;\n}"
+        },
+        {
+          "id": "native",
+          "code": "import { Toolbar, Input, Select, Button } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Toolbar navigation='native' aria-label='Фильтры'><Input aria-label='Поиск' /><Select aria-label='Статус' options={[{value: 'active', label: 'Активные'}]} /><Button size='compact'>Применить</Button></Toolbar>;\n}"
+        }
+      ]
+    }
+  ]
+}

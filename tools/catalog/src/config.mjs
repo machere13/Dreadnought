@@ -11,6 +11,7 @@ const adapter = 'packages/adapters/react/src';
 const ui = 'packages/ui/src/adapters/react/components';
 export const components = [
   { family: 'Controls', name: 'Button', sources: [core, adapter, ui] },
+  { family: 'Controls', name: 'Toolbar', sources: [core, adapter, ui] },
   { family: 'Fields', name: 'Input', sources: [core, adapter, ui] },
   { family: 'Fields', name: 'TextArea', sources: [core, adapter, ui] },
   { family: 'Fields', name: 'Checkbox', sources: [core, adapter, ui] },

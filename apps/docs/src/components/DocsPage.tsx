@@ -15,6 +15,7 @@ import { markDoc } from './componentDocs/MarkDoc';
 import { checkboxDoc } from './componentDocs/CheckboxDoc';
 import { radioDoc } from './componentDocs/RadioDoc';
 import { selectDoc } from './componentDocs/SelectDoc';
+import { toolbarDoc } from './componentDocs/ToolbarDoc';
 import { GettingStarted } from './GettingStarted';
 import { ThemingGuide } from './ThemingGuide';
 import { CustomComponentsGuide } from './CustomComponentsGuide';
@@ -24,10 +25,10 @@ import { DocsAssistant } from '../assistant/DocsAssistant.tsx';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
-type ComponentSection = 'button' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'radio' | 'select';
+type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'radio' | 'select';
 type DocsSection = 'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
 const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
-  { name: 'Controls', sections: ['button'] },
+  { name: 'Controls', sections: ['button', 'toolbar'] },
   { name: 'DataDisplay', sections: ['badge', 'codeblock', 'icon', 'mark', 'table'] },
   { name: 'Feedback', sections: ['alert'] },
   { name: 'Fields', sections: ['input', 'textarea', 'checkbox', 'radio', 'select'] },
@@ -198,6 +199,7 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
   },
   badge: badgeDoc,
   card: cardDoc,
+  toolbar: toolbarDoc,
   tabs: tabsDoc,
   menu: menuDoc,
   accordion: accordionDoc,

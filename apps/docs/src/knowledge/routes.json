@@ -5,5 +5,5 @@
   "/components/accordion/", "/components/tabs/", "/components/menu/", "/components/table/",
   "/components/breadcrumb/", "/components/codeblock/", "/components/icon/",
   "/components/mark/", "/components/layout/",
-  "/components/checkbox/", "/components/radio/", "/components/select/"
+  "/components/checkbox/", "/components/radio/", "/components/select/", "/components/toolbar/"
 ]
