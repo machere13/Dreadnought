@@ -22,4 +22,16 @@
   --dreadnought-color-status-warning: rgb(245 188 102 / 100%);
   --dreadnought-color-status-success: rgb(118 211 160 / 100%);
   --dreadnought-color-status-info: rgb(125 177 245 / 100%);
+  --dreadnought-color-chart-series-1: rgb(125 177 245 / 100%);
+  --dreadnought-color-chart-series-2: rgb(245 188 102 / 100%);
+  --dreadnought-color-chart-series-3: rgb(118 211 160 / 100%);
+  --dreadnought-color-chart-series-4: rgb(201 157 246 / 100%);
+  --dreadnought-color-chart-series-5: rgb(230 218 119 / 100%);
+  --dreadnought-color-chart-series-6: rgb(255 146 173 / 100%);
+  --dreadnought-color-chart-series-1-on-light: rgb(35 91 168 / 100%);
+  --dreadnought-color-chart-series-2-on-light: rgb(139 83 12 / 100%);
+  --dreadnought-color-chart-series-3-on-light: rgb(29 111 65 / 100%);
+  --dreadnought-color-chart-series-4-on-light: rgb(117 52 174 / 100%);
+  --dreadnought-color-chart-series-5-on-light: rgb(107 94 12 / 100%);
+  --dreadnought-color-chart-series-6-on-light: rgb(168 42 83 / 100%);
 }

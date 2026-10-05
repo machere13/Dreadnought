@@ -1,3 +1,8 @@
 :root {
   --dreadnought-opacity-disabled: 0.55;
+  --dreadnought-opacity-chart-fill: 0.14;
+  --dreadnought-stroke-dash-solid: none;
+  --dreadnought-stroke-dash-short: 6 3;
+  --dreadnought-stroke-dash-dot: 2 3;
+  --dreadnought-stroke-dash-long: 8 3 2 3;
 }

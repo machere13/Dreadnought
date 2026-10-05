@@ -209,11 +209,11 @@ describe('generated catalog over MCP', () => {
     mkdirSync(core, {recursive: true});
     writeFileSync(path.join(core, 'package.json'), JSON.stringify({name: '@dreadnought/core', version: '0.1.0'}));
   });
-  it('serves an adapter-only Radar contract and checked example through real MCP', async () => {
+  it('serves Radar adapter and ready UI contracts through real MCP', async () => {
     install('@dreadnought/react', '0.1.0');
     await withClient(generatedCatalogPath, projectPath, async client => {
       const overview = replyPayload(await client.callTool({ name: 'dreadnought_get', arguments: { component: 'RadarChart' } })).result;
-      expect(overview.bindings.map((binding: any) => binding.id)).toEqual(['react-adapter']);
+      expect(overview.bindings.map((binding: any) => binding.id)).toEqual(['react-adapter', 'react-ui']);
       const api = await client.callTool({ name: 'dreadnought_get', arguments: { component: 'RadarChart', binding: 'react-adapter', section: 'api' } });
       expect(api.isError).toBeUndefined();
       for (const variant of replyPayload(api).result.contracts[0].variants) {

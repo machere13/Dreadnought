@@ -59,6 +59,9 @@ const presentation = await import('../dist/index.js');
 for (const name of ['buttonPresentation', 'inputPresentation', 'textAreaPresentation', 'badgePresentation', 'codeBlockPresentation']) {
   assert.ok(presentation[name]?.root, `${name} must be exported from the built package`);
 }
+assert.ok(presentation.radarChartPresentation?.root);
+assert.equal(typeof presentation.getRadarSeriesClass('__proto__'), 'string');
+assert.equal('RadarChart' in presentation, false);
 for (const name of ['Button', 'Input', 'TextArea', 'Badge', 'CodeBlock']) {
   assert.equal(name in presentation, false, `${name} must only be exported by the React entrypoint`);
 }

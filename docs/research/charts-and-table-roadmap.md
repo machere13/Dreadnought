@@ -110,7 +110,7 @@ const model = buildRadarLayout({
 
 ### C2. Unstyled SVG Radar и доступное взаимодействие
 
-**Статус:** реализован `RadarChartAdapter` второго слоя, публичный каталог/MCP и страница `/components/radarchart/`. Готовый RadarChart с темой остаётся этапом C3. Итоговый контракт: [спецификация C2](../superpowers/specs/2026-10-05-radar-svg-adapter-design.md).
+**Статус:** реализован `RadarChartAdapter` второго слоя, публичный каталог/MCP и страница `/components/radarchart/`. Готовое оформление реализовано отдельно в C3. Контракт адаптера: [спецификация C2](../superpowers/specs/2026-10-05-radar-svg-adapter-design.md).
 
 **Сценарий:** в браузере менять видимость серий через клавиатуру, читать значения без hover, изменять контейнер sidebar.
 
@@ -130,6 +130,8 @@ const model = buildRadarLayout({
 
 ### C3. Оформление Radar и scoped themes
 
+**Статус:** реализован `RadarChart` в `@dreadnought/ui/react`; framework-neutral `radarChartPresentation` и `getRadarSeriesClass` экспортируются из `@dreadnought/ui`. Геометрия/состояние остаются в C1/C2. Компонентные токены в `Visualization/RadarChart` ссылаются на глобальные роли, данные оформления назначаются детерминированно по ID. Шесть сочетаний могут повторяться: уникальность каждого цвета для произвольного набора не обещается. Названия серий и полная таблица не зависят от цвета. Локальные области переопределяют компонентные токены; новый theme-provider или `data-theme` API не добавлен. Storybook показывает готовый компонент, отдельный адаптер, фиксированный размер, две одновременно оформленные области и восемь серий. Анимации нет; forced-colors сохраняет контуры и рисунок линий. Длинные SVG-подписи по-прежнему могут пересекаться, полный текст доступен в таблице.
+
 **Сценарий:** готовый Radar вписывается в Dreadnought, custom adapter остаётся независимым; две темы одновременно дают разные цвета.
 
 **Слой/reuse:** ui/presentation CSS Module + React facade; themes. Переиспользовать существующий [Table UI/presentation подход][D-ui], размерные/цветовые global roles. Не импортировать React в presentation map.
@@ -137,12 +139,12 @@ const model = buildRadarLayout({
 **Минимальный контракт:** `RadarChart` повторяет поведенческие props C2; UI даёт классы root/grid/axis/series/legend/focus. Стабильное назначение цветов по series ID на lifetime набора; доступный text/legend не кодирует series одним цветом. Не экспортировать имена внутренних CSS классов как обязательное API.
 
 ```tsx
-<div data-theme="dark">
+<div className="customRadarTheme">
   <RadarChart label="Сравнение" metrics={metrics} series={series} />
 </div>
 ```
 
-`data-theme` в примере — только идея scope: при реализации использовать фактический theme selector из проекта, не считать этот атрибут существующим API.
+`customRadarTheme` — класс приложения, задающий `--dreadnought-radar-chart-*`; не новый API выбора темы. Например, `--dreadnought-radar-chart-series-1-color: var(--dreadnought-color-chart-series-1-on-light)`. Для оформления вложенной таблицы используются уже существующие `--dreadnought-table-*`. Значения наследуются только внутри этой области.
 
 **Зависимости:** C2; согласование roles/tokens. **Границы:** dark/light/forced colors, contrast, reduced motion (первый выпуск без обязательной анимации), many series, перенос labels. Размерные component tokens ссылаются на global tokens.
 

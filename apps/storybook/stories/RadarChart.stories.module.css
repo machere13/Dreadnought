@@ -1,0 +1,22 @@
+.themes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dreadnought-size-x3)), 1fr)); gap: var(--dreadnought-spacing-x4); }
+.dark, .light { min-width: 0; padding: var(--dreadnought-spacing-x4); border-radius: var(--dreadnought-border-radius-x1); }
+.dark { background: var(--dreadnought-color-surface-canvas); }
+.light {
+  background: var(--dreadnought-color-surface-inverse);
+  --dreadnought-radar-chart-text: var(--dreadnought-color-text-inverse);
+  --dreadnought-radar-chart-description-text: var(--dreadnought-color-text-inverse);
+  --dreadnought-radar-chart-grid-color: var(--dreadnought-color-border-default);
+  --dreadnought-radar-chart-legend-bg: var(--dreadnought-color-surface-inverse);
+  --dreadnought-radar-chart-legend-bg-hover: var(--dreadnought-color-action-primary-hover);
+  --dreadnought-radar-chart-focus-color: var(--dreadnought-color-text-inverse);
+  --dreadnought-radar-chart-series-1-color: var(--dreadnought-color-chart-series-1-on-light);
+  --dreadnought-radar-chart-series-2-color: var(--dreadnought-color-chart-series-2-on-light);
+  --dreadnought-radar-chart-series-3-color: var(--dreadnought-color-chart-series-3-on-light);
+  --dreadnought-radar-chart-series-4-color: var(--dreadnought-color-chart-series-4-on-light);
+  --dreadnought-radar-chart-series-5-color: var(--dreadnought-color-chart-series-5-on-light);
+  --dreadnought-radar-chart-series-6-color: var(--dreadnought-color-chart-series-6-on-light);
+  --dreadnought-table-text: var(--dreadnought-color-text-inverse);
+  --dreadnought-table-header-text: var(--dreadnought-color-text-inverse);
+  --dreadnought-table-bg: var(--dreadnought-color-surface-inverse);
+  --dreadnought-table-header-bg: var(--dreadnought-color-action-primary-hover);
+}

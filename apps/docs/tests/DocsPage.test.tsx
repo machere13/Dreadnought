@@ -13,14 +13,14 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
-  it('documents an adapter-only Radar with real selection and API', () => {
+  it('documents ready Radar and its lower layers with real selection and API', () => {
     render(<DocsPage section="radarchart" />);
     expect(document.getElementById('radarchart-api')).toBeTruthy();
-    expect(screen.getByRole('link', { name: 'RadarChartAdapter' }).getAttribute('href')).toBe('/components/radarchart/');
+    expect(screen.getByRole('link', { name: 'RadarChart' }).getAttribute('href')).toBe('/components/radarchart/');
     const button = screen.getByRole('button', { name: 'Вариант A' });
     fireEvent.click(button); expect(button.getAttribute('aria-pressed')).toBe('false');
     expect(screen.getByRole('table', { name: 'Сравнение вариантов: Данные' })).toBeTruthy();
-    expect(screen.getByText('Адаптер второго слоя')).toBeTruthy();
+    expect(screen.getByText('Готовый компонент')).toBeTruthy();
   });
   it('documents a custom disclosure with a working example and anchor', () => {
     render(<DocsPage section="custom-components" />);

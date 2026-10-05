@@ -1,0 +1,15 @@
+:root {
+  --dreadnought-radar-chart-text: var(--dreadnought-color-text-primary);
+  --dreadnought-radar-chart-description-text: var(--dreadnought-color-text-placeholder);
+  --dreadnought-radar-chart-grid-color: var(--dreadnought-color-border-subtle);
+  --dreadnought-radar-chart-border: var(--dreadnought-color-border-default);
+  --dreadnought-radar-chart-legend-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-radar-chart-legend-bg-hover: var(--dreadnought-color-surface-hover);
+  --dreadnought-radar-chart-focus-color: var(--dreadnought-color-focus-ring);
+  --dreadnought-radar-chart-series-1-color: var(--dreadnought-color-chart-series-1);
+  --dreadnought-radar-chart-series-2-color: var(--dreadnought-color-chart-series-2);
+  --dreadnought-radar-chart-series-3-color: var(--dreadnought-color-chart-series-3);
+  --dreadnought-radar-chart-series-4-color: var(--dreadnought-color-chart-series-4);
+  --dreadnought-radar-chart-series-5-color: var(--dreadnought-color-chart-series-5);
+  --dreadnought-radar-chart-series-6-color: var(--dreadnought-color-chart-series-6);
+}

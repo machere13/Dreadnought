@@ -1,0 +1,29 @@
+{
+  "componentId": "component:radar-chart",
+  "constraints": [
+    "Оформление назначается по точному ID серии, независимо от порядка и видимости. Шесть сочетаний цвета/рисунка линии могут повторяться; названия и таблица сохраняют точную идентификацию.",
+    "Токены --dreadnought-radar-chart-* можно переопределять в области конкретного графика; CSS адаптера не зависит от UI."
+  ],
+  "bindings": [{
+    "id": "react-ui", "layer": 3, "framework": "react",
+    "importPath": "@dreadnought/ui/react", "exportName": "RadarChart",
+    "description": "Готовый Radar с темой, устойчивым оформлением серий, легендой и таблицей данных.",
+    "propertyDescriptions": {
+      "metrics": "Показатели с ID, подписью, явным domain и необязательным reverse.",
+      "series": "Серии с ID, подписью и исходными значениями по каждому ID показателя.",
+      "label": "Обязательное доступное название графика.",
+      "description": "Необязательное пояснение.",
+      "width": "Фиксированная ширина в CSS-пикселях; вместе с height.",
+      "height": "Фиксированная высота в CSS-пикселях; вместе с width.",
+      "visibleSeries": "Управляемый набор видимых ID.",
+      "defaultVisibleSeries": "Начальные видимые ID; по умолчанию все начальные серии.",
+      "onVisibleSeriesChange": "Запрос нового набора видимых актуальных ID.",
+      "labels": "Подписи легенды, таблицы и направления шкалы.",
+      "slotProps": "Классы, стили и нативные свойства частей объединяются с оформлением библиотеки."
+    },
+    "examples": [{
+      "id": "basic",
+      "code": "import { RadarChart } from '@dreadnought/ui/react';\nconst metrics = ['quality','coverage','latency'].map(id => ({id,label:id,domain:[0,100] as const}));\nconst series = [{id:'a',label:'A',values:{quality:80,coverage:70,latency:60}}];\nexport function Example() { return <RadarChart label=\"Сравнение\" metrics={metrics} series={series} />; }"
+    }]
+  }]
+}

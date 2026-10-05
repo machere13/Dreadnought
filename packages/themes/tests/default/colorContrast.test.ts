@@ -22,6 +22,7 @@ const tokens = new Map([
   ...declarations('components/Navigation/Tabs/colors.tokens.css'),
   ...declarations('components/DataDisplay/Badge/colors.tokens.css'),
   ...declarations('components/Surfaces/Card/colors.tokens.css'),
+  ...declarations('components/Visualization/RadarChart/colors.tokens.css'),
 ]);
 
 function color(name: string): number[] {
@@ -58,6 +59,14 @@ function borderWidth(name: string): number {
 }
 
 describe('default dark theme contrast', () => {
+  it('keeps every Radar series visible on dark and scoped light surfaces', () => {
+    expect(contrast('radar-chart-text', 'color-surface-canvas')).toBeGreaterThanOrEqual(4.5);
+    for (let index = 1; index <= 6; index++) {
+      expect(contrast(`radar-chart-series-${index}-color`, 'color-surface-canvas')).toBeGreaterThanOrEqual(3);
+      expect(contrast(`radar-chart-series-${index}-color`, 'color-surface-default')).toBeGreaterThanOrEqual(3);
+      expect(contrast(`color-chart-series-${index}-on-light`, 'color-surface-inverse')).toBeGreaterThanOrEqual(3);
+    }
+  });
   it('separates the canvas from the primary action and keeps its label readable', () => {
     expect(color('button-primary-bg')).toEqual([255, 255, 255]);
     expect(color('button-secondary-bg')).toEqual([70, 70, 70]);

@@ -1,0 +1,7 @@
+:root {
+  --dreadnought-radar-chart-gap: var(--dreadnought-spacing-x4);
+  --dreadnought-radar-chart-legend-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-radar-chart-legend-padding-block: var(--dreadnought-spacing-x2);
+  --dreadnought-radar-chart-legend-padding-inline: var(--dreadnought-spacing-x4);
+  --dreadnought-radar-chart-focus-offset: var(--dreadnought-spacing-x1);
+}

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { RadarChartAdapter } from '@dreadnought/react/unstyled';
+import { RadarChart } from '@dreadnought/ui/react';
 import { getCatalogDoc } from '../../catalog/getCatalogDoc';
 import type { ComponentDoc } from './types';
 import styles from '../DocsPage.module.css';
@@ -16,19 +16,15 @@ const series = [
 function RadarDemo() {
   const [visible, setVisible] = useState(series.map(item => item.id));
   return <div className={styles.demo}>
-    <RadarChartAdapter label="Сравнение вариантов" description="Нажмите на серию, чтобы скрыть или вернуть её. Таблица всегда показывает все исходные значения."
-      metrics={metrics} series={series} visibleSeries={visible} onVisibleSeriesChange={setVisible} className={styles.radarDemo}
-      slotProps={{ plotContainer: { className: styles.radarViewport }, plot: { className: styles.radarPlot }, grid: { className: styles.radarGrid },
-        axis: () => ({ className: styles.radarAxis }), axisLabel: () => ({ className: styles.radarAxisLabel }),
-        series: item => ({ className: item.id === 'A' ? styles.radarSeriesA : styles.radarSeriesB }),
-        legend: { className: styles.demoRow }, legendButton: () => ({ className: styles.coreDemoButton }), table: { className: styles.radarTable } }} />
+    <RadarChart label="Сравнение вариантов" description="Нажмите на серию, чтобы скрыть или вернуть её. Таблица всегда показывает все исходные значения."
+      metrics={metrics} series={series} visibleSeries={visible} onVisibleSeriesChange={setVisible} />
   </div>;
 }
 export const radarChartDoc: ComponentDoc = {
-  ...getCatalogDoc('radarchart'), title: 'RadarChartAdapter',
-  description: 'Сравнение серий по явным диапазонам показателей. Адаптер второго слоя создаёт SVG, легенду и полную таблицу данных без готовой темы.',
-  adapterDescription: 'slotProps передаёт классы и нативные свойства частям. Геометрией и доступной разметкой владеет адаптер; оформление этого демо принадлежит сайту документации.',
+  ...getCatalogDoc('radarchart'), title: 'RadarChart',
+  description: 'Сравнение серий по явным диапазонам показателей. Готовый компонент объединяет SVG, легенду и полную таблицу данных с оформлением через токены.',
+  adapterDescription: 'RadarChartAdapter второго слоя оставляет ту же разметку и поведение без оформления. slotProps передаёт классы и нативные свойства частям.',
   logicDescription: 'buildRadarLayout из core вычисляет оси и точки независимо от React. Используйте модель для собственной разметки или другого фреймворка.',
-  footnote: <>Готовый RadarChart и UI-тема ещё не выпущены. Задавайте width и height вместе либо оставьте оба: ResizeObserver измерит контейнер, высота будет 80% ширины. Без ResizeObserver данные остаются доступны, для SVG нужны фиксированные размеры. Длинные SVG-подписи могут пересекаться — полные названия и значения сохранены в таблице.</>,
+  footnote: <>Задавайте width и height вместе либо оставьте оба: ResizeObserver измерит контейнер, высота будет 80% ширины. Без ResizeObserver данные остаются доступны, для SVG нужны фиксированные размеры. Длинные SVG-подписи могут пересекаться — полные названия и значения сохранены в таблице. Цвет и рисунок линии привязаны к ID; шесть сочетаний могут повторяться. Для отдельного графика переопределяйте --dreadnought-radar-chart-* в своей CSS-области. Это не изменяет другие графики.</>,
   demo: <RadarDemo />,
 };

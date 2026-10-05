@@ -1,0 +1,10 @@
+:root {
+  --dreadnought-radar-chart-plot-max-width: var(--dreadnought-size-x4);
+  --dreadnought-radar-chart-legend-min-height: var(--dreadnought-size-control-compact-min-height);
+  --dreadnought-radar-chart-legend-radius: var(--dreadnought-border-radius-pill);
+  --dreadnought-radar-chart-swatch-width: var(--dreadnought-size-control-compact-min-height);
+  --dreadnought-radar-chart-border-width: var(--dreadnought-border-width-outline);
+  --dreadnought-radar-chart-grid-width: var(--dreadnought-border-width-outline);
+  --dreadnought-radar-chart-series-width: var(--dreadnought-border-width-x2);
+  --dreadnought-radar-chart-focus-width: var(--dreadnought-border-width-x2);
+}

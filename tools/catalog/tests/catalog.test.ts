@@ -33,12 +33,15 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
-  it('publishes Radar adapter without synthetic core, UI or theme', () => {
+  it('publishes Radar adapter and ready UI without a synthetic component core binding', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:radar-chart');
-    expect(entry).toMatchObject({ family: 'Visualization', tokens: [], composesWith: ['domain:build-radar-layout'] });
-    expect(entry!.bindings.map(binding => binding.id)).toEqual(['react-adapter']);
+    expect(entry).toMatchObject({ family: 'Visualization', composesWith: ['domain:build-radar-layout'] });
+    expect(entry!.bindings.map(binding => binding.id)).toEqual(['react-adapter', 'react-ui']);
+    expect(entry!.tokens.length).toBeGreaterThan(0);
     expect(entry!.bindings[0]).toMatchObject({ layer: 2, framework: 'react', importPath: '@dreadnought/react/unstyled', exportName: 'RadarChartAdapter' });
     expect(() => checkExamples(context, entry!.bindings[0].examples)).not.toThrow();
+    expect(entry!.bindings[1]).toMatchObject({ layer: 3, importPath: '@dreadnought/ui/react', exportName: 'RadarChart' });
+    expect(() => checkExamples(context, entry!.bindings[1].examples)).not.toThrow();
   });
   it('publishes the pure Radar domain with a checked core example', () => {
     const entry = catalog.entries.find(entry => entry.id === 'domain:build-radar-layout');

@@ -1,0 +1,7 @@
+:root {
+  --dreadnought-radar-chart-fill-opacity: var(--dreadnought-opacity-chart-fill);
+  --dreadnought-radar-chart-dash-solid: var(--dreadnought-stroke-dash-solid);
+  --dreadnought-radar-chart-dash-short: var(--dreadnought-stroke-dash-short);
+  --dreadnought-radar-chart-dash-dot: var(--dreadnought-stroke-dash-dot);
+  --dreadnought-radar-chart-dash-long: var(--dreadnought-stroke-dash-long);
+}

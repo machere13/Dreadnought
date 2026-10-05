@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-font-size-radar-chart: var(--dreadnought-font-size-body-3);
+  --dreadnought-font-weight-radar-chart: var(--dreadnought-font-weight-body-3);
+  --dreadnought-line-height-radar-chart: var(--dreadnought-line-height-body-3);
+  --dreadnought-radar-chart-legend-font-variation: var(--dreadnought-font-variation-wide);
+  --dreadnought-radar-chart-title-font-weight: var(--dreadnought-font-weight-label-1);
+  --dreadnought-radar-chart-label-font-size: var(--dreadnought-font-size-caption-2);
+}
