@@ -4,6 +4,8 @@ export { getNextEnabledValue } from './getNextEnabledValue.ts';
 export type { NavigationItem, NavigationDirection, NavigationOptions } from './getNextEnabledValue.ts';
 export { getNavigationDirection } from './getNavigationDirection.ts';
 export type { NavigationKeyOptions } from './getNavigationDirection.ts';
+export { getSteppedValue } from './getSteppedValue.ts';
+export type { SteppedValueOptions } from './getSteppedValue.ts';
 export { getComboboxKeyAction } from './getComboboxKeyAction.ts';
 export type { ComboboxKeyOptions, ComboboxKeyAction } from './getComboboxKeyAction.ts';
 export { getTypeaheadValue } from './getTypeaheadValue.ts';

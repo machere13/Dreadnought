@@ -150,6 +150,16 @@ const next = direction === undefined
   : getNextEnabledValue(items, 'copy', direction); // save`} />
       <p className={styles.footnote}>Для поискового поля передайте homeEnd: false: Home/End продолжат управлять текстовым курсором. События, их отмена, модификаторы, IME, RTL и перенос фокуса остаются в вашем адаптере. Tabs, Menu и Select уже используют это правило, сохраняя своё поведение и публичные пропсы.</p>
     </section>
+    <section data-knowledge className={styles.section} aria-labelledby="core-stepped-value">
+      <h2 id="core-stepped-value" className={styles.sectionTitle}>Числовое значение с шагом и границами</h2>
+      <p className={styles.bodyText}><code>getSteppedValue(value, {'{ min, max, step? }'})</code> выбирает ближайшую точку сетки от min, не выходя за max. Step по умолчанию 1; при равном расстоянии выбирается большая точка. Если max не кратен шагу от min, верхняя доступная точка будет ниже max.</p>
+      <CodeBlock language="ts" copyLabels={copyLabels} code={`import { getSteppedValue } from '@dreadnought/core';
+const grid = { min: 1, max: 6, step: 2 };
+const value = getSteppedValue(4, grid);
+const next = getSteppedValue(value + grid.step, grid);
+const last = getSteppedValue(grid.max, grid);`} />
+      <p className={styles.footnote}>Все входы должны быть конечными числами; min ≤ max, step &gt; 0. Нечисловой или бесконечный вход вызывает TypeError, неверная сетка — RangeError. Функция нормализует переданного кандидата, а не обрабатывает события. Координаты, клавиатура, disabled, ARIA, форма и хранение состояния остаются вашему адаптеру. Это number, не денежная модель с произвольной точностью.</p>
+    </section>
     <section data-knowledge className={styles.section} aria-labelledby="core-typeahead">
       <h2 id="core-typeahead" className={styles.sectionTitle}>Переход по набранным буквам</h2>
       <p className={styles.bodyText}><code>getTypeaheadValue(items, currentValue, query, options)</code> возвращает ключ доступного пункта по началу названия. Передайте пункты со строковыми value и text. Отключённые пункты пропускаются; регистр и пробелы по краям не учитываются. Пустой запрос или отсутствие совпадения возвращает undefined.</p>

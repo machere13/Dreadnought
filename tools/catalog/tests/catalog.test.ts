@@ -33,6 +33,16 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes the stepped numeric behavior with required bounds and a checked example', () => {
+    const entry = catalog.entries.find(entry => entry.name === 'getSteppedValue');
+    expect(entry?.kind).toBe('behavior');
+    expect(entry?.bindings[0]).toMatchObject({ importPath: '@dreadnought/core', exportName: 'getSteppedValue', framework: null, layer: 1 });
+    const parameters = entry!.bindings[0].contracts[0].parameters;
+    expect(parameters.map(parameter => parameter.name)).toEqual(['value', 'options']);
+    for (const name of ['min', 'max']) expect(parameters[1].variants[0].properties).toContainEqual(expect.objectContaining({ name, optional: false }));
+    expect(parameters[1].defaults).toEqual({ step: 1 });
+    expect(() => checkExamples(context, entry!.bindings[0].examples)).not.toThrow();
+  });
   it('publishes the Combobox keyboard behavior with a checked composition contract', () => {
     const entry = catalog.entries.find(entry => entry.name === 'getComboboxKeyAction');
     expect(entry?.kind).toBe('behavior');
@@ -86,7 +96,7 @@ describe('public catalog', () => {
   });
   it('publishes standalone actions and behaviors with checked public contracts', () => {
     const capabilities = catalog.entries.filter(entry => entry.kind !== 'component');
-    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getComboboxKeyAction', 'getDisclosureOpen', 'getDisclosureState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
+    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getComboboxKeyAction', 'getDisclosureOpen', 'getDisclosureState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getSteppedValue', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
     expect(capabilities.every(entry => entry.tokens.length === 0 && entry.bindings.length === 1 && entry.bindings[0].layer === 1)).toBe(true);
     const selection = capabilities.find(entry => entry.name === 'getSelectionValue');
     expect(selection.bindings[0].contracts).toHaveLength(3);

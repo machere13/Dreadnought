@@ -1,5 +1,21 @@
 [
   {
+    "id": "behavior:get-stepped-value",
+    "kind": "behavior",
+    "name": "getSteppedValue",
+    "family": "Behaviors",
+    "description": "Привязывает числовое значение к ближайшей точке сетки min + n * step внутри заданных границ. Для собственного Slider или ненативного числового поля, без DOM и React.",
+    "docsUrl": "/custom-components/#core-stepped-value",
+    "composesWith": ["behavior:get-navigation-direction"],
+    "constraints": ["value и options.min/max обязательны; step по умолчанию 1. Все значения — конечные number, иначе TypeError. min <= max и step > 0, иначе RangeError. Сетка начинается от min; неделимый max заменяется последней допустимой точкой ниже него. Ближайшая точка выбирается по расстоянию; при равенстве — большая. min === max допустимо. Внутренние целочисленные десятичные вычисления используют BigInt по строковым представлениям входных number; результат — number, не денежная модель или произвольная точность. Функция нормализует кандидата, не выполняет команду увеличения/уменьшения. Координаты, преобразование клавиши в кандидата, disabled, состояние, события, форма, ARIA и фокус принадлежат адаптеру. Нет RTL, нескольких бегунков и логарифмической шкалы."],
+    "bindings": [{
+      "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "getSteppedValue",
+      "parameterDefaults": {"1": {"step": 1}},
+      "examples": [{"id": "composition", "code": "import { getNavigationDirection, getSteppedValue } from '@dreadnought/core';\nconst grid = { min: 1, max: 6, step: 2 };\nconst value = getSteppedValue(4, grid);\nconst direction = getNavigationDirection('ArrowRight', { orientation: 'horizontal' });\nconst candidate = direction === 'first' ? grid.min : direction === 'last' ? grid.max : value + (direction === 'next' ? grid.step : direction === 'previous' ? -grid.step : 0);\nconst next = getSteppedValue(candidate, grid);\nconst end = getSteppedValue(grid.max, grid);"}]
+    }]
+  },
+  {
     "id": "behavior:get-combobox-key-action",
     "kind": "behavior",
     "name": "getComboboxKeyAction",
