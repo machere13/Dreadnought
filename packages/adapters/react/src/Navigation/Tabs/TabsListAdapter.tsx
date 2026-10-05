@@ -5,9 +5,7 @@ import { useTabsOverflow } from './useTabsOverflow.ts';
 import { TabsOverflowMenu } from './TabsOverflowMenu.tsx';
 
 export type TabsListAdapterProps = ComponentPropsWithRef<'div'> & {
-  /** Accessible name of the overflow button and its menu. */
   moreLabel?: string;
-  /** Public styling and DOM properties for the overflow parts. */
   slotProps?: {
     container?: ComponentPropsWithoutRef<'div'>;
     more?: ComponentPropsWithoutRef<'button'>;

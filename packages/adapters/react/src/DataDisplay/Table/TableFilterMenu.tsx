@@ -18,7 +18,6 @@ export function TableFilterMenu<RecordType extends object>({ column, values, onA
   useEffect(() => {
     const node = popup.current;
     if (!open || !node || typeof node.showPopover === 'function') return;
-    // Fallback for environments without the native light-dismiss behavior.
     function dismiss(event: PointerEvent) {
       if (root.current && !event.composedPath().includes(root.current)) setOpen(false);
     }

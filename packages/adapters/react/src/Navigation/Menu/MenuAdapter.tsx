@@ -10,7 +10,6 @@ export interface MenuItem extends NavigationItem {
 
 export type MenuAdapterProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   items: readonly MenuItem[];
-  /** When supplied, items are radio menu items with this value checked. */
   selectedValue?: string;
   onAction?: (value: string) => void;
   slotProps?: { item?: ComponentPropsWithoutRef<'button'> };

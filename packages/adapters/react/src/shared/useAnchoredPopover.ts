@@ -1,13 +1,11 @@
 import { useLayoutEffect } from 'react';
 import type { RefObject } from 'react';
 
-/** Only browser geometry; visual values belong to the UI layer. */
 export function useAnchoredPopover(open: boolean, anchor: RefObject<HTMLElement | null>, popup: RefObject<HTMLElement | null>) {
   useLayoutEffect(() => {
     const node = popup.current;
     if (!open || !node) return;
     const view = node.ownerDocument.defaultView;
-    // source preserves native nesting when the popup is rendered through a portal.
     if (node.showPopover) Reflect.apply(node.showPopover, node, [{ source: anchor.current ?? undefined }]);
     function position() {
       if (!node || !anchor.current) return;
