@@ -1,4 +1,6 @@
 export { useButton } from './Controls/Button/useButton.ts';
+export { useToolbarItem } from './Controls/Toolbar/useToolbarItem.ts';
+export type { UseToolbarItemOptions, ToolbarItemProps } from './Controls/Toolbar/useToolbarItem.ts';
 export type { UseButtonOptions } from './Controls/Button/useButton.ts';
 export { useInput } from './Fields/Input/useInput.ts';
 export type { UseInputOptions, TextInputType } from './Fields/Input/useInput.ts';

@@ -1,4 +1,6 @@
 export { ButtonAdapter } from './Controls/Button/ButtonAdapter.tsx';
+export { ToolbarAdapter } from './Controls/Toolbar/ToolbarAdapter.tsx';
+export type { ToolbarAdapterProps } from './Controls/Toolbar/ToolbarAdapter.tsx';
 export type { ButtonAdapterProps } from './Controls/Button/ButtonAdapter.tsx';
 export { InputAdapter } from './Fields/Input/InputAdapter.tsx';
 export type { InputAdapterProps } from './Fields/Input/InputAdapter.tsx';
