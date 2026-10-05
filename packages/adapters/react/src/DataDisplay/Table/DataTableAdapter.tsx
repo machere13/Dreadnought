@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { filterTableRows, getSelectionValue, paginateTableRows, sortTableRows } from '@dreadnought/core';
 import type { TableSortOrder } from '@dreadnought/core';
+import { CheckboxAdapter } from '../../Fields/Checkbox/index.ts';
 import { TableFilterMenu } from './TableFilterMenu.tsx';
 import { cellValue, fixedStyle, paginationNumber, recordKey } from './tableData.ts';
 import type { TableChangeFilters, TableChangeSorter, TableColumn, TableDataAdapterProps, TableFilterValue, TableRowKey } from './table.types.ts';
@@ -9,6 +10,7 @@ import type { TableChangeFilters, TableChangeSorter, TableColumn, TableDataAdapt
 export function DataTableAdapter<RecordType extends object>({
   columns, dataSource, rowKey, pagination, rowSelection, sticky, scroll, locale, onChange, ...tableProps
 }: TableDataAdapterProps<RecordType>) {
+  const selectionName = useId();
   const defaultSorted = columns.find((column) => column.defaultSortOrder);
   const [sorting, setSorting] = useState<{ key: string; order: TableSortOrder }>({ key: defaultSorted?.key ?? '', order: defaultSorted?.defaultSortOrder ?? null });
   const [filters, setFilters] = useState<Record<string, readonly TableFilterValue[]>>(() =>
@@ -41,6 +43,7 @@ export function DataTableAdapter<RecordType extends object>({
   }
   const keysOnPage = rows.map((record, index) => recordKey(record, rowKey, rowSelection ? undefined : (currentPage - 1) * pageSize + index))
     .filter((_, index) => !rowSelection?.getCheckboxProps?.(rows[index]!)?.disabled);
+  const selectedOnPage = keysOnPage.filter(key => selectedKeys.includes(key)).length;
 
   function filterValues(column: TableColumn<RecordType>): readonly TableFilterValue[] {
     return column.filteredValue !== undefined ? column.filteredValue ?? [] : filters[column.key] ?? [];
@@ -101,10 +104,11 @@ export function DataTableAdapter<RecordType extends object>({
   const table = <table {...tableProps} data-ui="table" data-sticky={Boolean(sticky)} style={tableStyle}>
     <thead><tr>
       {rowSelection && <th scope="col" data-slot="selection-cell" data-fixed="left" style={{ left: 0 }} aria-label="Выбор строк">
-        {rowSelection.type !== 'radio' && <input
-          type="checkbox"
+        {rowSelection.type !== 'radio' && <CheckboxAdapter
           aria-label="Выбрать все строки на странице"
-          checked={keysOnPage.length > 0 && keysOnPage.every((key) => selectedKeys.includes(key))}
+          checked={keysOnPage.length > 0 && selectedOnPage === keysOnPage.length}
+          indeterminate={selectedOnPage > 0 && selectedOnPage < keysOnPage.length}
+          disabled={keysOnPage.length === 0}
           onChange={(event) => changeSelection(event.target.checked
             ? [...new Set([...selectedKeys, ...keysOnPage])]
             : selectedKeys.filter((key) => !keysOnPage.includes(key)))}
@@ -143,7 +147,7 @@ export function DataTableAdapter<RecordType extends object>({
         {rowSelection && <td data-slot="selection-cell" data-fixed="left" style={{ left: 0 }}>
           <input
             type={rowSelection.type === 'radio' ? 'radio' : 'checkbox'}
-            name={rowSelection.type === 'radio' ? 'table-row-selection' : undefined}
+            name={rowSelection.type === 'radio' ? selectionName : undefined}
             aria-label={`Выбрать строку ${key}`}
             checked={selectedKeys.includes(key)}
             disabled={rowSelection.getCheckboxProps?.(record)?.disabled}

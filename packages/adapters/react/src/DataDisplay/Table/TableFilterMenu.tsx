@@ -61,7 +61,7 @@ export function TableFilterMenu<RecordType extends object>({ column, values, onA
       {column.filters.map((filter) => <label key={filter.value} data-slot="filter-option">
         <input
           type={column.filterMultiple === false ? 'radio' : 'checkbox'}
-          name={`filter-${column.key}`}
+          name={id}
           checked={draft.includes(filter.value)}
           onChange={() => setDraft(column.filterMultiple === false ? [filter.value]
             : getSelectionValue(draft, { type: 'toggle', value: filter.value }))}

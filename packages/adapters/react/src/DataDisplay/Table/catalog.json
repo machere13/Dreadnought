@@ -10,6 +10,7 @@
       "description": "Доступная разметка и поведение без готового оформления.",
       "propertyDescriptions": {
         "rowKey": "При rowSelection нужен уникальный устойчивый ключ из rowKey или record.key: строка либо конечное число.",
+        "rowSelection": "Шапка выбирает только доступные строки текущей страницы; mixed при частичном выборе, disabled при пустом доступном наборе. Выбранные disabled и внестраничные ключи сохраняются. Radio-группы таблиц и фильтров изолированы.",
         "columns": "filteredValue: null — пустой управляемый фильтр; defaultFilteredValue применяется только при создании.",
         "pagination": "current/pageSize — положительные безопасные целые числа. defaultCurrent/defaultPageSize применяются только при создании. Фильтр запрашивает страницу 1, сортировка сохраняет текущую.",
         "onChange": "extra.action: sort/filter/paginate; currentDataSource содержит все строки после фильтрации и сортировки, до пагинации. При фильтре и смене страницы сначала вызывается pagination.onChange, затем onChange. Изменение props событий не вызывает."

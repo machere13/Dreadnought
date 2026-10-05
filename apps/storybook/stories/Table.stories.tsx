@@ -62,7 +62,7 @@ export const Interactive: Story = {
     sticky
     scroll={{ x: 800, y: 220 }}
     pagination={{ pageSize: 3 }}
-    rowSelection={{}}
+    rowSelection={{ defaultSelectedRowKeys: [1], getCheckboxProps: row => ({ disabled: row.id === 5 }) }}
     columns={[
       { key: 'name', title: 'Имя', dataIndex: 'name', width: 180, fixed: 'left' },
       { key: 'role', title: 'Роль', dataIndex: 'role', width: 190, filters: [{ text: 'Дизайнер', value: 'Дизайнер' }, { text: 'Разработчик', value: 'Разработчик' }], onFilter: (value, row) => row.role === value },
@@ -71,4 +71,17 @@ export const Interactive: Story = {
     ]}
     dataSource={people}
   />,
+};
+
+export const RadioSelection: Story = {
+  render: () => <>{['Первая команда', 'Вторая команда'].map(name => <section key={name}>
+    <h3>{name}</h3>
+    <Table aria-label={name} rowKey="id" dataSource={people} rowSelection={{ type: 'radio' }} pagination={false}
+      columns={[
+        { key: 'name', title: 'Имя', dataIndex: 'name' },
+        { key: 'role', title: 'Роль', dataIndex: 'role', filterMultiple: false,
+          filters: [{ text: 'Дизайнер', value: 'Дизайнер' }, { text: 'Разработчик', value: 'Разработчик' }],
+          onFilter: (value, row) => row.role === value },
+      ]} />
+  </section>)}</>,
 };
