@@ -1,7 +1,9 @@
-import { useId, useState } from 'react';
+import { useCallback, useId, useRef, useState } from 'react';
 import { buildRadarLayout, getSelectionValue } from '@dreadnought/core';
 import { RadarPlot } from './RadarPlot.tsx';
 import { RadarDataTable } from './RadarDataTable.tsx';
+import { useRadarViewport } from './useRadarViewport.ts';
+import { attachRef } from '../../shared/attachRef.ts';
 import { radarNativeProps, type RadarChartAdapterProps, type RadarChartLabels } from './radarChart.types.ts';
 
 const defaultLabels: RadarChartLabels = {
@@ -28,6 +30,13 @@ export function RadarChartAdapter({ metrics, series, label, description, width, 
   validateVisibility(visibleSeries); validateVisibility(defaultVisibleSeries);
   const id = useId();
   const [internal, setInternal] = useState<readonly string[]>(() => [...(defaultVisibleSeries ?? series.map(item => item.id))]);
+  const plotRef = useRef<HTMLDivElement>(null);
+  const consumerRef = slotProps.plotContainer?.ref;
+  const attachPlot = useCallback((element: HTMLDivElement | null) => {
+    plotRef.current = element;
+    if (element) return attachRef(element, consumerRef, () => { plotRef.current = null; });
+  }, [consumerRef]);
+  const viewport = useRadarViewport(width, height, plotRef);
   const visible = (visibleSeries ?? internal).filter(value => series.some(item => item.id === value));
   function toggle(value: string) {
     const next = getSelectionValue(visible, { type: 'toggle', value });
@@ -37,8 +46,8 @@ export function RadarChartAdapter({ metrics, series, label, description, width, 
   return <figure {...radarNativeProps(native, ['role'])} aria-labelledby={`${id}-label`} aria-describedby={description !== undefined ? `${id}-description` : undefined} data-ui="radar-chart">
     <figcaption id={`${id}-label`}>{label}</figcaption>
     {description !== undefined && <p id={`${id}-description`}>{description}</p>}
-    <div {...radarNativeProps(slotProps.plotContainer)} data-ui="radar-plot-container">
-      {width !== undefined && height !== undefined && <RadarPlot layout={layout} metrics={metrics} series={series} visible={visible} slotProps={slotProps} width={width} height={height} />}
+    <div {...radarNativeProps(slotProps.plotContainer)} ref={attachPlot} data-ui="radar-plot-container">
+      {viewport && <RadarPlot layout={layout} metrics={metrics} series={series} visible={visible} slotProps={slotProps} {...viewport} />}
     </div>
     <div {...radarNativeProps(slotProps.legend)} role="group" aria-label={labels.legend} data-ui="radar-legend">
       {series.map(item => {
