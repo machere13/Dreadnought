@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-tooltip-font-family: var(--dreadnought-font-family-ui);
+  --dreadnought-tooltip-font-size: var(--dreadnought-font-size-body-3);
+  --dreadnought-tooltip-font-weight: var(--dreadnought-font-weight-body-3);
+  --dreadnought-tooltip-line-height: var(--dreadnought-line-height-body-3);
+}

@@ -8,6 +8,8 @@
   .axis { stroke: var(--dreadnought-radar-chart-grid-color); stroke-width: var(--dreadnought-radar-chart-grid-width); }
   .axisLabel { fill: var(--dreadnought-radar-chart-text); font-size: var(--dreadnought-radar-chart-label-font-size); }
   .series { stroke: var(--radar-series-color); fill: var(--radar-series-color); fill-opacity: var(--dreadnought-radar-chart-fill-opacity); stroke-width: var(--dreadnought-radar-chart-series-width); stroke-dasharray: var(--radar-series-dash); }
+  .point { r: var(--dreadnought-radar-chart-point-radius); fill: var(--radar-series-color); stroke: var(--dreadnought-radar-chart-point-border); stroke-width: var(--dreadnought-radar-chart-point-border-width); cursor: help; }
+  .point:is(:hover, :focus-visible, [data-active='true']) { r: var(--dreadnought-radar-chart-point-active-radius); stroke: var(--dreadnought-radar-chart-focus-color); stroke-width: var(--dreadnought-radar-chart-focus-width); outline: none; }
   .series1 { --radar-series-color: var(--dreadnought-radar-chart-series-1-color); --radar-series-dash: var(--dreadnought-radar-chart-dash-solid); --radar-series-border: solid; }
   .series2 { --radar-series-color: var(--dreadnought-radar-chart-series-2-color); --radar-series-dash: var(--dreadnought-radar-chart-dash-short); --radar-series-border: dashed; }
   .series3 { --radar-series-color: var(--dreadnought-radar-chart-series-3-color); --radar-series-dash: var(--dreadnought-radar-chart-dash-dot); --radar-series-border: dotted; }
@@ -31,6 +33,8 @@
   .table thead th:last-child { border-start-end-radius: var(--dreadnought-table-header-radius); }
   @media (forced-colors: active) {
     .series { stroke: CanvasText; fill: none; }
+    .point { fill: CanvasText; stroke: Canvas; }
+    .point:is(:hover, :focus-visible, [data-active='true']) { stroke: Highlight; }
     .grid, .axis { stroke: GrayText; }
     .axisLabel { fill: CanvasText; }
     .legendButton::before { border-color: CanvasText; }

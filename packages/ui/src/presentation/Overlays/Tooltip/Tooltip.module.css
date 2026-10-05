@@ -1,0 +1,16 @@
+@layer dreadnought {
+  .root {
+    box-sizing: border-box;
+    max-width: min(var(--dreadnought-tooltip-max-width), 100vw);
+    padding: var(--dreadnought-tooltip-padding-block) var(--dreadnought-tooltip-padding-inline);
+    border: var(--dreadnought-tooltip-border-width) solid var(--dreadnought-tooltip-border);
+    border-radius: var(--dreadnought-tooltip-radius);
+    background: var(--dreadnought-tooltip-bg);
+    color: var(--dreadnought-tooltip-text);
+    font-family: var(--dreadnought-tooltip-font-family);
+    font-size: var(--dreadnought-tooltip-font-size);
+    font-weight: var(--dreadnought-tooltip-font-weight);
+    line-height: var(--dreadnought-tooltip-line-height);
+    overflow-wrap: anywhere;
+  }
+}

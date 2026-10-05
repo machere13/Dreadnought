@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-tooltip-max-width: var(--dreadnought-size-x3);
+  --dreadnought-tooltip-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-tooltip-border-width: var(--dreadnought-border-width-outline);
+}

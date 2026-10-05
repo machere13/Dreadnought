@@ -1,0 +1,7 @@
+{
+  "componentId": "component:tooltip",
+  "constraints": ["Оформление меняется через --dreadnought-tooltip-* в области приложения или конкретного компонента."],
+  "bindings": [{ "id": "react-ui", "layer": 3, "framework": "react", "importPath": "@dreadnought/ui/react", "exportName": "Tooltip",
+    "propertyDescriptions": { "content": "Неинтерактивное содержимое подсказки.", "children": "Render-функция: передайте свойства одному фокусируемому целевому элементу.", "open": "Управляемое открытие.", "defaultOpen": "Начальное открытие.", "disabled": "Отключает подсказку.", "onOpenChange": "Запрос изменения открытого состояния.", "describedBy": "ID дополнительных описаний." },
+    "examples": [{ "id": "basic", "code": "import { Tooltip, Button } from '@dreadnought/ui/react';\nexport function Example() { return <Tooltip content=\"Дополнительная информация\">{trigger => <Button {...trigger}>Подробнее</Button>}</Tooltip>; }" }] }]
+}

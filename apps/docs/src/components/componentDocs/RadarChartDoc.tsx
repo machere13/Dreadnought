@@ -16,7 +16,7 @@ const series = [
 function RadarDemo() {
   const [visible, setVisible] = useState(series.map(item => item.id));
   return <div className={styles.demo}>
-    <RadarChart label="Сравнение вариантов" description="Нажмите на серию, чтобы скрыть или вернуть её. Таблица всегда показывает все исходные значения."
+    <RadarChart label="Сравнение вариантов" description="Наведите на точку или выберите её через Tab, чтобы увидеть исходное значение. Escape закрывает подсказку. Нажмите на серию в легенде, чтобы скрыть или вернуть её."
       metrics={metrics} series={series} visibleSeries={visible} onVisibleSeriesChange={setVisible} />
   </div>;
 }

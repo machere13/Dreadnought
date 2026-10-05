@@ -17,6 +17,7 @@ import { radioDoc } from './componentDocs/RadioDoc';
 import { selectDoc } from './componentDocs/SelectDoc';
 import { toolbarDoc } from './componentDocs/ToolbarDoc';
 import { radarChartDoc } from './componentDocs/RadarChartDoc';
+import { tooltipDoc } from './componentDocs/TooltipDoc';
 import { GettingStarted } from './GettingStarted';
 import { ThemingGuide } from './ThemingGuide';
 import { CustomComponentsGuide } from './CustomComponentsGuide';
@@ -26,7 +27,7 @@ import { DocsAssistant } from '../assistant/DocsAssistant.tsx';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
-type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'radio' | 'select' | 'radarchart';
+type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'radio' | 'select' | 'radarchart' | 'tooltip';
 type DocsSection = 'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
 const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
   { name: 'Controls', sections: ['button', 'toolbar'] },
@@ -37,6 +38,7 @@ const componentFamilies: readonly { name: string; sections: readonly ComponentSe
   { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs', 'menu'] },
   { name: 'Surfaces', sections: ['card'] },
   { name: 'Visualization', sections: ['radarchart'] },
+  { name: 'Overlays', sections: ['tooltip'] },
 ];
 
 function Header() {
@@ -161,6 +163,7 @@ function TextAreaDemo() {
 
 const componentDocs: Record<ComponentSection, ComponentDoc> = {
   radarchart: radarChartDoc,
+  tooltip: tooltipDoc,
   checkbox: checkboxDoc,
   radio: radioDoc,
   select: selectDoc,

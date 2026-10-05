@@ -163,6 +163,7 @@ describe('default theme', () => {
       "@import './components/Fields/Radio/index.css';",
       "@import './components/Fields/Select/index.css';",
       "@import './components/Visualization/RadarChart/index.css';",
+      "@import './components/Overlays/Tooltip/index.css';",
     ]);
     for (const file of ['colors', 'spacing', 'sizing', 'typography', 'effects', 'motion']) {
       expect(css('tokens/global/index.css')).toContain(`@import './${file}.tokens.css'`);

@@ -7,4 +7,7 @@
   --dreadnought-radar-chart-grid-width: var(--dreadnought-border-width-outline);
   --dreadnought-radar-chart-series-width: var(--dreadnought-border-width-x2);
   --dreadnought-radar-chart-focus-width: var(--dreadnought-border-width-x2);
+  --dreadnought-radar-chart-point-radius: var(--dreadnought-border-width-x2);
+  --dreadnought-radar-chart-point-active-radius: var(--dreadnought-border-width-x3);
+  --dreadnought-radar-chart-point-border-width: var(--dreadnought-border-width-outline);
 }

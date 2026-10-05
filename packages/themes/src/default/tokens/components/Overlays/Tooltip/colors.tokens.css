@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-tooltip-bg: var(--dreadnought-color-surface-subtle);
+  --dreadnought-tooltip-text: var(--dreadnought-color-text-primary);
+  --dreadnought-tooltip-border: var(--dreadnought-color-border-default);
+}

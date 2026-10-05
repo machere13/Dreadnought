@@ -33,6 +33,13 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes Tooltip in every layer with checked public examples', () => {
+    const entry = catalog.entries.find(entry => entry.id === 'component:tooltip');
+    expect(entry?.family).toBe('Overlays');
+    expect(entry!.bindings.map(binding => binding.id)).toEqual(['core', 'react-adapter', 'react-logic', 'react-ui']);
+    expect(entry!.tokens.length).toBeGreaterThan(0);
+    for (const binding of entry!.bindings) expect(() => checkExamples(context, binding.examples)).not.toThrow();
+  });
   it('publishes Radar adapter and ready UI without a synthetic component core binding', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:radar-chart');
     expect(entry).toMatchObject({ family: 'Visualization', composesWith: ['domain:build-radar-layout'] });
@@ -202,7 +209,7 @@ describe('public catalog', () => {
     renamed[0].bindings[0].exportName = 'removedExport';
     expect(() => generateCatalog(context, renamed)).toThrow('Missing public export');
     const stale = structuredClone(metadata);
-    stale[0].bindings[0].propertyDescriptions.renamedProp = 'Устаревшее свойство';
+    stale.find(entry => entry.name === 'RadarChart')!.bindings[0].propertyDescriptions.renamedProp = 'Устаревшее свойство';
     expect(() => generateCatalog(context, stale)).toThrow('Unknown property metadata');
   });
 

@@ -1,10 +1,10 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
 import { RadarChartAdapter } from '../../../src/unstyled.ts';
 
-afterEach(cleanup);
+afterEach(() => { cleanup(); vi.useRealTimers(); });
 const metrics = ['a', 'b', 'c', 'd'].map(id => ({ id, label: id, domain: [0, 100] as const }));
 const series = [{ id: 'A', label: 'Вариант A', values: { a: 100, b: 50, c: 0, d: 25 } },
   { id: 'B', label: 'Вариант B', values: { a: 50, b: 50, c: 50, d: 50 } }];
@@ -14,7 +14,7 @@ it('renders C1 coordinates, semantic data and native legend', () => {
   const { container } = render(<RadarChartAdapter label="Сравнение" metrics={metrics} series={series} width={400} height={320} />);
   const svg = container.querySelector('svg')!;
   expect(svg.getAttribute('viewBox')).toBe('-140 -140 280 280');
-  expect(svg.getAttribute('aria-hidden')).toBe('true');
+  expect(svg.getAttribute('aria-hidden')).toBeNull();
   expect(svg.getAttribute('width')).toBe('400');
   const points = container.querySelector('polygon[data-series-id="A"]')!.getAttribute('points')!.split(/\s+/).map(pair => pair.split(',').map(Number));
   expect(points[0][1]).toBeCloseTo(-100);
@@ -40,13 +40,51 @@ it('waits for controlled props and isolates a mutating callback', () => {
 it('supports native keyboard selection without leaking internal arrays', async () => {
   const user = userEvent.setup();
   const { container } = render(<RadarChartAdapter {...props} onVisibleSeriesChange={next => next.push('A')} />);
-  await user.tab(); await user.keyboard('{Enter}');
+  screen.getByRole('button', { name: 'Вариант A' }).focus(); await user.keyboard('{Enter}');
   expect(screen.getByRole('button', { name: 'Вариант A' }).getAttribute('aria-pressed')).toBe('false');
   await user.tab(); await user.keyboard(' ');
   expect(container.querySelectorAll('polygon[data-series-id]')).toHaveLength(0);
   expect(screen.getAllByRole('row')).toHaveLength(5);
   await user.tab({ shift: true });
   expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Вариант A' }));
+});
+
+it('offers every visible vertex through focus and shows its original value', () => {
+  const { container } = render(<RadarChartAdapter {...props} />);
+  expect(container.querySelectorAll('[data-ui="radar-point"]')).toHaveLength(8);
+  const point = screen.getByRole('img', { name: 'Вариант A, c: 0' });
+  fireEvent.focus(point);
+  expect(screen.getByRole('tooltip').textContent).toBe('Вариант A · c: 0');
+  expect(point.getAttribute('aria-describedby')).toBe(screen.getByRole('tooltip').id);
+  fireEvent.keyDown(point, { key: 'Escape' });
+  expect(screen.queryByRole('tooltip')).toBeNull();
+});
+
+it('moves tooltip content between vertices and removes it when the active series disappears', () => {
+  const { rerender } = render(<RadarChartAdapter {...props} />);
+  fireEvent.pointerEnter(screen.getByRole('img', { name: 'Вариант A, b: 50' }));
+  expect(screen.getByRole('tooltip').textContent).toBe('Вариант A · b: 50');
+  fireEvent.pointerEnter(screen.getByRole('img', { name: 'Вариант B, a: 50' }));
+  expect(screen.getByRole('tooltip').textContent).toBe('Вариант B · a: 50');
+  rerender(<RadarChartAdapter {...props} visibleSeries={['A']} />);
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  expect(screen.getByRole('table').textContent).toContain('Вариант B');
+});
+it('restores the focused vertex after hovering a different vertex', () => {
+  render(<RadarChartAdapter {...props} />);
+  const focused = screen.getByRole('img', { name: 'Вариант A, b: 50' });
+  const hovered = screen.getByRole('img', { name: 'Вариант B, a: 50' });
+  fireEvent.focus(focused); fireEvent.pointerEnter(hovered); fireEvent.pointerLeave(hovered);
+  expect(screen.getByRole('tooltip').textContent).toBe('Вариант A · b: 50');
+  expect(focused.getAttribute('aria-describedby')).toBe(screen.getByRole('tooltip').id);
+});
+it('does not retain focus when the focused series is removed', () => {
+  vi.useFakeTimers(); const { rerender } = render(<RadarChartAdapter {...props} />);
+  fireEvent.focus(screen.getByRole('img', { name: 'Вариант A, b: 50' }));
+  const hovered = screen.getByRole('img', { name: 'Вариант B, a: 50' }); fireEvent.pointerEnter(hovered);
+  rerender(<RadarChartAdapter {...props} visibleSeries={['B']} />);
+  fireEvent.pointerLeave(hovered); act(() => vi.advanceTimersByTime(100));
+  expect(screen.queryByRole('tooltip')).toBeNull();
 });
 
 it('honors cancelled clicks and forwards native props, refs and original slot inputs', () => {

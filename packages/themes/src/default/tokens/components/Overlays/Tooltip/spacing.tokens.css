@@ -1,0 +1,4 @@
+:root {
+  --dreadnought-tooltip-padding-block: var(--dreadnought-spacing-x2);
+  --dreadnought-tooltip-padding-inline: var(--dreadnought-spacing-x3);
+}

@@ -21,6 +21,15 @@ type Story = StoryObj<typeof meta>;
 
 export const Adaptive: Story = {};
 export const FixedSize: Story = { args: { width: 400, height: 320 } };
+function axes(count: number) {
+  const metrics = ['Качество', 'Покрытие', 'Скорость', 'Надёжность', 'Удобство', 'Поддержка'].slice(0, count)
+    .map((label, index) => ({ id: `metric-${index}`, label, domain: [0, 100] as const }));
+  return { metrics, series: ['A', 'B'].map((id, seriesIndex) => ({ id, label: `Вариант ${id}`,
+    values: Object.fromEntries(metrics.map((metric, index) => [metric.id, 45 + (index * 13 + seriesIndex * 17) % 50])) })) };
+}
+export const FourAxes: Story = { args: axes(4) };
+export const FiveAxes: Story = { args: axes(5) };
+export const SixAxes: Story = { args: axes(6) };
 export const ScopedThemes: Story = {
   render: args => <div className={styles.themes}>
     <section className={styles.dark}><RadarChart {...args} label="Тёмная область" /></section>

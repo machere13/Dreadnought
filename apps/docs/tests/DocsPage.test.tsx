@@ -13,6 +13,15 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('documents independent Tooltip with a working focus example', () => {
+    render(<DocsPage section="tooltip" />);
+    expect(document.getElementById('tooltip-api')).toBeTruthy();
+    const target = screen.getByRole('button', { name: 'Настройки' });
+    fireEvent.focus(target);
+    expect(screen.getByRole('tooltip').textContent).toBe('Открывает настройки приложения');
+    fireEvent.keyDown(target, { key: 'Escape' });
+    expect(screen.queryByRole('tooltip')).toBeNull();
+  });
   it('documents ready Radar and its lower layers with real selection and API', () => {
     render(<DocsPage section="radarchart" />);
     expect(document.getElementById('radarchart-api')).toBeTruthy();

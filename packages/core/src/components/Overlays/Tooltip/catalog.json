@@ -1,0 +1,8 @@
+{
+  "id": "component:tooltip", "kind": "component", "name": "Tooltip", "family": "Overlays",
+  "description": "Короткая неинтерактивная подсказка при наведении или фокусе.",
+  "docsUrl": "/components/tooltip/#tooltip-api", "states": ["open", "disabled"],
+  "constraints": ["Подсказка не содержит кнопок, ссылок и полей. Она дополняет доступное имя, а не заменяет его.", "Наведение на подсказку удерживает её открытой; Escape закрывает до нового взаимодействия."],
+  "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getTooltipState",
+    "examples": [{ "id": "state", "code": "import { getTooltipState } from '@dreadnought/core';\nconst state = getTooltipState({ tooltipId: 'help', open: true });" }] }]
+}

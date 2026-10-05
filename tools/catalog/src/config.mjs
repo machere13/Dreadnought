@@ -10,6 +10,7 @@ const core = 'packages/core/src/components';
 const adapter = 'packages/adapters/react/src';
 const ui = 'packages/ui/src/adapters/react/components';
 export const components = [
+  { family: 'Overlays', name: 'Tooltip', sources: [core, adapter, ui] },
   { family: 'Visualization', name: 'RadarChart', sources: [adapter, ui] },
   { family: 'Controls', name: 'Button', sources: [core, adapter, ui] },
   { family: 'Controls', name: 'Toolbar', sources: [core, adapter, ui] },

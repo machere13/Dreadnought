@@ -6,6 +6,7 @@
   --dreadnought-radar-chart-legend-bg: var(--dreadnought-color-surface-default);
   --dreadnought-radar-chart-legend-bg-hover: var(--dreadnought-color-surface-hover);
   --dreadnought-radar-chart-focus-color: var(--dreadnought-color-focus-ring);
+  --dreadnought-radar-chart-point-border: var(--dreadnought-color-surface-default);
   --dreadnought-radar-chart-series-1-color: var(--dreadnought-color-chart-series-1);
   --dreadnought-radar-chart-series-2-color: var(--dreadnought-color-chart-series-2);
   --dreadnought-radar-chart-series-3-color: var(--dreadnought-color-chart-series-3);

@@ -8,3 +8,4 @@ export * from './DataDisplay/Table/index.ts';
 export * from './Fields/Checkbox/index.ts';
 export * from './Fields/Radio/index.ts';
 export * from './Fields/Select/index.ts';
+export * from './Overlays/Tooltip/index.ts';

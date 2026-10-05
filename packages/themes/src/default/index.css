@@ -21,3 +21,4 @@
 @import './components/Fields/Radio/index.css';
 @import './components/Fields/Select/index.css';
 @import './components/Visualization/RadarChart/index.css';
+@import './components/Overlays/Tooltip/index.css';
