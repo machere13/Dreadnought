@@ -10,3 +10,7 @@ export { getCheckableState } from './getCheckableState.ts';
 export type { CheckableStateOptions } from './getCheckableState.ts';
 export { getSelectionValue } from './getSelectionValue.ts';
 export type { SelectionKey, SelectionValue, SelectionAction, SelectionOptions } from './getSelectionValue.ts';
+export { getDisclosureState } from './getDisclosureState.ts';
+export type { DisclosureState, DisclosureStateOptions } from './getDisclosureState.ts';
+export { getDisclosureOpen } from './getDisclosureOpen.ts';
+export type { DisclosureAction, DisclosureOptions } from './getDisclosureOpen.ts';
