@@ -1,5 +1,6 @@
 import type { RadarLayout, RadarMetric, RadarSeries } from '@dreadnought/core';
 import { useRef, useState } from 'react';
+import { MarkAdapter } from '../../DataDisplay/Mark/index.ts';
 import { TooltipAdapter } from '../../Overlays/Tooltip/index.ts';
 import { radarNativeProps, type RadarChartSlotProps } from './radarChart.types.ts';
 
@@ -13,7 +14,14 @@ export function RadarPlot({ layout, metrics, series, visible, slotProps, width, 
   const hovered = useRef<Vertex | null>(null), focused = useRef<Vertex | null>(null);
   const activeSeries = series.find(item => item.id === active?.series && visible.includes(item.id));
   const activeMetric = metrics.find(item => item.id === active?.metric);
-  const content = activeSeries && activeMetric ? `${activeSeries.label || activeSeries.id} · ${activeMetric.label || activeMetric.id}: ${activeSeries.values[activeMetric.id]}` : '';
+  const content = activeSeries && activeMetric ? <table {...radarNativeProps(slotProps.tooltipTable, ['role', 'aria-hidden', 'hidden'])} data-ui="radar-tooltip-table">
+    <caption>{activeMetric.label || activeMetric.id}</caption>
+    <tbody>{series.filter(item => visible.includes(item.id)).map(item => <tr key={item.id} data-series-id={item.id}>
+      <td><MarkAdapter {...radarNativeProps(slotProps.tooltipMark?.(item), ['aria-hidden'])} shape="circle" /></td>
+      <th scope="row">{item.label || item.id}</th>
+      <td>{item.values[activeMetric.id]}</td>
+    </tr>)}</tbody>
+  </table> : null;
   return <TooltipAdapter {...radarNativeProps(slotProps.tooltip, ['ref'])} content={content} disabled={active !== null && !content}>
     {({ ref: attach, ...trigger }) => <svg {...radarNativeProps(slotProps.plot, ['tabIndex', 'aria-hidden'])} width={width} height={height}
     viewBox="-140 -140 280 280" preserveAspectRatio="xMidYMid meet" data-ui="radar-plot">

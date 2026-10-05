@@ -13,6 +13,22 @@ const series = [
 ];
 const props = { metrics, series, label: 'Radar', width: 400, height: 320 };
 
+it('matches tooltip markers to series colors and preserves consumer slots', () => {
+  render(<ui.RadarChart {...props} slotProps={{ tooltipTable: { className: 'custom-tooltip-table' },
+    tooltipMark: item => ({ className: 'custom-mark', title: item.id }) }} />);
+  fireEvent.focus(screen.getByRole('img', { name: 'A, x: 80' }));
+  const table = screen.getByRole('table', { name: 'x' });
+  expect(table.className).toContain('custom-tooltip-table');
+  expect(table.className).toContain(presentation.radarChartPresentation.tooltipTable);
+  for (const item of series) {
+    const mark = table.querySelector(`[title="${item.id}"]`)!;
+    expect(mark.className).toContain('custom-mark');
+    expect(mark.className).toContain(presentation.markPresentation.root);
+    expect(mark.className).toContain(presentation.getRadarSeriesClass(item.id));
+    expect(mark.getAttribute('data-shape')).toBe('circle');
+  }
+});
+
 it('styles all parts without leaking presentation into the unstyled adapter', () => {
   expect(ui).toHaveProperty('RadarChart');
   expect(presentation).toHaveProperty('radarChartPresentation');

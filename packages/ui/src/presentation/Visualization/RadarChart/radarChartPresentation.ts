@@ -9,6 +9,8 @@ export const radarChartPresentation = {
   axisLabel: styles.axisLabel,
   series: styles.series,
   point: styles.point,
+  tooltipTable: styles.tooltipTable,
+  tooltipMark: styles.tooltipMark,
   legend: styles.legend,
   legendButton: styles.legendButton,
   table: styles.table,

@@ -24,6 +24,12 @@
   .legendButton[aria-pressed='false'] { text-decoration: line-through; color: var(--dreadnought-radar-chart-description-text); }
   .legendButton:focus-visible { outline: var(--dreadnought-radar-chart-focus-width) solid var(--dreadnought-radar-chart-focus-color); outline-offset: var(--dreadnought-radar-chart-focus-offset); }
   .table { display: block; max-width: 100%; overflow-x: auto; }
+  .tooltipTable { width: 100%; border-collapse: collapse; }
+  .tooltipTable caption { text-align: start; font-weight: var(--dreadnought-radar-chart-title-font-weight); padding-block-end: var(--dreadnought-radar-chart-tooltip-row-gap); }
+  .tooltipTable :is(th, td) { padding: var(--dreadnought-radar-chart-tooltip-row-gap) 0; text-align: start; vertical-align: middle; }
+  .tooltipTable th { padding-inline: var(--dreadnought-radar-chart-tooltip-column-gap); font-weight: inherit; }
+  .tooltipTable td:last-child { font-variant-numeric: tabular-nums; }
+  .tooltipMark { --dreadnought-mark-color: var(--radar-series-color); }
   .table caption { padding-block: var(--dreadnought-radar-chart-legend-padding-block); text-align: start; }
   .table :is(th, td) { padding-block: var(--dreadnought-table-active-padding-block); padding-inline: var(--dreadnought-table-active-padding-inline); border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); vertical-align: middle; }
   .table th { color: var(--dreadnought-table-header-text); font-weight: var(--dreadnought-table-header-font-weight); }

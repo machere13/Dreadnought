@@ -1,5 +1,5 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
 import { RadarChartAdapter } from '../../../src/unstyled.ts';
@@ -54,18 +54,28 @@ it('offers every visible vertex through focus and shows its original value', () 
   expect(container.querySelectorAll('[data-ui="radar-point"]')).toHaveLength(8);
   const point = screen.getByRole('img', { name: 'Вариант A, c: 0' });
   fireEvent.focus(point);
-  expect(screen.getByRole('tooltip').textContent).toBe('Вариант A · c: 0');
+  expect(within(screen.getByRole('tooltip')).getByRole('table', { name: 'c' }).textContent).toContain('Вариант A0');
   expect(point.getAttribute('aria-describedby')).toBe(screen.getByRole('tooltip').id);
   fireEvent.keyDown(point, { key: 'Escape' });
   expect(screen.queryByRole('tooltip')).toBeNull();
+});
+it('shows a caption and aligned marker, series name and raw value for visible series', () => {
+  const { rerender } = render(<RadarChartAdapter {...props} />);
+  fireEvent.focus(screen.getByRole('img', { name: 'Вариант A, c: 0' }));
+  const table = within(screen.getByRole('tooltip')).getByRole('table', { name: 'c' });
+  expect(within(table).getByRole('row', { name: 'Вариант A 0' })).toBeTruthy();
+  expect(within(table).getByRole('row', { name: 'Вариант B 50' })).toBeTruthy();
+  expect(table.querySelectorAll('[data-ui="mark"][data-shape="circle"]')).toHaveLength(2);
+  rerender(<RadarChartAdapter {...props} visibleSeries={['A']} />);
+  expect(within(screen.getByRole('tooltip')).queryByRole('row', { name: 'Вариант B 50' })).toBeNull();
 });
 
 it('moves tooltip content between vertices and removes it when the active series disappears', () => {
   const { rerender } = render(<RadarChartAdapter {...props} />);
   fireEvent.pointerEnter(screen.getByRole('img', { name: 'Вариант A, b: 50' }));
-  expect(screen.getByRole('tooltip').textContent).toBe('Вариант A · b: 50');
+  expect(within(screen.getByRole('tooltip')).getByRole('table', { name: 'b' })).toBeTruthy();
   fireEvent.pointerEnter(screen.getByRole('img', { name: 'Вариант B, a: 50' }));
-  expect(screen.getByRole('tooltip').textContent).toBe('Вариант B · a: 50');
+  expect(within(screen.getByRole('tooltip')).getByRole('table', { name: 'a' })).toBeTruthy();
   rerender(<RadarChartAdapter {...props} visibleSeries={['A']} />);
   expect(screen.queryByRole('tooltip')).toBeNull();
   expect(screen.getByRole('table').textContent).toContain('Вариант B');
@@ -75,7 +85,7 @@ it('restores the focused vertex after hovering a different vertex', () => {
   const focused = screen.getByRole('img', { name: 'Вариант A, b: 50' });
   const hovered = screen.getByRole('img', { name: 'Вариант B, a: 50' });
   fireEvent.focus(focused); fireEvent.pointerEnter(hovered); fireEvent.pointerLeave(hovered);
-  expect(screen.getByRole('tooltip').textContent).toBe('Вариант A · b: 50');
+  expect(within(screen.getByRole('tooltip')).getByRole('table', { name: 'b' })).toBeTruthy();
   expect(focused.getAttribute('aria-describedby')).toBe(screen.getByRole('tooltip').id);
 });
 it('does not retain focus when the focused series is removed', () => {

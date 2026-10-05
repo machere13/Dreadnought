@@ -16,6 +16,8 @@ export type RadarChartSlotProps = {
   series?: (series: RadarSeries) => Native<'polygon', 'points'>;
   point?: (series: RadarSeries, metric: RadarMetric) => Native<'circle', 'cx' | 'cy' | 'r' | 'role' | 'tabIndex' | 'aria-label' | 'aria-describedby'>;
   tooltip?: Native<'div', 'ref' | 'id' | 'role' | 'hidden' | 'popover'>;
+  tooltipTable?: Native<'table', 'aria-hidden' | 'hidden' | 'role'>;
+  tooltipMark?: (series: RadarSeries) => Native<'span', 'aria-hidden'>;
   legend?: Native<'div', 'role' | 'aria-label'>;
   legendButton?: (series: RadarSeries) => Native<'button', 'type' | 'aria-pressed' | 'aria-label' | 'aria-labelledby' | 'disabled'>;
   table?: Native<'table', 'aria-hidden' | 'hidden' | 'role'>;
