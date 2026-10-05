@@ -17,6 +17,7 @@ import { radioDoc } from './componentDocs/RadioDoc';
 import { selectDoc } from './componentDocs/SelectDoc';
 import { toolbarDoc } from './componentDocs/ToolbarDoc';
 import { radarChartDoc } from './componentDocs/RadarChartDoc';
+import { lineChartDoc } from './componentDocs/LineChartDoc';
 import { tooltipDoc } from './componentDocs/TooltipDoc';
 import { GettingStarted } from './GettingStarted';
 import { ThemingGuide } from './ThemingGuide';
@@ -27,7 +28,7 @@ import { DocsAssistant } from '../assistant/DocsAssistant.tsx';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
-type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'radio' | 'select' | 'radarchart' | 'tooltip';
+type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'radio' | 'select' | 'radarchart' | 'linechart' | 'tooltip';
 type DocsSection = 'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
 const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
   { name: 'Controls', sections: ['button', 'toolbar'] },
@@ -37,7 +38,7 @@ const componentFamilies: readonly { name: string; sections: readonly ComponentSe
   { name: 'Layout', sections: ['layout'] },
   { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs', 'menu'] },
   { name: 'Surfaces', sections: ['card'] },
-  { name: 'Visualization', sections: ['radarchart'] },
+  { name: 'Visualization', sections: ['radarchart', 'linechart'] },
   { name: 'Overlays', sections: ['tooltip'] },
 ];
 
@@ -163,6 +164,7 @@ function TextAreaDemo() {
 
 const componentDocs: Record<ComponentSection, ComponentDoc> = {
   radarchart: radarChartDoc,
+  linechart: lineChartDoc,
   tooltip: tooltipDoc,
   checkbox: checkboxDoc,
   radio: radioDoc,
@@ -246,7 +248,7 @@ function ComponentDocumentation({ component }: { component: ComponentSection }) 
           <div data-knowledge-exclude><CodeBlock code={doc.adapterCode} language="tsx" copyLabels={copyLabels} /></div>
         </div>
         {doc.logicCode && <div>
-          <h3 className={styles.subheading}>Своя разметка — логика</h3>
+          <h3 id={`${component}-logic`} className={styles.subheading}>Своя разметка — логика</h3>
           <p className={styles.bodyText}>{doc.logicDescription}</p>
           <div data-knowledge-exclude><CodeBlock code={doc.logicCode} language="tsx" copyLabels={copyLabels} /></div>
         </div>}

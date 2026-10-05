@@ -1,0 +1,9 @@
+{
+  "componentId": "component:line-chart",
+  "constraints": ["Цвет и рисунок линии привязаны к ID серии; шесть сочетаний могут повторяться. Цвет Mark в Tooltip совпадает с линией. Локальная настройка через --dreadnought-line-chart-* и slotProps не меняет другие графики."],
+  "bindings": [{
+    "id": "react-ui", "layer": 3, "framework": "react", "importPath": "@dreadnought/ui/react", "exportName": "LineChart",
+    "description": "Готовый LineChart с токенами темы, линиями, маркерами, Tooltip, легендой и таблицей данных.",
+    "examples": [{ "id": "basic", "code": "import { LineChart } from '@dreadnought/ui/react';\nconst series = [{id:'a',label:'A',data:[{x:0,y:20},{x:5,y:60},{x:10,y:40}]}];\nexport function Example() { return <LineChart label=\"Измерения\" series={series} xDomain={[0,10]} yDomain={[0,100]} />; }" }]
+  }]
+}

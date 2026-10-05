@@ -1,0 +1,8 @@
+@layer dreadnought {
+  .dreadnought-text-line-chart {
+    font-family: var(--dreadnought-font-family-ui);
+    font-size: var(--dreadnought-font-size-line-chart);
+    font-weight: var(--dreadnought-font-weight-line-chart);
+    line-height: var(--dreadnought-line-height-line-chart);
+  }
+}

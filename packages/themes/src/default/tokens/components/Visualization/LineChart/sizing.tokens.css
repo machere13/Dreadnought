@@ -1,0 +1,13 @@
+:root {
+  --dreadnought-line-chart-plot-max-width: var(--dreadnought-size-x4);
+  --dreadnought-line-chart-legend-min-height: var(--dreadnought-size-control-compact-min-height);
+  --dreadnought-line-chart-legend-radius: var(--dreadnought-border-radius-pill);
+  --dreadnought-line-chart-swatch-width: var(--dreadnought-size-control-compact-min-height);
+  --dreadnought-line-chart-border-width: var(--dreadnought-border-width-outline);
+  --dreadnought-line-chart-grid-width: var(--dreadnought-border-width-outline);
+  --dreadnought-line-chart-series-width: var(--dreadnought-border-width-x2);
+  --dreadnought-line-chart-focus-width: var(--dreadnought-border-width-x2);
+  --dreadnought-line-chart-point-radius: var(--dreadnought-border-width-x2);
+  --dreadnought-line-chart-point-active-radius: var(--dreadnought-border-width-x3);
+  --dreadnought-line-chart-point-border-width: var(--dreadnought-border-width-outline);
+}

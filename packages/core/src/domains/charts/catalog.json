@@ -1,5 +1,23 @@
 [
   {
+    "id": "domain:build-line-layout", "kind": "domain", "name": "buildLineLayout", "family": "Charts",
+    "description": "Чистые линейные шкалы, координаты, отметки осей и сегменты без соединения пропусков.",
+    "docsUrl": "/components/linechart/#linechart-logic",
+    "constraints": ["Явные конечные domains min < max и положительные dimensions. Уникальные ID серий и X внутри серии. null Y разрывает сегмент; точки сортируются по X. Пустые данные допустимы, выход независим от входа. Нет renderer, DOM, CSS, clipping или интерполяции пропусков."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "buildLineLayout",
+      "examples": [{ "id": "basic", "code": "import { buildLineLayout, getClosestLinePoint } from '@dreadnought/core';\nconst layout = buildLineLayout({series:[{id:'a',label:'A',data:[{x:0,y:20},{x:5,y:60},{x:10,y:40}]}],xDomain:[0,10],yDomain:[0,100],width:500,height:300});\nconst closest = getClosestLinePoint(layout,250,120);" }]
+    }]
+  },
+  {
+    "id": "domain:closest-line-point", "kind": "domain", "name": "getClosestLinePoint", "family": "Charts",
+    "description": "Поиск ближайшей реальной точки в координатах LineLayout, с необязательным фильтром видимых серий.",
+    "docsUrl": "/components/linechart/#linechart-logic",
+    "constraints": ["Конечные X/Y в координатах layout, не клиентских пикселях. Евклидово расстояние; при равенстве первая точка в порядке серий и отсортированных X. Пустой набор даёт undefined. Линейный обход; нет DOM или внешних эффектов."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getClosestLinePoint",
+      "examples": [{ "id": "basic", "code": "import { buildLineLayout, getClosestLinePoint } from '@dreadnought/core';\nconst layout = buildLineLayout({series:[{id:'a',label:'A',data:[{x:0,y:0},{x:10,y:100}]}],xDomain:[0,10],yDomain:[0,100],width:500,height:300});\nconst point = getClosestLinePoint(layout,490,10,['a']);" }]
+    }]
+  },
+  {
     "id": "domain:build-radar-layout",
     "kind": "domain",
     "name": "buildRadarLayout",

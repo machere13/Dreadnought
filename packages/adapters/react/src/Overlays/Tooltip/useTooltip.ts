@@ -58,7 +58,7 @@ export function useTooltip({ open: controlled, defaultOpen = false, disabled = f
     onPointerEnter: event => { interaction.current.hovered = event.currentTarget; enter(event.currentTarget); },
     onPointerLeave: () => { interaction.current.hovered = null; leave(); },
     onFocus: event => { interaction.current.focused = event.currentTarget; enter(event.currentTarget); },
-    onBlur: () => { interaction.current.focused = null; update(); },
+    onBlur: () => { interaction.current.focused = null; leave(); },
     onKeyDown: event => { if (event.key === 'Escape' && !event.defaultPrevented && !event.nativeEvent.isComposing) { event.preventDefault(); dismiss(); } },
   };
   return { open: state.open, triggerProps, contentProps: { ...state.contentProps, ref: popup,

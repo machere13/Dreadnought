@@ -2,7 +2,7 @@ import { useCallback, useId, useRef, useState } from 'react';
 import { buildRadarLayout, getSelectionValue } from '@dreadnought/core';
 import { RadarPlot } from './RadarPlot.tsx';
 import { RadarDataTable } from './RadarDataTable.tsx';
-import { useRadarViewport } from './useRadarViewport.ts';
+import { useChartViewport } from '../../shared/useChartViewport.ts';
 import { attachRef } from '../../shared/attachRef.ts';
 import { radarNativeProps, type RadarChartAdapterProps, type RadarChartLabels } from './radarChart.types.ts';
 
@@ -36,7 +36,7 @@ export function RadarChartAdapter({ metrics, series, label, description, width, 
     plotRef.current = element;
     if (element) return attachRef(element, consumerRef, () => { plotRef.current = null; });
   }, [consumerRef]);
-  const viewport = useRadarViewport(width, height, plotRef);
+  const viewport = useChartViewport(width, height, plotRef);
   const visible = (visibleSeries ?? internal).filter(value => series.some(item => item.id === value));
   function toggle(value: string) {
     const next = getSelectionValue(visible, { type: 'toggle', value });

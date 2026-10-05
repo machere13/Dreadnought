@@ -1,8 +1,7 @@
-import type { ComponentPropsWithRef, JSX } from 'react';
+import type { ChartNative as Native } from '../../shared/chartNativeProps.ts';
+export { chartNativeProps as radarNativeProps } from '../../shared/chartNativeProps.ts';
 import type { RadarMetric, RadarSeries } from '@dreadnought/core';
 
-type Native<Tag extends keyof JSX.IntrinsicElements, Owned extends string = never> =
-  Omit<ComponentPropsWithRef<Tag>, Owned | 'children' | 'dangerouslySetInnerHTML'> & { children?: never; dangerouslySetInnerHTML?: never };
 export type RadarChartLabels = {
   legend: string; dataTable: string; metric: string; domain: string; direction: string;
   increasing: string; decreasing: string;
@@ -29,9 +28,3 @@ export type RadarChartAdapterProps = Native<'figure', 'aria-labelledby' | 'aria-
   onVisibleSeriesChange?: (next: string[]) => void;
   labels?: Partial<RadarChartLabels>; slotProps?: RadarChartSlotProps;
 };
-
-export function radarNativeProps<T extends object>(props: T | undefined, owned: readonly string[] = []): T {
-  const result = { ...props } as T;
-  for (const key of ['children', 'dangerouslySetInnerHTML', ...owned]) delete (result as Record<string, unknown>)[key];
-  return result;
-}

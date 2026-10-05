@@ -13,6 +13,14 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('documents LineChart layers, navigation and real legend interaction', () => {
+    render(<DocsPage section="linechart" />);
+    expect(document.getElementById('linechart-api')).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'LineChart' }).getAttribute('href')).toBe('/components/linechart/');
+    const button = screen.getByRole('button', { name: 'Вариант A' });
+    fireEvent.click(button); expect(button.getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByRole('table', { name: 'Измерения: Данные' })).toBeTruthy();
+  });
   it('documents independent Tooltip with a working focus example', () => {
     render(<DocsPage section="tooltip" />);
     expect(document.getElementById('tooltip-api')).toBeTruthy();

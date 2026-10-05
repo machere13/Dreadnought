@@ -1,4 +1,5 @@
 import styles from './RadarChart.module.css';
+import { getChartSeriesIndex } from '../shared/getChartSeriesIndex.ts';
 
 export const radarChartPresentation = {
   root: 'dreadnought-text-radar-chart ' + styles.root,
@@ -18,7 +19,5 @@ export const radarChartPresentation = {
 } as const;
 
 export function getRadarSeriesClass(id: string) {
-  let hash = 0;
-  for (const character of id) hash = (Math.imul(hash, 31) + character.codePointAt(0)!) >>> 0;
-  return radarChartPresentation.seriesStyles[hash % radarChartPresentation.seriesStyles.length];
+  return radarChartPresentation.seriesStyles[getChartSeriesIndex(id, radarChartPresentation.seriesStyles.length)];
 }

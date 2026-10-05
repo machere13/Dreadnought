@@ -1,6 +1,6 @@
 import { useEffect, useState, type RefObject } from 'react';
 
-export function useRadarViewport(width: number | undefined, height: number | undefined, ref: RefObject<HTMLDivElement | null>) {
+export function useChartViewport(width: number | undefined, height: number | undefined, ref: RefObject<HTMLDivElement | null>) {
   const [measurement, setMeasurement] = useState<{ target: HTMLDivElement; width: number }>();
   useEffect(() => {
     setMeasurement(undefined);

@@ -1,0 +1,9 @@
+:root {
+  --dreadnought-line-chart-gap: var(--dreadnought-spacing-x4);
+  --dreadnought-line-chart-legend-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-line-chart-legend-padding-block: var(--dreadnought-spacing-x2);
+  --dreadnought-line-chart-legend-padding-inline: var(--dreadnought-spacing-x4);
+  --dreadnought-line-chart-focus-offset: var(--dreadnought-spacing-x1);
+  --dreadnought-line-chart-tooltip-row-gap: var(--dreadnought-spacing-x1);
+  --dreadnought-line-chart-tooltip-column-gap: var(--dreadnought-spacing-x2);
+}
