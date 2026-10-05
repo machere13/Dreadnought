@@ -9,7 +9,7 @@ export function useToolbarRegistry(root: RefObject<HTMLDivElement | null>, navig
   const focused = useRef<HTMLElement | null>(null);
   const [items, setItems] = useState<RegisteredToolbarItem[]>([]);
   const orderedItems = useCallback(() => [...entries.current.values()]
-    .map((item) => ({ ...item, disabled: item.disabled || !item.element.isConnected || item.element.matches(':disabled') }))
+    .map((item) => ({ ...item, disabled: item.disabled || !item.element.isConnected || item.element.matches(':disabled') || Boolean(item.element.closest('[hidden]')) }))
     .sort((left, right) => {
       const position = left.element.compareDocumentPosition(right.element);
       if (position & left.element.DOCUMENT_POSITION_DISCONNECTED) return 0;
@@ -36,9 +36,9 @@ export function useToolbarRegistry(root: RefObject<HTMLDivElement | null>, navig
     if (!container) return;
     if (navigation === 'native') focused.current = null;
     const observer = new MutationObserver(refresh);
-    observer.observe(container, { childList: true, subtree: true, attributes: true, attributeFilter: ['disabled'] });
+    observer.observe(container, { childList: true, subtree: true, attributes: true, attributeFilter: ['disabled', 'hidden'] });
     for (let ancestor = container.parentElement; ancestor; ancestor = ancestor.parentElement) {
-      if (ancestor.tagName === 'FIELDSET') observer.observe(ancestor, { attributes: true, attributeFilter: ['disabled'] });
+      observer.observe(ancestor, { attributes: true, attributeFilter: ancestor.tagName === 'FIELDSET' ? ['disabled', 'hidden'] : ['hidden'] });
     }
     return () => observer.disconnect();
   }, [root, navigation, refresh]);
@@ -60,10 +60,8 @@ export function useToolbarRegistry(root: RefObject<HTMLDivElement | null>, navig
       if (event.relatedTarget !== focused.current) focused.current = null;
       return;
     }
-    queueMicrotask(() => {
-      const element = focused.current;
-      if (element?.isConnected && !element.matches(':disabled') && element.ownerDocument.activeElement !== element) focused.current = null;
-    });
+    const element = focused.current;
+    if (element?.isConnected && !element.matches(':disabled') && !element.closest('[hidden]') && element.ownerDocument.activeElement !== element) focused.current = null;
   }, []);
   return { items, register, orderedItems, markFocused, handleBlur };
 }

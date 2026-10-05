@@ -43,6 +43,38 @@ describe('Toolbar lifecycle', () => {
     view.rerender(<><ToolbarAdapter aria-label="Commands"><Tool value="a" /></ToolbarAdapter><button>Outside</button></>);
     expect(document.activeElement).toBe(outside);
   });
+  it('does not restore focus after an intentional blur immediately followed by removal', async () => {
+    const view = render(<ToolbarAdapter aria-label="Commands"><Tool value="a" /><Tool value="b" /></ToolbarAdapter>);
+    const second = screen.getByRole('button', { name: 'b' });
+    await userEvent.click(second);
+    act(() => {
+      second.blur();
+      view.rerender(<ToolbarAdapter aria-label="Commands"><Tool value="a" /></ToolbarAdapter>);
+    });
+    expect(document.activeElement).toBe(document.body);
+  });
+  it('enters the visible command instead of a mounted hidden command', async () => {
+    render(<><ToolbarAdapter aria-label="Commands"><Tool value="a" hidden /><Tool value="b" /></ToolbarAdapter><button>Outside</button></>);
+    await userEvent.tab();
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'b' }));
+  });
+  it('updates availability when a registered command ancestor is hidden', async () => {
+    const view = render(<ToolbarAdapter aria-label="Commands"><span><Tool value="a" /></span><Tool value="b" /></ToolbarAdapter>);
+    const wrapper = view.container.querySelector('span')!;
+    await act(async () => { wrapper.hidden = true; });
+    expect(screen.getByRole('button', { name: 'b' }).tabIndex).toBe(0);
+    await userEvent.tab();
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'b' }));
+  });
+  it('observes hidden changes outside the toolbar root', async () => {
+    const view = render(<section><ToolbarAdapter aria-label="Commands"><Tool value="a" /></ToolbarAdapter></section>);
+    const wrapper = view.container.querySelector('section')!;
+    const button = screen.getByRole('button');
+    await act(async () => { wrapper.hidden = true; });
+    expect(button.tabIndex).toBe(-1);
+    await act(async () => { wrapper.hidden = false; });
+    expect(button.tabIndex).toBe(0);
+  });
   it('does not focus on mount or when an unfocused active key becomes unavailable', () => {
     const before = document.activeElement;
     const view = render(<ToolbarAdapter aria-label="Commands"><Tool value="a" /><Tool value="b" /></ToolbarAdapter>);
