@@ -46,6 +46,8 @@ Behavior возвращает результат вычисления, но са
 
 `getDisclosureState({ open?, disabled?, triggerId, panelId })` не генерирует ID: владелец задаёт непустые разные ID без ASCII whitespace и обеспечивает уникальность на странице. По умолчанию open/disabled — false. `getDisclosureOpen(currentOpen, action, { disabled? })` принимает open/close/toggle; disabled сохраняет текущее значение. Внешний controlled-владелец может закрыть секцию независимо от disabled. Пример в документации использует нативную кнопку, mounted hidden-панель и возвращает фокус только при закрытии с фокусом внутри неё. Общего controller или popup API нет.
 
+Уточнение Disclosure: невалидное действие из JavaScript вызывает TypeError, включая disabled-режим. В каталоге варианты action опубликованы структурированно в parameters[].values, defaults options — в parameters[].defaults. Accordion восстанавливает фокус в документе самой панели, включая iframe/React portal, и не перехватывает фокус из родительской страницы.
+
 ## Domains — специализированные модели
 
 | Возможность | Сценарий | Статус |

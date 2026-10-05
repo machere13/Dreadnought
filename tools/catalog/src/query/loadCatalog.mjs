@@ -111,15 +111,25 @@ export function validateCatalog(value) {
         const cat = `${bat}.contracts[${ci}]`;
         object(contract, cat);
         string(contract.returnType, `${cat}.returnType`);
+        validateVariants(contract.variants, `${cat}.variants`);
         array(contract.parameters, `${cat}.parameters`).forEach((parameter, i) => {
           const pat = `${cat}.parameters[${i}]`;
           object(parameter, pat);
           string(parameter.name, `${pat}.name`);
           string(parameter.type, `${pat}.type`);
           boolean(parameter.optional, `${pat}.optional`);
+          if (parameter.values !== undefined) array(parameter.values, `${pat}.values`).forEach(value => {
+            if (typeof value !== 'string' && typeof value !== 'number') fail('Invalid literal', `${pat}.values`);
+          });
           if (parameter.variants !== undefined) validateVariants(parameter.variants, `${pat}.variants`);
+          if (parameter.defaults !== undefined) {
+            object(parameter.defaults, `${pat}.defaults`);
+            const properties = (i === 0 ? contract.variants : parameter.variants ?? []).flatMap(variant => variant.properties);
+            for (const name of Object.keys(parameter.defaults)) {
+              if (!properties.some(property => property.name === name)) fail('Unknown parameter default', `${pat}.defaults.${name}`);
+            }
+          }
         });
-        validateVariants(contract.variants, `${cat}.variants`);
       });
     });
   });

@@ -8,6 +8,16 @@ import { validateCatalog, loadCatalog } from '../src/query/index.mjs';
 import { makeCatalog } from './queryFixtures';
 
 describe('catalog query validation', () => {
+  it.each([
+    { values: 'toggle' },
+    { values: [true] },
+    { defaults: [] },
+    { defaults: { missing: false } },
+  ])('rejects malformed structured parameter details %j', details => {
+    const data = makeCatalog();
+    (data.entries[0].bindings[0].contracts[0].parameters as any).push({ name: 'action', type: 'Action', optional: false, ...details });
+    expect(() => validateCatalog(data)).toThrow(expect.objectContaining({ code: 'INVALID_CATALOG' }));
+  });
   it('accepts a valid catalog', () => {
     const data = makeCatalog();
     expect(validateCatalog(data)).toBe(data);

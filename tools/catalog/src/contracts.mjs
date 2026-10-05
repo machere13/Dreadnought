@@ -33,7 +33,7 @@ function describeVariants(checker, input, declaration) {
   }));
 }
 
-export function describeContract(context, binding) {
+export function getSignatures(context, binding) {
   const { checker } = context;
   const symbol = getExport(context, binding.importPath, binding.exportName);
   const declaration = symbol.valueDeclaration ?? symbol.declarations?.[0];
@@ -45,7 +45,12 @@ export function describeContract(context, binding) {
   }
   const signatures = type.getCallSignatures();
   if (!signatures.length) throw new Error(`Not a callable export: ${binding.exportName}`);
-  // Preserve both overloads and union branches rather than merging their props.
+  return { signatures, declaration };
+}
+
+export function describeContract(context, binding) {
+  const { checker } = context;
+  const { signatures, declaration } = getSignatures(context, binding);
   return signatures.map((signature) => {
     const parameter = signature.parameters[0];
     const input = parameter && checker.getTypeOfSymbolAtLocation(parameter, declaration);
@@ -53,9 +58,11 @@ export function describeContract(context, binding) {
       parameters: signature.parameters.map((parameter, index) => {
         const type = checker.getTypeOfSymbolAtLocation(parameter, declaration);
         const variants = index > 0 ? describeVariants(checker, type, declaration) : undefined;
+        const values = literalValues(type);
         return {
           name: parameter.name, type: printType(checker, type),
           optional: Boolean(parameter.flags & ts.SymbolFlags.Optional) || Boolean(parameter.valueDeclaration?.questionToken) || Boolean(parameter.valueDeclaration?.initializer),
+          ...(values ? {values} : {}),
           ...(variants?.some(variant => variant.properties.length) ? {variants} : {}),
         };
       }),

@@ -1,4 +1,4 @@
-import { describeContract } from './contracts.mjs';
+import { describeContract, getSignatures } from './contracts.mjs';
 import { checkExamples } from './examples.mjs';
 import { readComponentTokens } from './tokens.mjs';
 import { usageExamples } from './usageExamples.mjs';
@@ -45,8 +45,32 @@ export function generateCatalog(context, metadata) {
         if (!propertyNames.has(name)) throw new Error(`Unknown default property: ${binding.exportName}.${name}`);
         defaultChecks.push({
           id: `${entry.id}/${binding.id}/default:${name}`,
+          binding, parameterIndex: 0, propertyName: name,
           code: `import { ${binding.exportName} } from '${binding.importPath}';\nconst value: NonNullable<Parameters<typeof ${[binding.exportName, ...(binding.propertyPath ?? [])].join('.')}>[0]>[${JSON.stringify(name)}] = ${JSON.stringify(value)};`,
         });
+      }
+      const parameterDefaults = binding.parameterDefaults ?? {};
+      if (typeof parameterDefaults !== 'object' || Array.isArray(parameterDefaults)) throw new Error('Invalid parameter defaults');
+      for (const [index, defaults] of Object.entries(parameterDefaults)) {
+        if (!/^(0|[1-9]\d*)$/.test(index)) throw new Error(`Invalid parameter index: ${index}`);
+        if (!defaults || typeof defaults !== 'object' || Array.isArray(defaults)) throw new Error(`Invalid parameter defaults: ${index}`);
+        for (const contract of contracts) {
+          const parameter = contract.parameters[Number(index)];
+          if (!parameter) throw new Error(`Unknown parameter: ${binding.exportName}[${index}]`);
+          const properties = (Number(index) === 0 ? contract.variants : parameter.variants ?? [])
+            .flatMap(variant => variant.properties);
+          for (const name of Object.keys(defaults)) {
+            if (!properties.some(property => property.name === name)) throw new Error(`Unknown parameter default: ${binding.exportName}[${index}].${name}`);
+          }
+          parameter.defaults = defaults;
+        }
+        for (const [name, value] of Object.entries(defaults)) {
+          defaultChecks.push({
+            id: `${entry.id}/${binding.id}/parameter:${index}/default:${name}`,
+            binding, parameterIndex: Number(index), propertyName: name,
+            code: `import { ${binding.exportName} } from '${binding.importPath}';\nconst value: NonNullable<Parameters<typeof ${[binding.exportName, ...(binding.propertyPath ?? [])].join('.')}>[${index}]>[${JSON.stringify(name)}] = ${JSON.stringify(value)};`,
+          });
+        }
       }
       const bindingExamples = [...(binding.examples ?? [])];
       if (binding.id === 'react-ui' && usageExamples[entry.name] && !bindingExamples.some(example => example.id === 'usage')) {
@@ -80,7 +104,23 @@ export function generateCatalog(context, metadata) {
       entry.composesWith.some(id => !ids.has(id)))) throw new Error(`Unknown composition reference: ${entry.id}`);
   }
   unique(examples, 'example');
-  checkExamples(context, [...examples, ...defaultChecks]);
+  const program = checkExamples(context, [...examples, ...defaultChecks]);
+  const checker = program.getTypeChecker();
+  const sources = new Map(program.getSourceFiles().map(source => [source.text, source]));
+  for (const check of defaultChecks) {
+    const source = sources.get(check.code);
+    const initializer = source.statements[1].declarationList.declarations[0].initializer;
+    const valueType = checker.getTypeAtLocation(initializer);
+    const { signatures, declaration } = getSignatures({ ...context, program, checker }, check.binding);
+    for (const [index, signature] of signatures.entries()) {
+      const parameter = signature.parameters[check.parameterIndex];
+      const type = parameter && checker.getNonNullableType(checker.getTypeOfSymbolAtLocation(parameter, declaration));
+      const property = type && checker.getPropertyOfType(type, check.propertyName);
+      if (!property || !checker.isTypeAssignableTo(valueType, checker.getTypeOfSymbolAtLocation(property, declaration))) {
+        throw new Error(`Default not assignable to overload ${index + 1}: ${check.id}`);
+      }
+    }
+  }
   return {
     schemaVersion: 1,
     packageVersions: context.packageVersions,

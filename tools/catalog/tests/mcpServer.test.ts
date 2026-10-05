@@ -224,6 +224,13 @@ describe('generated catalog over MCP', () => {
       expect(replyPayload(context).result.items[2].contracts[0].parameters).toEqual([]);
       const overview = replyPayload(await client.callTool({name: 'dreadnought_get', arguments: {component: 'getSelectionValue'}}));
       expect(overview.result.composesWith).toContain('behavior:get-next-enabled-value');
+      const disclosureApi = replyPayload(await client.callTool({name: 'dreadnought_get', arguments: {
+        component: 'getDisclosureOpen', binding: 'core', section: 'api'}})).result;
+      expect(disclosureApi.contracts[0].parameters[1].values).toEqual(expect.arrayContaining(['open', 'close', 'toggle']));
+      expect(disclosureApi.contracts[0].parameters[2].defaults).toEqual({disabled: false});
+      const disclosureContext = replyPayload(await client.callTool({name: 'dreadnought_context', arguments: {
+        components: ['getDisclosureOpen'], layer: 1, format: 'contract', maxBytes: 8192}})).result;
+      expect(disclosureContext.items[0].contracts[0].parameters[2].defaults).toEqual({disabled: false});
     });
   });
   it('preserves ref variants, compound exports, examples and component tokens', async () => {

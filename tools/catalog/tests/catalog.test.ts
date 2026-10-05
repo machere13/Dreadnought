@@ -1,5 +1,6 @@
 // @vitest-environment node
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { setImmediate } from 'node:timers/promises';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -23,6 +24,9 @@ beforeAll(() => {
   context = createContext(root, packages);
   catalog = generateCatalog(context, metadata);
 });
+
+// Compiler checks are synchronous; let the worker report results between tests.
+afterEach(() => setImmediate());
 
 afterAll(() => {
   for (const directory of temporaryRoots) rmSync(directory, { recursive: true, force: true });
@@ -52,6 +56,8 @@ describe('public catalog', () => {
     const parameters = transition.bindings[0].contracts[0].parameters;
     expect(parameters.slice(0, 2).map(parameter => parameter.name)).toEqual(['currentOpen', 'action']);
     expect(parameters[1].type).toBe('DisclosureAction');
+    expect(parameters[1].values).toEqual(expect.arrayContaining(['open', 'close', 'toggle']));
+    expect(parameters[2].defaults).toEqual({ disabled: false });
     examples.push({ id: 'disclosure-actions', code:
       "import { getDisclosureOpen } from '@dreadnought/core';\ngetDisclosureOpen(false, 'open');\ngetDisclosureOpen(true, 'close');\ngetDisclosureOpen(false, 'toggle');" });
     expect(parameters[2].variants[0].properties).toContainEqual(expect.objectContaining({ name: 'disabled', optional: true }));
@@ -180,6 +186,22 @@ describe('public catalog', () => {
     expect(() => generateCatalog(context, invalid)).toThrow(/not assignable/);
   });
 
+  it('validates positional property defaults against public parameter types', () => {
+    const binding = () => structuredClone(metadata.find(entry => entry.name === 'getDisclosureOpen')!);
+    for (const [defaults, error] of [
+      [{ 2: { disabled: 'yes' } }, /not assignable/],
+      [{ 2: { missing: false } }, /Unknown parameter default/],
+      [{ 9: { disabled: false } }, /Unknown parameter/],
+      [{ 1: { disabled: false } }, /Unknown parameter default/],
+      [{ '02': { disabled: false } }, /Invalid parameter index/],
+    ] as const) {
+      const entry = binding();
+      entry.bindings[0].parameterDefaults = defaults;
+      const invalid = metadata.map(item => item.id === entry.id ? entry : item);
+      expect(() => generateCatalog(context, invalid)).toThrow(error);
+    }
+  });
+
   it('rejects private imports and suppressed example errors', () => {
     expect(() => checkExamples(context, [{ id: 'private', code: "import { getButtonState } from './internal.ts';" }])).toThrow('Non-public import');
     expect(() => checkExamples(context, [{ id: 'unchecked', code: '// @ts-nocheck\nconst x: string = 1;' }])).toThrow('Suppressed type check');
@@ -208,6 +230,24 @@ function fixture(version = '1.0.0') {
 }
 
 describe('catalog source of truth', () => {
+  it('checks positional defaults against every overload, not only the final one', () => {
+    const directory = fixture();
+    writeFileSync(path.join(directory, 'src/index.ts'), `
+export function pick(kind: 'a', options?: { mode?: 'a'; disabled?: boolean }): void;
+export function pick(kind: 'b', options?: { mode?: 'b'; disabled?: boolean }): void;
+export function pick(kind: 'a' | 'b', options: { mode?: 'a' | 'b'; disabled?: boolean } = {}) {}`);
+    const current = createContext(directory, [{ directory: '.', entrypoints: ['.'] }]);
+    const entry = { id: 'behavior:pick', kind: 'behavior', name: 'pick', family: 'Behaviors',
+      description: 'Overloaded behavior', docsUrl: '/custom-components/#overloads', bindings: [{
+        id: 'core', layer: 1, framework: null, importPath: '@test/core', exportName: 'pick',
+        parameterDefaults: { '1': { mode: 'b' } } as Record<string, Record<string, unknown>>,
+      }] };
+    expect(() => generateCatalog(current, [entry])).toThrow(/not assignable.*overload/i);
+    entry.bindings[0].parameterDefaults = { '1': { disabled: false } };
+    const generated = generateCatalog(current, [entry]);
+    expect(generated.entries[0].bindings[0].contracts.map(contract => contract.parameters[1].defaults))
+      .toEqual([{ disabled: false }, { disabled: false }]);
+  });
   it('reads current source when stale dist files exist', () => {
     const directory = fixture();
     mkdirSync(path.join(directory, 'dist'));

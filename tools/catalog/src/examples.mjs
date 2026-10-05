@@ -37,4 +37,5 @@ export function checkExamples(context, examples) {
   };
   const program = ts.createProgram([...context.roots, ...files.keys()], context.options, host, context.program);
   assertNoErrors(program, [...files.keys()].map((file) => program.getSourceFile(file)));
+  return program;
 }

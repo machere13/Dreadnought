@@ -1,5 +1,6 @@
 import { createRef, useState } from 'react';
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { createPortal } from 'react-dom';
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AccordionAdapter } from '../../../src/Navigation/Accordion/AccordionAdapter.tsx';
@@ -14,6 +15,36 @@ function pair(value: string, label = value, content = `${value} content`) {
 }
 
 describe('AccordionAdapter', () => {
+  it('restores panel focus in an iframe portal without stealing parent-document focus', () => {
+    const frame = document.createElement('iframe');
+    document.body.append(frame);
+    const frameDocument = frame.contentDocument!;
+    const view = (value: string | null) => <>{createPortal(<AccordionAdapter value={value}>
+      <AccordionAdapter.Item value="a">
+        <AccordionAdapter.Trigger>Frame question</AccordionAdapter.Trigger>
+        <AccordionAdapter.Panel><input aria-label="Frame input" /></AccordionAdapter.Panel>
+      </AccordionAdapter.Item>
+    </AccordionAdapter>, frameDocument.body)}<button>Parent outside</button></>;
+    const { rerender, unmount } = render(view('a'));
+    try {
+      const input = within(frameDocument.body).getByRole('textbox');
+      const button = within(frameDocument.body).getByRole('button');
+      act(() => input.focus());
+      expect(frameDocument.activeElement).toBe(input);
+      expect(document.activeElement).toBe(frame);
+      rerender(view(null));
+      expect(frameDocument.activeElement).toBe(button);
+      rerender(view('a'));
+      act(() => input.focus());
+      const outside = screen.getByRole('button', { name: 'Parent outside' });
+      act(() => outside.focus());
+      rerender(view(null));
+      expect(document.activeElement).toBe(outside);
+    } finally {
+      unmount();
+      frame.remove();
+    }
+  });
   it('protects button type and ARIA from consumer spreads while preserving disabled', async () => {
     const submit = vi.fn(event => event.preventDefault());
     const consumer = { id: 'consumer', type: 'submit' as const,

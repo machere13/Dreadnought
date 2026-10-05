@@ -23,10 +23,11 @@
     "description": "Возвращает следующее boolean-состояние раскрытия по действию open/close/toggle, учитывая disabled. Не меняет состояние сам и не вызывает события.",
     "docsUrl": "/custom-components/#core-disclosure",
     "composesWith": ["behavior:get-disclosure-state"],
-    "constraints": ["Чистая функция: currentOpen и action обязательны. DisclosureAction — open, close или toggle. options.disabled по умолчанию false; true сохраняет currentOpen для любого действия. Внешний controlled-владелец может изменить open независимо от disabled. Хранилище, callback, проверка defaultPrevented, DOM и фокус принадлежат потребителю. Кнопке достаточно нативных Enter/Space без собственного keydown."],
+    "constraints": ["Чистая функция: currentOpen и action обязательны. DisclosureAction — open, close или toggle; неверный action из JavaScript вызывает TypeError, даже при disabled. options.disabled по умолчанию false; true сохраняет currentOpen для любого допустимого действия. Внешний controlled-владелец может изменить open независимо от disabled. Хранилище, callback, проверка defaultPrevented, DOM и фокус принадлежат потребителю. Кнопке достаточно нативных Enter/Space без собственного keydown."],
     "bindings": [{
       "id": "core", "layer": 1, "framework": null,
       "importPath": "@dreadnought/core", "exportName": "getDisclosureOpen",
+      "parameterDefaults": {"2": {"disabled": false}},
       "examples": [{"id": "composition", "code": "import { getDisclosureOpen, getDisclosureState } from '@dreadnought/core';\nconst next = getDisclosureOpen(false, 'toggle');\nconst state = getDisclosureState({ open: next, triggerId: 'details-trigger', panelId: 'details-panel' });\nconst blocked = getDisclosureOpen(true, 'close', { disabled: true }); // true"}]
     }]
   },

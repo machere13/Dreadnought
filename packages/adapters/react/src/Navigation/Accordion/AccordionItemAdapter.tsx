@@ -20,7 +20,13 @@ export function AccordionItemAdapter({ value, children, ref, ...itemProps }: Acc
 
   useLayoutEffect(() => root.registerItem(value, itemToken.current), [root.registerItem, value]);
   useLayoutEffect(() => {
-    if (wasOpen.current && !open && panelRef.current?.contains(document.activeElement)) {
+    const panel = panelRef.current;
+    let active = panel?.ownerDocument.activeElement;
+    for (let frame = panel?.ownerDocument.defaultView?.frameElement; frame;
+      frame = frame.ownerDocument.defaultView?.frameElement) {
+      if (frame.ownerDocument.activeElement !== frame) active = null;
+    }
+    if (wasOpen.current && !open && active && panel?.contains(active)) {
       triggerRef.current?.focus();
     }
     wasOpen.current = open;
