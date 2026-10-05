@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "packages/core/tests/domains/charts/radar.types.ts",
     "packages/core/tests/behaviors/disclosure.types.ts",
     "packages/ui/tests/adapters/react/components/Controls/Toolbar/Toolbar.types.tsx",
     "packages/adapters/react/tests/Controls/Toolbar/ToolbarPublic.types.tsx",
