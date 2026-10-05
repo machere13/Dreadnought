@@ -2,6 +2,8 @@ export { getTextFieldState } from './getTextFieldState.ts';
 export type { TextFieldState, TextFieldStateOptions } from './getTextFieldState.ts';
 export { getNextEnabledValue } from './getNextEnabledValue.ts';
 export type { NavigationItem, NavigationDirection, NavigationOptions } from './getNextEnabledValue.ts';
+export { getNavigationDirection } from './getNavigationDirection.ts';
+export type { NavigationKeyOptions } from './getNavigationDirection.ts';
 export { getTypeaheadValue } from './getTypeaheadValue.ts';
 export type { TypeaheadItem, TypeaheadOptions } from './getTypeaheadValue.ts';
 export { getCheckableState } from './getCheckableState.ts';

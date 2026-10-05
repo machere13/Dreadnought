@@ -23,6 +23,18 @@ it('keeps the final required selection when clear is requested', async () => {
   expect((screen.getByRole('combobox') as HTMLInputElement).value).toBe('Анна');
 });
 
+it('leaves Home and End to the searchable input rather than moving the active option', async () => {
+  render(<adapters.SelectAdapter searchable aria-label="Поиск" options={options} />);
+  const input = screen.getByRole('combobox', { name: 'Поиск' });
+  input.focus();
+  await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+  const last = screen.getByRole('option', { name: 'Вера' }).id;
+  expect(input.getAttribute('aria-activedescendant')).toBe(last);
+  expect(fireEvent.keyDown(input, { key: 'Home' })).toBe(true);
+  expect(fireEvent.keyDown(input, { key: 'End' })).toBe(true);
+  expect(input.getAttribute('aria-activedescendant')).toBe(last);
+});
+
 it('respects a cancelled form reset and dismisses without committing', async () => {
   render(<form onReset={event => event.preventDefault()}><adapters.SelectAdapter aria-label="Выбор" options={options} defaultValue="a" /></form>);
   const input = screen.getByRole('combobox', { name: 'Выбор' }) as HTMLInputElement;

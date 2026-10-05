@@ -1,5 +1,5 @@
-import { getNextEnabledValue, getTypeaheadValue } from '@dreadnought/core';
-import type { NavigationOptions, TypeaheadItem, TypeaheadOptions } from '@dreadnought/core';
+import { getNavigationDirection, getNextEnabledValue, getTypeaheadValue } from '@dreadnought/core';
+import type { NavigationDirection, NavigationKeyOptions, NavigationOptions, TypeaheadItem, TypeaheadOptions } from '@dreadnought/core';
 
 const options: NavigationOptions = { loop: false };
 const next: string | undefined = getNextEnabledValue([{ value: 'a' }], 'a', 'next', options);
@@ -17,3 +17,13 @@ getTypeaheadValue(searchable, '', 42);
 // @ts-expect-error includeCurrent accepts a boolean.
 getTypeaheadValue(searchable, '', 'set', { includeCurrent: 'yes' });
 void found;
+
+const keyOptions: NavigationKeyOptions = { orientation: 'horizontal', homeEnd: false };
+const direction: NavigationDirection | undefined = getNavigationDirection('ArrowRight', keyOptions);
+// @ts-expect-error Orientation supports only horizontal or vertical navigation.
+getNavigationDirection('ArrowRight', { orientation: 'diagonal' });
+// @ts-expect-error homeEnd accepts a boolean.
+getNavigationDirection('Home', { homeEnd: 'off' });
+// @ts-expect-error Core accepts a key string, not a DOM event.
+getNavigationDirection(new KeyboardEvent('keydown', { key: 'Home' }));
+void direction;

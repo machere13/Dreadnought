@@ -1,5 +1,20 @@
 [
   {
+    "id": "behavior:get-navigation-direction",
+    "kind": "behavior",
+    "name": "getNavigationDirection",
+    "family": "Behaviors",
+    "description": "Преобразует строку клавиши в направление навигации previous/next/first/last. Горизонтальная или вертикальная ориентация; Home/End можно оставить текстовому курсору. Для своего меню, списка или панели управления.",
+    "docsUrl": "/custom-components/#core-keyboard",
+    "composesWith": ["behavior:get-next-enabled-value", "component:tabs", "component:menu", "component:select"],
+    "constraints": ["Чистая функция принимает строку key, не DOM-событие. По умолчанию orientation: vertical, homeEnd: true. Vertical использует ArrowUp/ArrowDown, horizontal — ArrowLeft/ArrowRight; другая пара стрелок возвращает undefined. Home/End возвращают first/last только при homeEnd: true. Посторонние клавиши возвращают undefined. Функция не учитывает RTL, модификаторы, IME, disabled, отмену события, DOM, фокус и выбор; это ответственность вызывающего кода. В поисковом поле отключайте Home/End, чтобы сохранить управление курсором."],
+    "bindings": [{
+      "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "getNavigationDirection",
+      "examples": [{"id": "usage", "code": "import { getNavigationDirection, getNextEnabledValue } from '@dreadnought/core';\nconst items = [{ value: 'copy' }, { value: 'save' }];\nconst direction = getNavigationDirection('ArrowRight', { orientation: 'horizontal' });\nconst next = direction === undefined ? undefined : getNextEnabledValue(items, 'copy', direction);\nconst cursorKey = getNavigationDirection('Home', { homeEnd: false });\n// Следующий ключ — save; курсорная клавиша — undefined. События и фокус остаются в адаптере."}]
+    }]
+  },
+  {
     "id": "behavior:get-typeahead-value",
     "kind": "behavior",
     "name": "getTypeaheadValue",

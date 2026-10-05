@@ -33,7 +33,7 @@ node tools/catalog/src/query.mjs get readClipboard --binding core --section api
 
 ## Самостоятельные возможности core
 
-Опубликованы четыре actions (`copy`, `download`, `pickFiles`, `readClipboard`) и три behaviors (`getSelectionValue`, `getNextEnabledValue`, `getTypeaheadValue`). Они имеют одну привязку `core`, слой 1, `framework: null` и не получают фиктивных UI-токенов или React-привязок. Actions независимы от фреймворка, но требуют браузерных API; behaviors — чистые вычисления.
+Опубликованы четыре actions (`copy`, `download`, `pickFiles`, `readClipboard`) и четыре behaviors (`getSelectionValue`, `getNextEnabledValue`, `getTypeaheadValue`, `getNavigationDirection`). Они имеют одну привязку `core`, слой 1, `framework: null` и не получают фиктивных UI-токенов или React-привязок. Actions независимы от фреймворка, но требуют браузерных API; behaviors — чистые вычисления.
 
 Ищите возможность по имени или назначению, при необходимости с `kind`. Затем запросите `dreadnought_context` с `components: ["getSelectionValue", "getNextEnabledValue"]` и `layer: 1`. Для core-записей usage-ответ содержит назначение, проверенный пример, ограничения и `composesWith` — ID записей, с которыми возможность можно сочетать. Это рекомендуемые сочетания, а не граф обязательных зависимостей. Полные позиционные контракты добавляются только при `format: "contract"`. При `truncated: true` запрашивайте недостающий точный контракт через `dreadnought_get` с `binding: "core"`, `section: "api"`, а примеры — через `section: "examples"`.
 

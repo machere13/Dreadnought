@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { getNavigationDirection } from '@dreadnought/core';
 import type { ComponentPropsWithRef, KeyboardEvent } from 'react';
 import { useTabsContext } from './TabsContext.tsx';
 import { forwardTabsRef } from './forwardTabsRef.ts';
@@ -17,13 +18,7 @@ export function TabsTabAdapter({ value, disabled = false, onClick, onKeyDown, re
   function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
     onKeyDown?.(event);
     if (event.defaultPrevented) return;
-    const direction = {
-      ArrowLeft: 'previous',
-      ArrowRight: 'next',
-      Home: 'first',
-      End: 'last',
-    } as const;
-    const targetDirection = direction[event.key as keyof typeof direction];
+    const targetDirection = getNavigationDirection(event.key, { orientation: 'horizontal' });
     if (targetDirection === undefined) return;
     event.preventDefault();
     context.navigate(value, targetDirection);

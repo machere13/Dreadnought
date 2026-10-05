@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import type { ComponentPropsWithRef, ComponentPropsWithoutRef, ReactNode } from 'react';
-import { getNextEnabledValue, getTypeaheadValue } from '@dreadnought/core';
+import { getNavigationDirection, getNextEnabledValue, getTypeaheadValue } from '@dreadnought/core';
 import type { NavigationItem } from '@dreadnought/core';
 
 export interface MenuItem extends NavigationItem {
@@ -31,8 +31,7 @@ export function MenuAdapter({ items, selectedValue, onAction, slotProps = {}, on
   }} onKeyDown={(event) => {
     onKeyDown?.(event);
     if (event.defaultPrevented) return;
-    const directions = { ArrowDown: 'next', ArrowUp: 'previous', Home: 'first', End: 'last' } as const;
-    const direction = directions[event.key as keyof typeof directions];
+    const direction = getNavigationDirection(event.key);
     const typing = event.key.length === 1 && event.key !== ' ' && !event.ctrlKey
       && !event.altKey && !event.metaKey && !event.nativeEvent.isComposing;
     if (!direction && !typing) return;

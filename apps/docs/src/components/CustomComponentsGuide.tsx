@@ -136,6 +136,17 @@ export function CustomComponentsGuide() {
       <CodeBlock code={otherActionsCode} language="ts" copyLabels={copyLabels} />
       <p className={styles.footnote}>Выбор файлов и чтение буфера вызывайте в ответ на действие пользователя. <code>download</code> не загружает данные с сервера: Blob нужно подготовить самостоятельно.</p>
     </section>
+    <section data-knowledge className={styles.section} aria-labelledby="core-keyboard">
+      <h2 id="core-keyboard" className={styles.sectionTitle}>Клавиши и направление навигации</h2>
+      <p className={styles.bodyText}><code>getNavigationDirection(key, options)</code> превращает строку клавиши в previous, next, first или last. Посторонняя клавиша возвращает undefined. По умолчанию используются стрелки вверх/вниз и Home/End; горизонтальная ориентация использует стрелки влево/вправо.</p>
+      <CodeBlock language="ts" copyLabels={copyLabels} code={`import { getNavigationDirection, getNextEnabledValue } from '@dreadnought/core';
+const items = [{ value: 'copy' }, { value: 'save' }];
+const direction = getNavigationDirection('ArrowRight', { orientation: 'horizontal' });
+const next = direction === undefined
+  ? undefined
+  : getNextEnabledValue(items, 'copy', direction); // save`} />
+      <p className={styles.footnote}>Для поискового поля передайте homeEnd: false: Home/End продолжат управлять текстовым курсором. События, их отмена, модификаторы, IME, RTL и перенос фокуса остаются в вашем адаптере. Tabs, Menu и Select уже используют это правило, сохраняя своё поведение и публичные пропсы.</p>
+    </section>
     <section data-knowledge className={styles.section} aria-labelledby="core-typeahead">
       <h2 id="core-typeahead" className={styles.sectionTitle}>Переход по набранным буквам</h2>
       <p className={styles.bodyText}><code>getTypeaheadValue(items, currentValue, query, options)</code> возвращает ключ доступного пункта по началу названия. Передайте пункты со строковыми value и text. Отключённые пункты пропускаются; регистр и пробелы по краям не учитываются. Пустой запрос или отсутствие совпадения возвращает undefined.</p>

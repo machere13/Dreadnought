@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { getNextEnabledValue, getSelectState, getSelectionValue } from '@dreadnought/core';
+import { getNavigationDirection, getNextEnabledValue, getSelectState, getSelectionValue } from '@dreadnought/core';
 import type { SelectValue, SelectionAction } from '@dreadnought/core';
 import type { KeyboardEvent } from 'react';
 import type { SelectAdapterProps } from './SelectAdapter.types.ts';
@@ -56,8 +56,7 @@ export function useSelect(props: SelectAdapterProps) {
       if (!open) setExpanded(true); else if (activeValue) choose(activeValue);
       return;
     }
-    const direction = event.key === 'ArrowDown' ? 'next' : event.key === 'ArrowUp' ? 'previous'
-      : (!props.searchable && event.key === 'Home') ? 'first' : (!props.searchable && event.key === 'End') ? 'last' : undefined;
+    const direction = getNavigationDirection(event.key, { homeEnd: !props.searchable });
     if (!direction) return;
     event.preventDefault();
     if (!open) {

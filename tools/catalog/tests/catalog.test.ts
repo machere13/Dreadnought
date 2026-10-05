@@ -30,7 +30,7 @@ afterAll(() => {
 describe('public catalog', () => {
   it('publishes standalone actions and behaviors with checked public contracts', () => {
     const capabilities = catalog.entries.filter(entry => entry.kind !== 'component');
-    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getNextEnabledValue', 'getSelectionValue', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
+    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
     expect(capabilities.every(entry => entry.tokens.length === 0 && entry.bindings.length === 1 && entry.bindings[0].layer === 1)).toBe(true);
     const selection = capabilities.find(entry => entry.name === 'getSelectionValue');
     expect(selection.bindings[0].contracts).toHaveLength(3);
@@ -43,6 +43,10 @@ describe('public catalog', () => {
     expect(typeahead.bindings[0].contracts[0].parameters.map(parameter => parameter.name))
       .toEqual(['items', 'currentValue', 'query', 'options']);
     expect(() => checkExamples(context, typeahead.bindings[0].examples)).not.toThrow();
+    const keyboard = capabilities.find(entry => entry.name === 'getNavigationDirection');
+    expect(keyboard.bindings[0].contracts[0].parameters.map(parameter => parameter.name)).toEqual(['key', 'options']);
+    expect(keyboard.bindings[0].contracts[0].parameters[1].variants[0].properties.map(property => property.name).sort()).toEqual(['homeEnd', 'orientation']);
+    expect(() => checkExamples(context, keyboard.bindings[0].examples)).not.toThrow();
   });
 
   it('describes a zero-argument action without inventing an options parameter', () => {
