@@ -3,7 +3,7 @@ import type { CSSProperties } from 'react';
 import { filterTableRows, getSelectionValue, paginateTableRows, sortTableRows } from '@dreadnought/core';
 import type { TableSortOrder } from '@dreadnought/core';
 import { TableFilterMenu } from './TableFilterMenu.tsx';
-import { cellValue, fixedStyle, recordKey } from './tableData.ts';
+import { cellValue, fixedStyle, paginationNumber, recordKey } from './tableData.ts';
 import type { TableChangeFilters, TableChangeSorter, TableColumn, TableDataAdapterProps, TableFilterValue, TableRowKey } from './table.types.ts';
 
 export function DataTableAdapter<RecordType extends object>({
@@ -11,32 +11,49 @@ export function DataTableAdapter<RecordType extends object>({
 }: TableDataAdapterProps<RecordType>) {
   const defaultSorted = columns.find((column) => column.defaultSortOrder);
   const [sorting, setSorting] = useState<{ key: string; order: TableSortOrder }>({ key: defaultSorted?.key ?? '', order: defaultSorted?.defaultSortOrder ?? null });
-  const [filters, setFilters] = useState<Record<string, TableFilterValue[]>>({});
-  const [page, setPage] = useState(pagination && pagination.defaultCurrent || 1);
+  const [filters, setFilters] = useState<Record<string, readonly TableFilterValue[]>>(() =>
+    Object.fromEntries(columns.map(column => [column.key, column.defaultFilteredValue ?? []])));
+  const [page, setPage] = useState(() => ({
+    current: paginationNumber(pagination ? pagination.defaultCurrent : undefined, 1),
+    pageSize: paginationNumber(pagination ? pagination.pageSize ?? pagination.defaultPageSize : undefined, 10),
+  }));
   const [selected, setSelected] = useState<TableRowKey[]>([...(rowSelection?.defaultSelectedRowKeys ?? [])]);
   const activeColumn = columns.find((column) => column.sortOrder !== undefined) ?? columns.find((column) => column.key === sorting.key);
   const activeOrder = activeColumn?.sortOrder !== undefined ? activeColumn.sortOrder : sorting.order;
   const filtered = filterTableRows(dataSource, columns.filter((column) => column.onFilter).map((column) => ({
-    values: column.filteredValue ?? filters[column.key] ?? column.defaultFilteredValue ?? [],
+    values: filterValues(column),
     predicate: column.onFilter!,
   })));
   const sorted = sortTableRows(filtered, activeColumn?.sorter, activeOrder);
-  const pageSize = Math.max(1, pagination && (pagination.pageSize ?? pagination.defaultPageSize) || 10);
+  const pageSize = paginationNumber(pagination ? pagination.pageSize : undefined, page.pageSize);
   const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
-  const currentPage = Math.min(pagination && pagination.current || page, pageCount);
+  const requestedPage = paginationNumber(pagination ? pagination.current : undefined, pageSize !== page.pageSize ? 1 : page.current);
+  const currentPage = Math.min(requestedPage, pageCount);
+  const storedPage = pagination && pagination.current !== undefined ? page.current : currentPage;
+  if (pagination !== false && (storedPage !== page.current || pageSize !== page.pageSize)) {
+    setPage({ current: storedPage, pageSize });
+  }
   const rows = pagination === false ? sorted : paginateTableRows(sorted, currentPage, pageSize);
   const selectedKeys = rowSelection?.selectedRowKeys ?? selected;
-  const keysOnPage = rows.map((record, index) => recordKey(record, rowKey, (currentPage - 1) * pageSize + index))
+  const sourceKeys = rowSelection ? dataSource.map(record => recordKey(record, rowKey)) : [];
+  if (new Set(sourceKeys.map(String)).size !== sourceKeys.length) {
+    throw new Error('Table rowSelection requires unique rowKey or record.key values.');
+  }
+  const keysOnPage = rows.map((record, index) => recordKey(record, rowKey, rowSelection ? undefined : (currentPage - 1) * pageSize + index))
     .filter((_, index) => !rowSelection?.getCheckboxProps?.(rows[index]!)?.disabled);
 
+  function filterValues(column: TableColumn<RecordType>): readonly TableFilterValue[] {
+    return column.filteredValue !== undefined ? column.filteredValue ?? [] : filters[column.key] ?? [];
+  }
+
   function currentFilters(override?: { key: string; values: readonly TableFilterValue[] }): TableChangeFilters {
-    return Object.fromEntries(columns.filter((column) => column.filters).map((column) => [
+    return Object.fromEntries(columns.filter((column) => column.filters || column.onFilter).map((column) => [
       column.key,
-      override?.key === column.key ? override.values : column.filteredValue ?? filters[column.key] ?? column.defaultFilteredValue ?? [],
+      override?.key === column.key ? override.values : filterValues(column),
     ]));
   }
 
-  function publishChange(nextPage: number, nextFilters: TableChangeFilters, nextSorter: TableChangeSorter) {
+  function publishChange(action: 'sort' | 'filter' | 'paginate', nextPage: number, nextFilters: TableChangeFilters, nextSorter: TableChangeSorter) {
     const matching = filterTableRows(dataSource, columns.filter((column) => column.onFilter).map((column) => ({
       values: nextFilters[column.key] ?? [],
       predicate: column.onFilter!,
@@ -46,7 +63,7 @@ export function DataTableAdapter<RecordType extends object>({
       { current: nextPage, pageSize },
       nextFilters,
       nextSorter,
-      { currentDataSource: sortTableRows(matching, sorterColumn?.sorter, nextSorter.order) },
+      { action, currentDataSource: sortTableRows(matching, sorterColumn?.sorter, nextSorter.order) },
     );
   }
 
@@ -54,22 +71,25 @@ export function DataTableAdapter<RecordType extends object>({
     const current = column.key === activeColumn?.key ? activeOrder : null;
     const order = current === null ? 'ascend' : current === 'ascend' ? 'descend' : null;
     if (column.sortOrder === undefined) setSorting({ key: column.key, order });
-    publishChange(currentPage, currentFilters(), { columnKey: column.key, order });
+    publishChange('sort', currentPage, currentFilters(), { columnKey: column.key, order });
   }
   function changePage(next: number) {
     if (pagination === false) return;
-    if (pagination?.current === undefined) setPage(next);
+    if (pagination?.current === undefined) setPage({ current: next, pageSize });
     pagination?.onChange?.(next, pageSize);
-    publishChange(next, currentFilters(), { columnKey: activeColumn?.key, order: activeOrder });
+    publishChange('paginate', next, currentFilters(), { columnKey: activeColumn?.key, order: activeOrder });
   }
   function changeFilter(column: TableColumn<RecordType>, values: TableFilterValue[]) {
     if (column.filteredValue === undefined) setFilters({ ...filters, [column.key]: values });
-    if (pagination !== false && pagination?.current === undefined) setPage(1);
-    publishChange(1, currentFilters({ key: column.key, values }), { columnKey: activeColumn?.key, order: activeOrder });
+    if (pagination !== false) {
+      if (pagination?.current === undefined) setPage({ current: 1, pageSize });
+      pagination?.onChange?.(1, pageSize);
+    }
+    publishChange('filter', 1, currentFilters({ key: column.key, values }), { columnKey: activeColumn?.key, order: activeOrder });
   }
   function changeSelection(next: TableRowKey[]) {
     if (rowSelection?.selectedRowKeys === undefined) setSelected(next);
-    rowSelection?.onChange?.(next, dataSource.filter((record, index) => next.includes(recordKey(record, rowKey, index))));
+    rowSelection?.onChange?.(next, dataSource.filter((_, index) => next.includes(sourceKeys[index]!)));
   }
 
   const tableStyle = {
@@ -92,7 +112,7 @@ export function DataTableAdapter<RecordType extends object>({
       </th>}
       {columns.map((column, index) => {
         const order = activeColumn?.key === column.key ? activeOrder : null;
-        const values = column.filteredValue ?? filters[column.key] ?? column.defaultFilteredValue ?? [];
+        const values = filterValues(column);
         const ariaSort = column.sorter
           ? order === 'ascend' ? 'ascending' : order === 'descend' ? 'descending' : 'none'
           : undefined;
@@ -118,7 +138,7 @@ export function DataTableAdapter<RecordType extends object>({
       })}
     </tr></thead>
     <tbody>{rows.length ? rows.map((record, rowIndex) => {
-      const key = recordKey(record, rowKey, (currentPage - 1) * pageSize + rowIndex);
+      const key = recordKey(record, rowKey, rowSelection ? undefined : (currentPage - 1) * pageSize + rowIndex);
       return <tr key={key} data-selected={selectedKeys.includes(key)}>
         {rowSelection && <td data-slot="selection-cell" data-fixed="left" style={{ left: 0 }}>
           <input

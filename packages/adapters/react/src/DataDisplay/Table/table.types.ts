@@ -54,6 +54,6 @@ export type TableDataAdapterProps<RecordType extends object> = Omit<ComponentPro
     pagination: { current: number; pageSize: number },
     filters: TableChangeFilters,
     sorter: TableChangeSorter,
-    extra: { currentDataSource: readonly RecordType[] },
+    extra: { action: 'sort' | 'filter' | 'paginate'; currentDataSource: readonly RecordType[] },
   ) => void;
 };

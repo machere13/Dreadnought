@@ -9,10 +9,17 @@ export function cellValue<RecordType extends object>(record: RecordType, dataInd
   record);
 }
 
-export function recordKey<RecordType extends object>(record: RecordType, rowKey: TableDataAdapterProps<RecordType>['rowKey'], index: number): TableRowKey {
-  if (typeof rowKey === 'function') return rowKey(record);
-  const value = record[rowKey ?? 'key' as keyof RecordType];
-  return typeof value === 'string' || typeof value === 'number' ? value : index;
+export function recordKey<RecordType extends object>(record: RecordType, rowKey: TableDataAdapterProps<RecordType>['rowKey'], index?: number): TableRowKey {
+  const value = typeof rowKey === 'function' ? rowKey(record) : record[rowKey ?? 'key' as keyof RecordType];
+  if (typeof value === 'string' || typeof value === 'number' && Number.isFinite(value)) return value;
+  if (index !== undefined) return index;
+  throw new Error('Table rowSelection requires a string or finite number from rowKey or record.key.');
+}
+
+export function paginationNumber(value: number | undefined, fallback: number): number {
+  if (value === undefined) return fallback;
+  if (!Number.isSafeInteger(value) || value < 1) throw new RangeError('Table pagination requires a positive integer.');
+  return value;
 }
 
 export function fixedStyle<RecordType extends object>(columns: readonly TableColumn<RecordType>[], index: number, hasSelection: boolean): CSSProperties | undefined {
