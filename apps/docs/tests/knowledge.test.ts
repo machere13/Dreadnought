@@ -10,6 +10,17 @@ const identity = { buildId: 'a'.repeat(64), packageVersions: { '@dreadnought/cor
 const manifest = { schemaVersion: 1, ...identity, entries: [entry] };
 
 describe('published knowledge boundaries', () => {
+  it('publishes and loads adapter-only Radar knowledge at its real API anchor', () => {
+    const url = '/components/radarchart/#radarchart-api';
+    const pages = new Map([['/components/radarchart/', parsePage('<h2 id="radarchart-api">API</h2>')]]);
+    expect(() => validateLink(url, pages)).not.toThrow();
+    const chunks = catalogChunks({ entries: [{ id: 'component:radar-chart', name: 'RadarChart', docsUrl: url, description: 'Radar', bindings: [
+      { id: 'react-adapter', layer: 2, exportName: 'RadarChartAdapter', importPath: '@dreadnought/react/unstyled', examples: [{ id: 'basic', code: '<RadarChartAdapter />' }] },
+    ] }] }, pages);
+    expect(chunks.map(chunk => chunk.url)).toEqual([url, url]);
+    const radar = { ...entry, id: chunks[0].id, url, title: chunks[0].title, text: chunks[0].text };
+    expect(validateManifest({ ...manifest, entries: [radar] }, identity).entries[0].url).toBe(url);
+  });
   it('extracts only explicit article sections and keeps whole code separate', () => {
     const document = parsePage(`<nav data-knowledge id="nav">Private nav</nav><main><article>
       <p>Unselected text</p><section data-knowledge aria-labelledby="start"><h2 id="start">Start</h2><p>Public guidance</p>

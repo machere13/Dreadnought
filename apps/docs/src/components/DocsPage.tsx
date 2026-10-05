@@ -16,6 +16,7 @@ import { checkboxDoc } from './componentDocs/CheckboxDoc';
 import { radioDoc } from './componentDocs/RadioDoc';
 import { selectDoc } from './componentDocs/SelectDoc';
 import { toolbarDoc } from './componentDocs/ToolbarDoc';
+import { radarChartDoc } from './componentDocs/RadarChartDoc';
 import { GettingStarted } from './GettingStarted';
 import { ThemingGuide } from './ThemingGuide';
 import { CustomComponentsGuide } from './CustomComponentsGuide';
@@ -25,7 +26,7 @@ import { DocsAssistant } from '../assistant/DocsAssistant.tsx';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
-type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'radio' | 'select';
+type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'radio' | 'select' | 'radarchart';
 type DocsSection = 'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
 const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
   { name: 'Controls', sections: ['button', 'toolbar'] },
@@ -35,6 +36,7 @@ const componentFamilies: readonly { name: string; sections: readonly ComponentSe
   { name: 'Layout', sections: ['layout'] },
   { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs', 'menu'] },
   { name: 'Surfaces', sections: ['card'] },
+  { name: 'Visualization', sections: ['radarchart'] },
 ];
 
 function Header() {
@@ -158,6 +160,7 @@ function TextAreaDemo() {
 }
 
 const componentDocs: Record<ComponentSection, ComponentDoc> = {
+  radarchart: radarChartDoc,
   checkbox: checkboxDoc,
   radio: radioDoc,
   select: selectDoc,
@@ -222,16 +225,16 @@ function ComponentDocumentation({ component }: { component: ComponentSection }) 
     <section className={styles.section} aria-labelledby={`${component}-example`}>
       <div className={styles.sectionHeading}>
         <h2 id={`${component}-example`} className={styles.sectionTitle}>Пример</h2>
-        <span className={styles.sectionMeta}>Готовый компонент</span>
+        <span className={styles.sectionMeta}>{doc.readyCode ? 'Готовый компонент' : 'Адаптер второго слоя'}</span>
       </div>
       {doc.demo}
-      <CodeBlock code={doc.readyCode} language="tsx" copyLabels={copyLabels} />
+      <CodeBlock code={doc.readyCode ?? doc.adapterCode} language="tsx" copyLabels={copyLabels} />
     </section>
 
     <section data-knowledge className={styles.section} aria-labelledby={`${component}-layers`}>
       <div className={styles.sectionHeading}>
         <h2 id={`${component}-layers`} className={styles.sectionTitle}>Когда нужен другой слой</h2>
-        <span className={styles.sectionMeta}>{doc.logicCode ? 'Один контракт · три уровня' : 'Готовый компонент · адаптер'}</span>
+        <span className={styles.sectionMeta}>{doc.readyCode ? doc.logicCode ? 'Один контракт · три уровня' : 'Готовый компонент · адаптер' : 'Адаптер · модель core'}</span>
       </div>
       <div className={styles.layerExamples}>
         <div>

@@ -166,6 +166,20 @@
   background: var(--dreadnought-color-surface-default);
 }
 .demoRow { display: flex; flex-wrap: wrap; align-items: center; gap: var(--dreadnought-spacing-x4); }
+.radarDemo { margin: 0; min-width: 0; color: var(--dreadnought-color-text-primary); }
+.radarDemo > figcaption { font-weight: var(--dreadnought-font-weight-label-1); }
+.radarDemo > p { color: var(--dreadnought-color-text-placeholder); }
+.radarViewport { width: 100%; max-width: 40rem; margin-inline: auto; }
+.radarPlot { display: block; max-width: 100%; }
+.radarGrid { fill: none; stroke: var(--dreadnought-color-border-subtle); }
+.radarAxis { stroke: var(--dreadnought-color-border-subtle); }
+.radarAxisLabel { fill: currentColor; font-size: var(--dreadnought-font-size-caption-2); }
+.radarSeriesA { fill: rgb(255 255 255 / 10%); stroke: currentColor; stroke-width: 2; }
+.radarSeriesB { fill: rgb(255 255 255 / 5%); stroke: currentColor; stroke-width: 2; stroke-dasharray: 5 3; }
+.radarDemo button[aria-pressed='false'] { color: var(--dreadnought-color-text-placeholder); }
+.radarTable { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; margin-block-start: var(--dreadnought-spacing-x4); }
+.radarTable caption { text-align: start; padding-block: var(--dreadnought-spacing-x2); }
+.radarTable th, .radarTable td { padding: var(--dreadnought-spacing-x2); text-align: start; border-bottom: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle); }
 .coreDemoButton {
   padding: var(--dreadnought-spacing-x2) var(--dreadnought-spacing-x4);
   border: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle);

@@ -1,0 +1,40 @@
+{
+  "id": "component:radar-chart",
+  "kind": "component",
+  "name": "RadarChart",
+  "family": "Visualization",
+  "description": "SVG Radar с независимыми диапазонами показателей, легендой и полной таблицей данных без темы.",
+  "docsUrl": "/components/radarchart/#radarchart-api",
+  "states": [],
+  "composesWith": ["domain:build-radar-layout"],
+  "constraints": [
+    "Доступен только адаптер второго слоя; готовый RadarChart и UI-тема ещё не выпущены.",
+    "Не менее трёх показателей; все серии, включая скрытые, валидируются buildRadarLayout.",
+    "width и height задаются вместе конечными положительными числами; без них ResizeObserver измеряет контейнер, высота равна 80% ширины.",
+    "Без ResizeObserver адаптивный SVG отсутствует, но таблица и легенда доступны; задайте фиксированные размеры.",
+    "Длинные подписи SVG могут пересекаться; полные названия и исходные значения всегда доступны в таблице.",
+    "Controlled visibleSeries меняется только через новый пропс; onVisibleSeriesChange запрашивает изменение."
+  ],
+  "bindings": [{
+    "id": "react-adapter", "layer": 2, "framework": "react",
+    "importPath": "@dreadnought/react/unstyled", "exportName": "RadarChartAdapter",
+    "description": "Нативные SVG, figure, кнопки легенды и семантическая таблица без готовых стилей.",
+    "propertyDescriptions": {
+      "metrics": "Показатели с ID, подписью, явным domain и необязательным reverse.",
+      "series": "Серии с ID, подписью и исходными значениями по каждому ID показателя.",
+      "label": "Обязательное непустое доступное название графика.",
+      "description": "Необязательное текстовое пояснение.",
+      "width": "Фиксированная ширина в CSS-пикселях; задаётся вместе с height.",
+      "height": "Фиксированная высота в CSS-пикселях; задаётся вместе с width.",
+      "visibleSeries": "Управляемый набор видимых ID; неизвестные ID игнорируются.",
+      "defaultVisibleSeries": "Начальный набор видимых ID; по умолчанию все начальные серии.",
+      "onVisibleSeriesChange": "Запрос нового набора актуальных видимых ID.",
+      "labels": "Подписи легенды, таблицы, заголовков и направления шкалы.",
+      "slotProps": "Нативные свойства частей без замены геометрии и обязательной семантики."
+    },
+    "examples": [{
+      "id": "basic",
+      "code": "import { RadarChartAdapter } from '@dreadnought/react/unstyled';\nconst metrics = ['quality','coverage','latency'].map(id => ({id,label:id,domain:[0,100] as const}));\nconst series = [{id:'a',label:'A',values:{quality:80,coverage:70,latency:60}}];\nexport function Example() { return <RadarChartAdapter label=\"Сравнение\" metrics={metrics} series={series} width={400} height={320} />; }"
+    }]
+  }]
+}

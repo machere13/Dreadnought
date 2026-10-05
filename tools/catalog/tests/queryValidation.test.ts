@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateCatalog, loadCatalog } from '../src/query/index.mjs';
 import { makeCatalog } from './queryFixtures';
+import { components } from '../src/config.mjs';
 
 describe('catalog query validation', () => {
   it.each([
@@ -26,7 +27,7 @@ describe('catalog query validation', () => {
   it('accepts the generated catalog used by the site', () => {
     const file = fileURLToPath(new URL('../dist/catalog.json', import.meta.url));
     const entries = loadCatalog(file).entries;
-    expect(entries.filter(entry => entry.kind === 'component')).toHaveLength(19);
+    expect(entries.filter(entry => entry.kind === 'component')).toHaveLength(components.length);
     expect(entries).toEqual(expect.arrayContaining([
       expect.objectContaining({ id: 'action:copy', kind: 'action' }),
       expect.objectContaining({ id: 'behavior:get-combobox-key-action', kind: 'behavior' }),

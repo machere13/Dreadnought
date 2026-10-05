@@ -95,7 +95,8 @@ export function generateCatalog(context, metadata) {
       description: entry.description, docsUrl: entry.docsUrl,
       states: entry.states ?? [], parts: entry.parts ?? [], constraints: entry.constraints ?? [],
       ...(entry.composesWith ? {composesWith: entry.composesWith} : {}),
-      tokens: entry.kind === 'component' ? readComponentTokens(context.root, entry.family, entry.name) : [], bindings,
+      tokens: entry.kind === 'component' && bindings.some(binding => binding.layer === 3)
+        ? readComponentTokens(context.root, entry.family, entry.name) : [], bindings,
     };
   });
   const ids = new Set(entries.map(entry => entry.id));

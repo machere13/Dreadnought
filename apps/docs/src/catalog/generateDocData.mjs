@@ -10,6 +10,7 @@ function apiRows(entry, binding) {
   const props = new Map();
   for (const contract of binding.contracts) for (const variant of contract.variants) {
     for (const prop of variant.properties) {
+      if (prop.type === 'undefined' || prop.type === 'never') continue;
       if (prop.origin !== 'library' && !descriptions[prop.name] && !Object.hasOwn(defaults, prop.name)) continue;
       const previous = props.get(prop.name) ?? [];
       previous.push(prop);
@@ -31,13 +32,15 @@ export function prepareCatalogDocs(root) {
     if (entry.kind !== 'component') continue;
     const ready = entry.bindings.find((binding) => binding.id === 'react-ui');
     const adapter = entry.bindings.find((binding) => binding.id === 'react-adapter');
-    const logic = entry.bindings.find((binding) => binding.id === 'react-logic') ?? entry.bindings.find((binding) => binding.layer === 1);
-    if (!ready || !adapter || !ready.examples.length || !adapter.examples.length) throw new Error(`Missing documentation example: ${entry.name}`);
+    const relatedCore = (entry.composesWith ?? []).map(id => catalog.entries.find(item => item.id === id))
+      .find(item => item?.kind === 'domain')?.bindings.find(binding => binding.id === 'core');
+    const logic = entry.bindings.find((binding) => binding.id === 'react-logic') ?? entry.bindings.find((binding) => binding.layer === 1) ?? relatedCore;
+    if (!adapter?.examples.length || (ready && !ready.examples.length)) throw new Error(`Missing documentation example: ${entry.name}`);
     components[entry.name.toLowerCase()] = {
-      readyCode: ready.examples[0].code,
+      ...(ready ? { readyCode: ready.examples[0].code } : {}),
       adapterCode: adapter.examples[0].code,
       ...(logic?.examples[0] ? { logicCode: logic.examples[0].code } : {}),
-      apiRows: entry.bindings.filter((binding) => binding.layer === 3).flatMap((binding) => apiRows(entry, binding)),
+      apiRows: entry.bindings.filter((binding) => binding.layer === (ready ? 3 : 2)).flatMap((binding) => apiRows(entry, binding)),
     };
   }
   const output = path.join(root, 'apps/docs/src/generated/catalog-docs.json');

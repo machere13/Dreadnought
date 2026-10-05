@@ -209,6 +209,22 @@ describe('generated catalog over MCP', () => {
     mkdirSync(core, {recursive: true});
     writeFileSync(path.join(core, 'package.json'), JSON.stringify({name: '@dreadnought/core', version: '0.1.0'}));
   });
+  it('serves an adapter-only Radar contract and checked example through real MCP', async () => {
+    install('@dreadnought/react', '0.1.0');
+    await withClient(generatedCatalogPath, projectPath, async client => {
+      const overview = replyPayload(await client.callTool({ name: 'dreadnought_get', arguments: { component: 'RadarChart' } })).result;
+      expect(overview.bindings.map((binding: any) => binding.id)).toEqual(['react-adapter']);
+      const api = await client.callTool({ name: 'dreadnought_get', arguments: { component: 'RadarChart', binding: 'react-adapter', section: 'api' } });
+      expect(api.isError).toBeUndefined();
+      for (const variant of replyPayload(api).result.contracts[0].variants) {
+        expect(variant.properties).toContainEqual(expect.objectContaining({ name: 'label', optional: false }));
+      }
+      const context = await client.callTool({ name: 'dreadnought_context', arguments: { components: ['RadarChart'], layer: 2, maxBytes: 8192 } });
+      expect(context.isError).toBeUndefined();
+      expect(replyPayload(context).result.items[0]).toMatchObject({ binding: { importPath: '@dreadnought/react/unstyled', exportName: 'RadarChartAdapter' },
+        example: { code: expect.stringContaining('RadarChartAdapter label=') } });
+    });
+  });
   it('serves the Radar domain through real MCP list, API and checked context', async () => {
     await withClient(generatedCatalogPath, projectPath, async client => {
       const list = await client.callTool({ name: 'dreadnought_list', arguments: { kind: 'domain' } });

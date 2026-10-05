@@ -33,6 +33,13 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes Radar adapter without synthetic core, UI or theme', () => {
+    const entry = catalog.entries.find(entry => entry.id === 'component:radar-chart');
+    expect(entry).toMatchObject({ family: 'Visualization', tokens: [], composesWith: ['domain:build-radar-layout'] });
+    expect(entry!.bindings.map(binding => binding.id)).toEqual(['react-adapter']);
+    expect(entry!.bindings[0]).toMatchObject({ layer: 2, framework: 'react', importPath: '@dreadnought/react/unstyled', exportName: 'RadarChartAdapter' });
+    expect(() => checkExamples(context, entry!.bindings[0].examples)).not.toThrow();
+  });
   it('publishes the pure Radar domain with a checked core example', () => {
     const entry = catalog.entries.find(entry => entry.id === 'domain:build-radar-layout');
     expect(entry).toMatchObject({ kind: 'domain', name: 'buildRadarLayout', family: 'Charts' });
@@ -176,7 +183,8 @@ describe('public catalog', () => {
     expect(componentEntries.map((entry) => entry.name)).toEqual(components.map((component) => component.name).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())));
     expect(componentEntries).toHaveLength(components.length);
     expect(catalog.entries.find((entry) => entry.name === 'Button').tokens).toContainEqual({ name: '--dreadnought-button-primary-bg', value: 'var(--dreadnought-color-action-primary)' });
-    expect(componentEntries.every((entry) => entry.tokens.length > 0)).toBe(true);
+    expect(componentEntries.filter(entry => entry.bindings.some(binding => binding.layer === 3)).every(entry => entry.tokens.length > 0)).toBe(true);
+    expect(componentEntries.filter(entry => !entry.bindings.some(binding => binding.layer === 3)).every(entry => entry.tokens.length === 0)).toBe(true);
     expect(catalog.packageVersions['@dreadnought/themes']).toBe(readJson(path.join(root, 'packages/themes/package.json')).version);
   });
 
@@ -213,7 +221,7 @@ describe('public catalog', () => {
     expect(() => checkExamples(context, [{ id: 'wrong-prop', code: "import { Input } from '@dreadnought/ui/react'; const input = <Input type='number' />;" }])).toThrow(/not assignable/);
     expect(() => checkExamples(context, [{ id: 'wrong-ref', code: "import { createRef } from 'react'; import { Button } from '@dreadnought/ui/react'; const link = <Button href='/' ref={createRef<HTMLButtonElement>()} />;" }])).toThrow(/not assignable/);
     const invalid = structuredClone(metadata);
-    invalid[0].bindings[3].defaults.variant = 'removed-variant';
+    invalid.find(entry => entry.name === 'Button')!.bindings.find(binding => binding.id === 'react-ui')!.defaults.variant = 'removed-variant';
     expect(() => generateCatalog(context, invalid)).toThrow(/not assignable/);
   });
 

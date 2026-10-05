@@ -13,6 +13,15 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('documents an adapter-only Radar with real selection and API', () => {
+    render(<DocsPage section="radarchart" />);
+    expect(document.getElementById('radarchart-api')).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'RadarChartAdapter' }).getAttribute('href')).toBe('/components/radarchart/');
+    const button = screen.getByRole('button', { name: 'Вариант A' });
+    fireEvent.click(button); expect(button.getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByRole('table', { name: 'Сравнение вариантов: Данные' })).toBeTruthy();
+    expect(screen.getByText('Адаптер второго слоя')).toBeTruthy();
+  });
   it('documents a custom disclosure with a working example and anchor', () => {
     render(<DocsPage section="custom-components" />);
     expect(screen.getByRole('heading', { name: 'Своя раскрывающаяся секция' }).id).toBe('core-disclosure');
