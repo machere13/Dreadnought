@@ -1,0 +1,4 @@
+:root {
+  --dreadnought-toolbar-border-width: var(--dreadnought-border-width-x1);
+  --dreadnought-toolbar-radius: var(--dreadnought-border-radius-x1);
+}

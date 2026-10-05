@@ -1,0 +1,4 @@
+:root {
+  --dreadnought-toolbar-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-toolbar-padding: var(--dreadnought-spacing-x1);
+}

@@ -1,0 +1,4 @@
+:root {
+  --dreadnought-toolbar-bg: var(--dreadnought-color-surface-canvas);
+  --dreadnought-toolbar-border-color: var(--dreadnought-color-border-subtle);
+}

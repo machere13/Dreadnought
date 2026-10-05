@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "packages/ui/tests/adapters/react/components/Controls/Toolbar/Toolbar.types.tsx",
     "packages/adapters/react/tests/Controls/Toolbar/ToolbarPublic.types.tsx",
     "packages/core/tests/behaviors/navigation.types.ts",
     "packages/core/tests/behaviors/selection.types.ts",

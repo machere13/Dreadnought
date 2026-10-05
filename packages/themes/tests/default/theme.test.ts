@@ -144,6 +144,7 @@ describe('default theme', () => {
       "@import './tokens/global/index.css';",
       "@import './typography.css';",
       "@import './components/Controls/Button/index.css';",
+      "@import './components/Controls/Toolbar/index.css';",
       "@import './components/Fields/Input/index.css';",
       "@import './components/Fields/TextArea/index.css';",
       "@import './components/DataDisplay/Badge/index.css';",
