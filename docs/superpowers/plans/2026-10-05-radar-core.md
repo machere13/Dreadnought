@@ -41,7 +41,7 @@
 
 **Interfaces:** Produces `buildRadarLayout(options: RadarLayoutOptions): RadarLayout`, `RadarMetric`, `RadarSeries`, `RadarLayoutOptions`, `RadarLayout`. Consumes только Math и стандартные операции JavaScript.
 
-- [ ] **Step 1: написать тест известной геометрии.** В новом тестовом файле импортировать функцию из core/src/index.ts; метрики readonly и frozen. Для первого запуска отсутствие экспорта должно дать ошибку; после добавления объявления тест обязан упасть на неверных координатах до реализации расчёта.
+- [x] **Step 1: написать тест известной геометрии.** В новом тестовом файле импортировать функцию из core/src/index.ts; метрики readonly и frozen. Для первого запуска отсутствие экспорта должно дать ошибку; после добавления объявления тест обязан упасть на неверных координатах до реализации расчёта.
 
 ```ts
 import { expect, it } from 'vitest';
@@ -67,7 +67,7 @@ it('places four axes clockwise from the top and preserves source values', () => 
 
 Run: `node node_modules/vitest/vitest.mjs run packages/core/tests/domains/charts/buildRadarLayout.test.ts --reporter=dot`. Проверить RED, не считать ошибку разрешения импорта доказательством правильности математических assertions.
 
-- [ ] **Step 2: определить типы и реализовать минимальный расчёт после RED.** Все типы находятся рядом с функцией; массивы входа readonly.
+- [x] **Step 2: определить типы и реализовать минимальный расчёт после RED.** Все типы находятся рядом с функцией; массивы входа readonly.
 
 ```ts
 export interface RadarMetric {
@@ -103,7 +103,7 @@ const point = { metricId: id, value, normalizedValue,
 
 Экспортировать через оба новых index.ts и существующий core/index.ts. Не добавлять package subpath. Повторить тест Step 1 до GREEN.
 
-- [ ] **Step 3: добавить RED-тесты границ и валидацию.** Применять проверки в точном порядке: структура options/массивов и конечный radius; radius > 0 и минимум три метрики; каждый показатель и его domain; уникальность ID; затем каждая серия, собственные значения и их диапазоны. Обход через Array.from или for-of должен обнаруживать holes, а не map/forEach с их пропуском.
+- [x] **Step 3: добавить RED-тесты границ и валидацию.** Применять проверки в точном порядке: структура options/массивов и конечный radius; radius > 0 и минимум три метрики; каждый показатель и его domain; уникальность ID; затем каждая серия, собственные значения и их диапазоны. Обход через Array.from или for-of должен обнаруживать holes, а не map/forEach с их пропуском.
 
 ```ts
 it('normalizes an overflowing finite domain without losing its midpoint', () => {
@@ -142,7 +142,7 @@ if (value < min || value > max) throw new RangeError('Radar value is outside its
 
 Проверки ID используют trim только для пустоты, Set — для точного сравнения; не нормализовать ID и не мутировать values. Повторять RED → минимальное исправление → GREEN для каждой новой ветки.
 
-- [ ] **Step 4: проверить отсутствие мутации, порядок и публичные типы.** Frozen-метрики, domains, values и series не вызывают ошибку. Перестановка метрик задаёт новый порядок осей/точек; лишний ключ values ничего не добавляет. После изменения `result.axes[0].domain[0]` вход остаётся прежним.
+- [x] **Step 4: проверить отсутствие мутации, порядок и публичные типы.** Frozen-метрики, domains, values и series не вызывают ошибку. Перестановка метрик задаёт новый порядок осей/точек; лишний ключ values ничего не добавляет. После изменения `result.axes[0].domain[0]` вход остаётся прежним.
 
 ```ts
 const original = metrics[0].domain[0];
@@ -153,13 +153,13 @@ expect(metrics[0].domain[0]).toBe(original);
 
 В `radar.types.ts` импортировать четыре публичных типа и функцию из `@dreadnought/core`, вызвать с readonly literals; добавить файл в tsconfig.type-tests.json. Проверить отрицательные type-cases domain из трёх чисел, reverse строка, values строка через `@ts-expect-error` в type-test, не в компоненте.
 
-- [ ] **Step 5: проверки и коммит.** Выполнить targeted tests, `pnpm --filter @dreadnought/core build`, `pnpm typecheck`; прочитать результат. Commit: `feat(core): add pure Radar layout model`. Новые тесты должны проверять результаты, не текст функции.
+- [x] **Step 5: проверки и коммит.** Выполнить targeted tests, `pnpm --filter @dreadnought/core build`, `pnpm typecheck`; прочитать результат. Commit: `feat(core): add pure Radar layout model`. Новые тесты должны проверять результаты, не текст функции.
 
 ## Task 2: публикация домена через каталог и MCP
 
 **Interfaces:** Consumes публичный экспорт Task 1; produces entry `domain:build-radar-layout`, kind `domain`, family `Charts`, binding `core`, layer 1, framework null, importPath `@dreadnought/core`.
 
-- [ ] **Step 1: RED-тест публикации.** В существующем catalog.test.ts, где catalog строится из настоящих metadata, добавить:
+- [x] **Step 1: RED-тест публикации.** В существующем catalog.test.ts, где catalog строится из настоящих metadata, добавить:
 
 ```ts
 it('publishes the pure Radar domain with a checked core example', () => {
@@ -173,7 +173,7 @@ it('publishes the pure Radar domain with a checked core example', () => {
 
 Run: `node node_modules/vitest/vitest.mjs run tools/catalog/tests/catalog.test.ts --reporter=dot`. Ожидается отсутствующая entry, затем RED от неподдержанного kind после появления metadata.
 
-- [ ] **Step 2: расширить существующий тракт kind и добавить metadata.** Добавить `'domain'` в разрешённые значения generateCatalog, loadCatalog, parseArgs, selectEntries, MCP listShape. Обновить CLI help и описания MCP без переименования tools. Добавить `packages/core/src/domains/charts/catalog.json` в capabilitySources, не автоматически сканировать все файлы.
+- [x] **Step 2: расширить существующий тракт kind и добавить metadata.** Добавить `'domain'` в разрешённые значения generateCatalog, loadCatalog, parseArgs, selectEntries, MCP listShape. Обновить CLI help и описания MCP без переименования tools. Добавить `packages/core/src/domains/charts/catalog.json` в capabilitySources, не автоматически сканировать все файлы.
 
 ```json
 [
@@ -196,7 +196,7 @@ Run: `node node_modules/vitest/vitest.mjs run tools/catalog/tests/catalog.test.t
 
 Добавить реальный раздел `id="core-radar"` в `apps/docs/src/components/CustomComponentsGuide.tsx` с этим примером и пояснением координат/ошибок, используя существующую структуру соседнего раздела core-stepped-value. В docs/core-capabilities.md отметить Radar как реализованную модель, не готовый компонент.
 
-- [ ] **Step 3: RED-тесты полной цепочки запросов.** В querySelection.test.ts добавить domain fixture с полной структурой существующего makeCatalog, core binding, constraints и примером из metadata. После validateCatalog проверить:
+- [x] **Step 3: RED-тесты полной цепочки запросов.** В querySelection.test.ts добавить domain fixture с полной структурой существующего makeCatalog, core binding, constraints и примером из metadata. После validateCatalog проверить:
 
 ```ts
 expect(parseArgs(['list', '--kind', 'domain']).options.kind).toBe('domain');
@@ -209,7 +209,7 @@ expect(selectEntries(catalog, { kind: 'component' }).items.map(entry => entry.na
 
 В mcpServer.test.ts использовать существующий transport/client fixture, добавить domain entry и установить core package в fixture. Вызвать реальный `client.callTool({ name: 'dreadnought_list', arguments: { kind: 'domain' } })`; replyPayload должен вернуть buildRadarLayout. Через dreadnought_get с binding core/section api получить options и returnType; через dreadnought_context — checked example и constraints. Неподдержанный kind по-прежнему отклоняется. Не тестировать лишь совпадение строки enum в исходнике.
 
-- [ ] **Step 4: GREEN и финальный коммит.** Run targeted core/catalog tests, `pnpm typecheck`, `pnpm -r build`, полный `node node_modules/vitest/vitest.mjs run --reporter=dot`. Сборки документации выполнять последовательно, не запускать второй docs build параллельно первому. После сборки выполнить `node apps/docs/scripts/buildKnowledge.mjs --public`.
+- [x] **Step 4: GREEN и финальный коммит.** Run targeted core/catalog tests, `pnpm typecheck`, `pnpm -r build`, полный `node node_modules/vitest/vitest.mjs run --reporter=dot`. Сборки документации выполнять последовательно, не запускать второй docs build параллельно первому. После сборки выполнить `node apps/docs/scripts/buildKnowledge.mjs --public`.
 
 Проверить `git diff --check`, пройти review всего C1 по пяти Review Focus. Зафиксировать только свои исходники/документацию, не generated ignored artifacts. Commit: `feat(catalog): publish Radar domain through catalog and MCP`. Прежние component/action/behavior запросы должны проходить вместе с domain, без изменения schemaVersion ради одного нового допустимого значения.
 

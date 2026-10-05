@@ -26,6 +26,28 @@ function withBranches() {
 }
 
 describe('catalog selection', () => {
+  it('queries a domain through loader, CLI arguments and bounded core context', () => {
+    const catalog = makeCatalog();
+    catalog.entries.push({
+      ...structuredClone(catalog.entries[0]), id: 'domain:build-radar-layout', kind: 'domain', name: 'buildRadarLayout', family: 'Charts',
+      constraints: ['At least three metrics; explicit finite domains.'], tokens: [],
+      bindings: [{ ...structuredClone(catalog.entries[0].bindings[0]), id: 'core', layer: 1, framework: null,
+        importPath: '@dreadnought/core', exportName: 'buildRadarLayout',
+        examples: [{ id: 'usage', code: "import { buildRadarLayout } from '@dreadnought/core';\nconst layout = buildRadarLayout({ radius: 100, metrics: ['quality', 'coverage', 'latency'].map(id => ({ id, label: id, domain: [0, 100] as const })), series: [{ id: 'a', label: 'A', values: { quality: 80, coverage: 70, latency: 60 } }] });\nconst points = layout.seriesPoints[0].points.map(point => [point.x, point.y]);" }],
+        contracts: [{ parameters: [{ name: 'options', type: 'RadarLayoutOptions', optional: false }], returnType: 'RadarLayout', variants: [{ properties: [] }] }],
+      }],
+    } as any);
+    expect(() => validateCatalog(catalog)).not.toThrow();
+    expect(parseArgs(['list', '--kind', 'domain']).options.kind).toBe('domain');
+    expect(selectEntries(catalog, { kind: 'domain' }).items.map(entry => entry.name)).toEqual(['buildRadarLayout']);
+    expect(getEntry(catalog, 'domain:build-radar-layout').kind).toBe('domain');
+    const context = getContext(catalog, { components: ['buildRadarLayout'], layer: 1, maxBytes: 4096 });
+    expect(context.items[0]).toMatchObject({ kind: 'domain', binding: { importPath: '@dreadnought/core' },
+      constraints: catalog.entries[1].constraints, example: catalog.entries[1].bindings[0].examples[0] });
+    expect(selectEntries(catalog, { kind: 'component' }).items.map(entry => entry.name)).toEqual(['Button']);
+    expect(() => parseArgs(['list', '--kind', 'unknown'])).toThrow();
+    expect(() => selectEntries(catalog, { kind: 'unknown' })).toThrow(expect.objectContaining({ code: 'INVALID_FILTER' }));
+  });
   it('filters standalone actions and exposes their parameters in bounded core context', () => {
     const catalog = makeCatalog();
     catalog.entries.push({

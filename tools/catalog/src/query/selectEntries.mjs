@@ -2,7 +2,7 @@ import { CatalogQueryError } from './errors.mjs';
 
 export function selectEntries(catalog, {query = '', kind, family, layer, framework, limit = 10, offset = 0} = {}) {
   if (typeof query !== 'string' || (family !== undefined && !catalog.entries.some((entry) => entry.family === family)) ||
-      (kind !== undefined && !['component', 'action', 'behavior'].includes(kind)) ||
+      (kind !== undefined && !['component', 'action', 'behavior', 'domain'].includes(kind)) ||
       (layer !== undefined && ![1, 2, 3].includes(layer)) ||
       (framework !== undefined && (typeof framework !== 'string' || !framework.trim())) ||
       !Number.isInteger(limit) || limit < 1 || limit > 50 || !Number.isInteger(offset) || offset < 0) {

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "domain:build-radar-layout",
+    "kind": "domain",
+    "name": "buildRadarLayout",
+    "family": "Charts",
+    "description": "Чистая модель осей и точек Radar с явными диапазонами; без renderer и фреймворка.",
+    "docsUrl": "/custom-components/#core-radar",
+    "constraints": ["Минимум три показателя; уникальные непустые ID отдельно у показателей и серий. Конечные domain min < max и radius > 0. Для каждого показателя нужно собственное конечное значение внутри domain. Лишние значения игнорируются. Нет clipping или подстановки нуля. reverse меняет направление нормализации. Оси идут по часовой стрелке от верха в порядке metrics; угол в радианах, центр (0,0), y вниз. Пустые series допустимы. TypeError для структуры/типов/missing/nonfinite; RangeError для числовых границ/числа осей/duplicate ID. Вход не меняется, выход не ссылается на его изменяемые структуры."],
+    "bindings": [{
+      "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "buildRadarLayout",
+      "examples": [{ "id": "usage", "code": "import { buildRadarLayout } from '@dreadnought/core';\nconst layout = buildRadarLayout({ radius: 100, metrics: ['quality', 'coverage', 'latency'].map(id => ({ id, label: id, domain: [0, 100] as const })), series: [{ id: 'a', label: 'A', values: { quality: 80, coverage: 70, latency: 60 } }] });\nconst points = layout.seriesPoints[0].points.map(point => [point.x, point.y]);" }]
+    }]
+  }
+]

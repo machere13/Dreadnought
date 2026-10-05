@@ -24,7 +24,7 @@ export function generateCatalog(context, metadata) {
     nonempty(entry.name, 'name');
     nonempty(entry.description, 'description');
     nonempty(entry.family, 'family');
-    if (!['component', 'action', 'behavior'].includes(entry.kind)) throw new Error(`Unsupported catalog kind: ${entry.kind}`);
+    if (!['component', 'action', 'behavior', 'domain'].includes(entry.kind)) throw new Error(`Unsupported catalog kind: ${entry.kind}`);
     const namePattern = entry.kind === 'component' ? /^[A-Z][A-Za-z0-9]*$/ : /^[A-Za-z][A-Za-z0-9]*$/;
     if (!namePattern.test(entry.name) || !/^[A-Z][A-Za-z0-9]*$/.test(entry.family)) throw new Error('Invalid catalog name or family');
     if (!/^\/[a-z0-9/-]+\/#[-a-z0-9]+$/.test(entry.docsUrl)) throw new Error(`Invalid documentation URL: ${entry.docsUrl}`);

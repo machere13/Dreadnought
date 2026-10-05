@@ -160,6 +160,14 @@ const next = getSteppedValue(value + grid.step, grid);
 const last = getSteppedValue(grid.max, grid);`} />
       <p className={styles.footnote}>Все входы должны быть конечными числами; min ≤ max, step &gt; 0. Нечисловой или бесконечный вход вызывает TypeError, неверная сетка — RangeError. Функция нормализует переданного кандидата, а не обрабатывает события. Координаты, клавиатура, disabled, ARIA, форма и хранение состояния остаются вашему адаптеру. Это number, не денежная модель с произвольной точностью.</p>
     </section>
+    <section data-knowledge className={styles.section} aria-labelledby="core-radar">
+      <h2 id="core-radar" className={styles.sectionTitle}>Модель Radar без отрисовки</h2>
+      <p className={styles.bodyText}><code>buildRadarLayout({'{ metrics, series, radius }'})</code> вычисляет оси и точки серий. Каждому показателю задайте ID, подпись и диапазон domain; значения серии связываются с ID. Это доменная модель core, не готовый RadarChart.</p>
+      <CodeBlock language="ts" copyLabels={copyLabels} code={`import { buildRadarLayout } from '@dreadnought/core';
+const layout = buildRadarLayout({ radius: 100, metrics: ['quality', 'coverage', 'latency'].map(id => ({ id, label: id, domain: [0, 100] as const })), series: [{ id: 'a', label: 'A', values: { quality: 80, coverage: 70, latency: 60 } }] });
+const points = layout.seriesPoints[0].points.map(point => [point.x, point.y]);`} />
+      <p className={styles.footnote}>Минимум три показателя. Оси идут по часовой стрелке от верха, в порядке metrics; angle — в радианах. Центр (0,0), x вправо, y вниз. Нормализация от 0 до 1; reverse разворачивает шкалу. ID непустые и уникальные отдельно у показателей и серий; пустые подписи и series допустимы. Domain содержит два конечных числа min &lt; max, radius конечный и &gt; 0. Каждое значение должно быть собственным конечным числом внутри domain; лишние ключи игнорируются. Пропущенные значения не заменяются нулём и не обрезаются. TypeError означает неверную структуру, тип или отсутствующее/неконечное значение; RangeError — неверные границы, мало осей, повтор ID или выход за domain. Вход не меняется. SVG, размеры контейнера, подписи, стили и доступность обеспечивает адаптер.</p>
+    </section>
     <section data-knowledge className={styles.section} aria-labelledby="core-typeahead">
       <h2 id="core-typeahead" className={styles.sectionTitle}>Переход по набранным буквам</h2>
       <p className={styles.bodyText}><code>getTypeaheadValue(items, currentValue, query, options)</code> возвращает ключ доступного пункта по началу названия. Передайте пункты со строковыми value и text. Отключённые пункты пропускаются; регистр и пробелы по краям не учитываются. Пустой запрос или отсутствие совпадения возвращает undefined.</p>

@@ -1,6 +1,6 @@
 # Каталог публичного API
 
-Общий JSON-каталог опубликованных компонентов, actions и behaviors для сайта, RAG и локального MCP. Генератор запускается только при разработке/сборке; runtime библиотеки не получает новых зависимостей.
+Общий JSON-каталог опубликованных компонентов, actions, behaviors и domains для сайта, RAG и локального MCP. Генератор запускается только при разработке/сборке; runtime библиотеки не получает новых зависимостей.
 
 Из корня репозитория:
 
@@ -22,6 +22,8 @@ node tools/catalog/src/query.mjs context --components Button,Input,Card --projec
 node tools/catalog/src/query.mjs get Button --binding react-ui --section api --property href
 node tools/catalog/src/query.mjs get Layout --binding react-ui-sidebar --section examples
 node tools/catalog/src/query.mjs list --kind action --layer 1
+node tools/catalog/src/query.mjs list --kind domain --layer 1
+node tools/catalog/src/query.mjs get buildRadarLayout --binding core --section api
 node tools/catalog/src/query.mjs search getSelectionValue --kind behavior
 node tools/catalog/src/query.mjs context --components getSelectionValue,getNextEnabledValue --layer 1 --format contract --max-bytes 8192
 node tools/catalog/src/query.mjs get readClipboard --binding core --section api
@@ -29,7 +31,7 @@ node tools/catalog/src/query.mjs get readClipboard --binding core --section api
 
 Для другого расположения инструмента и каталога используйте абсолютный путь к `query.mjs` и `--catalog "C:/path/to/catalog.json"`. Для машинного потребителя запускайте Node напрямую: `pnpm catalog:query` тоже работает, но pnpm может добавить собственный заголовок в stdout.
 
-`list` и `search` поддерживают `--kind component|action|behavior`, `--family`, `--layer`, `--framework`, `--limit` (1–50) и `--offset` (от 0). `context` принимает 1–10 имён или ID записей в `--components`, а также `--layer`, `--framework`, `--format usage|contract`, `--max-bytes` (1024–32768) и `--include-tokens`. Название аргумента `components` сохранено для совместимости: он принимает также actions и behaviors. Отдельный `check` перед ним не нужен: совместимость проверяется в том же запросе.
+`list` и `search` поддерживают `--kind component|action|behavior|domain`, `--family`, `--layer`, `--framework`, `--limit` (1–50) и `--offset` (от 0). `context` принимает 1–10 имён или ID записей в `--components`, а также `--layer`, `--framework`, `--format usage|contract`, `--max-bytes` (1024–32768) и `--include-tokens`. Название аргумента `components` сохранено для совместимости: он принимает также actions, behaviors и domains. Отдельный `check` перед ним не нужен: совместимость проверяется в том же запросе.
 
 ## Самостоятельные возможности core
 
@@ -84,13 +86,15 @@ TypeScript извлекает входной контракт экспортир
 
 Самостоятельные core-записи явно подключены через `capabilitySources` в `src/config.mjs`: массивы `actions/catalog.json` и `behaviors/catalog.json` рядом с реализацией. Добавление произвольного файла не публикует экспорт автоматически. `composesWith` проверяется на существование записей каталога.
 
+Домен Radar подключён отдельным явным источником `domains/charts/catalog.json`: запись `domain:build-radar-layout`, family Charts, binding core. `buildRadarLayout` вычисляет оси и точки по явным диапазонам; renderer и фреймворка у этой функции нет. Её ограничения и проверенный пример доступны теми же запросами, что и другие возможности core.
+
 Описания свойств проверяются на существование в текущем контракте. Явные `defaults` проверяются на существование свойства и совместимость с его типом; соответствие реальному поведению подтверждается при редактировании метаданных и тестами компонентов, а не выводится из optional-типа. Примеры компилируются в памяти через разрешённые публичные импорты, без выполнения. Подавление ошибок TypeScript и внутренние импорты запрещены.
 
 ## Формат версии 1
 
 Верхний уровень: `schemaVersion`, `packageVersions`, `entries`. Версии библиотечных пакетов должны совпадать в соответствии с текущей политикой совместного выпуска.
 
-Запись содержит `id`, `kind` (`component`, `action` или `behavior`), `name`, `family`, `description`, `docsUrl`, `states`, `parts`, `constraints`, `tokens` и `bindings`; необязательное `composesWith` ссылается на существующие ID каталога. Генератор страниц компонентов обрабатывает только `kind: component`.
+Запись содержит `id`, `kind` (`component`, `action`, `behavior` или `domain`), `name`, `family`, `description`, `docsUrl`, `states`, `parts`, `constraints`, `tokens` и `bindings`; необязательное `composesWith` ссылается на существующие ID каталога. Генератор страниц компонентов обрабатывает только `kind: component`.
 
 Каждая привязка содержит `id`, `layer`, `framework`, `importPath`, `exportName`, `description`, `propertyDescriptions`, `defaults`, `examples` и `contracts`. `framework: null` означает независимый от фреймворка Core. Наличие React-привязки не подразумевает других фреймворков.
 

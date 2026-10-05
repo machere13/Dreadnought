@@ -67,7 +67,7 @@ export function validateCatalog(value) {
     const at = `entries[${ei}]`;
     object(entry, at);
     for (const field of ['id', 'kind', 'name', 'family', 'description', 'docsUrl']) string(entry[field], `${at}.${field}`);
-    if (!['component', 'action', 'behavior'].includes(entry.kind)) fail('Unsupported entry kind', `${at}.kind`);
+    if (!['component', 'action', 'behavior', 'domain'].includes(entry.kind)) fail('Unsupported entry kind', `${at}.kind`);
     if (entry.composesWith !== undefined) {
       strings(entry.composesWith, `${at}.composesWith`);
       if (entry.composesWith.some(id => !entries.some(other => other?.id === id))) fail('Unknown composition reference', `${at}.composesWith`);

@@ -39,7 +39,7 @@ export function parseArgs(argv) {
   if (operation === 'check' && !fields.project) fail('check requires --project');
   if (operation === 'context' && !fields.components) fail('context requires --components');
   if (fields.format !== undefined && !['usage', 'contract'].includes(fields.format)) fail('Unknown context format');
-  if (fields.kind !== undefined && !['component', 'action', 'behavior'].includes(fields.kind)) fail('Unknown catalog kind');
+  if (fields.kind !== undefined && !['component', 'action', 'behavior', 'domain'].includes(fields.kind)) fail('Unknown catalog kind');
   for (const flag of ['catalog', 'project', 'family', 'framework', 'binding', 'section', 'property', 'example', 'components']) {
     if (fields[flag] !== undefined && !fields[flag].trim()) fail('Empty flag value', {flag});
   }

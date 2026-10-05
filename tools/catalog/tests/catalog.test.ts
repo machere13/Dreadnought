@@ -33,6 +33,17 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes the pure Radar domain with a checked core example', () => {
+    const entry = catalog.entries.find(entry => entry.id === 'domain:build-radar-layout');
+    expect(entry).toMatchObject({ kind: 'domain', name: 'buildRadarLayout', family: 'Charts' });
+    expect(entry!.bindings[0]).toMatchObject({ id: 'core', layer: 1, framework: null,
+      importPath: '@dreadnought/core', exportName: 'buildRadarLayout' });
+    const contract = entry!.bindings[0].contracts[0];
+    expect(contract).toMatchObject({ returnType: 'RadarLayout', parameters: [{ name: 'options', optional: false }] });
+    expect(contract.variants[0].properties.map(property => [property.name, property.optional]))
+      .toEqual([['metrics', false], ['radius', false], ['series', false]]);
+    expect(() => checkExamples(context, entry!.bindings[0].examples)).not.toThrow();
+  });
   it('publishes the stepped numeric behavior with required bounds and a checked example', () => {
     const entry = catalog.entries.find(entry => entry.name === 'getSteppedValue');
     expect(entry?.kind).toBe('behavior');
@@ -95,7 +106,7 @@ describe('public catalog', () => {
     expect(toolbar?.tokens).toContainEqual({ name: '--dreadnought-toolbar-gap', value: 'var(--dreadnought-spacing-x2)' });
   });
   it('publishes standalone actions and behaviors with checked public contracts', () => {
-    const capabilities = catalog.entries.filter(entry => entry.kind !== 'component');
+    const capabilities = catalog.entries.filter(entry => entry.kind === 'action' || entry.kind === 'behavior');
     expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getComboboxKeyAction', 'getDisclosureOpen', 'getDisclosureState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getSteppedValue', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
     expect(capabilities.every(entry => entry.tokens.length === 0 && entry.bindings.length === 1 && entry.bindings[0].layer === 1)).toBe(true);
     const selection = capabilities.find(entry => entry.name === 'getSelectionValue');

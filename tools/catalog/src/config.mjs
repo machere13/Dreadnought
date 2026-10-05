@@ -31,4 +31,4 @@ export const components = [
   { family: 'DataDisplay', name: 'Mark', sources: [adapter, ui] },
 ];
 
-export const capabilitySources = ['packages/core/src/actions/catalog.json', 'packages/core/src/behaviors/catalog.json'];
+export const capabilitySources = ['packages/core/src/actions/catalog.json', 'packages/core/src/behaviors/catalog.json', 'packages/core/src/domains/charts/catalog.json'];

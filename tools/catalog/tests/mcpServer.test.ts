@@ -209,6 +209,26 @@ describe('generated catalog over MCP', () => {
     mkdirSync(core, {recursive: true});
     writeFileSync(path.join(core, 'package.json'), JSON.stringify({name: '@dreadnought/core', version: '0.1.0'}));
   });
+  it('serves the Radar domain through real MCP list, API and checked context', async () => {
+    await withClient(generatedCatalogPath, projectPath, async client => {
+      const list = await client.callTool({ name: 'dreadnought_list', arguments: { kind: 'domain' } });
+      expect(list.isError).toBeUndefined();
+      expect(replyPayload(list).result.items.map((item: any) => item.name)).toEqual(['buildRadarLayout']);
+      const api = await client.callTool({ name: 'dreadnought_get', arguments: {
+        component: 'domain:build-radar-layout', binding: 'core', section: 'api' } });
+      expect(api.isError).toBeUndefined();
+      expect(replyPayload(api).result.contracts[0]).toMatchObject({ returnType: 'RadarLayout',
+        parameters: [{ name: 'options', type: 'RadarLayoutOptions', optional: false }] });
+      const context = await client.callTool({ name: 'dreadnought_context', arguments: {
+        components: ['buildRadarLayout'], layer: 1, maxBytes: 8192 } });
+      expect(context.isError).toBeUndefined();
+      const item = replyPayload(context).result.items[0];
+      expect(item).toMatchObject({ kind: 'domain', binding: { importPath: '@dreadnought/core' },
+        example: { id: 'usage', code: expect.stringContaining('buildRadarLayout({') } });
+      expect(item.constraints.join(' ')).toContain('TypeError');
+      expect((await client.callTool({ name: 'dreadnought_list', arguments: { kind: 'unknown' } })).isError).toBe(true);
+    });
+  });
   it('discovers core capabilities by kind and returns signatures and composition examples', async () => {
     await withClient(generatedCatalogPath, projectPath, async client => {
       const actions = await client.callTool({name: 'dreadnought_list', arguments: {kind: 'action', layer: 1}});
