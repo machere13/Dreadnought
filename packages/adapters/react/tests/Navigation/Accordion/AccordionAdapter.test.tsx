@@ -14,6 +14,34 @@ function pair(value: string, label = value, content = `${value} content`) {
 }
 
 describe('AccordionAdapter', () => {
+  it('protects button type and ARIA from consumer spreads while preserving disabled', async () => {
+    const submit = vi.fn(event => event.preventDefault());
+    const consumer = { id: 'consumer', type: 'submit' as const,
+      'aria-expanded': true, 'aria-controls': 'missing' };
+    const view = (disabled: boolean) => <form onSubmit={submit}><AccordionAdapter>
+      <AccordionAdapter.Item value="a">
+        <AccordionAdapter.Trigger {...consumer} disabled={disabled}>a</AccordionAdapter.Trigger>
+        <AccordionAdapter.Panel>Answer</AccordionAdapter.Panel>
+      </AccordionAdapter.Item>
+    </AccordionAdapter></form>;
+    const { rerender } = render(view(false));
+    const button = screen.getByRole('button', { name: 'a' });
+    const panel = screen.getByText('Answer');
+    expect(button.getAttribute('type')).toBe('button');
+    expect(button.id).not.toBe('consumer');
+    expect(button.getAttribute('aria-expanded')).toBe('false');
+    expect(button.getAttribute('aria-controls')).toBe(panel.id);
+    expect(panel.getAttribute('aria-labelledby')).toBe(button.id);
+    await userEvent.click(button);
+    expect(panel.hidden).toBe(false);
+    expect(button.getAttribute('aria-expanded')).toBe('true');
+    expect(submit).not.toHaveBeenCalled();
+    rerender(view(true));
+    expect(button.hasAttribute('disabled')).toBe(true);
+    await userEvent.click(button);
+    expect(panel.hidden).toBe(false);
+    expect(submit).not.toHaveBeenCalled();
+  });
   it('toggles exactly once with native Enter and Space, without submitting', async () => {
     const change = vi.fn();
     const submit = vi.fn(event => event.preventDefault());

@@ -55,7 +55,7 @@
 - Consumes: нет новых зависимостей.
 - Produces: `getDisclosureState(options: DisclosureStateOptions): DisclosureState`; `getDisclosureOpen(currentOpen: boolean, action: DisclosureAction, options?: DisclosureOptions): boolean`. Типы и поля буквально соответствуют spec. `getDisclosureState` принимает обязательные triggerId/panelId, default open=false/disabled=false; getDisclosureOpen options default disabled=false.
 
-- [ ] **Step 1: Написать проверки core через публичный barrel.**
+- [x] **Step 1: Написать проверки core через публичный barrel.**
 
 ```ts
 import { getDisclosureState, getDisclosureOpen } from '../../src/index.ts';
@@ -87,13 +87,13 @@ it.each([
 
 Types-файл импортирует оба экспорта и четыре типа из @dreadnought/core; присваивает type:'button', boolean hidden/expanded. `@ts-expect-error` для отсутствующего panelId, action='select', open='yes'.
 
-- [ ] **Step 2: Запустить RED.**
+- [x] **Step 2: Запустить RED.**
 
 Run: `node node_modules/vitest/vitest.mjs run packages/core/tests/behaviors/getDisclosureState.test.ts packages/core/tests/behaviors/getDisclosureOpen.test.ts --maxWorkers=1`
 
 Expected: отсутствующий экспорт новых функций, не неверный fixture/import path. Затем добавить barrel и реализацию.
 
-- [ ] **Step 3: Реализовать минимальные функции.** Типы взять из spec целиком; локальная проверка двух ID внутри getDisclosureState, не новый helper.
+- [x] **Step 3: Реализовать минимальные функции.** Типы взять из spec целиком; локальная проверка двух ID внутри getDisclosureState, не новый helper.
 
 ```ts
 if (!triggerId || !panelId || /[\t\n\f\r ]/.test(triggerId)
@@ -112,8 +112,8 @@ return action === 'toggle' ? !currentOpen : action === 'open';
 
 Runtime action вне TS union не является новым поддержанным действием; не расширять контракт. Source exports остаются `.ts`.
 
-- [ ] **Step 4: GREEN и публичные типы.** Повторить runtime-команду; затем `node node_modules/typescript/bin/tsc -p packages/core/tsconfig.build.json` и `node node_modules/typescript/bin/tsc -p tsconfig.type-tests.json --noEmit`. Expected: каждый exit 0.
-- [ ] **Step 5: Коммит этапа.**
+- [x] **Step 4: GREEN и публичные типы.** Повторить runtime-команду; затем `node node_modules/typescript/bin/tsc -p packages/core/tsconfig.build.json` и `node node_modules/typescript/bin/tsc -p tsconfig.type-tests.json --noEmit`. Expected: каждый exit 0.
+- [x] **Step 5: Коммит этапа.**
 
 ```powershell
 git add -- packages/core/src/behaviors/getDisclosureState.ts packages/core/src/behaviors/getDisclosureOpen.ts packages/core/src/behaviors/index.ts packages/core/tests/behaviors/getDisclosureState.test.ts packages/core/tests/behaviors/getDisclosureOpen.test.ts packages/core/tests/behaviors/disclosure.types.ts tsconfig.type-tests.json
@@ -129,7 +129,7 @@ git commit -m "feat(core): add reusable disclosure state and transitions"
 - Consumes: Task 1 getDisclosureState/getDisclosureOpen без изменений.
 - Produces: внутреннее `AccordionItemContextValue.disclosure: DisclosureState` вместо отдельных triggerId/panelId; open сохраняется для существующего состояния/фокуса. Docs-local `DisclosureDemo({open?, defaultOpen?, disabled?, onOpenChange?, onTriggerClick?})` с defaultOpen=false; публичного экспорта библиотеки нет. `disclosureCode` — string с самостоятельным JSX-примером и публичными импортами.
 
-- [ ] **Step 1: RED собственной секции и базовые проверки Accordion.** Новый DisclosureDemo.test.tsx использует реальный компонент/кнопку, без mock core. Ожидаемые названия: trigger «Дополнительные настройки», input «Примечание», внутренняя кнопка «Закрыть настройки».
+- [x] **Step 1: RED собственной секции и базовые проверки Accordion.** Новый DisclosureDemo.test.tsx использует реальный компонент/кнопку, без mock core. Ожидаемые названия: trigger «Дополнительные настройки», input «Примечание», внутренняя кнопка «Закрыть настройки».
 
 ```tsx
 render(<DisclosureDemo />);
@@ -154,7 +154,7 @@ Run: `node node_modules/vitest/vitest.mjs run apps/docs/tests/DisclosureDemo.tes
 
 Expected: новая demo отсутствует; существующий Accordion сохраняет baseline. DocsPage-test RED проверяет heading «Своя раскрывающаяся секция» и anchor #core-disclosure на section=custom-components.
 
-- [ ] **Step 2: Применить состояние core в Accordion.** В Item вычислить getDisclosureState после encodedValue с теми же rootId/encodedValue ID; context содержит disclosure. Фокус/refs/registerPart остаются прежними. Trigger применяет общие props до consumer buttonProps, чтобы потребительский disabled не затирался; защищённые id/type/aria-controls/aria-expanded по-прежнему исключены публичным Omit. Panel применяет core panelProps после consumer panelProps. Click-handler и выбор root не меняются.
+- [x] **Step 2: Применить состояние core в Accordion.** В Item вычислить getDisclosureState после encodedValue с теми же rootId/encodedValue ID; context содержит disclosure. Фокус/refs/registerPart остаются прежними. После итогового ревью порядок Trigger исправлен: consumer buttonProps, общие защищённые props, затем явный consumer disabled. Omit не защищает от spread объектов на runtime. Panel применяет core panelProps после consumer panelProps. Click-handler и выбор root не меняются.
 
 ```tsx
 const disclosure = getDisclosureState({ open,
@@ -162,13 +162,13 @@ const disclosure = getDisclosureState({ open,
   panelId: `${root.rootId}-panel-${encodedValue}` });
 
 // Trigger, сохранить Heading/ref/data-state/onClick:
-<button {...item.disclosure.triggerProps} {...buttonProps} ref={setRef}
+<button {...buttonProps} {...item.disclosure.triggerProps} disabled={buttonProps.disabled} ref={setRef}
   data-state={item.open ? 'open' : 'closed'} onClick={handleClick}>{children}</button>
 // Panel, сохранить ref и children:
 <div {...panelProps} {...item.disclosure.panelProps} ref={setRef}>{children}</div>
 ```
 
-- [ ] **Step 3: Минимальный docs-local пример.** Использовать useId/useState/useRef/useLayoutEffect, только нативные button/div/input; классы существующего DocsPage.module.css, новых CSS нет. JSX props из core. В controlled режиме отправлять callback без изменения effective open; unmanaged хранит internal open. Не вызывать callback при неизменившемся результате перехода.
+- [x] **Step 3: Минимальный docs-local пример.** Использовать useId/useState/useRef/useLayoutEffect, только нативные button/div/input; классы существующего DocsPage.module.css, новых CSS нет. JSX props из core. В controlled режиме отправлять callback без изменения effective open; unmanaged хранит internal open. Не вызывать callback при неизменившемся результате перехода.
 
 ```tsx
 import { useId, useLayoutEffect, useRef, useState } from 'react';
@@ -225,13 +225,13 @@ disclosureCode содержит приведённый полный компон
 
 В CustomComponentsGuide новый section data-knowledge aria-labelledby=core-disclosure с h2 «Своя раскрывающаяся секция», DisclosureDemo и CodeBlock(disclosureCode). Пояснить функции, ID, хранение состояния, disabled, отмену событий, нативную клавиатуру и фокус; core не обещает полноценный popup.
 
-- [ ] **Step 4: GREEN композиции и типы.**
+- [x] **Step 4: GREEN композиции и типы.**
 
 Run: `node node_modules/vitest/vitest.mjs run apps/docs/tests/DisclosureDemo.test.tsx apps/docs/tests/DocsPage.test.tsx packages/adapters/react/tests/Navigation/Accordion --maxWorkers=1`
 
 Затем `node node_modules/typescript/bin/tsc -p packages/adapters/react/tsconfig.build.json`, `node node_modules/typescript/bin/tsc -p tsconfig.type-tests.json --noEmit`, `node packages/adapters/react/tests/verifyBuild.mjs`. Expected: каждый exit 0; публичные props Accordion прежние.
 
-- [ ] **Step 5: Коммит этапа.**
+- [x] **Step 5: Коммит этапа.**
 
 ```powershell
 git add -- packages/adapters/react/src/Navigation/Accordion/AccordionContext.tsx packages/adapters/react/src/Navigation/Accordion/AccordionItemAdapter.tsx packages/adapters/react/src/Navigation/Accordion/AccordionTriggerAdapter.tsx packages/adapters/react/src/Navigation/Accordion/AccordionPanelAdapter.tsx packages/adapters/react/tests/Navigation/Accordion/AccordionAdapter.test.tsx
@@ -248,7 +248,7 @@ git commit -m "feat(react): compose disclosure rules in accordion and custom exa
 - Consumes: Task 1 public bindings, Task 2 disclosureCode string/live example.
 - Produces: два behavior entries с docsUrl `/custom-components/#core-disclosure`, единственным core binding layer=1/framework=null/importPath=@dreadnought/core; 19 components + 10 standalone = 29 entries. Routes остаётся 23.
 
-- [ ] **Step 1: RED каталога.** Дополнить standalone name list двумя новыми именами (лексикографически getDisclosureOpen перед getDisclosureState), изменить только standalone count 8→10, component count оставить 19.
+- [x] **Step 1: RED каталога.** Дополнить standalone name list двумя новыми именами (лексикографически getDisclosureOpen перед getDisclosureState), изменить только standalone count 8→10, component count оставить 19.
 
 ```ts
 for (const name of ['getDisclosureState', 'getDisclosureOpen']) {
@@ -269,7 +269,7 @@ Run: `node node_modules/vitest/vitest.mjs run tools/catalog/tests/catalog.test.t
 
 Expected: новых entries нет, не ошибка генератора. Generated queryValidation пока использует предыдущий dist — обновить его после metadata.
 
-- [ ] **Step 2: Добавить metadata и честные core examples.** Формат повторяет существующие standalone behaviors, без новых schema/config sources.
+- [x] **Step 2: Добавить metadata и честные core examples.** Формат повторяет существующие standalone behaviors, без новых schema/config sources.
 
 ```ts
 // get-disclosure-state core example:
@@ -288,7 +288,7 @@ Metadata описывает defaults open=false/disabled=false для state; opt
 
 В core-capabilities таблица Behaviors добавляет обе функции, Patterns Disclosure описывает реализованные базовые behaviors/ответственность адаптера без объявления общего controller. Toolbar больше не «следующий кандидат»: реализован через component contract и React adapter. Финальный абзац Components обновляется соответственно.
 
-- [ ] **Step 3: Сборки и проверки последовательно.**
+- [x] **Step 3: Сборки и проверки последовательно.**
 
 ```powershell
 node node_modules/typescript/bin/tsc -p packages/core/tsconfig.build.json
@@ -304,8 +304,8 @@ node node_modules/vitest/vitest.mjs run --maxWorkers=1
 
 Expected: каждый процесс exit 0, каталог 29 entries, docs 23 маршрута. Число knowledge fragments/test count получать из реального вывода, не выдумывать заранее. Не запускать full Vitest одновременно с docs build. При EPERM запросить штатную эскалацию; не менять timeout/config ради зелёного результата.
 
-- [ ] **Step 4: Ручная проверка собственной секции.** На работающей `/custom-components/` проверить Enter/Space, focus restoration, disabled и видимость текста; не подменять browser-подтверждение только jsdom. Если browser attach недоступен, записать ограничение и явно сообщить его при передаче.
-- [ ] **Step 5: Проверить scope и закоммитить публикацию.**
+- [x] **Step 4: Попытка ручной проверки и фиксация ограничения.** Свежая вкладка работающей `/custom-components/` не подключилась к browser webview. Ручная проверка не подтверждена; ограничение записано и сообщается при передаче. Реальные userEvent-проверки не выдаются за браузерную проверку.
+- [x] **Step 5: Проверить scope и закоммитить публикацию.**
 
 ```powershell
 git status --short
@@ -322,4 +322,19 @@ Tracked generated files, если они появились в git ls-files, п�
 
 Spec coverage: pure contracts/validation — Task 1; Accordion compatibility/custom ownership/events/focus/native keyboard — Task 2; catalogue/docs/counts/roadmap/full builds — Task 3. Все пять Review Focus имеют проверки в Tasks 1–2; native disabled не обходится ради focus. Новые controller/component/styles/actions не создаются.
 
-План ещё не исполнен. Рекомендуемый способ — Native: три связанных этапа, один исполнитель в текущем чате и одно свежее итоговое ревью. Subagent-driven доступен, но добавляет отдельный контекст исполнителя и reviewer на каждый этап. Перед реализацией пользователь проверяет план и выбирает способ исполнения.
+План исполнен 2026-10-05 способом Native: три этапа и одно свежее read-only итоговое ревью на gpt-6-astra. Коммиты этапов: 520dacd, 8df28fe, 38e6090. Единственное Important — приоритет защищённых props Trigger — исправлено в одном проходе; регрессионный тест наблюдался RED→GREEN. Critical и Minor нет; повторного reviewer не запускали.
+
+Проверки: core/React/UI builds, публичные type tests и React verifyBuild — exit 0. Каталог: 29 entries; docs: 23 маршрута, 755 knowledge fragments. Проверки публикации: 127/127. Полный набор до исправления: 491/491; после исправления: 492/492 в 93 файлах, exit 0. После исправления повторно проверены React build, публичные types и verifyBuild. Временная рабочая папка этого плана удаляется после финального коммита; чужие изменения и соседние папки сохраняются.
+
+### Решения и ограничения исполнения / ревью
+
+1. Формат каталога не расширен: DisclosureAction остаётся alias, варианты действий и default options.disabled описаны constraints и проверены typed examples/core types. Примеры компилируются одним checkExamples без дублирования TS programs. Цена ошибки: потребителю нужны описания/примеры вместо структурированных positional defaults/literals.
+2. Browser attach недоступен. Ручное поведение/вид не подтверждены и не подменяются jsdom. Цена ошибки: browser-only проблемы могут остаться незамеченными.
+3. Плановый порядок spread исправлен ради прежнего контракта Accordion; защищённые ID/type/ARIA выигрывают, consumer disabled сохраняется. Цена ошибки: потребитель не может переопределить защищённую семантику — как и до этапа.
+4. Runtime-действия вне DisclosureAction не валидируются; typed контракт не расширен. Цена ошибки: невалидный action из нетипизированного JS может вернуть false, а не Error.
+5. Глобальная уникальность ID и существование DOM-узлов — ответственность владельца. Цена ошибки: дубликаты владельца ломают page-wide ARIA-связи.
+6. Escape, закрытие снаружи и popup-позиционирование исключены. Цена ошибки: использующий эти правила для popup потребитель обязан реализовать эти взаимодействия.
+7. Существующая проверка document.activeElement в Accordion не расширена до iframe/другого document; новый пример использует ownerDocument. Цена ошибки: восстановление фокуса Accordion между document может не работать.
+8. Reviewer также не подтверждает реальный браузер и внешний вид из-за attachment; это не второе визуальное подтверждение. Цена ошибки: та же неопределённость browser-only поведения.
+
+Отложенные Minor: нет.
