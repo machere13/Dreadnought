@@ -1,5 +1,6 @@
 import { createRef, useState } from 'react';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AccordionAdapter } from '../../../src/Navigation/Accordion/AccordionAdapter.tsx';
 
@@ -13,6 +14,44 @@ function pair(value: string, label = value, content = `${value} content`) {
 }
 
 describe('AccordionAdapter', () => {
+  it('toggles exactly once with native Enter and Space, without submitting', async () => {
+    const change = vi.fn();
+    const submit = vi.fn(event => event.preventDefault());
+    render(<form onSubmit={submit}><AccordionAdapter onValueChange={change}>{pair('a')}</AccordionAdapter></form>);
+    screen.getByRole('button', { name: 'a' }).focus();
+    await userEvent.keyboard('{Enter}');
+    expect(screen.getByText('a content').hidden).toBe(false);
+    await userEvent.keyboard(' ');
+    expect(screen.getByText('a content').hidden).toBe(true);
+    expect(change.mock.calls).toEqual([['a'], [null]]);
+    expect(submit).not.toHaveBeenCalled();
+  });
+
+  it('honors canceled clicks and leaves a disabled controlled panel open', () => {
+    const change = vi.fn();
+    const view = (value: string | null, disabled = false) => <AccordionAdapter value={value} onValueChange={change}>
+      <AccordionAdapter.Item value="a">
+        <AccordionAdapter.Trigger disabled={disabled} onClick={event => event.preventDefault()}>a</AccordionAdapter.Trigger>
+        <AccordionAdapter.Panel>Answer</AccordionAdapter.Panel>
+      </AccordionAdapter.Item>
+    </AccordionAdapter>;
+    const { rerender } = render(view(null));
+    fireEvent.click(screen.getByRole('button', { name: 'a' }));
+    expect(change).not.toHaveBeenCalled();
+    rerender(view('a', true));
+    fireEvent.click(screen.getByRole('button', { name: 'a' }));
+    expect(screen.getByText('Answer').hidden).toBe(false);
+    expect(change).not.toHaveBeenCalled();
+  });
+
+  it('does not steal outside focus on controlled close', () => {
+    const view = (value: string | null) => <><AccordionAdapter value={value}>{pair('a')}</AccordionAdapter><button>Outside</button></>;
+    const { rerender } = render(view('a'));
+    const outside = screen.getByRole('button', { name: 'Outside' });
+    outside.focus();
+    rerender(view(null));
+    expect(document.activeElement).toBe(outside);
+  });
   it('connects a heading button to a mounted hidden panel and toggles it', () => {
     render(<AccordionAdapter>{pair('a', 'Question', 'Answer')}</AccordionAdapter>);
     const button = screen.getByRole('button', { name: 'Question' });

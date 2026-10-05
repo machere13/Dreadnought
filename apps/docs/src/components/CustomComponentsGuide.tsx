@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { copy, getButtonState, getSelectionValue } from '@dreadnought/core';
 import { Breadcrumb, CodeBlock } from '@dreadnought/ui/react';
 import styles from './DocsPage.module.css';
+import { DisclosureDemo } from './DisclosureDemo.tsx';
+import { disclosureCode } from './disclosureCode.ts';
 
 const copyLabels = { copy: 'Копировать', copied: 'Скопировано', error: 'Ошибка копирования' };
 
@@ -165,6 +167,13 @@ const refined = getTypeaheadValue(items, 'settings', 'наст', { includeCurren
       <SelectionDemo />
       <div className={styles.startExamples}><CodeBlock code={selectionCode} language="tsx" copyLabels={copyLabels} /></div>
       <p className={styles.footnote}><code>disabled</code> блокирует изменение целиком, <code>disabledValues</code> запрещает менять указанные пункты и сохраняет их при clear, <code>required</code> не позволяет снять последний выбранный пункт. Пустое начальное значение допустимо: функция не выбирает за пользователя. Семантику, клавиатуру, фокус и хранение состояния обеспечивает ваш компонент.</p>
+    </section>
+    <section data-knowledge className={styles.section} aria-labelledby="core-disclosure">
+      <h2 id="core-disclosure" className={styles.sectionTitle}>Своя раскрывающаяся секция</h2>
+      <p className={styles.bodyText}><code>getDisclosureState</code> связывает кнопку и панель через ARIA и hidden. <code>getDisclosureOpen</code> вычисляет open, close или toggle; disabled блокирует запрос, но не закрывает уже открытую секцию. Внешний владелец может изменить open независимо от disabled.</p>
+      <DisclosureDemo />
+      <div className={styles.startExamples}><CodeBlock code={disclosureCode} language="tsx" copyLabels={copyLabels} /></div>
+      <p className={styles.footnote}>ID задаёт владелец: непустые, разные, без ASCII-пробелов и уникальные на странице. В React useId подходит для нескольких экземпляров. Хранение состояния, отмена клика, DOM и фокус остаются в компоненте. Нативная кнопка сама поддерживает Enter/Space; при закрытии возвращаем фокус только из панели, не перехватывая внешний. Отключённую кнопку не включаем ради фокуса. Содержимое остаётся mounted. Это раскрытие секции, не готовый popup.</p>
     </section>
   </article>;
 }

@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import type { ComponentPropsWithRef, ReactNode } from 'react';
+import { getDisclosureState } from '@dreadnought/core';
 import { AccordionItemContext, useAccordionRootContext } from './AccordionContext.tsx';
 import { useAccordionParts } from './useAccordionParts.ts';
 
@@ -26,11 +27,13 @@ export function AccordionItemAdapter({ value, children, ref, ...itemProps }: Acc
   }, [open]);
 
   const encodedValue = encodeURIComponent(value);
+  const disclosure = getDisclosureState({ open,
+    triggerId: `${root.rootId}-trigger-${encodedValue}`,
+    panelId: `${root.rootId}-panel-${encodedValue}` });
   const context = {
     value,
     open,
-    triggerId: `${root.rootId}-trigger-${encodedValue}`,
-    panelId: `${root.rootId}-panel-${encodedValue}`,
+    disclosure,
     toggle: () => root.toggle(value),
     triggerRef,
     panelRef,

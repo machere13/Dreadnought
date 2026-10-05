@@ -13,6 +13,5 @@ export function AccordionPanelAdapter({ children, ref, ...panelProps }: Accordio
   const setRef = useCallback((element: HTMLDivElement | null) =>
     forwardAccordionRef(item.panelRef, ref, element), [item.panelRef, ref]);
 
-  return <div {...panelProps} ref={setRef} id={item.panelId}
-    aria-labelledby={item.triggerId} hidden={!item.open}>{children}</div>;
+  return <div {...panelProps} {...item.disclosure.panelProps} ref={setRef}>{children}</div>;
 }

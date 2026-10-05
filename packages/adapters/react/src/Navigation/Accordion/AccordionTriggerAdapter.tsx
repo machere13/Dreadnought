@@ -22,6 +22,6 @@ export function AccordionTriggerAdapter({ headingLevel = 3, children, onClick, r
     if (!event.defaultPrevented && !buttonProps.disabled) item.toggle();
   }
 
-  return <Heading><button {...buttonProps} ref={setRef} id={item.triggerId} type="button" aria-controls={item.panelId}
-  aria-expanded={item.open} data-state={item.open ? 'open' : 'closed'} onClick={handleClick}>{children}</button></Heading>;
+  return <Heading><button {...item.disclosure.triggerProps} {...buttonProps} ref={setRef}
+    data-state={item.open ? 'open' : 'closed'} onClick={handleClick}>{children}</button></Heading>;
 }

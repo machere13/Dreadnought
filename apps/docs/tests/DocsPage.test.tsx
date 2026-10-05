@@ -13,6 +13,14 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('documents a custom disclosure with a working example and anchor', () => {
+    render(<DocsPage section="custom-components" />);
+    expect(screen.getByRole('heading', { name: 'Своя раскрывающаяся секция' }).id).toBe('core-disclosure');
+    const trigger = screen.getByRole('button', { name: 'Дополнительные настройки' });
+    fireEvent.click(trigger);
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getByRole('textbox', { name: 'Примечание' })).toBeTruthy();
+  });
   it('documents Toolbar composition, its API anchor and the Controls navigation link', () => {
     render(<DocsPage section="toolbar" />);
     expect(screen.getByRole('toolbar', { name: 'Действия документа' })).toBeTruthy();

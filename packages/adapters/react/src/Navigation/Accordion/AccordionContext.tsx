@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react';
 import type { RefObject } from 'react';
+import type { DisclosureState } from '@dreadnought/core';
 
 export interface AccordionRootContextValue {
   rootId: string;
@@ -11,8 +12,7 @@ export interface AccordionRootContextValue {
 export interface AccordionItemContextValue {
   value: string;
   open: boolean;
-  triggerId: string;
-  panelId: string;
+  disclosure: DisclosureState;
   toggle: () => void;
   triggerRef: RefObject<HTMLButtonElement | null>;
   panelRef: RefObject<HTMLDivElement | null>;
