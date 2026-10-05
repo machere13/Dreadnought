@@ -12,7 +12,6 @@ export interface SelectionOptions<T extends SelectionKey = SelectionKey> {
 export function getSelectionValue<T extends SelectionKey>(current: readonly T[], action: SelectionAction<T>, options?: SelectionOptions<T>): T[];
 export function getSelectionValue<T extends SelectionKey>(current: T | null, action: SelectionAction<T>, options?: SelectionOptions<T>): T | null;
 export function getSelectionValue<T extends SelectionKey>(current: SelectionValue<T>, action: SelectionAction<T>, options?: SelectionOptions<T>): T | null | T[];
-/** Computes a requested selection; state ownership and events belong to the caller. */
 export function getSelectionValue<T extends SelectionKey>(current: SelectionValue<T>, action: SelectionAction<T>,
   { disabled = false, disabledValues = [], required = false }: SelectionOptions<T> = {}): T | null | T[] {
   const multiple = Array.isArray(current);

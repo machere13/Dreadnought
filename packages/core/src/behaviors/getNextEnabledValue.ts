@@ -6,7 +6,6 @@ export interface NavigationItem {
 export type NavigationDirection = 'previous' | 'next' | 'first' | 'last';
 
 export interface NavigationOptions {
-  /** Wrap around at collection boundaries. Defaults to true. */
   loop?: boolean;
 }
 
