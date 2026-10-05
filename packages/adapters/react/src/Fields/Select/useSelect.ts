@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { getNavigationDirection, getNextEnabledValue, getSelectState, getSelectionValue } from '@dreadnought/core';
+import { getComboboxKeyAction, getNextEnabledValue, getSelectState, getSelectionValue } from '@dreadnought/core';
 import type { SelectValue, SelectionAction } from '@dreadnought/core';
 import type { KeyboardEvent } from 'react';
 import type { SelectAdapterProps } from './SelectAdapter.types.ts';
@@ -49,16 +49,13 @@ export function useSelect(props: SelectAdapterProps) {
     props.onKeyDown?.(event);
     props.slotProps?.control?.onKeyDown?.(event);
     if (event.defaultPrevented || event.nativeEvent.isComposing || props.disabled) return;
-    if (event.key === 'Escape') { if (open) { event.preventDefault(); close(); } return; }
-    if (event.key === 'Tab') { close(); return; }
-    if (event.key === 'Enter' || (!props.searchable && event.key === ' ')) {
-      event.preventDefault();
-      if (!open) setExpanded(true); else if (activeValue) choose(activeValue);
-      return;
-    }
-    const direction = getNavigationDirection(event.key, { homeEnd: !props.searchable });
-    if (!direction) return;
-    event.preventDefault();
+    const action = getComboboxKeyAction(event.key, { open, searchable: props.searchable ?? false });
+    if (!action) return;
+    if (action.preventDefault) event.preventDefault();
+    if (action.type === 'close') { close(); return; }
+    if (action.type === 'open') { setExpanded(true); return; }
+    if (action.type === 'select') { if (activeValue) choose(activeValue); return; }
+    const direction = action.direction;
     if (!open) {
       setExpanded(true);
       setActive(getNextEnabledValue(state.filteredOptions, '', direction === 'previous' ? 'last' : 'first') ?? '');

@@ -1,7 +1,7 @@
 // Throwaway feasibility probe, not a public component or adapter.
 import { useId, useRef, useState } from 'react';
 import type { KeyboardEventHandler } from 'react';
-import { getDisclosureOpen, getNavigationDirection, getNextEnabledValue, getSelectState, getSelectionValue } from '@dreadnought/core';
+import { getComboboxKeyAction, getDisclosureOpen, getNextEnabledValue, getSelectState, getSelectionValue } from '@dreadnought/core';
 import type { SelectOption } from '@dreadnought/core';
 
 export function ComboboxProbe({ options, defaultValue = null, disabled = false, onKeyDown }: {
@@ -45,18 +45,13 @@ export function ComboboxProbe({ options, defaultValue = null, disabled = false, 
       onKeyDown={event => {
         onKeyDown?.(event);
         if (event.defaultPrevented || event.nativeEvent.isComposing || disabled) return;
-        if (event.key === 'Escape') { if (open) { event.preventDefault(); close(); } return; }
-        if (event.key === 'Tab') { close(); return; }
-        if (event.key === 'Enter' && open) {
-          event.preventDefault();
-          if (activeValue) choose(activeValue);
-          return;
-        }
-        const direction = getNavigationDirection(event.key, { homeEnd: false });
-        if (!direction) return;
-        event.preventDefault();
+        const action = getComboboxKeyAction(event.key, { open, openOnEnter: false });
+        if (!action) return;
+        if (action.preventDefault) event.preventDefault();
+        if (action.type === 'close') { close(); return; }
+        if (action.type === 'select') { if (activeValue) choose(activeValue); return; }
         setExpanded(getDisclosureOpen(expanded, 'open', { disabled }));
-        setActive(getNextEnabledValue(state.filteredOptions, open ? activeValue ?? '' : '', direction, { loop: false }) ?? '');
+        if (action.type === 'navigate') setActive(getNextEnabledValue(state.filteredOptions, open ? activeValue ?? '' : '', action.direction, { loop: false }) ?? '');
       }} />
     <div id={`${id}-list`} role="listbox" aria-label="People" hidden={!open}>
       {state.filteredOptions.map(option => <button key={option.value} id={optionId(option.value)}

@@ -33,6 +33,16 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes the Combobox keyboard behavior with a checked composition contract', () => {
+    const entry = catalog.entries.find(entry => entry.name === 'getComboboxKeyAction');
+    expect(entry?.kind).toBe('behavior');
+    expect(entry?.bindings[0]).toMatchObject({ importPath: '@dreadnought/core', exportName: 'getComboboxKeyAction', framework: null, layer: 1 });
+    const contract = entry!.bindings[0].contracts[0];
+    expect(contract.parameters.map(parameter => parameter.name)).toEqual(['key', 'options']);
+    expect(contract.parameters[1].variants[0].properties).toContainEqual(expect.objectContaining({ name: 'open', optional: false }));
+    expect(contract.parameters[1].defaults).toEqual({ searchable: true, openOnEnter: true });
+    expect(() => checkExamples(context, entry!.bindings[0].examples)).not.toThrow();
+  });
   it('publishes standalone Disclosure contracts and a type-checked custom composition', () => {
     const examples: { id: string; code: string }[] = [];
     for (const name of ['getDisclosureState', 'getDisclosureOpen']) {
@@ -76,7 +86,7 @@ describe('public catalog', () => {
   });
   it('publishes standalone actions and behaviors with checked public contracts', () => {
     const capabilities = catalog.entries.filter(entry => entry.kind !== 'component');
-    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getDisclosureOpen', 'getDisclosureState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
+    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getComboboxKeyAction', 'getDisclosureOpen', 'getDisclosureState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
     expect(capabilities.every(entry => entry.tokens.length === 0 && entry.bindings.length === 1 && entry.bindings[0].layer === 1)).toBe(true);
     const selection = capabilities.find(entry => entry.name === 'getSelectionValue');
     expect(selection.bindings[0].contracts).toHaveLength(3);

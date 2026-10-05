@@ -140,6 +140,7 @@ export function CustomComponentsGuide() {
     </section>
     <section data-knowledge className={styles.section} aria-labelledby="core-keyboard">
       <h2 id="core-keyboard" className={styles.sectionTitle}>Клавиши и направление навигации</h2>
+      <p className={styles.bodyText}><code>getComboboxKeyAction(key, {'{ open, searchable?, openOnEnter? }'})</code> определяет действие Combobox: open, close, select или navigate. Результат содержит preventDefault, но не вызывает его. Escape закрывает открытый список, Tab закрывает без отмены перехода фокуса, Enter открывает или выбирает. В поисковом режиме Space и Home/End остаются текстовому вводу; в непоисковом Space активирует, Home/End навигируют. По умолчанию searchable и openOnEnter — true; openOnEnter: false оставляет Enter закрытого поля форме. Проверки disabled, отмены события и IME, выполнение действия и фокус остаются вашему адаптеру.</p>
       <p className={styles.bodyText}><code>getNavigationDirection(key, options)</code> превращает строку клавиши в previous, next, first или last. Посторонняя клавиша возвращает undefined. По умолчанию используются стрелки вверх/вниз и Home/End; горизонтальная ориентация использует стрелки влево/вправо.</p>
       <CodeBlock language="ts" copyLabels={copyLabels} code={`import { getNavigationDirection, getNextEnabledValue } from '@dreadnought/core';
 const items = [{ value: 'copy' }, { value: 'save' }];
