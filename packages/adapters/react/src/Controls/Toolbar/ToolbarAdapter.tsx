@@ -12,10 +12,11 @@ export type ToolbarAdapterProps = ComponentPropsWithRef<'div'> & {
   loop?: boolean;
 };
 
-export function ToolbarAdapter({ navigation = 'roving', orientation = 'horizontal', loop = true, ref, children, tabIndex, ...props }: ToolbarAdapterProps) {
+export function ToolbarAdapter({ navigation = 'roving', orientation = 'horizontal', loop = true, ref, children, tabIndex, onBlurCapture, ...props }: ToolbarAdapterProps) {
   const root = useRef<HTMLDivElement | null>(null);
-  const { items, register, orderedItems } = useToolbarRegistry();
-  const [activeValue, activate] = useState<string>();
+  const { items, register, orderedItems, markFocused, handleBlur } = useToolbarRegistry(root, navigation);
+  const [activeValue, setActiveValue] = useState<string>();
+  const activate = useCallback((value: string) => { markFocused(value); setActiveValue(value); }, [markFocused]);
   const state = getToolbarState({ items, activeValue, navigation, orientation });
   const navigate = useCallback((value: string, direction: NavigationDirection) => {
     const ordered = orderedItems();
@@ -28,6 +29,7 @@ export function ToolbarAdapter({ navigation = 'roving', orientation = 'horizonta
     return attachRef(element, ref, () => { root.current = null; });
   }, [ref]);
   return <ToolbarContext.Provider value={{ navigation, orientation, loop, tabStopValue: state.tabStopValue, register, activate, navigate }}>
-    <div {...props} ref={rootRef} role={state.role} aria-orientation={state.ariaOrientation} tabIndex={navigation === 'roving' ? -1 : tabIndex}>{children}</div>
+    <div {...props} ref={rootRef} role={state.role} aria-orientation={state.ariaOrientation} tabIndex={navigation === 'roving' ? -1 : tabIndex}
+      onBlurCapture={(event) => { onBlurCapture?.(event); if (!event.defaultPrevented) handleBlur(event); }}>{children}</div>
   </ToolbarContext.Provider>;
 }
