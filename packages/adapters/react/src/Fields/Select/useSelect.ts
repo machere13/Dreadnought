@@ -69,7 +69,7 @@ export function useSelect(props: SelectAdapterProps) {
     if (props.disabled) close();
   }, [props.disabled]);
   useEffect(() => {
-    if (open && activeValue) document.getElementById(optionId(activeValue))?.scrollIntoView?.({ block: 'nearest' });
+    if (open && activeValue) popup.current?.ownerDocument.getElementById(optionId(activeValue))?.scrollIntoView?.({ block: 'nearest' });
   }, [open, activeValue, id]);
   useEffect(() => {
     const form = native.current?.form;

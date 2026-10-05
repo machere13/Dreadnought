@@ -6,6 +6,52 @@ import { TableAdapter } from '../../../src/DataDisplay/Table/index.ts';
 afterEach(cleanup);
 
 describe('TableAdapter', () => {
+  it('leaves Escape from a nested popup to that popup', () => {
+    render(<TableAdapter columns={[{ key: 'role', title: 'Роль', filters: [{ text: 'Дизайнер', value: 'designer' }] }]} dataSource={[]} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Фильтр Роль' }));
+    const child = document.createElement('div');
+    child.setAttribute('popover', 'auto');
+    const button = document.createElement('button');
+    child.append(button);
+    screen.getByRole('dialog', { name: 'Фильтр Роль' }).append(child);
+    expect(fireEvent.keyDown(button, { key: 'Escape' })).toBe(true);
+    expect(screen.getByRole('checkbox', { name: 'Дизайнер' })).toBeTruthy();
+  });
+  it('dismisses a filter with Escape and restores focus without applying its draft', () => {
+    render(<TableAdapter rowKey="id" columns={[{ key: 'role', title: 'Роль', dataIndex: 'role',
+      filters: [{ text: 'Дизайнер', value: 'designer' }], onFilter: (value, row) => row.role === value }]}
+      dataSource={[{ id: 1, role: 'designer' }, { id: 2, role: 'developer' }]} />);
+    const trigger = screen.getByRole('button', { name: 'Фильтр Роль' });
+    fireEvent.click(trigger);
+    const choice = screen.getByRole('checkbox', { name: 'Дизайнер' });
+    fireEvent.click(choice);
+    choice.focus();
+    fireEvent.keyDown(choice, { key: 'Escape' });
+    expect(screen.queryByRole('checkbox', { name: 'Дизайнер' })).toBeNull();
+    expect(document.activeElement).toBe(trigger);
+    expect(screen.getAllByRole('cell')).toHaveLength(2);
+  });
+
+  it('dismisses a filter outside without stealing focus', () => {
+    render(<><button>Outside</button><TableAdapter columns={[{ key: 'role', title: 'Роль',
+      filters: [{ text: 'Дизайнер', value: 'designer' }] }]} dataSource={[]} /></>);
+    fireEvent.click(screen.getByRole('button', { name: 'Фильтр Роль' }));
+    const outside = screen.getByRole('button', { name: 'Outside' });
+    outside.focus();
+    fireEvent.pointerDown(outside);
+    expect(screen.queryByRole('checkbox', { name: 'Дизайнер' })).toBeNull();
+    expect(document.activeElement).toBe(outside);
+  });
+
+  it.each(['Применить', 'Сбросить'])('restores filter trigger focus after %s', (label) => {
+    render(<TableAdapter columns={[{ key: 'role', title: 'Роль', filters: [{ text: 'Дизайнер', value: 'designer' }] }]} dataSource={[]} />);
+    const trigger = screen.getByRole('button', { name: 'Фильтр Роль' });
+    fireEvent.click(trigger);
+    const action = screen.getByRole('button', { name: label });
+    action.focus();
+    fireEvent.click(action);
+    expect(document.activeElement).toBe(trigger);
+  });
   it('reports requested sorting while a controlled column waits for new props', () => {
     const changes: Array<{ order: string | null; rows: number[] }> = [];
     const dataSource = [{ id: 1, age: 42 }, { id: 2, age: 18 }];

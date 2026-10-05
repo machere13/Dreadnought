@@ -2,6 +2,8 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TabsAdapter } from '../../../src/Navigation/Tabs/TabsAdapter.tsx';
+import { createPortal } from 'react-dom';
+import { within } from '@testing-library/react';
 
 let width = 100;
 let resizeCallbacks: (() => void)[] = [];
@@ -71,6 +73,34 @@ function Sample({ value, onValueChange, last = true }: {
 }
 
 describe('Tabs overflow', () => {
+  it('positions its menu and follows resize in the iframe document', () => {
+    const frame = document.createElement('iframe');
+    document.body.append(frame);
+    const doc = frame.contentDocument!;
+    const proto = doc.defaultView!.HTMLElement.prototype;
+    vi.spyOn(proto, 'getBoundingClientRect').mockImplementation(HTMLElement.prototype.getBoundingClientRect);
+    vi.spyOn(proto, 'clientWidth', 'get').mockImplementation(function () { return this.getAttribute('data-slot') === 'list' ? width : 120; });
+    vi.spyOn(proto, 'scrollWidth', 'get').mockImplementation(function () { return this.getAttribute('data-slot') === 'list' ? this.querySelectorAll('[role="tab"]').length * 100 : 0; });
+    Object.defineProperty(proto, 'showPopover', { configurable: true, value: HTMLElement.prototype.showPopover });
+    Object.defineProperty(proto, 'hidePopover', { configurable: true, value: HTMLElement.prototype.hidePopover });
+    vi.spyOn(proto, 'matches').mockImplementation(HTMLElement.prototype.matches);
+    Object.defineProperty(doc.documentElement, 'clientWidth', { configurable: true, value: 120 });
+    Object.defineProperty(doc.documentElement, 'clientHeight', { configurable: true, value: 160 });
+    const { unmount } = render(createPortal(<Sample />, doc.body));
+    try {
+      const more = within(doc.body).getByRole('button', { name: 'More sections' });
+      let right = 144;
+      vi.spyOn(more, 'getBoundingClientRect').mockImplementation(() => ({ ...rect(right - 44, right), top: 50, bottom: 94 }));
+      fireEvent.keyDown(more, { key: 'ArrowDown' });
+      const menu = within(doc.body).getByRole('menu');
+      expect(menu.style.left).toBe('76px');
+      right = 84;
+      act(() => doc.defaultView!.dispatchEvent(new Event('resize')));
+      expect(menu.style.left).toBe('40px');
+      fireEvent.keyDown(doc.activeElement!, { key: 'Escape' });
+      expect(doc.activeElement).toBe(more);
+    } finally { unmount(); frame.remove(); }
+  });
   it('lists offscreen tabs, skips disabled items and selects without submitting', () => {
     const change = vi.fn();
     const submit = vi.fn((event) => event.preventDefault());

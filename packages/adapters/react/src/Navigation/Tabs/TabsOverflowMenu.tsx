@@ -27,26 +27,27 @@ export function TabsOverflowMenu({ tabs, revealTab, label, slotProps }: {
   useLayoutEffect(() => {
     if (!open) return;
     const menu = menuRef.current!;
-    menu.showPopover();
+    const view = menu.ownerDocument.defaultView;
+    Reflect.apply(menu.showPopover, menu, [{ source: triggerRef.current ?? undefined }]);
     function position() {
       const trigger = triggerRef.current!.getBoundingClientRect();
       const popup = menu.getBoundingClientRect();
-      const width = document.documentElement.clientWidth;
-      const height = document.documentElement.clientHeight;
+      const width = menu.ownerDocument.documentElement.clientWidth;
+      const height = menu.ownerDocument.documentElement.clientHeight;
       menu.style.left = `${Math.max(0, Math.min(trigger.right - popup.width, width - popup.width))}px`;
       menu.style.top = `${Math.max(0, trigger.bottom + popup.height <= height ? trigger.bottom : trigger.top - popup.height)}px`;
     }
     position();
     const items = menu.querySelectorAll<HTMLButtonElement>('[role="menuitemradio"]:not(:disabled)');
     (focusLast.current ? items[items.length - 1] : items[0])?.focus();
-    const resize = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(position);
+    const resize = view?.ResizeObserver ? new view.ResizeObserver(position) : undefined;
     resize?.observe(menu);
-    window.addEventListener('resize', position);
-    window.addEventListener('scroll', position, true);
+    view?.addEventListener('resize', position);
+    view?.addEventListener('scroll', position, true);
     return () => {
       resize?.disconnect();
-      window.removeEventListener('resize', position);
-      window.removeEventListener('scroll', position, true);
+      view?.removeEventListener('resize', position);
+      view?.removeEventListener('scroll', position, true);
       if (menu.matches(':popover-open')) menu.hidePopover();
     };
   }, [open]);
