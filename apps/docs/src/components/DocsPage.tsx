@@ -1,6 +1,6 @@
 import { getCatalogDoc } from '../catalog/getCatalogDoc';
-import { useState } from 'react';
-import { Breadcrumb, Button, Card, CodeBlock, Input, Layout, Table, TextArea } from '@dreadnought/ui/react';
+import { useEffect, useRef, useState } from 'react';
+import { Accordion, Breadcrumb, Button, Card, CodeBlock, Input, Layout, Table, TextArea } from '@dreadnought/ui/react';
 import { badgeDoc } from './componentDocs/BadgeDoc';
 import { cardDoc } from './componentDocs/CardDoc';
 import { tabsDoc } from './componentDocs/TabsDoc';
@@ -45,14 +45,33 @@ const componentFamilies: readonly { name: string; sections: readonly ComponentSe
 
 function Header() {
   return <Layout.Header className={styles.header}>
-    <a className={styles.brand} href="/" aria-label="Dreadnought — на главную">
-      <span className={styles.brandMark} aria-hidden="true">D</span>
-      <span>Dreadnought</span>
-    </a>
-    <span className={styles.headerDivider} aria-hidden="true" />
-    <span className={styles.headerSection}>Документация</span>
-    <a className={styles.assistantLink} href="#docs-assistant">Помощник</a>
+    <h4 className={styles.brand}><a href="/" title="На главную">Dreadnought</a></h4>
   </Layout.Header>;
+}
+
+function Footer() {
+  const wordRef = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const word = wordRef.current!, container = word.parentElement!;
+    let frame = 0;
+    function fit() {
+      if (!word.isConnected) return;
+      const width = word.getBoundingClientRect().width, available = container.clientWidth;
+      if (width > 0 && available > 0 && Math.abs(width - available) > .5) {
+        word.style.fontSize = `${parseFloat(getComputedStyle(word).fontSize) * available / width}px`;
+      }
+    }
+    function resize() { cancelAnimationFrame(frame); frame = requestAnimationFrame(fit); }
+    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(resize);
+    observer?.observe(container); observer?.observe(word);
+    window.addEventListener('resize', resize);
+    document.fonts?.ready.then(resize);
+    fit();
+    return () => { observer?.disconnect(); window.removeEventListener('resize', resize); cancelAnimationFrame(frame); };
+  }, []);
+  return <Layout.Footer className={styles.footer}><div className={styles.footerWidth}>
+    <span ref={wordRef} className={styles.footerWord}>DREADNOUGHT</span>
+  </div></Layout.Footer>;
 }
 
 function Sidebar({ section, knowledge }: { section: DocsSection; knowledge: ReturnType<typeof useKnowledge> }) {
@@ -77,16 +96,18 @@ function Sidebar({ section, knowledge }: { section: DocsSection; knowledge: Retu
       <a className={styles.navigationLink} href="/theming/" aria-current={section === 'theming' ? 'page' : undefined}>Тема и токены</a>
       <a className={styles.navigationLink} href="/custom-components/" aria-current={section === 'custom-components' ? 'page' : undefined}>Свой компонент</a>
       <span className={styles.navigationGroup}>Компоненты</span>
-      {componentFamilies.map((family) => <details key={family.name} className={styles.navigationFamily}
-        open={section !== 'overview' && section !== 'getting-started' && section !== 'theming' && section !== 'custom-components' && family.sections.includes(section)}>
-        <summary className={styles.familySummary}>{family.name}</summary>
-        <div className={styles.familyLinks}>
+      <Accordion key={section} multiple className={styles.navigationFamilies}
+        defaultValue={componentFamilies.filter(family => family.sections.some(component => component === section)).map(family => family.name)}>
+      {componentFamilies.map((family) => <Accordion.Item key={family.name} value={family.name}>
+        <Accordion.Trigger headingLevel={2}>{family.name}</Accordion.Trigger>
+        <Accordion.Panel className={styles.familyLinks}>
           {family.sections.map((component) => <a key={component} className={styles.navigationLink}
             href={`/components/${component}/`} aria-current={section === component ? 'page' : undefined}>
             {componentDocs[component].title}
           </a>)}
-        </div>
-      </details>)}
+        </Accordion.Panel>
+      </Accordion.Item>)}
+      </Accordion>
     </nav>}
   </Layout.Sidebar>;
 }
@@ -286,7 +307,7 @@ export function DocsPage({ section }: { section: DocsSection }) {
         </aside>
       </Layout.Content>
     </Layout>
-    <Layout.Footer className={styles.footer}>Dreadnought · Документация <span>Структура · Поведение · Тема</span></Layout.Footer>
+    <Footer />
   </Layout>;
 }
 

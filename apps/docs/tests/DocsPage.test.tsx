@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DocsPage } from '../src/components/DocsPage';
 
@@ -13,6 +13,14 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('keeps only the wordmark in the header and footer', () => {
+    render(<DocsPage section="overview" />);
+    const header = screen.getByRole('banner');
+    expect(header.textContent).toBe('Dreadnought');
+    expect(within(header).getByRole('heading', { name: 'Dreadnought', level: 4 })).toBeTruthy();
+    expect(within(header).getByRole('link').getAttribute('href')).toBe('/');
+    expect(screen.getByRole('contentinfo').textContent?.toLowerCase()).toBe('dreadnought');
+  });
   it('documents BarChart API and keeps full data when a legend series is hidden', () => {
     render(<DocsPage section="barchart" />);
     expect(document.getElementById('barchart-api')).toBeTruthy();
@@ -98,14 +106,17 @@ describe('documentation pages', () => {
   it('groups component links by family and opens the current family', () => {
     render(<DocsPage section="table" />);
 
-    const dataDisplay = screen.getByText('DataDisplay').closest('details');
-    const controls = screen.getByText('Controls').closest('details');
-    expect(dataDisplay?.hasAttribute('open')).toBe(true);
-    expect(controls?.hasAttribute('open')).toBe(false);
-    expect(dataDisplay?.querySelector('a[href="/components/table/"]')?.getAttribute('aria-current')).toBe('page');
-    fireEvent.click(screen.getByText('Controls'));
-    expect(controls?.hasAttribute('open')).toBe(true);
-    expect(controls?.querySelector('a[href="/components/button/"]')).toBeTruthy();
+    const dataDisplay = screen.getByRole('button', { name: 'DataDisplay' });
+    const controls = screen.getByRole('button', { name: 'Controls' });
+    expect(dataDisplay.getAttribute('aria-expanded')).toBe('true');
+    expect(controls.getAttribute('aria-expanded')).toBe('false');
+    expect(screen.getByRole('link', { name: 'Table' }).getAttribute('aria-current')).toBe('page');
+    fireEvent.click(controls);
+    expect(controls.getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getByRole('link', { name: 'Button' })).toBeTruthy();
+    expect(dataDisplay.getAttribute('aria-expanded')).toBe('true');
+    fireEvent.click(controls);
+    expect(screen.queryByRole('link', { name: 'Button' })).toBeNull();
   });
 
   it('searches page content and API properties without losing the regular navigation', () => {
