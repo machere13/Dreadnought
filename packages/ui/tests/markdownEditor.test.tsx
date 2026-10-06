@@ -3,12 +3,15 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, expect, it, vi } from 'vitest';
 import * as ui from '../src/adapters/react/index.ts';
 
-afterEach(() => { cleanup(); vi.restoreAllMocks(); });
+afterEach(() => { cleanup(); vi.useRealTimers(); vi.restoreAllMocks(); });
 
 it('uses themed tooltips instead of native titles and honors custom action labels', () => {
+  vi.useFakeTimers();
   render(<ui.MarkdownEditor aria-label="Notes" labels={{ bold: 'Strong' }} />);
   const bold = screen.getByRole('button', { name: 'Strong' });
   fireEvent.pointerEnter(bold);
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  act(() => vi.advanceTimersByTime(100));
   const tooltip = screen.getByRole('tooltip');
   expect(tooltip.textContent).toBe('Strong');
   expect(tooltip.getAttribute('data-placement')).toBe('top');

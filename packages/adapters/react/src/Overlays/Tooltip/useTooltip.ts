@@ -4,10 +4,10 @@ import { getDisclosureOpen, getTooltipState } from '@dreadnought/core';
 import type { TooltipPlacement } from '@dreadnought/core';
 import { useAnchoredPopover } from '../../shared/useAnchoredPopover.ts';
 
-export interface UseTooltipOptions { open?: boolean; defaultOpen?: boolean; disabled?: boolean; onOpenChange?: (open: boolean) => void; describedBy?: string; placement?: TooltipPlacement; arrow?: boolean | { pointAtCenter: boolean }; autoAdjustOverflow?: boolean }
+export interface UseTooltipOptions { open?: boolean; defaultOpen?: boolean; disabled?: boolean; onOpenChange?: (open: boolean) => void; describedBy?: string; placement?: TooltipPlacement; arrow?: boolean | { pointAtCenter: boolean }; autoAdjustOverflow?: boolean; openDelay?: number; closeDelay?: number }
 export type TooltipTriggerProps = DOMAttributes<Element> & { ref: (element: Element | null) => void; 'aria-describedby': string | undefined };
 
-export function useTooltip({ open: controlled, defaultOpen = false, disabled = false, onOpenChange, describedBy, placement = 'top', arrow = true, autoAdjustOverflow = true }: UseTooltipOptions = {}) {
+export function useTooltip({ open: controlled, defaultOpen = false, disabled = false, onOpenChange, describedBy, placement = 'top', arrow = true, autoAdjustOverflow = true, openDelay = 100, closeDelay = 100 }: UseTooltipOptions = {}) {
   const id = useId();
   const [internal, setInternal] = useState(defaultOpen);
   const [anchorElement, setAnchorElement] = useState<Element | null>(null);
@@ -34,29 +34,34 @@ export function useTooltip({ open: controlled, defaultOpen = false, disabled = f
     if (!current.focused?.isConnected) current.focused = null;
     request(!current.dismissed && !!(current.hovered || current.popupHovered || current.focused));
   }
-  function enter(element: Element) {
+  function schedule(delay: number) {
+    clearTimeout(timer.current);
+    delay = Number.isFinite(delay) ? Math.max(0, delay) : 100;
+    if (delay === 0) update();
+    else timer.current = setTimeout(update, delay);
+  }
+  function enter(element: Element, delay = 0) {
     attach(element);
     interaction.current.dismissed = false;
-    update();
+    schedule(state.open || interaction.current.focused ? 0 : delay);
   }
   function leave() {
-    clearTimeout(timer.current);
-    timer.current = setTimeout(update, 100);
+    schedule(closeDelay);
   }
   function dismiss() { interaction.current.dismissed = true; update(); }
   useEffect(() => { if (!state.open) interaction.current.popupHovered = false; }, [state.open]);
   useEffect(() => () => clearTimeout(timer.current), []);
   useEffect(() => {
-    if (!state.open || !anchorElement) return;
+    if (!anchorElement) return;
     const document = anchorElement.ownerDocument;
     function escape(event: KeyboardEvent) {
-      if (event.key === 'Escape' && !event.defaultPrevented && !event.isComposing) { event.preventDefault(); dismiss(); }
+      if (!currentOptions.current.disabled && (currentOptions.current.open || (!interaction.current.dismissed && interaction.current.hovered)) && event.key === 'Escape' && !event.defaultPrevented && !event.isComposing) { event.preventDefault(); dismiss(); }
     }
     document.addEventListener('keydown', escape);
     return () => document.removeEventListener('keydown', escape);
-  }, [state.open, anchorElement, controlled, disabled, onOpenChange]);
+  }, [anchorElement]);
   const triggerProps: TooltipTriggerProps = { ...state.triggerProps, ref: attach,
-    onPointerEnter: event => { interaction.current.hovered = event.currentTarget; enter(event.currentTarget); },
+    onPointerEnter: event => { interaction.current.hovered = event.currentTarget; enter(event.currentTarget, openDelay); },
     onPointerLeave: () => { interaction.current.hovered = null; leave(); },
     onFocus: event => { interaction.current.focused = event.currentTarget; enter(event.currentTarget); },
     onBlur: () => { interaction.current.focused = null; leave(); },

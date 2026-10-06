@@ -71,8 +71,11 @@ it('shows a caption and aligned marker, series name and raw value for visible se
 });
 
 it('moves tooltip content between vertices and removes it when the active series disappears', () => {
+  vi.useFakeTimers();
   const { rerender } = render(<RadarChartAdapter {...props} />);
   fireEvent.pointerEnter(screen.getByRole('img', { name: 'Вариант A, b: 50' }));
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  act(() => vi.advanceTimersByTime(100));
   expect(within(screen.getByRole('tooltip')).getByRole('table', { name: 'b' })).toBeTruthy();
   fireEvent.pointerEnter(screen.getByRole('img', { name: 'Вариант B, a: 50' }));
   expect(within(screen.getByRole('tooltip')).getByRole('table', { name: 'a' })).toBeTruthy();

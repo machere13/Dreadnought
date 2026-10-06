@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button, Tooltip } from '@dreadnought/ui/react';
 
 const meta = { title: 'Overlays/Tooltip', component: Tooltip,
+  argTypes: { openDelay: { control: { type: 'number', min: 0, step: 50 } }, closeDelay: { control: { type: 'number', min: 0, step: 50 } } },
   args: { content: 'Открывает настройки приложения', children: trigger => <Button {...trigger}>Настройки</Button> },
 } satisfies Meta<typeof Tooltip>;
 export default meta;
@@ -15,3 +16,5 @@ export const Placements: Story = { render: () => <div style={{ display: 'grid', 
 </div> };
 export const WithoutArrow: Story = { args: { arrow: false } };
 export const CenteredArrow: Story = { args: { placement: 'topLeft', arrow: { pointAtCenter: true } } };
+export const WithoutDelay: Story = { args: { openDelay: 0, closeDelay: 0 } };
+export const CustomDelays: Story = { args: { openDelay: 500, closeDelay: 250 } };

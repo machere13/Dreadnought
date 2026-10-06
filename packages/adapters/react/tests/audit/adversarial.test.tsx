@@ -200,6 +200,7 @@ describe('audit: regression invariants', () => {
     }
     const { rerender, unmount } = render(<Page />);
     fireEvent.pointerEnter(screen.getByRole('button', { name: 'First' }));
+    act(() => vi.advanceTimersByTime(100));
     fireEvent.pointerLeave(screen.getByRole('button', { name: 'First' }));
     rerender(<Page latest sibling={false} />);
     act(() => vi.advanceTimersByTime(100));

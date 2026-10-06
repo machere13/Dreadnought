@@ -4,7 +4,7 @@ import { createRef } from 'react';
 import { renderToString } from 'react-dom/server';
 import * as adapters from '../../../src/unstyled.ts';
 
-afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
+afterEach(() => { cleanup(); vi.useRealTimers(); vi.unstubAllGlobals(); });
 const props = { label: 'Измерения', xDomain: [0, 10] as const, yDomain: [0, 100] as const, width: 500, height: 300,
   series: [{ id: 'a', label: 'A', data: [{ x: 0, y: 0 }, { x: 5, y: null }, { x: 10, y: 80 }] },
     { id: 'b', label: 'B', data: [{ x: 0, y: 40 }, { x: 10, y: 100 }] }] };
@@ -35,10 +35,13 @@ it('navigates points with existing keyboard rules', () => {
   expect(screen.queryByRole('tooltip')).toBeNull();
 });
 it('uses nearest-point search between vertices, not only circle hover', () => {
+  vi.useFakeTimers();
   render(<adapters.LineChartAdapter {...props} />);
   const plot = document.querySelector<SVGSVGElement>('[data-ui="line-plot"]')!;
   vi.spyOn(plot, 'getBoundingClientRect').mockReturnValue({ left: 0, top: 0, width: 500, height: 300 } as DOMRect);
   fireEvent(plot, new MouseEvent('pointermove', { clientX: 50, clientY: 265, bubbles: true }));
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  act(() => vi.advanceTimersByTime(100));
   expect(within(screen.getByRole('tooltip')).getByRole('row', { name: 'A 0' })).toBeTruthy();
 });
 it('forwards point refs and allows consumers to cancel keyboard navigation', () => {
