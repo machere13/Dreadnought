@@ -1,6 +1,6 @@
 [
   "/", "/getting-started/", "/theming/", "/custom-components/",
-  "/components/button/", "/components/input/", "/components/textarea/", "/components/markdowneditor/",
+  "/components/button/", "/components/input/", "/components/textarea/", "/components/markdowneditor/", "/components/markdownpreview/",
   "/components/badge/", "/components/alert/", "/components/toast/", "/components/loader/", "/components/card/",
   "/components/accordion/", "/components/tabs/", "/components/menu/", "/components/table/",
   "/components/breadcrumb/", "/components/codeblock/", "/components/icon/",

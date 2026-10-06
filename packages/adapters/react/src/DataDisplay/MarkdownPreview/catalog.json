@@ -1,0 +1,10 @@
+{
+  "id": "component:markdown-preview", "kind": "component", "name": "MarkdownPreview", "family": "DataDisplay",
+  "description": "Безопасное отображение CommonMark и GFM: таблицы, списки задач, зачёркивание и автоссылки.",
+  "docsUrl": "/components/markdownpreview/#markdownpreview-api", "states": [],
+  "composesWith": ["component:markdown-editor"],
+  "constraints": ["Сырой HTML не отображается; опасные URL удаляются. Не MDX, нет выполнения кода и произвольных плагинов. Внешние изображения могут обращаться к сети. value — строка; обычные атрибуты относятся к контейнеру."],
+  "bindings": [{ "id": "react-adapter", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/unstyled", "exportName": "MarkdownPreviewAdapter",
+    "propertyDescriptions": { "value": "Исходный Markdown для безопасного отображения." },
+    "examples": [{ "id": "basic", "code": "import { MarkdownPreviewAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <MarkdownPreviewAdapter value='# Hello' aria-label='Preview' />; }" }] }]
+}

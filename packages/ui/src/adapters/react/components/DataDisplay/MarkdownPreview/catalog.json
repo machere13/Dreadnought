@@ -1,0 +1,6 @@
+{
+  "componentId": "component:markdown-preview",
+  "bindings": [{ "id": "react-ui", "layer": 3, "framework": "react", "importPath": "@dreadnought/ui/react", "exportName": "MarkdownPreview",
+    "propertyDescriptions": { "value": "Исходный Markdown. CommonMark и GFM, без сырого HTML.", "className": "Дополнительный класс контейнера." },
+    "examples": [{ "id": "basic", "code": "import { MarkdownPreview } from '@dreadnought/ui/react';\nconst example = <MarkdownPreview value='# Hello' aria-label='Preview' />;" }] }]
+}

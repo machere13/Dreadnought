@@ -213,7 +213,7 @@ export function Editor() {
       <button type="button" disabled={disabled || readOnly}
         onClick={() => execute({ type: 'bold' })}>Bold</button>} />;
 }`} />
-      <p className={styles.footnote}>onValueChange получает строки после ввода и команд; onChange вызывается только для реального ввода. В controlled-режиме синхронно обновляйте value для восстановления курсора. CRLF/CR нормализуются в LF. Tab и Shift+Enter остаются нативными. Программные команды не гарантируют включения в нативную undo-историю; preview и история редактора не входят в этот этап.</p>
+      <p className={styles.footnote}>onValueChange получает строки после ввода, команд и undo/redo; onChange вызывается только для реального ввода. В controlled-режиме синхронно обновляйте value для восстановления курсора и истории. CRLF/CR нормализуются в LF. Tab и Shift+Enter остаются нативными. История использует getHistoryState из core; undo/redo и режимы edit/live/preview доступны через controls. Во втором слое отображение передайте через renderPreview с MarkdownPreviewAdapter; третий слой подключает его оформление автоматически.</p>
     </section>
   </article>;
 }

@@ -10,6 +10,7 @@ const core = 'packages/core/src/components';
 const adapter = 'packages/adapters/react/src';
 const ui = 'packages/ui/src/adapters/react/components';
 export const components = [
+  { family: 'DataDisplay', name: 'MarkdownPreview', sources: [adapter, ui] },
   { family: 'Fields', name: 'MarkdownEditor', sources: [adapter, ui] },
   { family: 'Feedback', name: 'Toast', sources: [core, adapter, ui] },
   { family: 'Feedback', name: 'Loader', sources: [core, adapter, ui] },

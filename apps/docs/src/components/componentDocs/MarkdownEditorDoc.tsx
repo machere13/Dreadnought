@@ -7,16 +7,16 @@ import styles from '../DocsPage.module.css';
 function MarkdownEditorDemo() {
   const [value, setValue] = useState('# Заметки\n\nВыделите текст и выберите форматирование.');
   return <div className={styles.demo}>
-    <MarkdownEditor aria-label="Текст Markdown" value={value} onValueChange={setValue} autoSize minRows={6} maxRows={14} />
+    <MarkdownEditor aria-label="Текст Markdown" value={value} onValueChange={setValue} defaultPreview="live" autoSize minRows={6} maxRows={14} />
   </div>;
 }
 
 export const markdownEditorDoc: ComponentDoc = {
   ...getCatalogDoc('markdowneditor'),
   title: 'MarkdownEditor',
-  description: 'Поле Markdown с компактной панелью: выделение текста, форматирование и продолжение списков. Без preview и собственной истории undo.',
+  description: 'Редактор Markdown с форматированием, общей историей ввода и команд, отменой Ctrl/Cmd+Z и режимами редактирования, предпросмотра и двух панелей.',
   adapterDescription: 'MarkdownEditorAdapter связывает textarea и команды core без стилей; свою панель передайте через renderToolbar.',
-  logicDescription: 'useMarkdownEditor возвращает execute, значение, выделение и свойства textarea для своей разметки.',
-  footnote: 'Встроены жирный, курсив, зачёркивание, H2, цитата, два вида списков, код, блок кода, ссылка, изображение и таблица. Для ссылки и изображения вставляется редактируемый шаблон, загрузки файлов нет. toolbar=false скрывает панель; labels переводит подписи. ref, className и style относятся к textarea. В controlled-режиме синхронно принимайте onValueChange. Программные команды могут не попасть в нативную undo-историю.',
+  logicDescription: 'useMarkdownEditor возвращает execute, undo/redo, canUndo/canRedo, preview/setPreview, значение, выделение и свойства textarea для своей разметки.',
+  footnote: 'Иконка глаза включает предпросмотр, двух панелей — live, кода — edit. По умолчанию edit; defaultPreview задаёт начальный режим, preview/onPreviewChange — управляемый. Ctrl/Cmd+Z отменяет ввод и команды, Ctrl/Cmd+Shift+Z или Ctrl+Y повторяет. historyLimit ограничивает число полных снимков (100 по умолчанию). toolbar=false скрывает панель; labels переводит подписи. ref/className/style относятся к textarea. В controlled-режиме синхронно принимайте onValueChange; независимая внешняя замена текста сбрасывает историю. Preview поддерживает таблицы и списки задач, но не выполняет HTML и не загружает файлы. Внешние изображения могут обращаться к сети.',
   demo: <MarkdownEditorDemo />,
 };

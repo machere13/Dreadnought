@@ -3,26 +3,29 @@
   "kind": "component",
   "name": "MarkdownEditor",
   "family": "Fields",
-  "description": "Редактирование Markdown через команды core и textarea: независимый адаптер и готовый компонент с панелью форматирования.",
+  "description": "Редактирование Markdown: общая история ввода/команд и режимы edit/live/preview, независимый адаптер и готовая панель.",
   "docsUrl": "/components/markdowneditor/#markdowneditor-api",
   "states": ["disabled", "readOnly"],
-  "composesWith": ["domain:apply-markdown-command"],
+  "composesWith": ["domain:apply-markdown-command", "behavior:get-history-state", "component:markdown-preview"],
   "constraints": [
-    "Второй слой не подключает стили или панель. Третий слой добавляет тему и 12 действий; renderToolbar заменяет панель, toolbar=false скрывает её. Нет preview и рендерера. Задайте доступное имя поля через label или aria-label.",
-    "value/defaultValue — строки; CRLF/CR нормализуются в LF. onValueChange вызывается для ввода и команд; onChange — только для реального ввода. Выделение использует UTF-16 offsets.",
+    "Второй слой не подключает стили или панель; renderPreview задаёт отображение. Третий слой добавляет тему, 12 действий, историю и режимы, безопасный MarkdownPreview. renderToolbar заменяет панель; toolbar=false скрывает её. Задайте доступное имя поля через label или aria-label.",
+    "value/defaultValue — строки; CRLF/CR нормализуются в LF. onValueChange вызывается для ввода, команд и undo/redo; onChange — только для реального ввода. Выделение использует UTF-16 offsets.",
     "Controlled-владелец должен синхронно принять значение для восстановления выделения. Отказ, преобразование значения, новый ввод и замена элемента отменяют устаревшее восстановление. Несколько controlled-команд без commit не предугадывают принятие prop.",
-    "disabled/readOnly и IME блокируют команды. Tab, Shift+Enter и undo остаются нативными. Программные команды не гарантируют включения в нативную undo-историю.",
+    "disabled/readOnly и IME блокируют команды и undo/redo. Ctrl/Cmd+Z отменяет ввод и команды, Ctrl/Cmd+Shift+Z и Ctrl+Y повторяет. Tab и Shift+Enter нативные. historyLimit=100 ограничивает полные снимки; новая правка очищает redo. Поддержка ОС-жестов beforeinput зависит от браузера.",
+    "preview/defaultPreview: edit (по умолчанию), live или preview; preview/onPreviewChange управляют режимом. Переключение не уничтожает textarea и историю. В preview форматирование запрещено, undo/redo не фокусирует скрытое поле. Независимая внешняя замена controlled value сбрасывает историю.",
     "className/style и нативные атрибуты относятся к textarea; ref указывает на HTMLTextAreaElement. Uncontrolled form reset возвращает первоначальный defaultValue без callback."
   ],
   "bindings": [
     {
       "id": "react-logic", "layer": 2, "framework": "react",
       "importPath": "@dreadnought/react/logic", "exportName": "useMarkdownEditor",
+      "defaults": { "historyLimit": 100, "defaultPreview": "edit" },
       "examples": [{ "id": "custom", "code": "import { useMarkdownEditor } from '@dreadnought/react/logic';\nexport function Example() { const editor = useMarkdownEditor({defaultValue:'hello'}); return <><button type=\"button\" onClick={() => editor.execute({type:'bold'})}>Bold</button><textarea {...editor.textAreaProps} ref={editor.textAreaRef} aria-label=\"Markdown\" /></>; }" }]
     },
     {
       "id": "react-adapter", "layer": 2, "framework": "react",
       "importPath": "@dreadnought/react/unstyled", "exportName": "MarkdownEditorAdapter",
+      "defaults": { "historyLimit": 100, "defaultPreview": "edit" },
       "examples": [{ "id": "basic", "code": "import { MarkdownEditorAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <MarkdownEditorAdapter aria-label=\"Markdown\" defaultValue=\"hello\" renderToolbar={({execute,disabled,readOnly}) => <button type=\"button\" disabled={disabled || readOnly} onClick={() => execute({type:'bold'})}>Bold</button>} />; }" }]
     }
   ]

@@ -33,12 +33,23 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes safe MarkdownPreview and shared history with checked examples', () => {
+    const preview = catalog.entries.find(entry => entry.id === 'component:markdown-preview');
+    expect(preview).toMatchObject({ family: 'DataDisplay' });
+    expect(preview!.bindings.map(binding => binding.layer)).toEqual([2, 3]);
+    for (const binding of preview!.bindings) expect(() => checkExamples(context, binding.examples)).not.toThrow();
+    const history = catalog.entries.find(entry => entry.id === 'behavior:get-history-state');
+    expect(history).toMatchObject({ kind: 'behavior', name: 'getHistoryState' });
+    expect(() => checkExamples(context, history!.bindings[0].examples)).not.toThrow();
+  });
   it('publishes MarkdownEditor logic, adapter and ready UI with checked examples', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:markdown-editor');
-    expect(entry).toMatchObject({ family: 'Fields', composesWith: ['domain:apply-markdown-command'] });
+    expect(entry).toMatchObject({ family: 'Fields', composesWith: ['domain:apply-markdown-command', 'behavior:get-history-state', 'component:markdown-preview'] });
     expect(entry!.bindings.map(binding => binding.id)).toEqual(['react-logic', 'react-adapter', 'react-ui']);
     expect(entry!.bindings.map(binding => binding.layer)).toEqual([2, 2, 3]);
     expect(entry!.tokens.length).toBeGreaterThan(0);
+    const ready = entry!.bindings.find(binding => binding.id === 'react-ui')!;
+    expect(ready.contracts[0].variants[0].properties.map(property => property.name)).toEqual(expect.arrayContaining(['historyLimit', 'preview', 'defaultPreview', 'onPreviewChange', 'renderPreview']));
     for (const binding of entry!.bindings) expect(() => checkExamples(context, binding.examples)).not.toThrow();
   });
   it('publishes the Markdown domain with a checked framework-independent example', () => {
@@ -141,7 +152,7 @@ describe('public catalog', () => {
   });
   it('publishes standalone actions and behaviors with checked public contracts', () => {
     const capabilities = catalog.entries.filter(entry => entry.kind === 'action' || entry.kind === 'behavior');
-    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getComboboxKeyAction', 'getCountdownRemaining', 'getDisclosureOpen', 'getDisclosureState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getSteppedValue', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
+    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getComboboxKeyAction', 'getCountdownRemaining', 'getDisclosureOpen', 'getDisclosureState', 'getHistoryState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getSteppedValue', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
     expect(capabilities.every(entry => entry.tokens.length === 0 && entry.bindings.length === 1 && entry.bindings[0].layer === 1)).toBe(true);
     const selection = capabilities.find(entry => entry.name === 'getSelectionValue');
     expect(selection.bindings[0].contracts).toHaveLength(3);
