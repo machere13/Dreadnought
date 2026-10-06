@@ -8,6 +8,9 @@ const example = <MarkdownEditorAdapter ref={ref} value="hello" onValueChange={va
 const wrongValue = <MarkdownEditorAdapter value={1} />;
 function Example() {
   const editor = useMarkdownEditor();
+  editor.undo();
+  editor.redo();
+  editor.setPreview('live');
   // @ts-expect-error Heading levels come from core.
   editor.execute({ type: 'heading', level: 7 });
   return <textarea {...editor.textAreaProps} ref={editor.textAreaRef} />;

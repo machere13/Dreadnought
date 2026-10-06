@@ -1,0 +1,7 @@
+:root {
+  --dreadnought-markdown-preview-font-family: var(--dreadnought-font-family-ui);
+  --dreadnought-markdown-preview-code-font-family: var(--dreadnought-font-family-monospace);
+  --dreadnought-font-size-markdown-preview: var(--dreadnought-font-size-body-2);
+  --dreadnought-font-weight-markdown-preview: var(--dreadnought-font-weight-body-2);
+  --dreadnought-line-height-markdown-preview: var(--dreadnought-line-height-body-2);
+}

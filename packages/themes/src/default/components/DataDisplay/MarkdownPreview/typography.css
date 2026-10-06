@@ -1,0 +1,8 @@
+@layer dreadnought {
+  .dreadnought-text-markdown-preview {
+    font-family: var(--dreadnought-markdown-preview-font-family);
+    font-size: var(--dreadnought-font-size-markdown-preview);
+    font-weight: var(--dreadnought-font-weight-markdown-preview);
+    line-height: var(--dreadnought-line-height-markdown-preview);
+  }
+}

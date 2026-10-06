@@ -1,5 +1,6 @@
 import { CheckCircleOutlined, CheckOutlined, CloseCircleOutlined, CloseOutlined, CopyOutlined, DownOutlined, EllipsisOutlined, EyeInvisibleOutlined, EyeOutlined, InfoCircleOutlined, MenuOutlined, SearchOutlined, WarningOutlined } from '@ant-design/icons';
 import { BoldOutlined, ItalicOutlined, StrikethroughOutlined, FontSizeOutlined, DoubleRightOutlined, UnorderedListOutlined, OrderedListOutlined, CodeOutlined, FileTextOutlined, LinkOutlined, PictureOutlined, TableOutlined } from '@ant-design/icons';
+import { UndoOutlined, RedoOutlined, LayoutOutlined } from '@ant-design/icons';
 import { IconAdapter } from '@dreadnought/react/unstyled';
 import type { IconAdapterProps } from '@dreadnought/react/unstyled';
 import type { ComponentType } from 'react';
@@ -32,6 +33,9 @@ const icons = {
   link: LinkOutlined,
   image: PictureOutlined,
   table: TableOutlined,
+  undo: UndoOutlined,
+  redo: RedoOutlined,
+  columns: LayoutOutlined,
 } satisfies Record<IconName, ComponentType>;
 
 export type IconProps = Omit<IconAdapterProps, 'children'> & { name: IconName };

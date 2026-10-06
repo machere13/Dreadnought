@@ -35,4 +35,22 @@
     --dreadnought-text-area-padding-x: var(--dreadnought-markdown-editor-padding-x);
     --dreadnought-text-area-padding-y: var(--dreadnought-markdown-editor-padding-y);
   }
+
+  .root [data-ui='markdown-editor-panels'] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dreadnought-markdown-editor-divider-width);
+    background: var(--dreadnought-markdown-editor-divider);
+  }
+  .root :where([data-ui='markdown-editor-edit'], [data-ui='markdown-editor-preview']) {
+    flex: 1 1 var(--dreadnought-markdown-editor-panel-basis);
+    min-width: 0;
+    background: var(--dreadnought-markdown-editor-bg);
+  }
+  .root [data-ui='markdown-editor-preview'] {
+    padding: var(--dreadnought-markdown-editor-padding-y) var(--dreadnought-markdown-editor-padding-x);
+  }
+  .toolbar [aria-pressed='true'] {
+    --dreadnought-button-ghosted-bg: var(--dreadnought-markdown-editor-mode-selected-bg);
+  }
 }

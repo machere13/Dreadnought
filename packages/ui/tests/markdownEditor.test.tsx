@@ -21,14 +21,38 @@ it('formats through the ready toolbar and restores native selection', () => {
   expect(document.activeElement).toBe(field);
   expect(change).toHaveBeenCalledExactlyOnceWith('**hello**');
   expect(input).not.toHaveBeenCalled();
-  expect(screen.getByRole('toolbar').querySelectorAll('button')).toHaveLength(12);
+  expect(screen.getByRole('toolbar').querySelectorAll('button')).toHaveLength(17);
 });
 
 it.each(['disabled', 'readOnly'] as const)('blocks every toolbar action in %s mode', mode => {
   render(<ui.MarkdownEditor aria-label="Notes" defaultValue="hello" {...{ [mode]: true }} />);
-  for (const button of screen.getAllByRole('button')) expect((button as HTMLButtonElement).disabled).toBe(true);
+  for (const button of screen.getAllByRole('button').filter(button => !button.hasAttribute('aria-pressed'))) expect((button as HTMLButtonElement).disabled).toBe(true);
   fireEvent.click(screen.getByRole('button', { name: 'Жирный' }));
   expect((screen.getByRole('textbox') as HTMLTextAreaElement).value).toBe('hello');
+});
+
+it('shows a live preview and exposes history and selected mode controls', () => {
+  render(<ui.MarkdownEditor defaultValue="# Hello" defaultPreview="live" aria-label="Notes" />);
+  expect((screen.getByRole('button', { name: 'Отменить' }) as HTMLButtonElement).disabled).toBe(true);
+  expect(screen.getByRole('heading', { name: 'Hello' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Текст и предпросмотр' }).getAttribute('aria-pressed')).toBe('true');
+  const field = screen.getByRole('textbox') as HTMLTextAreaElement;
+  field.setSelectionRange(2, 7);
+  fireEvent.click(screen.getByRole('button', { name: 'Жирный' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Отменить' }));
+  expect(field.value).toBe('# Hello');
+  fireEvent.click(screen.getByRole('button', { name: 'Предпросмотр' }));
+  expect(screen.queryByRole('textbox')).toBeNull();
+  expect((screen.getByRole('button', { name: 'Жирный' }) as HTMLButtonElement).disabled).toBe(true);
+  expect(field.isConnected).toBe(true);
+});
+
+it('supports standalone styled preview and toolbar-free preview', () => {
+  const view = render(<ui.MarkdownPreview value="## Preview" aria-label="Rendered" />);
+  expect(screen.getByRole('heading', { name: 'Preview' })).toBeTruthy();
+  view.rerender(<ui.MarkdownEditor toolbar={false} preview="preview" value="## Preview" />);
+  expect(screen.queryByRole('toolbar')).toBeNull();
+  expect(screen.getByRole('heading', { name: 'Preview' })).toBeTruthy();
 });
 
 it('preserves controlled acceptance with an inline native ref', () => {

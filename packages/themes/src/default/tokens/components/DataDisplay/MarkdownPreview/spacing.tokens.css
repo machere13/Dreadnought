@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-markdown-preview-block-gap: var(--dreadnought-spacing-x4);
+  --dreadnought-markdown-preview-padding: var(--dreadnought-spacing-x4);
+  --dreadnought-markdown-preview-table-padding: var(--dreadnought-spacing-x2);
+  --dreadnought-markdown-preview-list-indent: var(--dreadnought-size-control-compact-min-height);
+}

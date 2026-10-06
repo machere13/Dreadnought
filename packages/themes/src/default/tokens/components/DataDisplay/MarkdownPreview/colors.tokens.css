@@ -1,0 +1,7 @@
+:root {
+  --dreadnought-markdown-preview-text: var(--dreadnought-color-text-primary);
+  --dreadnought-markdown-preview-muted-text: var(--dreadnought-color-text-placeholder);
+  --dreadnought-markdown-preview-link: var(--dreadnought-color-text-primary);
+  --dreadnought-markdown-preview-border: var(--dreadnought-color-border-subtle);
+  --dreadnought-markdown-preview-code-bg: var(--dreadnought-color-surface-subtle);
+}

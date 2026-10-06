@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-markdown-preview-border-width: var(--dreadnought-border-width-outline);
+  --dreadnought-markdown-preview-quote-width: var(--dreadnought-border-width-x3);
+  --dreadnought-markdown-preview-radius: var(--dreadnought-border-radius-x1);
+}

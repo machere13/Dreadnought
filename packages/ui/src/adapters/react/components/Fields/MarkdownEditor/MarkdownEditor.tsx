@@ -8,6 +8,7 @@ import { textAreaPresentation } from '#presentation/Fields/TextArea/textAreaPres
 import { Button } from '../../Controls/Button/index.ts';
 import { Toolbar } from '../../Controls/Toolbar/index.ts';
 import { Icon } from '../../DataDisplay/Icon/index.ts';
+import { MarkdownPreview } from '../../DataDisplay/MarkdownPreview/index.ts';
 
 const actions = [
   { id: 'bold', label: 'Жирный', icon: 'bold', command: { type: 'bold' } },
@@ -24,19 +25,19 @@ const actions = [
   { id: 'table', label: 'Таблица', icon: 'table', command: { type: 'table' } },
 ] as const satisfies readonly { id: string; label: string; icon: IconName; command: Parameters<MarkdownEditorControls['execute']>[0] }[];
 
-export type MarkdownEditorLabels = Record<typeof actions[number]['id'] | 'toolbar', string>;
+export type MarkdownEditorLabels = Record<typeof actions[number]['id'] | 'toolbar' | 'undo' | 'redo' | 'edit' | 'preview' | 'live', string>;
 export type MarkdownEditorProps = MarkdownEditorAdapterProps & {
   toolbar?: boolean;
   labels?: Partial<MarkdownEditorLabels>;
 };
 
-function CommandButton({ action, label, execute, disabled }: { action: typeof actions[number]; label: string; execute: MarkdownEditorControls['execute']; disabled: boolean }) {
-  const { itemProps } = useToolbarItem<HTMLButtonElement>({ value: action.id, disabled });
+function ToolbarButton({ id, label, icon, onClick, disabled = false, pressed }: { id: string; label: string; icon: IconName; onClick: () => void; disabled?: boolean; pressed?: boolean }) {
+  const { itemProps } = useToolbarItem<HTMLButtonElement>({ value: id, disabled });
   return <Button {...itemProps} type="button" size="compact" variant="ghosted" aria-label={label} title={label}
-    icon={<Icon name={action.icon} />} disabled={disabled} onClick={() => execute(action.command)} />;
+    icon={<Icon name={icon} />} disabled={disabled} aria-pressed={pressed} onClick={onClick} />;
 }
 
-export function MarkdownEditor({ toolbar = true, labels, renderToolbar, className, style, rows = 8, ...props }: MarkdownEditorProps) {
+export function MarkdownEditor({ toolbar = true, labels, renderToolbar, renderPreview, className, style, rows = 8, ...props }: MarkdownEditorProps) {
   const bounds = {
     ...style,
     '--dreadnought-text-area-min-rows': !props.autoSize && (props.minRows !== undefined || props.maxRows !== undefined)
@@ -46,10 +47,16 @@ export function MarkdownEditor({ toolbar = true, labels, renderToolbar, classNam
   return <div className={markdownEditorPresentation.root} data-invalid={props.invalid || undefined}>
     <MarkdownEditorAdapter {...props} rows={rows} style={bounds}
       className={[textAreaPresentation.root, markdownEditorPresentation.field, className].filter(Boolean).join(' ')}
-      renderToolbar={!toolbar ? undefined : renderToolbar ?? (({ execute, disabled, readOnly }) =>
+      renderPreview={renderPreview ?? (value => <MarkdownPreview value={value} />)}
+      renderToolbar={!toolbar ? undefined : renderToolbar ?? ((controls) =>
         <Toolbar className={markdownEditorPresentation.toolbar} aria-label={labels?.toolbar ?? 'Форматирование Markdown'}>
-          {actions.map(action => <CommandButton key={action.id} action={action} label={labels?.[action.id] ?? action.label}
-            execute={execute} disabled={disabled || readOnly} />)}
+          {actions.map(action => <ToolbarButton key={action.id} id={action.id} label={labels?.[action.id] ?? action.label} icon={action.icon}
+            onClick={() => controls.execute(action.command)} disabled={controls.disabled || controls.readOnly || controls.preview === 'preview'} />)}
+          <ToolbarButton id="undo" label={labels?.undo ?? 'Отменить'} icon="undo" onClick={controls.undo} disabled={!controls.canUndo} />
+          <ToolbarButton id="redo" label={labels?.redo ?? 'Повторить'} icon="redo" onClick={controls.redo} disabled={!controls.canRedo} />
+          <ToolbarButton id="edit" label={labels?.edit ?? 'Редактирование'} icon="code" onClick={() => controls.setPreview('edit')} pressed={controls.preview === 'edit'} />
+          <ToolbarButton id="live" label={labels?.live ?? 'Текст и предпросмотр'} icon="columns" onClick={() => controls.setPreview('live')} pressed={controls.preview === 'live'} />
+          <ToolbarButton id="preview" label={labels?.preview ?? 'Предпросмотр'} icon="eye" onClick={() => controls.setPreview('preview')} pressed={controls.preview === 'preview'} />
         </Toolbar>)} />
   </div>;
 }

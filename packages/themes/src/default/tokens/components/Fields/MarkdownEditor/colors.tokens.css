@@ -1,4 +1,5 @@
 :root {
+  --dreadnought-markdown-editor-mode-selected-bg: var(--dreadnought-color-surface-selected);
   --dreadnought-markdown-editor-bg: var(--dreadnought-color-surface-default);
   --dreadnought-markdown-editor-toolbar-bg: var(--dreadnought-color-surface-subtle);
   --dreadnought-markdown-editor-text: var(--dreadnought-color-text-primary);
