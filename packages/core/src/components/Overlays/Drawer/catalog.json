@@ -1,0 +1,36 @@
+{
+  "id": "component:drawer",
+  "kind": "component",
+  "name": "Drawer",
+  "family": "Overlays",
+  "description": "Модальная панель у одного из четырёх краёв экрана.",
+  "docsUrl": "/components/drawer/#drawer-api",
+  "states": [
+    "open",
+    "disabled"
+  ],
+  "composesWith": [
+    "component:modal"
+  ],
+  "constraints": [
+    "getDrawerState — явный алиас getModalState: общий контракт без визуальных свойств.",
+    "Core задаёт доступную связь между кнопкой и диалогом, не управляет DOM или фокусом.",
+    "React использует showModal(): необходим браузер с native HTMLDialogElement.",
+    "Содержимое должно предоставлять доступный способ закрытия, например кнопку с close()."
+  ],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "getDrawerState",
+      "examples": [
+        {
+          "id": "state",
+          "code": "import { getDrawerState } from '@dreadnought/core';\nconst state = getDrawerState({ triggerId: 'edit-button', panelId: 'profile-dialog', open: true });"
+        }
+      ]
+    }
+  ]
+}

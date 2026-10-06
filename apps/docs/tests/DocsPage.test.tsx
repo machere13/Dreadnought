@@ -13,6 +13,31 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('documents Drawer with a working form and visual-only API', () => {
+    Object.defineProperties(HTMLDialogElement.prototype, {
+      showModal: { configurable: true, value() { this.open = true; } },
+      close: { configurable: true, value() { this.open = false; this.dispatchEvent(new Event('close')); } },
+    });
+    try {
+      render(<DocsPage section="drawer" />);
+      expect(screen.getByRole('heading', { name: 'Drawer', level: 1 })).toBeTruthy();
+      expect(screen.getByRole('rowheader', { name: 'placement' })).toBeTruthy();
+      expect(screen.getByRole('rowheader', { name: 'size' })).toBeTruthy();
+      expect(screen.getByRole('link', { name: 'Drawer' }).getAttribute('href')).toBe('/components/drawer/');
+      const trigger = screen.getByRole('button', { name: 'Настроить профиль' });
+      trigger.focus(); fireEvent.click(trigger);
+      const field = screen.getByRole('textbox', { name: 'Имя профиля' });
+      fireEvent.change(field, { target: { value: 'Ada' } });
+      expect((field as HTMLInputElement).value).toBe('Ada');
+      field.focus(); fireEvent.click(screen.getByRole('button', { name: 'Сохранить профиль' }));
+      expect(screen.queryByRole('dialog')).toBeNull();
+      expect(document.activeElement).toBe(trigger);
+    } finally {
+      cleanup();
+      delete (HTMLDialogElement.prototype as Partial<HTMLDialogElement>).showModal;
+      delete (HTMLDialogElement.prototype as Partial<HTMLDialogElement>).close;
+    }
+  });
   it('documents Modal with a working form and explicit closure', () => {
     Object.defineProperties(HTMLDialogElement.prototype, {
       showModal: { configurable: true, value() { this.open = true; } },

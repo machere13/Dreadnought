@@ -33,6 +33,21 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes Drawer aliases and visual-only placement and size', () => {
+    const entry = catalog.entries.find(entry => entry.id === 'component:drawer');
+    expect(entry).toMatchObject({ family: 'Overlays', composesWith: ['component:modal'] });
+    expect(entry!.constraints.join(' ')).not.toContain('showDrawer()');
+    expect(entry!.bindings.map(binding => binding.exportName)).toEqual(['getDrawerState', 'DrawerAdapter', 'useDrawer', 'Drawer']);
+    for (const binding of entry!.bindings) expect(() => checkExamples(context, binding.examples)).not.toThrow();
+    const styled = entry!.bindings.find(binding => binding.id === 'react-ui')!;
+    expect(styled.contracts[0].variants[0].properties.map(property => property.name)).toEqual(expect.arrayContaining(['placement', 'size']));
+    for (const binding of entry!.bindings.filter(binding => binding.layer === 2)) {
+      const names = binding.contracts[0].variants[0].properties.map(property => property.name);
+      expect(names).not.toContain('placement');
+      expect(names).not.toContain('size');
+    }
+    expect(entry!.tokens.length).toBeGreaterThan(0);
+  });
   it('publishes safe MarkdownPreview and shared history with checked examples', () => {
     const preview = catalog.entries.find(entry => entry.id === 'component:markdown-preview');
     expect(preview).toMatchObject({ family: 'DataDisplay' });

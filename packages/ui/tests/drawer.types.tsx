@@ -1,10 +1,8 @@
-import { Button, Drawer, Input } from '../src/adapters/react/index.ts';
+import { Button, Drawer, Input } from '@dreadnought/ui/react';
 import { DrawerAdapter } from '@dreadnought/react/unstyled';
 import { useDrawer } from '@dreadnought/react/logic';
-import { getDrawerState } from '@dreadnought/core';
-import { drawerPresentation } from '../src/presentation/index.ts';
+import { drawerPresentation } from '@dreadnought/ui';
 
-getDrawerState({ triggerId: 'trigger', panelId: 'drawer', open: true });
 export const Styled = <Drawer placement="left" size={320} aria-label="Profile" className={drawerPresentation.root}
   content={({ close }) => <><Input aria-label="Name" /><Button onClick={close}>Done</Button></>}>
   {trigger => <Button {...trigger}>Edit</Button>}

@@ -1,0 +1,33 @@
+{
+  "componentId": "component:drawer",
+  "constraints": [
+    "Drawer использует DrawerAdapter — общий native Modal lifecycle, но собственное оформление.",
+    "placement задаёт край: right, left, top или bottom. size задаёт ширину боковой панели или высоту верхней/нижней.",
+    "Положительное конечное число size — пиксели, строка — CSS-размер; невалидные числа оставляют размер темы или локального токена.",
+    "Входная анимация отключается при prefers-reduced-motion. Закрытие немедленное; содержимое сохраняется смонтированным.",
+    "Кнопка закрытия, заголовок и footer задаются приложением. Необходимы доступное имя и поддержка dialog.showModal()."
+  ],
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Drawer",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Button, Drawer, Input } from '@dreadnought/ui/react';\nexport function Example() { return <Drawer placement=\"right\" size={384} aria-label=\"Settings\" content={({ close }) => <><Input aria-label=\"Name\" /><Button onClick={close}>Done</Button></>}>{trigger => <Button {...trigger}>Open</Button>}</Drawer>; }"
+        }
+      ],
+      "defaults": {
+        "placement": "right",
+        "size": "var(--dreadnought-drawer-size)"
+      },
+      "propertyDescriptions": {
+        "placement": "Край экрана; по умолчанию right.",
+        "size": "Ширина для left/right, высота для top/bottom. Число — px, строка — CSS-размер."
+      }
+    }
+  ]
+}
