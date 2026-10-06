@@ -1,0 +1,30 @@
+{
+  "id": "component:loader",
+  "kind": "component",
+  "name": "Loader",
+  "family": "Feedback",
+  "description": "Индикатор загрузки отдельно или поверх содержимого.",
+  "docsUrl": "/components/loader/#loader-api",
+  "states": [
+    "loading"
+  ],
+  "constraints": [
+    "Без children — отдельный индикатор, с children — загрузка поверх содержимого; содержимое остаётся смонтированным и становится inert.",
+    "Состояние загрузки и доступное имя не означают числовой прогресс. Полноэкранный прелоадер — сценарий размещения Loader, не отдельный компонент."
+  ],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "getLoaderState",
+      "examples": [
+        {
+          "id": "state",
+          "code": "import { getLoaderState } from '@dreadnought/core';\nconst state = getLoaderState({ loading: true });"
+        }
+      ]
+    }
+  ]
+}

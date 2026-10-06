@@ -1,5 +1,13 @@
 [
   {
+    "id": "behavior:get-countdown-remaining", "kind": "behavior", "name": "getCountdownRemaining", "family": "Behaviors",
+    "description": "Вычисляет оставшееся время после прошедшего интервала без таймера, React или DOM.",
+    "docsUrl": "/components/toast/#toast-api", "composesWith": ["component:toast"],
+    "constraints": ["remaining и elapsed — конечные неотрицательные миллисекунды. Результат не меньше 0. Планирование, часы, состояние и паузу обеспечивает адаптер."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getCountdownRemaining",
+      "examples": [{ "id": "remaining", "code": "import { getCountdownRemaining } from '@dreadnought/core';\nconst remaining = getCountdownRemaining(3000, 1000);" }] }]
+  },
+  {
     "id": "behavior:get-stepped-value",
     "kind": "behavior",
     "name": "getSteppedValue",

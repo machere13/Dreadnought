@@ -1,0 +1,8 @@
+@layer dreadnought {
+  .dreadnought-text-loader {
+    font-family: var(--dreadnought-font-family-ui);
+    font-size: var(--dreadnought-font-size-loader);
+    font-weight: var(--dreadnought-font-weight-loader);
+    line-height: var(--dreadnought-line-height-loader);
+  }
+}

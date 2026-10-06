@@ -1,0 +1,31 @@
+{
+  "id": "component:toast",
+  "kind": "component",
+  "name": "Toast",
+  "family": "Feedback",
+  "description": "Временное всплывающее уведомление с паузой таймера при наведении и фокусе.",
+  "docsUrl": "/components/toast/#toast-api",
+  "states": [
+    "open"
+  ],
+  "constraints": [
+    "ToastViewport размещает уведомления в стопке; монтируйте один контейнер в корне приложения. placement: top-start, top, top-end, bottom-start, bottom, bottom-end.",
+    "duration — конечные миллисекунды от 0 до 2147483647, 0 оставляет уведомление до ручного закрытия. При наведении и фокусе сохраняется оставшееся время. Уведомление не перехватывает фокус.",
+    "В controlled-режиме onOpenChange(false) запрашивает закрытие; внешний владелец меняет open. Повторное открытие или изменение duration начинает новый отсчёт."
+  ],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "getToastState",
+      "examples": [
+        {
+          "id": "state",
+          "code": "import { getToastState } from '@dreadnought/core';\nconst state = getToastState({ open: true, type: \"success\" });"
+        }
+      ]
+    }
+  ]
+}

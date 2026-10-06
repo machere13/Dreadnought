@@ -1,0 +1,20 @@
+@layer dreadnought {
+  .root { position: relative; display: inline-flex; color: var(--dreadnought-loader-fg); }
+  .root[data-overlay] { display: block; }
+  .indicator { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--dreadnought-loader-gap); }
+  .root[data-overlay] > .indicator { position: absolute; inset: 0; background: var(--dreadnought-loader-overlay-bg); border-radius: var(--dreadnought-loader-radius); }
+  .content { min-width: 0; }
+  .root[data-loading] > .content { opacity: var(--dreadnought-loader-content-opacity); }
+  .graphic { display: inline-flex; align-items: center; justify-content: center; width: var(--dreadnought-loader-size); height: var(--dreadnought-loader-size); }
+  .root[data-size="small"] { --dreadnought-loader-size: var(--dreadnought-loader-small-size); }
+  .root[data-size="large"] { --dreadnought-loader-size: var(--dreadnought-loader-large-size); }
+  .root:not([data-custom-indicator]) .graphic {
+    box-sizing: border-box; border: var(--dreadnought-loader-border-width) solid var(--dreadnought-loader-track);
+    border-top-color: var(--dreadnought-loader-fg); border-radius: var(--dreadnought-loader-circle-radius);
+    animation: spin var(--dreadnought-loader-duration) linear infinite;
+  }
+  .graphic svg { width: 100%; height: 100%; }
+  .label { text-align: center; }
+  @keyframes spin { to { transform: rotate(var(--dreadnought-loader-rotation)); } }
+  @media (prefers-reduced-motion: reduce) { .root:not([data-custom-indicator]) .graphic { animation: none; } }
+}

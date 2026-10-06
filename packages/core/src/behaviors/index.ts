@@ -18,3 +18,4 @@ export { getDisclosureState } from './getDisclosureState.ts';
 export type { DisclosureState, DisclosureStateOptions } from './getDisclosureState.ts';
 export { getDisclosureOpen } from './getDisclosureOpen.ts';
 export type { DisclosureAction, DisclosureOptions } from './getDisclosureOpen.ts';
+export { getCountdownRemaining } from './getCountdownRemaining.ts';

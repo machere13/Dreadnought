@@ -21,3 +21,5 @@ export * from './Visualization/RadarChart/index.ts';
 export * from './Visualization/LineChart/index.ts';
 export * from './Visualization/BarChart/index.ts';
 export * from './Overlays/Tooltip/index.ts';
+export * from './Feedback/Toast/index.ts';
+export * from './Feedback/Loader/index.ts';

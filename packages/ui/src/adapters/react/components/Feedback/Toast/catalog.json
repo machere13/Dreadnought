@@ -1,0 +1,58 @@
+{
+  "componentId": "component:toast",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Toast",
+      "propertyDescriptions": {
+        "title": "Содержимое уведомления.",
+        "description": "Подробное описание.",
+        "type": "Тип уведомления и приоритет объявления.",
+        "open": "Управляемая видимость.",
+        "defaultOpen": "Начальная видимость.",
+        "duration": "Время до закрытия в миллисекундах; 0 отключает таймер.",
+        "onOpenChange": "Запрос изменения видимости.",
+        "icon": "Свой значок; null скрывает стандартный.",
+        "action": "Дополнительное действие.",
+        "closable": "Кнопка закрытия и Escape внутри уведомления.",
+        "closeIcon": "Свой значок закрытия.",
+        "closeLabel": "Доступное имя кнопки закрытия.",
+        "slotClassNames": "Классы частей уведомления."
+      },
+      "defaults": {
+        "defaultOpen": true,
+        "duration": 3000,
+        "type": "info",
+        "closable": true
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Toast, ToastViewport } from '@dreadnought/ui/react';\nexport function Example() { return <ToastViewport placement=\"top-end\"><Toast title=\"Сохранено\" type=\"success\" closeLabel=\"Закрыть уведомление\" /></ToastViewport>; }"
+        }
+      ]
+    },
+    {
+      "id": "react-ui-viewport",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "ToastViewport",
+      "propertyDescriptions": {
+        "placement": "Положение стопки уведомлений."
+      },
+      "defaults": {
+        "placement": "top-end"
+      },
+      "examples": [
+        {
+          "id": "stack",
+          "code": "import { Toast, ToastViewport } from '@dreadnought/ui/react';\nexport function Example() { return <ToastViewport placement=\"top-end\"><Toast title=\"Сохранено\" type=\"success\" closeLabel=\"Закрыть уведомление\" /></ToastViewport>; }"
+        }
+      ]
+    }
+  ]
+}

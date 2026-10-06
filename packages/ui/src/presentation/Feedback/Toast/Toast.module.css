@@ -1,0 +1,42 @@
+@layer dreadnought {
+  .root {
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--dreadnought-toast-gap);
+    padding: var(--dreadnought-toast-padding);
+    border: var(--dreadnought-toast-border-width) solid var(--dreadnought-toast-border);
+    border-radius: var(--dreadnought-toast-radius);
+    background: var(--dreadnought-toast-bg);
+    color: var(--dreadnought-toast-fg);
+    pointer-events: auto;
+  }
+  .content { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .title { margin: 0; }
+  .description { margin-block-start: var(--dreadnought-toast-gap); color: var(--dreadnought-toast-description-fg); }
+  .action { margin-block-start: var(--dreadnought-toast-gap); }
+  .icon { display: inline-flex; flex: none; font-size: var(--dreadnought-toast-icon-size); color: var(--dreadnought-toast-info); }
+  .root[data-type="success"] .icon { color: var(--dreadnought-toast-success); }
+  .root[data-type="warning"] .icon { color: var(--dreadnought-toast-warning); }
+  .root[data-type="error"] .icon { color: var(--dreadnought-toast-error); }
+  .close {
+    display: inline-flex; flex: none; align-items: center; justify-content: center;
+    width: var(--dreadnought-toast-close-size); height: var(--dreadnought-toast-close-size);
+    margin: 0; padding: 0; border: 0; border-radius: var(--dreadnought-toast-radius);
+    background: transparent; color: inherit; cursor: pointer; font: inherit;
+  }
+  .close:hover { background: var(--dreadnought-toast-close-hover-bg); }
+  .close:focus-visible { outline: var(--dreadnought-toast-focus-width) solid var(--dreadnought-toast-focus-ring); }
+  .viewport {
+    position: fixed; z-index: var(--dreadnought-toast-z-index);
+    display: flex; flex-direction: column; gap: var(--dreadnought-toast-gap);
+    width: min(var(--dreadnought-toast-width), calc(100% - 2 * var(--dreadnought-toast-inset)));
+    max-height: calc(100dvh - 2 * var(--dreadnought-toast-inset));
+    overflow-y: auto; pointer-events: none;
+  }
+  .viewport[data-placement^="top"] { top: var(--dreadnought-toast-inset); }
+  .viewport[data-placement^="bottom"] { bottom: var(--dreadnought-toast-inset); }
+  .viewport[data-placement$="start"] { inset-inline-start: var(--dreadnought-toast-inset); }
+  .viewport[data-placement$="end"] { inset-inline-end: var(--dreadnought-toast-inset); }
+  .viewport[data-placement="top"], .viewport[data-placement="bottom"] { left: 50%; transform: translateX(-50%); }
+}

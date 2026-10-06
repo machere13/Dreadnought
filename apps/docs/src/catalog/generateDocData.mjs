@@ -2,9 +2,16 @@ import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+function apiOwner(entry, binding) {
+  if (binding.propertyPath?.length) return [entry.name, ...binding.propertyPath].join('.');
+  const name = binding.exportName?.replace(/Adapter$/, '');
+  return binding.layer > 1 && binding.id !== 'react-logic' && name && name !== entry.name ? name : entry.name;
+}
+
 function apiRows(entry, binding) {
+  const owner = apiOwner(entry, binding);
   const peers = entry.bindings.filter((item) =>
-    JSON.stringify(item.propertyPath ?? []) === JSON.stringify(binding.propertyPath ?? []));
+    apiOwner(entry, item) === owner);
   const descriptions = Object.assign({}, ...peers.map((item) => item.propertyDescriptions), binding.propertyDescriptions);
   const defaults = Object.assign({}, ...peers.map((item) => item.defaults), binding.defaults);
   const props = new Map();
@@ -17,7 +24,7 @@ function apiRows(entry, binding) {
       props.set(prop.name, previous);
     }
   }
-  const prefix = binding.propertyPath?.length ? `${entry.name}.${binding.propertyPath.join('.')}.` : '';
+  const prefix = owner !== entry.name ? `${owner}.` : '';
   return [...props].map(([name, variants]) => {
     const types = [...new Set(variants.map((prop) => prop.values?.join(' | ') ?? prop.type.replace(/ \| undefined/g, '')))].filter((type) => type !== 'undefined');
     const fallback = Object.hasOwn(defaults, name) ? String(typeof defaults[name] === 'object' ? JSON.stringify(defaults[name]) : defaults[name]) : '—';

@@ -1,0 +1,50 @@
+{
+  "componentId": "component:toast",
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "ToastAdapter",
+      "propertyDescriptions": {
+        "title": "Содержимое уведомления.",
+        "description": "Подробное описание.",
+        "type": "Тип уведомления и приоритет объявления.",
+        "open": "Управляемая видимость.",
+        "defaultOpen": "Начальная видимость.",
+        "duration": "Время до закрытия в миллисекундах; 0 отключает таймер.",
+        "onOpenChange": "Запрос изменения видимости.",
+        "icon": "Свой значок; null скрывает стандартный.",
+        "action": "Дополнительное действие.",
+        "closable": "Кнопка закрытия и Escape внутри уведомления.",
+        "closeIcon": "Свой значок закрытия.",
+        "closeLabel": "Доступное имя кнопки закрытия.",
+        "slotClassNames": "Классы частей уведомления."
+      },
+      "defaults": {
+        "defaultOpen": true,
+        "duration": 3000,
+        "type": "info",
+        "closable": true
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { ToastAdapter, ToastViewportAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <ToastViewportAdapter><ToastAdapter title=\"Сохранено\" closeLabel=\"Закрыть уведомление\" /></ToastViewportAdapter>; }"
+        }
+      ]
+    },
+    {
+      "id": "react-adapter-viewport", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/unstyled", "exportName": "ToastViewportAdapter",
+      "propertyDescriptions": { "placement": "Положение контейнера; адаптер сам не задаёт CSS." },
+      "defaults": { "placement": "top-end" },
+      "examples": [{ "id": "stack", "code": "import { ToastAdapter, ToastViewportAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <ToastViewportAdapter><ToastAdapter title=\"Сохранено\" /></ToastViewportAdapter>; }" }]
+    },
+    {
+      "id": "react-logic", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/logic", "exportName": "useToast",
+      "defaults": { "defaultOpen": true, "duration": 3000 },
+      "examples": [{ "id": "basic", "code": "import { useToast } from '@dreadnought/react/logic';\nimport { getToastState } from '@dreadnought/core';\nexport function Example() {\n  const toast = useToast();\n  const state = getToastState({ open: toast.open });\n  if (!state.open) return null;\n  return <div {...state.rootProps} onMouseEnter={() => toast.setHovered(true)} onMouseLeave={() => toast.setHovered(false)} onFocus={() => toast.setFocused(true)} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) toast.setFocused(false); }}>Сохранено<button onClick={toast.close}>Закрыть</button></div>;\n}" }]
+    }
+  ]
+}

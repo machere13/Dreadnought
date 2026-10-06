@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-loader-fg: var(--dreadnought-color-text-primary);
+  --dreadnought-loader-track: var(--dreadnought-color-border-subtle);
+  --dreadnought-loader-overlay-bg: var(--dreadnought-color-surface-overlay);
+}

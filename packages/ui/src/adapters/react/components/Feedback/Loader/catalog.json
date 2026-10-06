@@ -1,0 +1,33 @@
+{
+  "componentId": "component:loader",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Loader",
+      "propertyDescriptions": {
+        "loading": "Показывает загрузку и блокирует вложенное содержимое.",
+        "label": "Доступное имя индикатора.",
+        "showLabel": "Отображает подпись.",
+        "indicator": "Свой индикатор вместо стандартного кольца.",
+        "size": "Размер стандартного индикатора.",
+        "children": "Содержимое, поверх которого показывается загрузка.",
+        "slotClassNames": "Классы частей компонента."
+      },
+      "defaults": {
+        "loading": true,
+        "label": "Loading",
+        "showLabel": false,
+        "size": "default"
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Loader } from '@dreadnought/ui/react';\nexport function Example() { return <Loader label=\"Загрузка данных\" showLabel><button>Сохранить</button></Loader>; }"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+:root {
+  --dreadnought-loader-duration: var(--dreadnought-motion-duration-standard);
+  --dreadnought-loader-rotation: var(--dreadnought-motion-rotation-full);
+}

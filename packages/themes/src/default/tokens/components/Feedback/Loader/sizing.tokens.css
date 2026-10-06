@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-loader-size: var(--dreadnought-size-control-compact-min-height);
+  --dreadnought-loader-small-size: var(--dreadnought-size-inline-graphic);
+  --dreadnought-loader-large-size: var(--dreadnought-size-x1);
+  --dreadnought-loader-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-loader-circle-radius: var(--dreadnought-border-radius-circle);
+  --dreadnought-loader-border-width: var(--dreadnought-border-width-x2);
+}

@@ -1,4 +1,5 @@
 :root {
+  --dreadnought-color-surface-overlay: rgb(23 23 23 / 60%);
   --dreadnought-color-surface-canvas: rgb(23 23 23 / 100%);
   --dreadnought-color-surface-default: rgb(40 40 40 / 100%);
   --dreadnought-color-surface-subtle: rgb(48 48 48 / 100%);

@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-font-size-loader: var(--dreadnought-font-size-body-2);
+  --dreadnought-font-weight-loader: var(--dreadnought-font-weight-body-2);
+  --dreadnought-line-height-loader: var(--dreadnought-line-height-body-2);
+}

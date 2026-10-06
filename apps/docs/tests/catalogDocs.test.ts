@@ -5,6 +5,26 @@ import path from 'node:path';
 import { expect, it } from 'vitest';
 import { prepareCatalogDocs } from '../src/catalog/generateDocData.mjs';
 
+it('keeps a separately exported viewport API distinct from its toast', () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'dreadnought-docs-viewport-'));
+  const binding = (id: string, layer: number, exportName: string, name: string, origin: string) => ({
+    id, layer, exportName, propertyDescriptions: { [name]: name }, defaults: {}, examples: [{ code: 'public example' }],
+    contracts: [{ variants: [{ properties: [{ name, type: 'string', origin }, { name: 'title', type: 'string', origin: 'native' }] }] }],
+  });
+  try {
+    const input = path.join(root, 'tools/catalog/dist/catalog.json');
+    mkdirSync(path.dirname(input), { recursive: true });
+    writeFileSync(input, JSON.stringify({ packageVersions: {}, entries: [{ kind: 'component', name: 'Toast', bindings: [
+      binding('react-adapter', 2, 'ToastAdapter', 'title', 'library'),
+      binding('react-ui', 3, 'Toast', 'title', 'library'),
+      binding('react-ui-viewport', 3, 'ToastViewport', 'placement', 'library'),
+    ] }] }));
+    prepareCatalogDocs(root);
+    const rows = JSON.parse(readFileSync(path.join(root, 'apps/docs/src/generated/catalog-docs.json'), 'utf8')).components.toast.apiRows;
+    expect(rows.map((row: string[]) => row[0])).toEqual(['title', 'ToastViewport.placement']);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
 it('projects adapter-only API and related core without claiming a ready component', () => {
   const root = mkdtempSync(path.join(tmpdir(), 'dreadnought-docs-l2-'));
   const input = path.join(root, 'tools/catalog/dist/catalog.json');

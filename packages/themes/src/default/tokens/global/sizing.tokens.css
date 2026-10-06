@@ -1,4 +1,5 @@
 :root {
+  --dreadnought-size-x5: 24rem;
   --dreadnought-size-choice-control: 1.125rem;
   --dreadnought-border-radius-choice: 4px;
   --dreadnought-size-control-min-height: 2.75rem;

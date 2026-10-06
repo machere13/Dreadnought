@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-toast-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-toast-border-width: var(--dreadnought-border-width-outline);
+  --dreadnought-toast-focus-width: var(--dreadnought-border-width-x2);
+  --dreadnought-toast-width: var(--dreadnought-size-x5);
+  --dreadnought-toast-icon-size: var(--dreadnought-size-inline-graphic);
+  --dreadnought-toast-close-size: var(--dreadnought-size-control-compact-min-height);
+}

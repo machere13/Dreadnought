@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-toast-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-toast-padding: var(--dreadnought-spacing-x4);
+  --dreadnought-toast-inset: var(--dreadnought-spacing-x4);
+}

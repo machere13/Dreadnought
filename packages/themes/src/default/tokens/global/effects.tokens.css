@@ -1,4 +1,5 @@
 :root {
+  --dreadnought-z-index-notification: 1000;
   --dreadnought-opacity-disabled: 0.55;
   --dreadnought-opacity-chart-fill: 0.14;
   --dreadnought-stroke-dash-solid: none;

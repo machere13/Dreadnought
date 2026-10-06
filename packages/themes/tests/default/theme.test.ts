@@ -157,6 +157,8 @@ describe('default theme', () => {
       "@import './components/Navigation/Menu/index.css';",
       "@import './components/Navigation/Accordion/index.css';",
       "@import './components/Feedback/Alert/index.css';",
+      "@import './components/Feedback/Toast/index.css';",
+      "@import './components/Feedback/Loader/index.css';",
       "@import './components/Navigation/Breadcrumb/index.css';",
       "@import './components/Layout/Layout/index.css';",
       "@import './components/Fields/Checkbox/index.css';",

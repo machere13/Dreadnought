@@ -1,0 +1,12 @@
+:root {
+  --dreadnought-toast-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-toast-fg: var(--dreadnought-color-text-primary);
+  --dreadnought-toast-border: var(--dreadnought-color-border-subtle);
+  --dreadnought-toast-description-fg: var(--dreadnought-color-text-placeholder);
+  --dreadnought-toast-info: var(--dreadnought-color-status-info);
+  --dreadnought-toast-success: var(--dreadnought-color-status-success);
+  --dreadnought-toast-warning: var(--dreadnought-color-status-warning);
+  --dreadnought-toast-error: var(--dreadnought-color-status-error);
+  --dreadnought-toast-close-hover-bg: var(--dreadnought-color-surface-hover);
+  --dreadnought-toast-focus-ring: var(--dreadnought-color-focus-ring);
+}

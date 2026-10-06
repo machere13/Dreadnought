@@ -1,0 +1,31 @@
+{
+  "componentId": "component:loader",
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "LoaderAdapter",
+      "propertyDescriptions": {
+        "loading": "Показывает загрузку и блокирует вложенное содержимое.",
+        "label": "Доступное имя индикатора.",
+        "showLabel": "Отображает подпись.",
+        "indicator": "Свой индикатор вместо стандартного кольца.",
+        "children": "Содержимое, поверх которого показывается загрузка.",
+        "slotClassNames": "Классы частей компонента."
+      },
+      "defaults": {
+        "loading": true,
+        "label": "Loading",
+        "showLabel": false
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { LoaderAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <LoaderAdapter label=\"Загрузка\" indicator={<span>…</span>} />; }"
+        }
+      ]
+    }
+  ]
+}
