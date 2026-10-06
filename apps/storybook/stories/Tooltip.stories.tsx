@@ -9,3 +9,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 export const Disabled: Story = { args: { disabled: true } };
 export const LongContent: Story = { args: { content: 'Подсказка переносится на несколько строк и остаётся открытой, когда указатель находится над ней. Escape закрывает её.' } };
+export const Placements: Story = { render: () => <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, max-content)', gap: '4rem', padding: '6rem' }}>
+  {(['topLeft', 'top', 'topRight', 'leftTop', 'left', 'leftBottom', 'rightTop', 'right', 'rightBottom', 'bottomLeft', 'bottom', 'bottomRight'] as const).map(placement =>
+    <Tooltip key={placement} content={placement} placement={placement}>{trigger => <Button {...trigger}>{placement}</Button>}</Tooltip>)}
+</div> };
+export const WithoutArrow: Story = { args: { arrow: false } };
+export const CenteredArrow: Story = { args: { placement: 'topLeft', arrow: { pointAtCenter: true } } };

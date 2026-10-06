@@ -1,5 +1,13 @@
 [
   {
+    "id": "behavior:get-tooltip-position", "kind": "behavior", "name": "getTooltipPosition", "family": "Behaviors",
+    "description": "Рассчитывает положение подсказки и стрелки относительно цели без DOM и фреймворка.",
+    "docsUrl": "/components/tooltip/#tooltip-api", "composesWith": ["component:tooltip"],
+    "constraints": ["anchor, popup и viewport — измеренные прямоугольники в общей системе координат CSS-пикселей. placement по умолчанию top; autoAdjustOverflow true. При нехватке места выбирается противоположная сторона, если там больше места. Центральные положения сдвигаются внутрь viewport; краевые сохраняют выравнивание. pointAtCenter может сдвинуть краевую подсказку к центру цели. gap и arrowPadding задаёт адаптер. Если ни одна сторона не вмещает подсказку, полное отсутствие переполнения не гарантируется."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getTooltipPosition",
+      "examples": [{ "id": "position", "code": "import { getTooltipPosition } from '@dreadnought/core';\nconst position = getTooltipPosition({ anchor: { left: 100, top: 100, width: 80, height: 40 }, popup: { width: 60, height: 30 }, viewport: { width: 400, height: 300 }, placement: 'top', gap: 8 });" }] }]
+  },
+  {
     "id": "behavior:get-history-state", "kind": "behavior", "name": "getHistoryState", "family": "Behaviors",
     "description": "Чистая ограниченная история произвольных неизменяемых снимков: commit, replace, undo, redo и reset.",
     "docsUrl": "/components/markdowneditor/#markdowneditor-api", "composesWith": ["component:markdown-editor"],

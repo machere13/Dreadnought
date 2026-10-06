@@ -6,10 +6,10 @@ export type TooltipAdapterProps = UseTooltipOptions & Omit<ComponentPropsWithout
   content: ReactNode; children: (trigger: TooltipTriggerProps) => ReactNode;
 };
 export function TooltipAdapter({ content, children, open, defaultOpen, disabled, onOpenChange, describedBy,
-  style, onPointerEnter, onPointerLeave, ...native }: TooltipAdapterProps) {
-  const tooltip = useTooltip({ open, defaultOpen, disabled, onOpenChange, describedBy });
+  style, onPointerEnter, onPointerLeave, placement = 'top', arrow = true, autoAdjustOverflow = true, ...native }: TooltipAdapterProps) {
+  const tooltip = useTooltip({ open, defaultOpen, disabled, onOpenChange, describedBy, placement, arrow, autoAdjustOverflow });
   return <>{children(tooltip.triggerProps)}{tooltip.open && <div {...native} {...tooltip.contentProps} popover="manual" data-ui="tooltip"
     style={{ position: 'fixed', inset: 'auto', margin: 0, ...style }}
     onPointerEnter={event => { onPointerEnter?.(event); if (!event.defaultPrevented) tooltip.contentProps.onPointerEnter(); }}
-    onPointerLeave={event => { onPointerLeave?.(event); if (!event.defaultPrevented) tooltip.contentProps.onPointerLeave(); }}>{content}</div>}</>;
+    onPointerLeave={event => { onPointerLeave?.(event); if (!event.defaultPrevented) tooltip.contentProps.onPointerLeave(); }}>{arrow !== false && <span data-ui="tooltip-arrow" aria-hidden="true" />}{content}</div>}</>;
 }

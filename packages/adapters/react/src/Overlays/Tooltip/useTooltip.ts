@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import type { DOMAttributes } from 'react';
 import { getDisclosureOpen, getTooltipState } from '@dreadnought/core';
+import type { TooltipPlacement } from '@dreadnought/core';
 import { useAnchoredPopover } from '../../shared/useAnchoredPopover.ts';
 
-export interface UseTooltipOptions { open?: boolean; defaultOpen?: boolean; disabled?: boolean; onOpenChange?: (open: boolean) => void; describedBy?: string }
+export interface UseTooltipOptions { open?: boolean; defaultOpen?: boolean; disabled?: boolean; onOpenChange?: (open: boolean) => void; describedBy?: string; placement?: TooltipPlacement; arrow?: boolean | { pointAtCenter: boolean }; autoAdjustOverflow?: boolean }
 export type TooltipTriggerProps = DOMAttributes<Element> & { ref: (element: Element | null) => void; 'aria-describedby': string | undefined };
 
-export function useTooltip({ open: controlled, defaultOpen = false, disabled = false, onOpenChange, describedBy }: UseTooltipOptions = {}) {
+export function useTooltip({ open: controlled, defaultOpen = false, disabled = false, onOpenChange, describedBy, placement = 'top', arrow = true, autoAdjustOverflow = true }: UseTooltipOptions = {}) {
   const id = useId();
   const [internal, setInternal] = useState(defaultOpen);
   const [anchorElement, setAnchorElement] = useState<Element | null>(null);
@@ -17,7 +18,7 @@ export function useTooltip({ open: controlled, defaultOpen = false, disabled = f
   const state = getTooltipState({ tooltipId: id, open: controlled ?? internal, disabled, describedBy });
   const currentOptions = useRef({ open: state.open, controlled, disabled, onOpenChange });
   currentOptions.current = { open: state.open, controlled, disabled, onOpenChange };
-  useAnchoredPopover(state.open, anchor, popup, anchorElement, false);
+  useAnchoredPopover(state.open, anchor, popup, anchorElement, false, { placement, arrow: arrow !== false, pointAtCenter: typeof arrow === 'object' && arrow.pointAtCenter, autoAdjustOverflow });
   const attach = useCallback((element: Element | null) => { anchor.current = element; setAnchorElement(element); }, []);
   function request(next: boolean) {
     const options = currentOptions.current;
