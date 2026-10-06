@@ -18,7 +18,7 @@ export default defineConfig({
       cssFileName: 'style',
     },
     rollupOptions: {
-      external: ['@dreadnought/react/unstyled', 'react', 'react/jsx-runtime'],
+      external: ['@dreadnought/react/unstyled', '@dreadnought/react/logic', 'react', 'react/jsx-runtime'],
     },
   },
 });

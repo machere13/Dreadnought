@@ -1,5 +1,9 @@
 import { buttonPresentation } from '@dreadnought/ui';
 import { Button } from '@dreadnought/ui/react';
+import { MarkdownEditor, type MarkdownEditorProps } from '@dreadnought/ui/react';
+import { markdownEditorPresentation } from '@dreadnought/ui';
+const markdownEditorProps: MarkdownEditorProps = { value: '', toolbar: false, labels: { bold: 'Bold' } };
+void [MarkdownEditor, markdownEditorPresentation.field, markdownEditorProps];
 import { tabsPresentation } from '@dreadnought/ui';
 import { Tabs } from '@dreadnought/ui/react';
 import { TabsAdapter } from '@dreadnought/react/unstyled';

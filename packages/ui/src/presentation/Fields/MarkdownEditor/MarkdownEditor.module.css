@@ -1,0 +1,38 @@
+@layer dreadnought {
+  .root {
+    min-width: 0;
+    overflow: hidden;
+    border: var(--dreadnought-markdown-editor-border-width) var(--dreadnought-markdown-editor-border-style) var(--dreadnought-markdown-editor-border-default);
+    border-radius: var(--dreadnought-markdown-editor-radius);
+    background: var(--dreadnought-markdown-editor-bg);
+  }
+
+  .root:focus-within {
+    border-color: var(--dreadnought-markdown-editor-border-focus);
+  }
+
+  .root[data-invalid] {
+    border-color: var(--dreadnought-markdown-editor-border-invalid);
+  }
+
+  .toolbar {
+    flex-wrap: wrap;
+    --dreadnought-toolbar-bg: var(--dreadnought-markdown-editor-toolbar-bg);
+    --dreadnought-toolbar-radius: var(--dreadnought-border-radius-square);
+    --dreadnought-toolbar-padding: var(--dreadnought-markdown-editor-toolbar-padding);
+    --dreadnought-toolbar-gap: var(--dreadnought-markdown-editor-toolbar-gap);
+    border-bottom: var(--dreadnought-markdown-editor-divider-width) var(--dreadnought-markdown-editor-border-style) var(--dreadnought-markdown-editor-divider);
+  }
+
+  .field {
+    display: block;
+    width: 100%;
+    --dreadnought-text-area-border-width: var(--dreadnought-border-width-x1);
+    --dreadnought-text-area-radius: var(--dreadnought-border-radius-square);
+    --dreadnought-text-area-bg: var(--dreadnought-markdown-editor-bg);
+    --dreadnought-text-area-text: var(--dreadnought-markdown-editor-text);
+    --dreadnought-text-area-placeholder-text: var(--dreadnought-markdown-editor-placeholder-text);
+    --dreadnought-text-area-padding-x: var(--dreadnought-markdown-editor-padding-x);
+    --dreadnought-text-area-padding-y: var(--dreadnought-markdown-editor-padding-y);
+  }
+}

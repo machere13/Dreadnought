@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-markdown-editor-border-width: var(--dreadnought-border-width-x2);
+  --dreadnought-markdown-editor-divider-width: var(--dreadnought-border-width-outline);
+  --dreadnought-markdown-editor-radius: var(--dreadnought-border-radius-x1);
+}

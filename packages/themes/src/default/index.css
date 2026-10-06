@@ -5,6 +5,7 @@
 @import './components/Controls/Toolbar/index.css';
 @import './components/Fields/Input/index.css';
 @import './components/Fields/TextArea/index.css';
+@import './components/Fields/MarkdownEditor/index.css';
 @import './components/DataDisplay/Badge/index.css';
 @import './components/DataDisplay/CodeBlock/index.css';
 @import './components/DataDisplay/Table/index.css';

@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const css = (file: string) => readFileSync(resolve('packages/themes/src/default', file), 'utf8');
-const componentFamilies = { Button: 'Controls', Input: 'Fields', TextArea: 'Fields', Checkbox: 'Fields', Radio: 'Fields', Select: 'Fields', Badge: 'DataDisplay', CodeBlock: 'DataDisplay', Table: 'DataDisplay', Tabs: 'Navigation', RadarChart: 'Visualization', LineChart: 'Visualization', BarChart: 'Visualization' } as const;
+const componentFamilies = { Button: 'Controls', Input: 'Fields', TextArea: 'Fields', MarkdownEditor: 'Fields', Checkbox: 'Fields', Radio: 'Fields', Select: 'Fields', Badge: 'DataDisplay', CodeBlock: 'DataDisplay', Table: 'DataDisplay', Tabs: 'Navigation', RadarChart: 'Visualization', LineChart: 'Visualization', BarChart: 'Visualization' } as const;
 
 describe('default theme', () => {
   it('enables the wide axis only for headings and Button and supports the page setting', () => {
@@ -123,7 +123,7 @@ describe('default theme', () => {
       const files = readdirSync(resolve(`packages/themes/src/default/tokens/components/${family}/${component}`));
       const componentDeclarations = declarations(files, `tokens/components/${family}/${component}`);
       expect(componentDeclarations.length).toBeGreaterThan(0);
-      const suffix = component === 'TextArea' ? 'text-area' : component === 'Tabs' ? 'tabs-tab' : component === 'CodeBlock' ? 'code-block' : component === 'RadarChart' ? 'radar-chart' : component === 'BarChart' ? 'bar-chart' : component === 'LineChart' ? 'line-chart' : component.toLowerCase();
+      const suffix = component === 'MarkdownEditor' ? 'markdown-editor' : component === 'TextArea' ? 'text-area' : component === 'Tabs' ? 'tabs-tab' : component === 'CodeBlock' ? 'code-block' : component === 'RadarChart' ? 'radar-chart' : component === 'BarChart' ? 'bar-chart' : component === 'LineChart' ? 'line-chart' : component.toLowerCase();
       const role = component === 'Button' || component === 'Tabs' ? 'label-1' : component === 'Badge' ? 'label-2' : component === 'CodeBlock' || component === 'Table' || component === 'RadarChart' || component === 'LineChart' || component === 'BarChart' ? 'body-3' : 'body-2';
       for (const property of ['font-size', 'font-weight', 'line-height']) {
         const name = `--dreadnought-${property}-${suffix}`;
@@ -147,6 +147,7 @@ describe('default theme', () => {
       "@import './components/Controls/Toolbar/index.css';",
       "@import './components/Fields/Input/index.css';",
       "@import './components/Fields/TextArea/index.css';",
+      "@import './components/Fields/MarkdownEditor/index.css';",
       "@import './components/DataDisplay/Badge/index.css';",
       "@import './components/DataDisplay/CodeBlock/index.css';",
       "@import './components/DataDisplay/Table/index.css';",
@@ -176,6 +177,7 @@ describe('default theme', () => {
       ['Controls', 'Button', ['colors', 'spacing', 'sizing', 'typography', 'effects', 'motion']],
       ['Fields', 'Input', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
       ['Fields', 'TextArea', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
+      ['Fields', 'MarkdownEditor', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
       ['Fields', 'Checkbox', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
       ['Fields', 'Radio', ['colors', 'spacing', 'sizing', 'effects', 'typography']],
       ['Fields', 'Select', ['colors', 'spacing', 'sizing', 'effects', 'typography']],

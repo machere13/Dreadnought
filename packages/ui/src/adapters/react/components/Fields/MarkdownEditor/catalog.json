@@ -1,0 +1,18 @@
+{
+  "componentId": "component:markdown-editor",
+  "bindings": [{
+    "id": "react-ui", "layer": 3, "framework": "react",
+    "importPath": "@dreadnought/ui/react", "exportName": "MarkdownEditor",
+    "propertyDescriptions": {
+      "toolbar": "Показывает встроенную или пользовательскую панель. false скрывает панель, но сохраняет клавиатурные команды.",
+      "labels": "Переводы доступных имён панели и 12 действий; непереданные подписи остаются русскими.",
+      "renderToolbar": "Заменяет встроенную панель; получает execute, disabled и readOnly.",
+      "className": "Дополнительный класс textarea, не внешней обёртки.",
+      "style": "Стили textarea; токены внешнего оформления можно задавать на предке.",
+      "onValueChange": "Строка Markdown после ввода или команды. Controlled-владелец синхронно обновляет value.",
+      "rows": "Исходная высота поля без autoSize."
+    },
+    "defaults": { "toolbar": true, "rows": 8, "disabled": false, "readOnly": false },
+    "examples": [{ "id": "basic", "code": "import { MarkdownEditor } from '@dreadnought/ui/react';\nconst example = <MarkdownEditor aria-label='Markdown' defaultValue='# Заметки' />;" }]
+  }]
+}

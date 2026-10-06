@@ -1,0 +1,10 @@
+:root {
+  --dreadnought-markdown-editor-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-markdown-editor-toolbar-bg: var(--dreadnought-color-surface-subtle);
+  --dreadnought-markdown-editor-text: var(--dreadnought-color-text-primary);
+  --dreadnought-markdown-editor-placeholder-text: var(--dreadnought-color-text-placeholder);
+  --dreadnought-markdown-editor-border-default: var(--dreadnought-color-border-default);
+  --dreadnought-markdown-editor-border-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-markdown-editor-border-invalid: var(--dreadnought-color-status-error);
+  --dreadnought-markdown-editor-divider: var(--dreadnought-color-border-subtle);
+}

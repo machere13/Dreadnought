@@ -17,6 +17,7 @@ import { markDoc } from './componentDocs/MarkDoc';
 import { checkboxDoc } from './componentDocs/CheckboxDoc';
 import { radioDoc } from './componentDocs/RadioDoc';
 import { selectDoc } from './componentDocs/SelectDoc';
+import { markdownEditorDoc } from './componentDocs/MarkdownEditorDoc';
 import { toolbarDoc } from './componentDocs/ToolbarDoc';
 import { radarChartDoc } from './componentDocs/RadarChartDoc';
 import { lineChartDoc } from './componentDocs/LineChartDoc';
@@ -31,13 +32,13 @@ import { DocsAssistant } from '../assistant/DocsAssistant.tsx';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
-type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'toast' | 'loader' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'radio' | 'select' | 'radarchart' | 'linechart' | 'barchart' | 'tooltip';
+type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'markdowneditor' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'toast' | 'loader' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'radio' | 'select' | 'radarchart' | 'linechart' | 'barchart' | 'tooltip';
 type DocsSection = 'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
 const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
   { name: 'Controls', sections: ['button', 'toolbar'] },
   { name: 'DataDisplay', sections: ['badge', 'codeblock', 'icon', 'mark', 'table'] },
   { name: 'Feedback', sections: ['alert', 'toast', 'loader'] },
-  { name: 'Fields', sections: ['input', 'textarea', 'checkbox', 'radio', 'select'] },
+  { name: 'Fields', sections: ['input', 'textarea', 'markdowneditor', 'checkbox', 'radio', 'select'] },
   { name: 'Layout', sections: ['layout'] },
   { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs', 'menu'] },
   { name: 'Surfaces', sections: ['card'] },
@@ -187,6 +188,7 @@ function TextAreaDemo() {
 }
 
 const componentDocs: Record<ComponentSection, ComponentDoc> = {
+  markdowneditor: markdownEditorDoc,
   radarchart: radarChartDoc,
   linechart: lineChartDoc,
   barchart: barChartDoc,

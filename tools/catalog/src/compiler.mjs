@@ -46,7 +46,7 @@ export function createContext(root, packages) {
     noEmit: true,
     allowImportingTsExtensions: true,
     esModuleInterop: true,
-    paths: { ...paths, '#behaviors/*': [path.join(root, 'packages/core/src/behaviors/*.ts')] },
+    paths: { ...paths, '@dreadnought/ui': [path.join(root, 'packages/ui/src/index.ts')], '#behaviors/*': [path.join(root, 'packages/core/src/behaviors/*.ts')] },
   };
   const cssTypes = path.join(root, 'packages/ui/src/css-modules.d.ts');
   const roots = [...entries.values(), ...(existsSync(cssTypes) ? [cssTypes] : [])];
