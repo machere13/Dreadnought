@@ -1,5 +1,15 @@
 import type { CSSProperties } from 'react';
-import type { TableColumn, TableDataAdapterProps, TableRowKey } from './table.types.ts';
+import { filterTableRows, sortTableRows } from '@dreadnought/core';
+import type { TableChangeFilters, TableChangeSorter, TableColumn, TableDataAdapterProps, TableRowKey } from './table.types.ts';
+
+export function matchingRows<RecordType extends object>(data: readonly RecordType[], columns: readonly TableColumn<RecordType>[],
+  filters: TableChangeFilters, sorter: TableChangeSorter) {
+  const filtered = filterTableRows(data, columns.filter(column => column.onFilter).map(column => ({
+    values: filters[column.key] ?? [], predicate: column.onFilter!,
+  })));
+  const column = columns.find(column => column.key === sorter.columnKey);
+  return sortTableRows(filtered, column?.sorter, sorter.order);
+}
 
 export function cellValue<RecordType extends object>(record: RecordType, dataIndex: TableColumn<RecordType>['dataIndex']) {
   if (dataIndex === undefined) return undefined;

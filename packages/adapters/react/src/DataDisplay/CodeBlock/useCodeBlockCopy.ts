@@ -1,5 +1,5 @@
 import { copy } from '@dreadnought/core';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 type CopyStatus = 'idle' | 'pending' | 'copied' | 'error';
 const feedbackDurationMs = 2000;
@@ -11,6 +11,8 @@ export function useCodeBlockCopy(
 ) {
   const [result, setResult] = useState<{ generation: number; status: CopyStatus }>({ generation: 0, status: 'idle' });
   const current = useRef({ code, generation: 0, pending: false });
+  const callbacks = useRef({ onCopy, onCopyError });
+  useLayoutEffect(() => { callbacks.current = { onCopy, onCopyError }; }, [onCopy, onCopyError]);
 
   if (current.current.code !== code) {
     current.current = { code, generation: current.current.generation + 1, pending: false };
@@ -47,14 +49,14 @@ export function useCodeBlockCopy(
       if (current.current.generation !== generation) return;
       current.current.pending = false;
       setResult({ generation, status: 'error' });
-      onCopyError?.(error);
+      callbacks.current.onCopyError?.(error);
       return;
     }
 
     if (current.current.generation !== generation) return;
     current.current.pending = false;
     setResult({ generation, status: 'copied' });
-    onCopy?.(copiedCode);
+    callbacks.current.onCopy?.(copiedCode);
   }
 
   return { status, handleCopy };

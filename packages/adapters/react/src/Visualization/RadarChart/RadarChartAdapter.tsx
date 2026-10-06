@@ -1,8 +1,9 @@
-import { useCallback, useId, useRef, useState } from 'react';
-import { buildRadarLayout, getSelectionValue } from '@dreadnought/core';
+import { useCallback, useId, useRef } from 'react';
+import { buildRadarLayout } from '@dreadnought/core';
 import { RadarPlot } from './RadarPlot.tsx';
 import { RadarDataTable } from './RadarDataTable.tsx';
 import { useChartViewport } from '../../shared/useChartViewport.ts';
+import { useSeriesVisibility } from '../../shared/useSeriesVisibility.ts';
 import { attachRef } from '../../shared/attachRef.ts';
 import { radarNativeProps, type RadarChartAdapterProps, type RadarChartLabels } from './radarChart.types.ts';
 
@@ -29,7 +30,7 @@ export function RadarChartAdapter({ metrics, series, label, description, width, 
   }
   validateVisibility(visibleSeries); validateVisibility(defaultVisibleSeries);
   const id = useId();
-  const [internal, setInternal] = useState<readonly string[]>(() => [...(defaultVisibleSeries ?? series.map(item => item.id))]);
+  const { visible, toggle } = useSeriesVisibility(series, visibleSeries, defaultVisibleSeries, onVisibleSeriesChange);
   const plotRef = useRef<HTMLDivElement>(null);
   const consumerRef = slotProps.plotContainer?.ref;
   const attachPlot = useCallback((element: HTMLDivElement | null) => {
@@ -37,12 +38,6 @@ export function RadarChartAdapter({ metrics, series, label, description, width, 
     if (element) return attachRef(element, consumerRef, () => { plotRef.current = null; });
   }, [consumerRef]);
   const viewport = useChartViewport(width, height, plotRef);
-  const visible = (visibleSeries ?? internal).filter(value => series.some(item => item.id === value));
-  function toggle(value: string) {
-    const next = getSelectionValue(visible, { type: 'toggle', value });
-    if (visibleSeries === undefined) setInternal([...next]);
-    onVisibleSeriesChange?.([...next]);
-  }
   return <figure {...radarNativeProps(native, ['role'])} aria-labelledby={`${id}-label`} aria-describedby={description !== undefined ? `${id}-description` : undefined} data-ui="radar-chart">
     <figcaption id={`${id}-label`}>{label}</figcaption>
     {description !== undefined && <p id={`${id}-description`}>{description}</p>}

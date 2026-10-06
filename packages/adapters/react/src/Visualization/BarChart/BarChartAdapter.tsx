@@ -1,6 +1,7 @@
-import { useCallback, useId, useMemo, useRef, useState } from 'react';
-import { buildBarLayout, getSelectionValue } from '@dreadnought/core';
+import { useCallback, useId, useMemo, useRef } from 'react';
+import { buildBarLayout } from '@dreadnought/core';
 import { useChartViewport } from '../../shared/useChartViewport.ts';
+import { useSeriesVisibility } from '../../shared/useSeriesVisibility.ts';
 import { chartNativeProps as nativeProps } from '../../shared/chartNativeProps.ts';
 import { attachRef } from '../../shared/attachRef.ts';
 import { TableAdapter } from '../../DataDisplay/Table/TableAdapter.tsx';
@@ -31,13 +32,7 @@ export function BarChartAdapter({ label, description, categories, series, domain
     if (element) return attachRef(element, consumerRef, () => { plotRef.current = null; });
   }, [consumerRef]);
   const viewport = useChartViewport(width, height, plotRef);
-  const [internal, setInternal] = useState<readonly string[]>(() => [...(defaultVisibleSeries ?? series.map(item => item.id))]);
-  const visible = useMemo(() => (visibleSeries ?? internal).filter(id => series.some(item => item.id === id)), [visibleSeries, internal, series]);
-  function toggle(value: string) {
-    const next = getSelectionValue(visible, { type: 'toggle', value });
-    if (visibleSeries === undefined) setInternal([...next]);
-    onVisibleSeriesChange?.([...next]);
-  }
+  const { visible, toggle } = useSeriesVisibility(series, visibleSeries, defaultVisibleSeries, onVisibleSeriesChange);
   return <figure {...nativeProps(native, ['role'])} aria-labelledby={`${id}-label`} aria-describedby={description !== undefined ? `${id}-description` : undefined} data-ui="bar-chart">
     <figcaption id={`${id}-label`}>{label}</figcaption>
     {description !== undefined && <p id={`${id}-description`}>{description}</p>}

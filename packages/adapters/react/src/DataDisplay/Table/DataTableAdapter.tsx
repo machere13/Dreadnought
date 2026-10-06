@@ -1,11 +1,11 @@
-import { useId, useImperativeHandle, useState } from 'react';
+import { useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
-import { filterTableRows, getSelectionValue, paginateTableRows, sortTableRows } from '@dreadnought/core';
+import { getSelectionValue, paginateTableRows } from '@dreadnought/core';
 import type { TableSortOrder } from '@dreadnought/core';
 import { CheckboxAdapter } from '../../Fields/Checkbox/CheckboxAdapter.tsx';
 import { TableFilterMenu } from './TableFilterMenu.tsx';
 import { useTableWidths } from './useTableWidths.ts';
-import { cellValue, fixedStyle, paginationNumber, recordKey } from './tableData.ts';
+import { cellValue, fixedStyle, matchingRows, paginationNumber, recordKey } from './tableData.ts';
 import type { TableChangeFilters, TableChangeSorter, TableColumn, TableDataAdapterProps, TableFilterValue, TableRowKey } from './table.types.ts';
 
 export function DataTableAdapter<RecordType extends object>({
@@ -20,6 +20,8 @@ export function DataTableAdapter<RecordType extends object>({
   const [sorting, setSorting] = useState<{ key: string; order: TableSortOrder }>({ key: defaultSorted?.key ?? '', order: defaultSorted?.defaultSortOrder ?? null });
   const [filters, setFilters] = useState<Record<string, readonly TableFilterValue[]>>(() =>
     Object.fromEntries(columns.map(column => [column.key, column.defaultFilteredValue ?? []])));
+  const pendingFilters = useRef(filters);
+  useLayoutEffect(() => { pendingFilters.current = filters; }, [filters]);
   const [page, setPage] = useState(() => ({
     current: paginationNumber(pagination ? pagination.defaultCurrent : undefined, 1),
     pageSize: paginationNumber(pagination ? pagination.pageSize ?? pagination.defaultPageSize : undefined, 10),
@@ -27,11 +29,7 @@ export function DataTableAdapter<RecordType extends object>({
   const [selected, setSelected] = useState<TableRowKey[]>([...(rowSelection?.defaultSelectedRowKeys ?? [])]);
   const activeColumn = columns.find((column) => column.sortOrder !== undefined) ?? columns.find((column) => column.key === sorting.key);
   const activeOrder = activeColumn?.sortOrder !== undefined ? activeColumn.sortOrder : sorting.order;
-  const filtered = filterTableRows(dataSource, columns.filter((column) => column.onFilter).map((column) => ({
-    values: filterValues(column),
-    predicate: column.onFilter!,
-  })));
-  const sorted = sortTableRows(filtered, activeColumn?.sorter, activeOrder);
+  const sorted = matchingRows(dataSource, columns, currentFilters(), { columnKey: activeColumn?.key, order: activeOrder });
   const pageSize = paginationNumber(pagination ? pagination.pageSize : undefined, page.pageSize);
   const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
   const requestedPage = paginationNumber(pagination ? pagination.current : undefined, pageSize !== page.pageSize ? 1 : page.current);
@@ -50,28 +48,23 @@ export function DataTableAdapter<RecordType extends object>({
     .filter((_, index) => !rowSelection?.getCheckboxProps?.(rows[index]!)?.disabled);
   const selectedOnPage = keysOnPage.filter(key => selectedKeys.includes(key)).length;
 
-  function filterValues(column: TableColumn<RecordType>): readonly TableFilterValue[] {
-    return column.filteredValue !== undefined ? column.filteredValue ?? [] : filters[column.key] ?? [];
+  function filterValues(column: TableColumn<RecordType>, source = filters): readonly TableFilterValue[] {
+    return column.filteredValue !== undefined ? column.filteredValue ?? [] : source[column.key] ?? [];
   }
 
-  function currentFilters(override?: { key: string; values: readonly TableFilterValue[] }): TableChangeFilters {
+  function currentFilters(override?: { key: string; values: readonly TableFilterValue[] }, source = filters): TableChangeFilters {
     return Object.fromEntries(columns.filter((column) => column.filters || column.onFilter).map((column) => [
       column.key,
-      override?.key === column.key ? override.values : filterValues(column),
+      override?.key === column.key ? override.values : filterValues(column, source),
     ]));
   }
 
   function publishChange(action: 'sort' | 'filter' | 'paginate', nextPage: number, nextFilters: TableChangeFilters, nextSorter: TableChangeSorter) {
-    const matching = filterTableRows(dataSource, columns.filter((column) => column.onFilter).map((column) => ({
-      values: nextFilters[column.key] ?? [],
-      predicate: column.onFilter!,
-    })));
-    const sorterColumn = columns.find((column) => column.key === nextSorter.columnKey);
     onChange?.(
       { current: nextPage, pageSize },
       nextFilters,
       nextSorter,
-      { action, currentDataSource: sortTableRows(matching, sorterColumn?.sorter, nextSorter.order) },
+      { action, currentDataSource: matchingRows(dataSource, columns, nextFilters, nextSorter) },
     );
   }
 
@@ -79,21 +72,24 @@ export function DataTableAdapter<RecordType extends object>({
     const current = column.key === activeColumn?.key ? activeOrder : null;
     const order = current === null ? 'ascend' : current === 'ascend' ? 'descend' : null;
     if (column.sortOrder === undefined) setSorting({ key: column.key, order });
-    publishChange('sort', currentPage, currentFilters(), { columnKey: column.key, order });
+    publishChange('sort', currentPage, currentFilters(undefined, pendingFilters.current), { columnKey: column.key, order });
   }
   function changePage(next: number) {
     if (pagination === false) return;
     if (pagination?.current === undefined) setPage({ current: next, pageSize });
     pagination?.onChange?.(next, pageSize);
-    publishChange('paginate', next, currentFilters(), { columnKey: activeColumn?.key, order: activeOrder });
+    publishChange('paginate', next, currentFilters(undefined, pendingFilters.current), { columnKey: activeColumn?.key, order: activeOrder });
   }
   function changeFilter(column: TableColumn<RecordType>, values: TableFilterValue[]) {
-    if (column.filteredValue === undefined) setFilters({ ...filters, [column.key]: values });
+    if (column.filteredValue === undefined) {
+      pendingFilters.current = { ...pendingFilters.current, [column.key]: values };
+      setFilters(pendingFilters.current);
+    }
     if (pagination !== false) {
       if (pagination?.current === undefined) setPage({ current: 1, pageSize });
       pagination?.onChange?.(1, pageSize);
     }
-    publishChange('filter', 1, currentFilters({ key: column.key, values }), { columnKey: activeColumn?.key, order: activeOrder });
+    publishChange('filter', 1, currentFilters({ key: column.key, values }, pendingFilters.current), { columnKey: activeColumn?.key, order: activeOrder });
   }
   function changeSelection(next: TableRowKey[]) {
     if (rowSelection?.selectedRowKeys === undefined) setSelected(next);

@@ -1,6 +1,7 @@
 import { useCallback, useId, useMemo, useRef, useState } from 'react';
-import { buildLineLayout, getSelectionValue } from '@dreadnought/core';
+import { buildLineLayout } from '@dreadnought/core';
 import { useChartViewport } from '../../shared/useChartViewport.ts';
+import { useSeriesVisibility } from '../../shared/useSeriesVisibility.ts';
 import { chartNativeProps as nativeProps } from '../../shared/chartNativeProps.ts';
 import { attachRef } from '../../shared/attachRef.ts';
 import { TableAdapter } from '../../DataDisplay/Table/TableAdapter.tsx';
@@ -29,8 +30,7 @@ export function LineChartAdapter({ label, description, series, xDomain, yDomain,
     if (element) return attachRef(element, consumerRef, () => { plotRef.current = null; });
   }, [consumerRef]);
   const viewport = useChartViewport(width, height, plotRef);
-  const [internal, setInternal] = useState<readonly string[]>(() => [...(defaultVisibleSeries ?? series.map(item => item.id))]);
-  const visible = useMemo(() => (visibleSeries ?? internal).filter(id => series.some(item => item.id === id)), [visibleSeries, internal, series]);
+  const { visible, toggle } = useSeriesVisibility(series, visibleSeries, defaultVisibleSeries, onVisibleSeriesChange);
   const xs = useMemo(() => [...new Set(series.flatMap(item => item.data.map(point => point.x)))].sort((a, b) => a - b), [series]);
   const values = useMemo(() => new Map(series.map(item => [item.id, new Map(item.data.map(point => [point.x, point.y]))])), [series]);
   const page = useChartPage(xs, pageSize);
@@ -39,11 +39,6 @@ export function LineChartAdapter({ label, description, series, xDomain, yDomain,
   const end = range.xs === xs ? Math.max(start + 1, Math.min(range.end, xs.length - 1)) : xs.length - 1;
   const activeDomain: readonly [number, number] = zoom && xs.length > 1 && (start !== 0 || end !== xs.length - 1) ? [xs[start], xs[end]] : xDomain;
   const rangeInput = nativeProps(slotProps.rangeInput);
-  function toggle(value: string) {
-    const next = getSelectionValue(visible, { type: 'toggle', value });
-    if (visibleSeries === undefined) setInternal([...next]);
-    onVisibleSeriesChange?.([...next]);
-  }
   return <figure {...nativeProps(native, ['role'])} aria-labelledby={`${id}-label`} aria-describedby={description !== undefined ? `${id}-description` : undefined} data-ui="line-chart">
     <figcaption id={`${id}-label`}>{label}</figcaption>
     {description !== undefined && <p id={`${id}-description`}>{description}</p>}
