@@ -13,6 +13,30 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('documents Modal with a working form and explicit closure', () => {
+    Object.defineProperties(HTMLDialogElement.prototype, {
+      showModal: { configurable: true, value() { this.open = true; } },
+      close: { configurable: true, value() { this.open = false; this.dispatchEvent(new Event('close')); } },
+    });
+    try {
+      render(<DocsPage section="modal" />);
+      expect(document.getElementById('modal-api')).toBeTruthy();
+      expect(screen.getByRole('link', { name: 'Modal' }).getAttribute('href')).toBe('/components/modal/');
+      const trigger = screen.getByRole('button', { name: 'Редактировать профиль' });
+      trigger.focus(); fireEvent.click(trigger);
+      const field = screen.getByRole('textbox', { name: 'Имя профиля' });
+      fireEvent.change(field, { target: { value: 'Ada' } });
+      expect((field as HTMLInputElement).value).toBe('Ada');
+      field.focus();
+      fireEvent.click(screen.getByRole('button', { name: 'Сохранить профиль' }));
+      expect(screen.queryByRole('dialog')).toBeNull();
+      expect(document.activeElement).toBe(trigger);
+    } finally {
+      cleanup();
+      delete (HTMLDialogElement.prototype as Partial<HTMLDialogElement>).showModal;
+      delete (HTMLDialogElement.prototype as Partial<HTMLDialogElement>).close;
+    }
+  });
   it('documents Popover layers with a working interactive panel', () => {
     render(<DocsPage section="popover" />);
     expect(document.getElementById('popover-api')).toBeTruthy();

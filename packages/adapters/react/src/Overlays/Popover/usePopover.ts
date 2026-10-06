@@ -3,6 +3,7 @@ import type { ButtonHTMLAttributes } from 'react';
 import { getDisclosureOpen, getPopoverState } from '@dreadnought/core';
 import type { TooltipPlacement } from '@dreadnought/core';
 import { useAnchoredPopover } from '../../shared/useAnchoredPopover.ts';
+import { getFocusableElements } from '../../shared/getFocusableElements.ts';
 
 export interface UsePopoverOptions {
   open?: boolean;
@@ -44,15 +45,7 @@ export function usePopover({ open: controlled, defaultOpen = false, disabled = f
     if (state.open) {
       const node = popup.current;
       if (!node) return;
-      const controls = node.querySelectorAll<HTMLElement>('button, a[href], input:not([type="hidden"]), select, textarea, [tabindex], [contenteditable="true"]');
-      const first = [...controls].find(element => {
-        if (element.tabIndex < 0 || element.matches(':disabled') || element.closest('[hidden], [inert], [aria-hidden="true"]')) return false;
-        for (let parent: HTMLElement | null = element; parent && node.contains(parent); parent = parent.parentElement) {
-          const style = node.ownerDocument.defaultView?.getComputedStyle(parent);
-          if (style?.display === 'none' || style?.visibility === 'hidden') return false;
-        }
-        return true;
-      });
+      const first = getFocusableElements(node)[0];
       (first ?? node).focus({ preventScroll: true });
       focusInside.current = node.contains(node.ownerDocument.activeElement);
       restoreFocus.current = undefined;

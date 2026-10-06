@@ -1,0 +1,241 @@
+import { StrictMode, useState } from 'react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { renderToString } from 'react-dom/server';
+import { afterEach, beforeEach, expect, it } from 'vitest';
+import * as adapters from '../../../src/unstyled.ts';
+
+beforeEach(() => {
+  Object.defineProperties(HTMLDialogElement.prototype, {
+    showModal: { configurable: true, value() { this.open = true; } },
+    close: { configurable: true, value() { this.open = false; this.dispatchEvent(new Event('close')); } },
+  });
+});
+afterEach(() => {
+  cleanup();
+  delete (HTMLDialogElement.prototype as Partial<HTMLDialogElement>).showModal;
+  delete (HTMLDialogElement.prototype as Partial<HTMLDialogElement>).close;
+});
+
+function Example(props: Partial<adapters.ModalAdapterProps> = {}) {
+  expect(adapters).toHaveProperty('ModalAdapter');
+  return <adapters.ModalAdapter aria-label="Profile" content={({ close }) => <>
+    <input aria-label="Name" /><button type="button" onClick={close}>Done</button>
+  </>} {...props}>{trigger => <button {...trigger}>Edit</button>}</adapters.ModalAdapter>;
+}
+const opener = () => screen.getByRole('button', { name: 'Edit' });
+const panel = () => screen.getByRole('dialog', { name: 'Profile' }) as HTMLDialogElement;
+function pointer(node: HTMLElement, type: 'pointerdown' | 'pointerup', clientX: number, clientY: number) {
+  const event = new MouseEvent(type, { bubbles: true, cancelable: true, button: 0, clientX, clientY });
+  Object.defineProperty(event, 'pointerId', { value: 1 });
+  fireEvent(node, event);
+}
+
+it('opens and closes through native cancel without submitting a form', async () => {
+  let submissions = 0;
+  render(<form onSubmit={event => { event.preventDefault(); submissions++; }}><Example /></form>);
+  await userEvent.click(opener());
+  expect(panel().open).toBe(true);
+  expect(panel().getAttribute('aria-modal')).toBe('true');
+  fireEvent(panel(), new Event('cancel', { cancelable: true }));
+  expect(screen.queryByRole('dialog')).toBeNull();
+  expect(document.activeElement).toBe(opener());
+  expect(submissions).toBe(0);
+});
+
+it('keeps a controlled dialog open until the parent accepts the request', async () => {
+  const requests: boolean[] = [];
+  const { rerender } = render(<Example open onOpenChange={open => requests.push(open)} />);
+  fireEvent(panel(), new Event('cancel', { cancelable: true }));
+  expect(panel().open).toBe(true);
+  expect(requests).toEqual([false]);
+  rerender(<Example open={false} />);
+  expect(screen.queryByRole('dialog')).toBeNull();
+});
+
+it('honors prevented cancel and closeOnEscape', () => {
+  const { rerender } = render(<Example defaultOpen onCancel={event => event.preventDefault()} />);
+  fireEvent(panel(), new Event('cancel', { cancelable: true }));
+  expect(panel().open).toBe(true);
+  rerender(<Example closeOnEscape={false} />);
+  fireEvent(panel(), new Event('cancel', { cancelable: true }));
+  expect(panel().open).toBe(true);
+});
+
+it('supports explicit close and repeated cycles under StrictMode', async () => {
+  render(<StrictMode><Example /></StrictMode>);
+  for (let cycle = 0; cycle < 2; cycle++) {
+    await userEvent.click(opener());
+    fireEvent(panel(), new Event('close'));
+    expect(panel().open).toBe(true);
+    await userEvent.click(screen.getByRole('button', { name: 'Done' }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(document.activeElement).toBe(opener());
+  }
+});
+
+it('synchronizes native close and reopens after a controlled refusal', () => {
+  const { rerender } = render(<Example defaultOpen />);
+  act(() => panel().close());
+  expect(screen.queryByRole('dialog')).toBeNull();
+  const requests: boolean[] = [];
+  rerender(<Example open onOpenChange={open => requests.push(open)} />);
+  act(() => panel().close());
+  expect(panel().open).toBe(true);
+  expect(requests).toEqual([false]);
+});
+
+it('suppresses disabled opening and releases resources when unmounted', async () => {
+  const { rerender, unmount } = render(<Example disabled />);
+  await userEvent.click(opener());
+  expect(screen.queryByRole('dialog')).toBeNull();
+  rerender(<Example open />);
+  expect(document.documentElement.style.overflow).toBe('hidden');
+  unmount();
+  expect(document.documentElement.style.overflow).toBe('');
+});
+
+it('keeps scroll locked until both modals close and restores the previous value', () => {
+  document.documentElement.style.overflow = 'scroll';
+  const { rerender } = render(<><Example open /><Example open /></>);
+  expect(document.documentElement.style.overflow).toBe('hidden');
+  rerender(<><Example open={false} /><Example open /></>);
+  expect(document.documentElement.style.overflow).toBe('hidden');
+  rerender(<><Example open={false} /><Example open={false} /></>);
+  expect(document.documentElement.style.overflow).toBe('scroll');
+  document.documentElement.style.overflow = '';
+});
+
+it('dismisses only a backdrop-origin gesture and respects prevented events', () => {
+  const { rerender } = render(<Example defaultOpen />);
+  const node = panel();
+  Object.defineProperty(node, 'getBoundingClientRect', { value: () => ({ left: 20, right: 120, top: 20, bottom: 120 }) });
+  pointer(node, 'pointerdown', 40, 40);
+  pointer(node, 'pointerup', 0, 0);
+  expect(panel().open).toBe(true);
+  rerender(<Example onPointerDown={event => event.preventDefault()} />);
+  pointer(node, 'pointerdown', 0, 0);
+  pointer(node, 'pointerup', 0, 0);
+  expect(panel().open).toBe(true);
+  rerender(<Example />);
+  pointer(node, 'pointerdown', 0, 0);
+  pointer(node, 'pointerup', 0, 0);
+  expect(screen.queryByRole('dialog')).toBeNull();
+});
+
+it('does not restore focus over a deliberate external focus transfer', async () => {
+  const { rerender } = render(<><Example open /><button>Outside</button></>);
+  screen.getByRole('textbox').focus();
+  screen.getByRole('button', { name: 'Outside' }).focus();
+  rerender(<><Example open={false} /><button>Outside</button></>);
+  expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Outside' }));
+});
+
+it('restores focus after accepted controlled closure and ignores removed openers', async () => {
+  const { rerender, unmount } = render(<Example />);
+  await userEvent.click(opener());
+  screen.getByRole('textbox').focus();
+  rerender(<Example open={false} />);
+  expect(document.activeElement).toBe(opener());
+  rerender(<Example open />);
+  screen.getByRole('textbox').focus();
+  unmount();
+  expect(document.activeElement).toBe(document.body);
+});
+
+it('reads current callbacks and composes native handlers', async () => {
+  const requests: string[] = [];
+  const { rerender } = render(<Example open onOpenChange={() => requests.push('old')} />);
+  rerender(<Example open onOpenChange={() => requests.push('new')} onCancel={() => requests.push('cancel')} />);
+  screen.getByRole('textbox').focus();
+  fireEvent(panel(), new Event('cancel', { cancelable: true }));
+  expect(requests).toEqual(['cancel', 'new']);
+  expect(document.activeElement).toBe(screen.getByRole('textbox'));
+});
+
+it('does not serialize nonmodal open markup during SSR', () => {
+  const html = renderToString(<Example open />);
+  expect(html).toContain('<dialog');
+  expect(html).not.toMatch(/<dialog[^>]*\sopen(?:=|\s|>)/);
+});
+
+it('wraps Tab at the visible controls without hijacking interior or prevented navigation', async () => {
+  render(<Example defaultOpen content={({ close }) => <>
+    <div hidden><button>Hidden</button></div><button disabled>Disabled</button>
+    <input aria-label="First" /><button type="button" onClick={close}>Last</button>
+  </>} />);
+  const first = screen.getByRole('textbox', { name: 'First' }), last = screen.getByRole('button', { name: 'Last' });
+  first.focus();
+  await userEvent.tab();
+  expect(document.activeElement).toBe(last);
+  await userEvent.tab();
+  expect(document.activeElement).toBe(first);
+  await userEvent.tab({ shift: true });
+  expect(document.activeElement).toBe(last);
+  for (const flags of [{ isComposing: true }, { ctrlKey: true }, { altKey: true }, { metaKey: true }]) {
+    expect(fireEvent.keyDown(last, { key: 'Tab', ...flags })).toBe(true);
+  }
+});
+
+it('honors consumer keydown cancellation at the focus boundary', () => {
+  render(<Example defaultOpen onKeyDown={event => event.preventDefault()} />);
+  const last = screen.getByRole('button', { name: 'Done' });
+  last.focus();
+  fireEvent.keyDown(last, { key: 'Tab' });
+  expect(document.activeElement).toBe(last);
+});
+
+it('uses the checked radio as the group tab stop at either boundary', async () => {
+  render(<Example defaultOpen content={<>
+    <input type="radio" name="choice" aria-label="A" />
+    <input type="radio" name="choice" aria-label="B" defaultChecked />
+    <button type="button">Last</button>
+  </>} />);
+  const checked = screen.getByRole('radio', { name: 'B' }), last = screen.getByRole('button', { name: 'Last' });
+  last.focus();
+  await userEvent.tab();
+  expect(document.activeElement).toBe(checked);
+  await userEvent.tab({ shift: true });
+  expect(document.activeElement).toBe(last);
+});
+
+it('respects positive tabindex order at focus boundaries', async () => {
+  render(<Example defaultOpen content={<><input aria-label="Second" tabIndex={2} />
+    <input aria-label="First" tabIndex={1} /><button type="button">Last</button></>} />);
+  screen.getByRole('button', { name: 'Last' }).focus();
+  await userEvent.tab();
+  expect(document.activeElement).toBe(screen.getByRole('textbox', { name: 'First' }));
+});
+
+it('filters queued stale close notifications before consumer handlers', () => {
+  const pending: (() => void)[] = [], notifications: string[] = [];
+  Object.defineProperty(HTMLDialogElement.prototype, 'close', { configurable: true, value() {
+    this.open = false;
+    pending.push(() => this.dispatchEvent(new Event('close')));
+  } });
+  function Controlled() {
+    const [open, setOpen] = useState(true);
+    return <Example open={open} onOpenChange={setOpen}
+      onClose={() => { notifications.push('close'); setOpen(false); }} />;
+  }
+  render(<StrictMode><Controlled /></StrictMode>);
+  expect(panel().open).toBe(true);
+  expect(pending).toHaveLength(1);
+  act(() => pending.shift()!());
+  expect(panel().open).toBe(true);
+  expect(notifications).toEqual([]);
+});
+
+it('delivers native close handlers for an actual completed closure', () => {
+  const pending: (() => void)[] = [], notifications: string[] = [];
+  Object.defineProperty(HTMLDialogElement.prototype, 'close', { configurable: true, value() {
+    this.open = false;
+    pending.push(() => this.dispatchEvent(new Event('close')));
+  } });
+  const props = { onClose: () => notifications.push('close') };
+  const { rerender } = render(<Example open {...props} />);
+  rerender(<Example open={false} {...props} />);
+  act(() => pending.shift()!());
+  expect(notifications).toEqual(['close']);
+  expect(screen.queryByRole('dialog')).toBeNull();
+});

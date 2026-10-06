@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-modal-width: var(--dreadnought-size-x4);
+  --dreadnought-modal-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-modal-border-width: var(--dreadnought-border-width-outline);
+}

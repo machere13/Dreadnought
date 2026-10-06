@@ -28,4 +28,5 @@
 @import './components/Visualization/BarChart/index.css';
 @import './components/Overlays/Tooltip/index.css';
 @import './components/Overlays/Popover/index.css';
+@import './components/Overlays/Modal/index.css';
 @import './components/DataDisplay/MarkdownPreview/index.css';

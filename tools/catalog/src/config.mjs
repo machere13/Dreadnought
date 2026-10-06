@@ -16,6 +16,7 @@ export const components = [
   { family: 'Feedback', name: 'Loader', sources: [core, adapter, ui] },
   { family: 'Overlays', name: 'Tooltip', sources: [core, adapter, ui] },
   { family: 'Overlays', name: 'Popover', sources: [core, adapter, ui] },
+  { family: 'Overlays', name: 'Modal', sources: [core, adapter, ui] },
   { family: 'Visualization', name: 'RadarChart', sources: [adapter, ui] },
   { family: 'Visualization', name: 'LineChart', sources: [adapter, ui] },
   { family: 'Visualization', name: 'BarChart', sources: [adapter, ui] },

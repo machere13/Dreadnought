@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-modal-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-modal-text: var(--dreadnought-color-text-primary);
+  --dreadnought-modal-border: var(--dreadnought-color-border-subtle);
+  --dreadnought-modal-backdrop: var(--dreadnought-color-surface-overlay);
+}

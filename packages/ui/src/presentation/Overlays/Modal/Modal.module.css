@@ -1,0 +1,24 @@
+@layer dreadnought {
+  .root {
+    box-sizing: border-box;
+    width: var(--dreadnought-modal-width);
+    max-width: calc(100vw - var(--dreadnought-modal-gutter) * 2);
+    max-height: calc(100dvh - var(--dreadnought-modal-gutter) * 2);
+    margin: auto;
+    padding: var(--dreadnought-modal-padding);
+    border: var(--dreadnought-modal-border-width) solid var(--dreadnought-modal-border);
+    border-radius: var(--dreadnought-modal-radius);
+    background: var(--dreadnought-modal-bg);
+    color: var(--dreadnought-modal-text);
+    font-family: var(--dreadnought-modal-font-family);
+    font-size: var(--dreadnought-modal-font-size);
+    font-weight: var(--dreadnought-modal-font-weight);
+    line-height: var(--dreadnought-modal-line-height);
+    overflow: auto;
+    overscroll-behavior: contain;
+    overflow-wrap: anywhere;
+  }
+  .root::backdrop {
+    background: var(--dreadnought-modal-backdrop);
+  }
+}

@@ -41,6 +41,8 @@ export * from './Visualization/LineChart/index.ts';
 export * from './Visualization/BarChart/index.ts';
 export { TooltipAdapter } from './Overlays/Tooltip/index.ts';
 export { PopoverAdapter } from './Overlays/Popover/index.ts';
+export { ModalAdapter } from './Overlays/Modal/index.ts';
+export type { ModalAdapterProps, ModalControls, ModalTriggerProps } from './Overlays/Modal/index.ts';
 export type { PopoverAdapterProps, PopoverControls, PopoverTriggerProps } from './Overlays/Popover/index.ts';
 export type { TooltipAdapterProps, TooltipTriggerProps } from './Overlays/Tooltip/index.ts';
 export { ToastAdapter, ToastViewportAdapter } from './Feedback/Toast/index.ts';

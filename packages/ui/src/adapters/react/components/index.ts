@@ -23,6 +23,7 @@ export * from './Visualization/LineChart/index.ts';
 export * from './Visualization/BarChart/index.ts';
 export * from './Overlays/Tooltip/index.ts';
 export * from './Overlays/Popover/index.ts';
+export * from './Overlays/Modal/index.ts';
 export * from './Feedback/Toast/index.ts';
 export * from './Feedback/Loader/index.ts';
 export * from './DataDisplay/MarkdownPreview/index.ts';

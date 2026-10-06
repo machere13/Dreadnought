@@ -1,0 +1,4 @@
+:root {
+  --dreadnought-modal-padding: var(--dreadnought-spacing-x4);
+  --dreadnought-modal-gutter: var(--dreadnought-spacing-x4);
+}

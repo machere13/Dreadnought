@@ -25,6 +25,7 @@ import { lineChartDoc } from './componentDocs/LineChartDoc';
 import { barChartDoc } from './componentDocs/BarChartDoc';
 import { tooltipDoc } from './componentDocs/TooltipDoc';
 import { popoverDoc } from './componentDocs/PopoverDoc';
+import { modalDoc } from './componentDocs/ModalDoc';
 import { GettingStarted } from './GettingStarted';
 import { ThemingGuide } from './ThemingGuide';
 import { CustomComponentsGuide } from './CustomComponentsGuide';
@@ -34,7 +35,7 @@ import { DocsAssistant } from '../assistant/DocsAssistant.tsx';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
-type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'markdowneditor' | 'markdownpreview' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'toast' | 'loader' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'radio' | 'select' | 'radarchart' | 'linechart' | 'barchart' | 'tooltip' | 'popover';
+type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'markdowneditor' | 'markdownpreview' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'toast' | 'loader' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'radio' | 'select' | 'radarchart' | 'linechart' | 'barchart' | 'tooltip' | 'popover' | 'modal';
 type DocsSection = 'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
 const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
   { name: 'Controls', sections: ['button', 'toolbar'] },
@@ -45,7 +46,7 @@ const componentFamilies: readonly { name: string; sections: readonly ComponentSe
   { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs', 'menu'] },
   { name: 'Surfaces', sections: ['card'] },
   { name: 'Visualization', sections: ['radarchart', 'linechart', 'barchart'] },
-  { name: 'Overlays', sections: ['tooltip', 'popover'] },
+  { name: 'Overlays', sections: ['tooltip', 'popover', 'modal'] },
 ];
 
 function Header() {
@@ -197,6 +198,7 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
   barchart: barChartDoc,
   tooltip: tooltipDoc,
   popover: popoverDoc,
+  modal: modalDoc,
   checkbox: checkboxDoc,
   radio: radioDoc,
   select: selectDoc,
