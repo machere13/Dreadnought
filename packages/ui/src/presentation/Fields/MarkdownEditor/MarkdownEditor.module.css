@@ -36,6 +36,17 @@
     --dreadnought-text-area-padding-y: var(--dreadnought-markdown-editor-padding-y);
   }
 
+  .toolbarGroup {
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 0;
+    gap: var(--dreadnought-markdown-editor-toolbar-gap);
+  }
+
+  .toolbarGroup:last-child {
+    margin-inline-start: auto;
+  }
+
   .root [data-ui='markdown-editor-panels'] {
     display: flex;
     flex-wrap: wrap;

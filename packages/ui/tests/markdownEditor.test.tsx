@@ -102,6 +102,20 @@ it('localizes accessible toolbar labels and supports arrow navigation', () => {
   expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Italic' }));
 });
 
+it('separates formatting from editor controls without breaking keyboard navigation', () => {
+  render(<ui.MarkdownEditor aria-label="Notes" />);
+  const groups = screen.getAllByRole('group');
+  expect(groups).toHaveLength(2);
+  expect(groups[0].contains(screen.getByRole('button', { name: 'Жирный' }))).toBe(true);
+  expect(groups[0].contains(screen.getByRole('button', { name: 'Таблица' }))).toBe(true);
+  expect(groups[1].contains(screen.getByRole('button', { name: 'Отменить' }))).toBe(true);
+  expect(groups[1].contains(screen.getByRole('button', { name: 'Предпросмотр' }))).toBe(true);
+  const table = screen.getByRole('button', { name: 'Таблица' });
+  table.focus();
+  fireEvent.keyDown(table, { key: 'ArrowRight' });
+  expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Редактирование' }));
+});
+
 it('does not submit the surrounding form from formatting buttons', () => {
   const submit = vi.fn(event => event.preventDefault());
   render(<form onSubmit={submit}><ui.MarkdownEditor aria-label="Notes" /></form>);

@@ -50,13 +50,17 @@ export function MarkdownEditor({ toolbar = true, labels, renderToolbar, renderPr
       renderPreview={renderPreview ?? (value => <MarkdownPreview value={value} />)}
       renderToolbar={!toolbar ? undefined : renderToolbar ?? ((controls) =>
         <Toolbar className={markdownEditorPresentation.toolbar} aria-label={labels?.toolbar ?? 'Форматирование Markdown'}>
-          {actions.map(action => <ToolbarButton key={action.id} id={action.id} label={labels?.[action.id] ?? action.label} icon={action.icon}
-            onClick={() => controls.execute(action.command)} disabled={controls.disabled || controls.readOnly || controls.preview === 'preview'} />)}
-          <ToolbarButton id="undo" label={labels?.undo ?? 'Отменить'} icon="undo" onClick={controls.undo} disabled={!controls.canUndo} />
-          <ToolbarButton id="redo" label={labels?.redo ?? 'Повторить'} icon="redo" onClick={controls.redo} disabled={!controls.canRedo} />
-          <ToolbarButton id="edit" label={labels?.edit ?? 'Редактирование'} icon="code" onClick={() => controls.setPreview('edit')} pressed={controls.preview === 'edit'} />
-          <ToolbarButton id="live" label={labels?.live ?? 'Текст и предпросмотр'} icon="columns" onClick={() => controls.setPreview('live')} pressed={controls.preview === 'live'} />
-          <ToolbarButton id="preview" label={labels?.preview ?? 'Предпросмотр'} icon="eye" onClick={() => controls.setPreview('preview')} pressed={controls.preview === 'preview'} />
+          <div role="group" className={markdownEditorPresentation.toolbarGroup}>
+            {actions.map(action => <ToolbarButton key={action.id} id={action.id} label={labels?.[action.id] ?? action.label} icon={action.icon}
+              onClick={() => controls.execute(action.command)} disabled={controls.disabled || controls.readOnly || controls.preview === 'preview'} />)}
+          </div>
+          <div role="group" className={markdownEditorPresentation.toolbarGroup}>
+            <ToolbarButton id="undo" label={labels?.undo ?? 'Отменить'} icon="undo" onClick={controls.undo} disabled={!controls.canUndo} />
+            <ToolbarButton id="redo" label={labels?.redo ?? 'Повторить'} icon="redo" onClick={controls.redo} disabled={!controls.canRedo} />
+            <ToolbarButton id="edit" label={labels?.edit ?? 'Редактирование'} icon="code" onClick={() => controls.setPreview('edit')} pressed={controls.preview === 'edit'} />
+            <ToolbarButton id="live" label={labels?.live ?? 'Текст и предпросмотр'} icon="columns" onClick={() => controls.setPreview('live')} pressed={controls.preview === 'live'} />
+            <ToolbarButton id="preview" label={labels?.preview ?? 'Предпросмотр'} icon="eye" onClick={() => controls.setPreview('preview')} pressed={controls.preview === 'preview'} />
+          </div>
         </Toolbar>)} />
   </div>;
 }
