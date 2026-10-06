@@ -19,3 +19,5 @@ export type { DisclosureState, DisclosureStateOptions } from './getDisclosureSta
 export { getDisclosureOpen } from './getDisclosureOpen.ts';
 export type { DisclosureAction, DisclosureOptions } from './getDisclosureOpen.ts';
 export { getCountdownRemaining } from './getCountdownRemaining.ts';
+export { getHistoryState } from './getHistoryState.ts';
+export type { HistoryState, HistoryAction, HistoryOptions } from './getHistoryState.ts';

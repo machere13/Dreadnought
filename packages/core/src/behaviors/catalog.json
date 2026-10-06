@@ -1,5 +1,13 @@
 [
   {
+    "id": "behavior:get-history-state", "kind": "behavior", "name": "getHistoryState", "family": "Behaviors",
+    "description": "Чистая ограниченная история произвольных неизменяемых снимков: commit, replace, undo, redo и reset.",
+    "docsUrl": "/components/markdowneditor/#markdowneditor-api", "composesWith": ["component:markdown-editor"],
+    "constraints": ["limit по умолчанию 100, положительное безопасное целое. Значения не клонируются: владелец передаёт неизменяемые снимки. Нет DOM, таймеров, группировки ввода или React."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getHistoryState",
+      "examples": [{ "id": "undo", "code": "import { getHistoryState } from '@dreadnought/core';\nconst initial = { past: [], present: 'hello', future: [] };\nconst edited = getHistoryState(initial, { type: 'commit', value: 'world' });\nconst undone = getHistoryState(edited, { type: 'undo' });" }] }]
+  },
+  {
     "id": "behavior:get-countdown-remaining", "kind": "behavior", "name": "getCountdownRemaining", "family": "Behaviors",
     "description": "Вычисляет оставшееся время после прошедшего интервала без таймера, React или DOM.",
     "docsUrl": "/components/toast/#toast-api", "composesWith": ["component:toast"],
