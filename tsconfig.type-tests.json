@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "packages/core/tests/domains/markdown/markdown.types.ts",
     "packages/ui/tests/tooltip.types.tsx",
     "packages/adapters/react/tests/Visualization/BarChart/BarChartAdapter.types.tsx",
     "packages/adapters/react/tests/Visualization/LineChart/LineChartAdapter.types.tsx",

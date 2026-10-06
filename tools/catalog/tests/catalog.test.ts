@@ -33,6 +33,15 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes the Markdown domain with a checked framework-independent example', () => {
+    const entry = catalog.entries.find(entry => entry.id === 'domain:apply-markdown-command');
+    expect(entry).toMatchObject({ kind: 'domain', name: 'applyMarkdownCommand', family: 'Markdown' });
+    expect(entry!.bindings).toHaveLength(1);
+    expect(entry!.bindings[0]).toMatchObject({ layer: 1, framework: null, importPath: '@dreadnought/core' });
+    expect(entry!.bindings[0].contracts[0]).toMatchObject({ returnType: 'MarkdownDocument' });
+    expect(entry!.bindings[0].contracts[0].parameters.map(parameter => parameter.name)).toEqual(['doc', 'command']);
+    expect(() => checkExamples(context, entry!.bindings[0].examples)).not.toThrow();
+  });
   it('publishes Tooltip in every layer with checked public examples', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:tooltip');
     expect(entry?.family).toBe('Overlays');

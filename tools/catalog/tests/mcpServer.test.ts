@@ -229,7 +229,12 @@ describe('generated catalog over MCP', () => {
     await withClient(generatedCatalogPath, projectPath, async client => {
       const list = await client.callTool({ name: 'dreadnought_list', arguments: { kind: 'domain' } });
       expect(list.isError).toBeUndefined();
-      expect(replyPayload(list).result.items.map((item: any) => item.name).sort()).toEqual(['buildBarLayout', 'buildLineLayout', 'buildRadarLayout', 'getClosestLinePoint', 'getLinePointAtX', 'sampleLineLayout']);
+      expect(replyPayload(list).result.items.map((item: any) => item.name).sort()).toEqual(['applyMarkdownCommand', 'buildBarLayout', 'buildLineLayout', 'buildRadarLayout', 'getClosestLinePoint', 'getLinePointAtX', 'sampleLineLayout']);
+      const markdown = await client.callTool({ name: 'dreadnought_get', arguments: {
+        component: 'domain:apply-markdown-command', binding: 'core', section: 'api' } });
+      expect(markdown.isError).toBeUndefined();
+      expect(replyPayload(markdown).result.contracts[0]).toMatchObject({ returnType: 'MarkdownDocument',
+        parameters: [{ name: 'doc', type: 'MarkdownDocument' }, { name: 'command', type: 'MarkdownCommand' }] });
       const api = await client.callTool({ name: 'dreadnought_get', arguments: {
         component: 'domain:build-radar-layout', binding: 'core', section: 'api' } });
       expect(api.isError).toBeUndefined();

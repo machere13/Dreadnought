@@ -194,5 +194,14 @@ const refined = getTypeaheadValue(items, 'settings', 'наст', { includeCurren
       <div className={styles.startExamples}><CodeBlock code={disclosureCode} language="tsx" copyLabels={copyLabels} /></div>
       <p className={styles.footnote}>ID задаёт владелец: непустые, разные, без ASCII-пробелов и уникальные на странице. В React useId подходит для нескольких экземпляров. Хранение состояния, отмена клика, DOM и фокус остаются в компоненте. Нативная кнопка сама поддерживает Enter/Space; при закрытии возвращаем фокус только из панели, не перехватывая внешний. Отключённую кнопку не включаем ради фокуса. Содержимое остаётся mounted. Это раскрытие секции, не готовый popup.</p>
     </section>
+    <section data-knowledge className={styles.section} aria-labelledby="core-markdown">
+      <h2 id="core-markdown" className={styles.sectionTitle}>Команды Markdown без редактора</h2>
+      <p className={styles.bodyText}><code>applyMarkdownCommand(document, command)</code> возвращает новый текст и выделение. Индексы start/end — полуоткрытый диапазон UTF-16, как у текстового поля. Исходный документ не меняется.</p>
+      <CodeBlock language="ts" copyLabels={copyLabels} code={`import { applyMarkdownCommand } from '@dreadnought/core';
+const document = { text: 'hello', selection: { start: 0, end: 5 } };
+const result = applyMarkdownCommand(document, { type: 'bold' });`} />
+      <p className={styles.bodyText}>Доступны bold, italic, strikethrough, inlineCode, codeBlock, comment, link, image, heading, quote, list, horizontalRule, table, indent, outdent, newLine, duplicateLines и moveLines. Для heading задайте level от 1 до 6; для list — style unordered, ordered или task; для moveLines — direction previous или next. Indent/outdent принимают size от 1 до 16, по умолчанию 2.</p>
+      <p className={styles.footnote}>Команды сохраняют LF/CRLF и работают без DOM и React. История undo, клавиатура, фокус, восстановление выделения и отображение Markdown остаются адаптеру. Это не полный Markdown-парсер и не санитайзер ссылок: безопасное отображение контента должен обеспечивать рендерер.</p>
+    </section>
   </article>;
 }

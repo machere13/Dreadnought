@@ -1,0 +1,23 @@
+[
+  {
+    "id": "domain:apply-markdown-command",
+    "kind": "domain",
+    "name": "applyMarkdownCommand",
+    "family": "Markdown",
+    "docsUrl": "/custom-components/#core-markdown",
+    "description": "Чистые команды Markdown: текст и выделение без DOM, React и рендерера.",
+    "constraints": [
+      "Выделение — полуоткрытый диапазон UTF-16 start/end, целые безопасные индексы внутри text. Вход не меняется. Возвращает новый текст и выделение.",
+      "Inline: bold, italic, strikethrough, inlineCode, comment, link, image. Блоки: heading level 1–6, quote, list style unordered/ordered/task, codeBlock, horizontalRule, table. Строки: indent/outdent size 1–16 (по умолчанию 2), duplicateLines, moveLines direction previous/next, newLine.",
+      "LF/CRLF сохраняются. Пустое inline-выделение использует слово; пустой курсор на пробеле создаёт шаблон. Перенос строки продолжает список. Нет полного Markdown-парсера, истории undo, HTML-рендеринга или санитизации URL. Типы/неизвестная команда: TypeError; границы выделения и числовых параметров: RangeError."
+    ],
+    "bindings": [{
+      "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "applyMarkdownCommand",
+      "examples": [{
+        "id": "basic",
+        "code": "import { applyMarkdownCommand, type MarkdownDocument, type MarkdownCommand } from '@dreadnought/core';\nconst document: MarkdownDocument = {text:'hello',selection:{start:0,end:5}};\nconst command: MarkdownCommand = {type:'bold'};\nconst result = applyMarkdownCommand(document, command);\nconst next = applyMarkdownCommand(result, {type:'newLine'});"
+      }]
+    }]
+  }
+]
