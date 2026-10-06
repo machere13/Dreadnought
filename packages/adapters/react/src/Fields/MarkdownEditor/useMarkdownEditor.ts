@@ -6,6 +6,7 @@ import { useTextArea } from '../TextArea/index.ts';
 import type { MarkdownEditorPreview, UseMarkdownEditorOptions, UseMarkdownEditorResult } from './markdownEditor.types.ts';
 import { baseline, continuousInput, recordDocument, sameSelection, snapshot } from './markdownHistory.ts';
 import { beforeInputEvent } from './beforeInputEvent.ts';
+import { useMarkdownImageUpload } from './useMarkdownImageUpload.ts';
 
 const normalize = (text: string) => text.replace(/\r\n?/g, '\n');
 const readSelection = (node: HTMLTextAreaElement): MarkdownSelection => ({ start: node.selectionStart, end: node.selectionEnd });
@@ -26,7 +27,7 @@ function keyCommand(event: KeyboardEvent<HTMLTextAreaElement>): MarkdownCommand 
 
 export function useMarkdownEditor({ value: controlledValue, defaultValue = '', onValueChange, onChange, onSelect,
   onKeyDown, onCompositionStart, onCompositionEnd, onBeforeInput, onBlur, historyLimit = 100,
-  preview: controlledPreview, defaultPreview = 'edit', onPreviewChange, ...options }: UseMarkdownEditorOptions = {}): UseMarkdownEditorResult {
+  preview: controlledPreview, defaultPreview = 'edit', onPreviewChange, uploadImage, ...options }: UseMarkdownEditorOptions = {}): UseMarkdownEditorResult {
   if (!Number.isSafeInteger(historyLimit) || historyLimit <= 0) throw new RangeError('History limit must be a positive safe integer');
   const initial = useRef(normalize(defaultValue));
   const [internal, setInternal] = useState(initial.current);
@@ -57,6 +58,7 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
   function publish(state: HistoryState<MarkdownDocument>, focus: boolean, composition = false) {
     const current = node.current;
     if (!current) return;
+    if (state.present.text !== history.current.present.text) image.cancelImageUpload();
     pending.current = { document: state.present, history: state, element: current, focus, composition };
     if (!controlled) {
       if (composition && state.present.text !== history.current.present.text) compositionChanged.current = true;
@@ -86,6 +88,20 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
     const state = getHistoryState(history.current, { type: 'replace', value: previous ?? snapshot(current.value, readSelection(current)) }, { limit: historyLimit });
     publish(recordDocument(state, result, false, historyLimit), true);
   }
+
+  const image = useMarkdownImageUpload({ uploadImage,
+    readDocument: () => {
+      const current = node.current;
+      if (!current || options.disabled || options.readOnly || composing.current || preview === 'preview') return null;
+      return !controlled && pending.current?.element === current ? pending.current.document : snapshot(current.value, readSelection(current));
+    },
+    insert: (document, result) => {
+      group.current = null;
+      compositionEnding.current = null;
+      const state = getHistoryState(history.current, { type: 'replace', value: document }, { limit: historyLimit });
+      publish(recordDocument(state, result, false, historyLimit), true);
+    },
+  });
 
   const area = useTextArea({ ...options, value,
     onChange(event) {
@@ -119,6 +135,7 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
       onBlur?.(event);
     },
     onCompositionStart(event) {
+      image.cancelImageUpload();
       composing.current = true;
       compositionEnding.current = null;
       compositionChanged.current = false;
@@ -150,6 +167,7 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
   });
   const textAreaRef = useCallback((current: HTMLTextAreaElement | null) => {
     if (node.current !== current) {
+      image.cancelImageUpload();
       pending.current = null;
       composing.current = false;
       compositionEnding.current = null;
@@ -158,7 +176,7 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
     node.current = current;
     setElement(current);
     area.textAreaRef(current);
-  }, [area.textAreaRef]);
+  }, [area.textAreaRef, image.cancelImageUpload]);
 
   useLayoutEffect(() => {
     const result = pending.current;
@@ -167,6 +185,7 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
       if (result.composition && history.current.present.text !== value) compositionChanged.current = true;
       if (history.current !== result.history) { history.current = result.history; update(revision => revision + 1); }
     } else if (history.current.present.text !== value) {
+      image.cancelImageUpload();
       history.current = baseline(snapshot(value, node.current ? readSelection(node.current) : { start: 0, end: 0 }));
       group.current = null;
       compositionChanged.current = false;
@@ -189,6 +208,10 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
     if (preview === 'preview' && node.current === node.current?.ownerDocument.activeElement) node.current?.blur();
   }, [preview]);
 
+  useLayoutEffect(() => {
+    if (options.disabled || options.readOnly || preview === 'preview' || !uploadImage) image.cancelImageUpload();
+  }, [options.disabled, options.readOnly, preview, uploadImage, image.cancelImageUpload]);
+
   useEffect(() => {
     if (!element) return;
     function beforeInput(raw: Event) {
@@ -210,6 +233,7 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
     function reset(event: Event) {
       queueMicrotask(() => {
         if (!mounted || event.defaultPrevented) return;
+        image.cancelImageUpload();
         pending.current = null;
         group.current = null;
         if (!controlled) {
@@ -223,7 +247,7 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
     return () => { mounted = false; form?.removeEventListener('reset', reset); };
   }, [element, controlled, options.form]);
 
-  return { value, selection, preview, setPreview, execute, undo: () => travel('undo'), redo: () => travel('redo'),
+  return { value, selection, preview, setPreview, execute, ...image, undo: () => travel('undo'), redo: () => travel('redo'),
     canUndo: !options.disabled && !options.readOnly && history.current.past.length > 0,
     canRedo: !options.disabled && !options.readOnly && history.current.future.length > 0,
     textAreaProps: area.textAreaProps, textAreaRef,

@@ -5,15 +5,17 @@
   "family": "Fields",
   "description": "Редактирование Markdown: общая история ввода/команд и режимы edit/live/preview, независимый адаптер и готовая панель.",
   "docsUrl": "/components/markdowneditor/#markdowneditor-api",
-  "states": ["disabled", "readOnly"],
-  "composesWith": ["domain:apply-markdown-command", "behavior:get-history-state", "component:markdown-preview"],
+  "states": ["disabled", "readOnly", "selecting", "uploading", "error"],
+  "composesWith": ["domain:apply-markdown-command", "behavior:get-history-state", "component:markdown-preview", "action:pick-files"],
   "constraints": [
     "Второй слой не подключает стили или панель; renderPreview задаёт отображение. Третий слой добавляет тему, 12 действий, историю и режимы, безопасный MarkdownPreview. renderToolbar заменяет панель; toolbar=false скрывает её. Задайте доступное имя поля через label или aria-label.",
     "value/defaultValue — строки; CRLF/CR нормализуются в LF. onValueChange вызывается для ввода, команд и undo/redo; onChange — только для реального ввода. Выделение использует UTF-16 offsets.",
     "Controlled-владелец должен синхронно принять значение для восстановления выделения. Отказ, преобразование значения, новый ввод и замена элемента отменяют устаревшее восстановление. Несколько controlled-команд без commit не предугадывают принятие prop.",
     "disabled/readOnly и IME блокируют команды и undo/redo. Ctrl/Cmd+Z отменяет ввод и команды, Ctrl/Cmd+Shift+Z и Ctrl+Y повторяет. Tab и Shift+Enter нативные. historyLimit=100 ограничивает полные снимки; новая правка очищает redo. Поддержка ОС-жестов beforeinput зависит от браузера.",
     "preview/defaultPreview: edit (по умолчанию), live или preview; preview/onPreviewChange управляют режимом. Переключение не уничтожает textarea и историю. В preview форматирование запрещено, undo/redo не фокусирует скрытое поле. Независимая внешняя замена controlled value сбрасывает историю.",
-    "className/style и нативные атрибуты относятся к textarea; ref указывает на HTMLTextAreaElement. Uncontrolled form reset возвращает первоначальный defaultValue без callback."
+    "className/style и нативные атрибуты относятся к textarea; ref указывает на HTMLTextAreaElement. Uncontrolled form reset возвращает первоначальный defaultValue без callback.",
+    "uploadImage(file, {signal}) возвращает Promise<string> с URL изображения (http/https или относительный URL). insertImage выбирает один файл через pickFiles; без обработчика вставляет шаблон. Проверка содержимого, размера, MIME и серверная загрузка — ответственность приложения; accept=image/* только подсказка выбора. Не возвращайте data/blob/javascript URL.",
+    "imageUploadState: idle/selecting/uploading/error, imageUploadError содержит ошибку, cancelImageUpload отменяет ожидание. Смена текста, undo/redo с изменением текста, reset, IME, disabled/readOnly, preview и закрытие редактора отменяют запрос. Даже обработчик, игнорирующий signal, не вставит устаревший результат. Движение курсора разрешено: вставка использует сохранённое выделение и одну запись истории. Библиотека не удаляет уже загруженный серверный файл при отмене."
   ],
   "bindings": [
     {

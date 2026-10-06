@@ -3,6 +3,7 @@ import type { ReactNode, RefCallback, TextareaHTMLAttributes } from 'react';
 import type { UseTextAreaOptions } from '../TextArea/index.ts';
 
 export type MarkdownEditorPreview = 'edit' | 'preview' | 'live';
+export type MarkdownImageUploadState = 'idle' | 'selecting' | 'uploading' | 'error';
 
 export interface UseMarkdownEditorOptions extends Omit<UseTextAreaOptions, 'value' | 'defaultValue'> {
   value?: string;
@@ -12,6 +13,7 @@ export interface UseMarkdownEditorOptions extends Omit<UseTextAreaOptions, 'valu
   preview?: MarkdownEditorPreview;
   defaultPreview?: MarkdownEditorPreview;
   onPreviewChange?: (preview: MarkdownEditorPreview) => void;
+  uploadImage?: (file: File, context: { signal: AbortSignal }) => Promise<string>;
 }
 
 export interface MarkdownEditorControls {
@@ -24,6 +26,10 @@ export interface MarkdownEditorControls {
   setPreview: (preview: MarkdownEditorPreview) => void;
   disabled: boolean;
   readOnly: boolean;
+  insertImage: () => Promise<void>;
+  cancelImageUpload: () => void;
+  imageUploadState: MarkdownImageUploadState;
+  imageUploadError: unknown;
 }
 
 export interface UseMarkdownEditorResult extends MarkdownEditorControls {

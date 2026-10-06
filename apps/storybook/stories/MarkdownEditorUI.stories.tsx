@@ -22,6 +22,10 @@ export const Controlled: Story = {
 export const Disabled: Story = { args: { disabled: true } };
 export const ReadOnly: Story = { args: { readOnly: true } };
 export const Invalid: Story = { args: { invalid: true } };
+export const ImageUploadPending: Story = { args: { uploadImage: (_, {signal}) => new Promise<string>((_, reject) => {
+  signal.addEventListener('abort', () => reject(signal.reason), { once: true });
+}) } };
+export const ImageUploadError: Story = { args: { uploadImage: async () => { throw new Error('Upload failed'); } } };
 export const WithoutToolbar: Story = { args: { toolbar: false } };
 export const Narrow: Story = { args: { defaultPreview: 'live' }, render: args => <div style={{ width: 240, maxWidth: '100%' }}><MarkdownEditor {...args} /></div> };
 export const AutoSize: Story = { args: { autoSize: true, minRows: 3, maxRows: 10 } };

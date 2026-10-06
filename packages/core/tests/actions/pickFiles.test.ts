@@ -4,6 +4,23 @@ import { pickFiles } from '../../src/actions/pickFiles.ts';
 afterEach(() => vi.restoreAllMocks());
 
 describe('pickFiles', () => {
+  it('cleans up a pending picker when aborted', async () => {
+    vi.spyOn(HTMLInputElement.prototype, 'click').mockImplementation(() => {});
+    const controller = new AbortController();
+    const selection = pickFiles({ signal: controller.signal });
+    const input = document.querySelector('input[type=file]');
+    expect(input).not.toBeNull();
+    controller.abort();
+    expect(await selection).toEqual([]);
+    expect(input?.isConnected).toBe(false);
+  });
+
+  it('does not open a picker with an already aborted signal', async () => {
+    const controller = new AbortController();
+    controller.abort();
+    expect(await pickFiles({ signal: controller.signal })).toEqual([]);
+    expect(document.querySelector('input[type=file]')).toBeNull();
+  });
   it('returns a selected file and removes the temporary input', async () => {
     const file = new File(['hello'], 'note.txt', { type: 'text/plain' });
     let input: HTMLInputElement | undefined;

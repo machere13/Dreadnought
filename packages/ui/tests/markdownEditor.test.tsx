@@ -1,9 +1,42 @@
 import { createRef, useState } from 'react';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import * as ui from '../src/adapters/react/index.ts';
 
-afterEach(cleanup);
+afterEach(() => { cleanup(); vi.restoreAllMocks(); });
+
+it('shows upload progress and cancellation through the built-in image button', async () => {
+  vi.spyOn(HTMLInputElement.prototype, 'click').mockImplementation(() => {});
+  let resolve!: (url: string) => void;
+  let signal!: AbortSignal;
+  render(<ui.MarkdownEditor aria-label="Notes" defaultValue="hello" uploadImage={(_, context) => {
+    signal = context.signal;
+    return new Promise<string>(yes => { resolve = yes; });
+  }} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Изображение' }));
+  const picker = document.querySelector('input[type=file]');
+  expect(picker).not.toBeNull();
+  await act(async () => { fireEvent.change(picker!, { target: { files: [new File(['png'], 'image.png', { type: 'image/png' })] } }); });
+  expect(screen.getByRole('button', { name: 'Изображение' }).getAttribute('aria-busy')).toBe('true');
+  fireEvent.click(screen.getByRole('button', { name: 'Отменить загрузку изображения' }));
+  expect(signal.aborted).toBe(true);
+  await act(async () => { resolve('/late.png'); });
+  expect((screen.getByRole('textbox') as HTMLTextAreaElement).value).toBe('hello');
+  expect(screen.queryByRole('button', { name: 'Отменить загрузку изображения' })).toBeNull();
+});
+
+it('shows a reusable Alert on upload failure and clears it on retry', async () => {
+  vi.spyOn(HTMLInputElement.prototype, 'click').mockImplementation(() => {});
+  render(<ui.MarkdownEditor aria-label="Notes" uploadImage={async () => { throw new Error('private server details'); }}
+    labels={{ uploadError: 'Upload failed' }} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Изображение' }));
+  await act(async () => { fireEvent.change(document.querySelector('input[type=file]')!, { target: { files: [new File(['png'], 'image.png')] } }); });
+  expect(screen.getByRole('alert').textContent).toBe('Upload failed');
+  expect(screen.getByRole('alert').getAttribute('data-ui')).toBe('alert');
+  fireEvent.click(screen.getByRole('button', { name: 'Изображение' }));
+  expect(screen.queryByRole('alert')).toBeNull();
+  await act(async () => { fireEvent(document.querySelector('input[type=file]')!, new Event('cancel')); });
+});
 
 it('formats through the ready toolbar and restores native selection', () => {
   expect(ui.MarkdownEditor).toBeTypeOf('function');

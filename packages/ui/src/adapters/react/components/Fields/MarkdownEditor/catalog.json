@@ -5,19 +5,23 @@
     "importPath": "@dreadnought/ui/react", "exportName": "MarkdownEditor",
     "propertyDescriptions": {
       "toolbar": "Показывает встроенную или пользовательскую панель. false скрывает панель, но сохраняет клавиатурные команды.",
-      "labels": "Переводы имён форматирования, undo/redo и режимов; непереданные подписи русские.",
-      "renderToolbar": "Заменяет панель; controls содержит execute, undo/redo, canUndo/canRedo, preview/setPreview, disabled/readOnly.",
+      "labels": "Переводы имён форматирования, undo/redo, режимов, отмены загрузки и ошибки; непереданные подписи русские.",
+      "renderToolbar": "Заменяет панель; controls содержит execute, undo/redo, canUndo/canRedo, preview/setPreview, disabled/readOnly, insertImage/cancelImageUpload и imageUploadState/imageUploadError.",
       "renderPreview": "Заменяет отображение принятого Markdown; по умолчанию безопасный MarkdownPreview.",
       "historyLimit": "Предел полных снимков истории, положительное безопасное целое; по умолчанию 100.",
       "preview": "Управляемый режим edit/live/preview.",
       "defaultPreview": "Начальный неуправляемый режим, по умолчанию edit.",
       "onPreviewChange": "Запрос смены режима; не меняет текст.",
+      "uploadImage": "Обработчик (file, {signal}) => Promise<string> с URL. Кнопка изображения выбирает файл, показывает загрузку и отмену; без обработчика вставляет шаблон. Ошибка отображается через Alert, labels.uploadError и labels.cancelUpload задают подписи.",
       "className": "Дополнительный класс textarea, не внешней обёртки.",
       "style": "Стили textarea; токены внешнего оформления можно задавать на предке.",
       "onValueChange": "Строка Markdown после ввода, команды или undo/redo. Controlled-владелец синхронно обновляет value.",
       "rows": "Исходная высота поля без autoSize."
     },
     "defaults": { "toolbar": true, "rows": 8, "disabled": false, "readOnly": false, "historyLimit": 100, "defaultPreview": "edit" },
-    "examples": [{ "id": "basic", "code": "import { MarkdownEditor } from '@dreadnought/ui/react';\nconst example = <MarkdownEditor aria-label='Markdown' defaultValue='# Заметки' defaultPreview='live' historyLimit={100} />;" }]
+    "examples": [
+      { "id": "basic", "code": "import { MarkdownEditor } from '@dreadnought/ui/react';\nconst example = <MarkdownEditor aria-label='Markdown' defaultValue='# Заметки' defaultPreview='live' historyLimit={100} />;" },
+      { "id": "image-upload", "code": "import { MarkdownEditor } from '@dreadnought/ui/react';\nconst example = <MarkdownEditor aria-label='Markdown' uploadImage={async (file, {signal}) => { const body = new FormData(); body.append('image', file); const response = await fetch('/api/images', {method:'POST', body, signal}); if (!response.ok) throw new Error('Upload failed'); const result: {url: string} = await response.json(); return result.url; }} />;" }
+    ]
   }]
 }

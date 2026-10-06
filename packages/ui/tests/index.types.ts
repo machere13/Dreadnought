@@ -7,6 +7,11 @@ import { MarkdownPreview, type MarkdownPreviewProps } from '@dreadnought/ui/reac
 import { markdownPreviewPresentation } from '@dreadnought/ui';
 const previewProps: MarkdownPreviewProps = { value: '# Hello' };
 const liveProps: MarkdownEditorProps = { preview: 'live', historyLimit: 20, onPreviewChange: mode => void mode };
+const uploadProps: MarkdownEditorProps = { uploadImage: async (file, {signal}) => {
+  signal.throwIfAborted();
+  return `/images/${encodeURIComponent(file.name)}`;
+}, labels: { cancelUpload: 'Cancel upload', uploadError: 'Upload failed' } };
+void uploadProps;
 void [MarkdownPreview, markdownPreviewPresentation.root, previewProps, liveProps];
 void [MarkdownEditor, markdownEditorPresentation.field, markdownEditorProps];
 import { tabsPresentation } from '@dreadnought/ui';
