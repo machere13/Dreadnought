@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-drawer-size: var(--dreadnought-size-x5);
+  --dreadnought-drawer-radius: var(--dreadnought-border-radius-square);
+  --dreadnought-drawer-border-width: var(--dreadnought-border-width-outline);
+}

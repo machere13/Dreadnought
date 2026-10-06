@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-drawer-font-family: var(--dreadnought-font-family-ui);
+  --dreadnought-drawer-font-size: var(--dreadnought-font-size-body-2);
+  --dreadnought-drawer-font-weight: var(--dreadnought-font-weight-body-2);
+  --dreadnought-drawer-line-height: var(--dreadnought-line-height-body-2);
+}

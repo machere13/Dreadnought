@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-drawer-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-drawer-text: var(--dreadnought-color-text-primary);
+  --dreadnought-drawer-border: var(--dreadnought-color-border-subtle);
+  --dreadnought-drawer-backdrop: var(--dreadnought-color-surface-overlay);
+}
