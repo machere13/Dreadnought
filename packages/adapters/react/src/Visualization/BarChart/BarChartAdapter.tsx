@@ -3,7 +3,7 @@ import { buildBarLayout, getSelectionValue } from '@dreadnought/core';
 import { useChartViewport } from '../../shared/useChartViewport.ts';
 import { chartNativeProps as nativeProps } from '../../shared/chartNativeProps.ts';
 import { attachRef } from '../../shared/attachRef.ts';
-import { TableAdapter } from '../../DataDisplay/Table/index.ts';
+import { TableAdapter } from '../../DataDisplay/Table/TableAdapter.tsx';
 import { BarPlot } from './BarPlot.tsx';
 import type { BarChartAdapterProps } from './barChart.types.ts';
 import { ChartPagination, useChartPage } from '../../shared/useChartPage.tsx';

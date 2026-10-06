@@ -29,10 +29,10 @@ export function MenuAdapter({ items, selectedValue, onAction, slotProps = {}, on
     if (!event.currentTarget.contains(event.relatedTarget)) search.current.query = '';
   }} onKeyDown={(event) => {
     onKeyDown?.(event);
-    if (event.defaultPrevented) return;
+    if (event.defaultPrevented || event.nativeEvent.isComposing) return;
     const direction = getNavigationDirection(event.key);
     const typing = event.key.length === 1 && event.key !== ' ' && !event.ctrlKey
-      && !event.altKey && !event.metaKey && !event.nativeEvent.isComposing;
+      && !event.altKey && !event.metaKey;
     if (!direction && !typing) return;
     event.preventDefault();
     const current = event.currentTarget.ownerDocument.activeElement?.getAttribute('data-menu-value') ?? tabStop ?? '';

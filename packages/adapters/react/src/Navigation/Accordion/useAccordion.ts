@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { toggleAccordionValue } from '@dreadnought/core';
 
 type Selection<T> = (
@@ -23,17 +23,19 @@ export function useAccordion(options: UseAccordionOptions): UseAccordionResult<s
     () => options.defaultValue ?? options.value ?? (options.multiple ? [] : null),
   );
   const selectedValue = options.value !== undefined ? options.value : internalValue;
+  const pendingValue = useRef(internalValue);
+  useLayoutEffect(() => { pendingValue.current = internalValue; }, [internalValue]);
 
   function toggle(item: string) {
     if (options.multiple) {
-      const current = selectedValue as string[];
+      const current = (options.value ?? pendingValue.current) as string[];
       const next = toggleAccordionValue(current, item);
-      if (options.value === undefined) setInternalValue(next);
+      if (options.value === undefined) { pendingValue.current = next; setInternalValue(next); }
       options.onValueChange?.(next);
     } else {
-      const current = selectedValue as string | null;
+      const current = (options.value !== undefined ? options.value : pendingValue.current) as string | null;
       const next = toggleAccordionValue(current, item);
-      if (options.value === undefined) setInternalValue(next);
+      if (options.value === undefined) { pendingValue.current = next; setInternalValue(next); }
       options.onValueChange?.(next);
     }
   }

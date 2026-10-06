@@ -17,7 +17,7 @@ export function TabsTabAdapter({ value, disabled = false, onClick, onKeyDown, re
 
   function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
     onKeyDown?.(event);
-    if (event.defaultPrevented) return;
+    if (event.defaultPrevented || event.nativeEvent.isComposing) return;
     const targetDirection = getNavigationDirection(event.key, { orientation: 'horizontal' });
     if (targetDirection === undefined) return;
     event.preventDefault();

@@ -1,7 +1,7 @@
 import type { RadarLayout, RadarMetric, RadarSeries } from '@dreadnought/core';
 import { useRef, useState } from 'react';
-import { MarkAdapter } from '../../DataDisplay/Mark/index.ts';
-import { TooltipAdapter } from '../../Overlays/Tooltip/index.ts';
+import { MarkAdapter } from '../../DataDisplay/Mark/MarkAdapter.tsx';
+import { TooltipAdapter } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
 import { radarNativeProps, type RadarChartSlotProps } from './radarChart.types.ts';
 
 type Props = {

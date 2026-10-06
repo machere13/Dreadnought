@@ -18,7 +18,7 @@ const empty: string[] = [];
 export function CheckboxGroupAdapter({ label, options, value, defaultValue = empty, onValueChange, name, disabled, ref, slotProps, ...props }: CheckboxGroupAdapterProps) {
   const root = useRef<HTMLFieldSetElement>(null);
   useImperativeHandle(ref, () => root.current!);
-  const [selected, setValue] = useFieldValue<readonly string[]>(value, defaultValue, next => onValueChange?.([...next]), root);
+  const [selected, setValue] = useFieldValue<readonly string[]>(value, defaultValue, next => onValueChange?.([...next]), root, props.form);
   if (new Set(options.map(o => o.value)).size !== options.length) throw new Error('Checkbox option values must be unique.');
   return <fieldset {...props} ref={root} name={name} disabled={disabled} data-ui="checkbox-group">
     {label && <legend>{label}</legend>}

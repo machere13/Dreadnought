@@ -28,7 +28,12 @@ export function SelectAdapter(props: SelectAdapterProps) {
       aria-required={required || undefined} aria-invalid={select.state.invalid || inputProps['aria-invalid'] || undefined}
       value={searchable && select.open ? select.query : display}
       placeholder={searchable && select.open && display ? display : inputProps.placeholder}
-      onChange={event => {
+      onInvalid={event => {
+        props.onInvalid?.(event);
+        slotProps.control?.onInvalid?.(event);
+        select.setValidationInvalid(true);
+        if (!event.defaultPrevented) event.currentTarget.focus();
+      }} onChange={event => {
         slotProps.control?.onChange?.(event);
         if (!event.defaultPrevented && searchable) { select.setQuery(event.currentTarget.value); select.setActive(''); select.setExpanded(true); }
       }} onClick={event => {
@@ -41,12 +46,18 @@ export function SelectAdapter(props: SelectAdapterProps) {
     <select ref={select.native} hidden data-slot="native" name={name} form={inputProps.form} disabled={disabled} required={required}
       aria-hidden="true" tabIndex={-1} multiple={multiple} value={multiple ? [...select.state.values] : select.state.values[0] ?? ''}
       onChange={event => { select.setValue(multiple ? Array.from(event.currentTarget.selectedOptions, option => option.value) : event.currentTarget.value || null); }}
-      onInvalid={event => { event.preventDefault(); select.setValidationInvalid(true); select.control.current?.focus(); }}>
+      onInvalid={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        const control = select.control.current;
+        if (control) control.dispatchEvent(new control.ownerDocument.defaultView!.Event('invalid', { cancelable: true }));
+      }}>
       {!multiple && <option value="" />}
       {[...options, ...additional].map(option => <option key={option.value} value={option.value} disabled={option.disabled}>{option.label}</option>)}
     </select>
     <div {...slotProps.popup} ref={select.popup} id={`${select.id}-listbox`} role="listbox" popover="auto" hidden={!select.open}
-      data-slot="popup" aria-label={props['aria-label'] ?? 'Варианты'} aria-labelledby={props['aria-labelledby']}
+      data-slot="popup" aria-label={slotProps.popup?.['aria-label'] ?? props['aria-label'] ?? 'Варианты'}
+      aria-labelledby={slotProps.popup?.['aria-labelledby'] ?? (slotProps.popup?.['aria-label'] ? undefined : props['aria-labelledby'])}
       aria-multiselectable={multiple || undefined} onToggle={event => {
         slotProps.popup?.onToggle?.(event); if (event.newState === 'closed') select.close();
       }} onMouseDown={event => { slotProps.popup?.onMouseDown?.(event); event.preventDefault(); }}>

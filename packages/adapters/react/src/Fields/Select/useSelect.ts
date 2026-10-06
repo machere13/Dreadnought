@@ -20,7 +20,7 @@ export function useSelect(props: SelectAdapterProps) {
   const [value, setValue] = useFieldValue<SelectValue>(props.value, props.defaultValue ?? (props.multiple ? empty : null), next => {
     if (props.multiple) props.onValueChange?.(next as string[]);
     else props.onValueChange?.(next as string | null);
-  }, native);
+  }, native, props.form);
   const open = expanded && !props.disabled;
   const state = getSelectState({ ...props, value, query: open ? query : '', invalid: props.invalid || validationInvalid });
   const activeValue = state.filteredOptions.find(option => option.value === active && !option.disabled)?.value
@@ -69,10 +69,17 @@ export function useSelect(props: SelectAdapterProps) {
     if (open && activeValue) popup.current?.ownerDocument.getElementById(optionId(activeValue))?.scrollIntoView?.({ block: 'nearest' });
   }, [open, activeValue, id]);
   useEffect(() => {
+    if (native.current?.validity.valid) setValidationInvalid(false);
+  }, [value, props.required, props.disabled, props.multiple, props.options]);
+  useEffect(() => {
     const form = native.current?.form;
-    function reset() { close(); setValidationInvalid(false); }
+    function reset(event: Event) {
+      queueMicrotask(() => {
+        if (!event.defaultPrevented) { close(); setValidationInvalid(false); }
+      });
+    }
     form?.addEventListener('reset', reset);
     return () => form?.removeEventListener('reset', reset);
-  }, []);
+  }, [props.form]);
   return { id, control, native, root, popup, state, open, query, activeValue, optionId, choose, clear, close, setValue, setExpanded, setQuery, setActive, setValidationInvalid, onKeyDown };
 }

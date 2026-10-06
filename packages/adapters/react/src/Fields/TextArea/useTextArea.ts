@@ -86,8 +86,6 @@ export function useTextArea({
     'data-max-rows': !state.autoSize && state.maxRows !== undefined ? '' : undefined,
     style: {
       ...style,
-      '--dreadnought-text-area-min-rows': minimumRows,
-      '--dreadnought-text-area-max-rows': state.autoSize ? undefined : state.maxRows,
       ...(state.autoSize ? { resize: 'none' as const, overflowY: 'hidden' as const } : {}),
     },
     onInput: handleInput,

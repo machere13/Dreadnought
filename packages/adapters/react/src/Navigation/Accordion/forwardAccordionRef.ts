@@ -1,20 +1,12 @@
 import type { Ref, RefObject } from 'react';
+import { attachRef } from '../../shared/attachRef.ts';
 
 export function forwardAccordionRef<T>(internal: RefObject<T | null>, external: Ref<T> | undefined, element: T | null) {
   internal.current = element;
-  if (typeof external === 'function') {
-    const cleanup = external(element);
-    if (element === null) return;
-    return () => {
-      internal.current = null;
-      if (typeof cleanup === 'function') cleanup();
-      else external(null);
-    };
+  if (element === null) {
+    if (typeof external === 'function') external(null);
+    else if (external) external.current = null;
+    return;
   }
-  if (external) external.current = element;
-  if (element === null) return;
-  return () => {
-    internal.current = null;
-    if (external) external.current = null;
-  };
+  return attachRef(element, external, () => { internal.current = null; });
 }

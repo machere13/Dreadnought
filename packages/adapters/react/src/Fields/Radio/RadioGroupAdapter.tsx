@@ -18,7 +18,7 @@ export function RadioGroupAdapter({ label, options, value, defaultValue = '', on
   const generatedName = useId();
   const root = useRef<HTMLFieldSetElement>(null);
   useImperativeHandle(ref, () => root.current!);
-  const [selected, setValue] = useFieldValue(value, defaultValue, onValueChange, root);
+  const [selected, setValue] = useFieldValue(value, defaultValue, onValueChange, root, props.form);
   if (new Set(options.map(o => o.value)).size !== options.length) throw new Error('Radio option values must be unique.');
   return <fieldset {...props} ref={root} name={name} role="radiogroup" disabled={disabled} data-ui="radio-group">
     {label && <legend>{label}</legend>}

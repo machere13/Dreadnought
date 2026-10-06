@@ -1,5 +1,5 @@
 import type { RadarMetric, RadarSeries } from '@dreadnought/core';
-import { TableAdapter } from '../../DataDisplay/Table/index.ts';
+import { TableAdapter } from '../../DataDisplay/Table/TableAdapter.tsx';
 import { radarNativeProps, type RadarChartLabels, type RadarChartSlotProps } from './radarChart.types.ts';
 
 type Props = { metrics: readonly RadarMetric[]; series: readonly RadarSeries[]; label: string;

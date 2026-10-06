@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { RefObject } from 'react';
 
 export function useFieldValue<T>(value: T | undefined, defaultValue: T, onValueChange: ((value: T) => void) | undefined,
-  ref: RefObject<HTMLInputElement | HTMLSelectElement | HTMLFieldSetElement | null>) {
+  ref: RefObject<HTMLInputElement | HTMLSelectElement | HTMLFieldSetElement | null>, formId?: string) {
   const [internal, setInternal] = useState(defaultValue);
   useEffect(() => {
     const form = ref.current?.form;
@@ -13,7 +13,7 @@ export function useFieldValue<T>(value: T | undefined, defaultValue: T, onValueC
     }
     form?.addEventListener('reset', reset);
     return () => form?.removeEventListener('reset', reset);
-  }, [value, defaultValue, ref]);
+  }, [value, defaultValue, ref, formId]);
   return [value === undefined ? internal : value, (next: T) => {
     if (value === undefined) setInternal(next);
     onValueChange?.(next);

@@ -1,7 +1,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { sampleLineLayout, getLinePointAtX, getClosestLinePoint, getNavigationDirection, getNextEnabledValue, type LineLayout, type LinePoint } from '@dreadnought/core';
-import { TooltipAdapter } from '../../Overlays/Tooltip/index.ts';
-import { MarkAdapter } from '../../DataDisplay/Mark/index.ts';
+import { TooltipAdapter } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
+import { MarkAdapter } from '../../DataDisplay/Mark/MarkAdapter.tsx';
 import { chartNativeProps as nativeProps } from '../../shared/chartNativeProps.ts';
 import type { LineChartAdapterProps } from './lineChart.types.ts';
 import { attachRef } from '../../shared/attachRef.ts';

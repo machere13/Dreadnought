@@ -2,7 +2,7 @@ import { useId, useImperativeHandle, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { filterTableRows, getSelectionValue, paginateTableRows, sortTableRows } from '@dreadnought/core';
 import type { TableSortOrder } from '@dreadnought/core';
-import { CheckboxAdapter } from '../../Fields/Checkbox/index.ts';
+import { CheckboxAdapter } from '../../Fields/Checkbox/CheckboxAdapter.tsx';
 import { TableFilterMenu } from './TableFilterMenu.tsx';
 import { useTableWidths } from './useTableWidths.ts';
 import { cellValue, fixedStyle, paginationNumber, recordKey } from './tableData.ts';
