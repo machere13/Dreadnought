@@ -3,7 +3,7 @@ import type { HistoryState, MarkdownCommand, MarkdownDocument, MarkdownSelection
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { useTextArea } from '../TextArea/index.ts';
-import type { UseMarkdownEditorOptions, UseMarkdownEditorResult } from './markdownEditor.types.ts';
+import type { MarkdownEditorPreview, UseMarkdownEditorOptions, UseMarkdownEditorResult } from './markdownEditor.types.ts';
 import { baseline, continuousInput, recordDocument, sameSelection, snapshot } from './markdownHistory.ts';
 import { beforeInputEvent } from './beforeInputEvent.ts';
 
@@ -25,12 +25,16 @@ function keyCommand(event: KeyboardEvent<HTMLTextAreaElement>): MarkdownCommand 
 }
 
 export function useMarkdownEditor({ value: controlledValue, defaultValue = '', onValueChange, onChange, onSelect,
-  onKeyDown, onCompositionStart, onCompositionEnd, onBeforeInput, onBlur, historyLimit = 100, ...options }: UseMarkdownEditorOptions = {}): UseMarkdownEditorResult {
+  onKeyDown, onCompositionStart, onCompositionEnd, onBeforeInput, onBlur, historyLimit = 100,
+  preview: controlledPreview, defaultPreview = 'edit', onPreviewChange, ...options }: UseMarkdownEditorOptions = {}): UseMarkdownEditorResult {
   if (!Number.isSafeInteger(historyLimit) || historyLimit <= 0) throw new RangeError('History limit must be a positive safe integer');
   const initial = useRef(normalize(defaultValue));
   const [internal, setInternal] = useState(initial.current);
   const value = controlledValue === undefined ? internal : normalize(controlledValue);
   const controlled = controlledValue !== undefined;
+  const [internalPreview, setInternalPreview] = useState(defaultPreview);
+  const preview = controlledPreview ?? internalPreview;
+  if (!['edit', 'preview', 'live'].includes(preview)) throw new TypeError('Invalid Markdown preview mode');
   const [element, setElement] = useState<HTMLTextAreaElement | null>(null);
   const node = useRef<HTMLTextAreaElement | null>(null);
   const composing = useRef(false);
@@ -40,6 +44,14 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
   const pending = useRef<{ document: MarkdownDocument; history: HistoryState<MarkdownDocument>; element: HTMLTextAreaElement; focus: boolean } | null>(null);
   const [selection, setSelection] = useState<MarkdownSelection>({ start: 0, end: 0 });
   const [, update] = useState(0);
+
+  function setPreview(next: MarkdownEditorPreview) {
+    if (!['edit', 'preview', 'live'].includes(next)) throw new TypeError('Invalid Markdown preview mode');
+    if (next === preview) return;
+    group.current = null;
+    if (controlledPreview === undefined) setInternalPreview(next);
+    onPreviewChange?.(next);
+  }
 
   function publish(state: HistoryState<MarkdownDocument>, focus: boolean) {
     const current = node.current;
@@ -60,7 +72,7 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
 
   function execute(command: MarkdownCommand) {
     const current = node.current;
-    if (!current || options.disabled || options.readOnly || composing.current) return;
+    if (!current || options.disabled || options.readOnly || composing.current || preview === 'preview') return;
     const previous = !controlled && pending.current?.element === current ? pending.current.document : undefined;
     const result = applyMarkdownCommand(previous ?? { text: current.value, selection: readSelection(current) }, command);
     group.current = null;
@@ -146,7 +158,7 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
       update(revision => revision + 1);
     } else if (result) { group.current = null; }
     if (result && result.element === node.current && result.document.text === value
-      && result.focus && !options.disabled && !options.readOnly && !composing.current) {
+      && result.focus && preview !== 'preview' && !options.disabled && !options.readOnly && !composing.current) {
       result.element.focus();
       result.element.setSelectionRange(result.document.selection.start, result.document.selection.end);
     }
@@ -155,6 +167,11 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
       setSelection(current => current.start === next.start && current.end === next.end ? current : next);
     }
   });
+
+  useLayoutEffect(() => {
+    group.current = null;
+    if (preview === 'preview' && node.current === document.activeElement) node.current?.blur();
+  }, [preview]);
 
   useEffect(() => {
     if (!element) return;
@@ -190,7 +207,7 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
     return () => { mounted = false; form?.removeEventListener('reset', reset); };
   }, [element, controlled, options.form]);
 
-  return { value, selection, execute, undo: () => travel('undo'), redo: () => travel('redo'),
+  return { value, selection, preview, setPreview, execute, undo: () => travel('undo'), redo: () => travel('redo'),
     canUndo: !options.disabled && !options.readOnly && history.current.past.length > 0,
     canRedo: !options.disabled && !options.readOnly && history.current.future.length > 0,
     textAreaProps: area.textAreaProps, textAreaRef,
