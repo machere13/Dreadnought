@@ -5,6 +5,37 @@ import * as ui from '../src/adapters/react/index.ts';
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 
+it('uses themed tooltips instead of native titles and honors custom action labels', () => {
+  render(<ui.MarkdownEditor aria-label="Notes" labels={{ bold: 'Strong' }} />);
+  const bold = screen.getByRole('button', { name: 'Strong' });
+  fireEvent.pointerEnter(bold);
+  const tooltip = screen.getByRole('tooltip');
+  expect(tooltip.textContent).toBe('Strong');
+  expect(tooltip.getAttribute('data-placement')).toBe('top');
+  expect(tooltip.querySelector('[data-ui="tooltip-arrow"]')).not.toBeNull();
+  expect(bold.getAttribute('aria-describedby')).toBe(tooltip.id);
+  expect(screen.getByRole('toolbar').querySelector('button[title]')).toBeNull();
+  fireEvent.keyDown(bold, { key: 'Escape' });
+  expect(screen.queryByRole('tooltip')).toBeNull();
+});
+
+it('keeps toolbar keyboard navigation and text selection when showing tooltips', () => {
+  render(<ui.MarkdownEditor aria-label="Notes" defaultValue="hello" />);
+  const field = screen.getByRole('textbox') as HTMLTextAreaElement;
+  field.setSelectionRange(0, 5);
+  const bold = screen.getByRole('button', { name: 'Жирный' });
+  act(() => bold.focus());
+  expect(screen.getByRole('tooltip').textContent).toBe('Жирный');
+  fireEvent.keyDown(bold, { key: 'ArrowRight' });
+  const italic = screen.getByRole('button', { name: 'Курсив' });
+  expect(document.activeElement).toBe(italic);
+  expect(document.getElementById(italic.getAttribute('aria-describedby')!)?.textContent).toBe('Курсив');
+  fireEvent.click(italic);
+  expect(field.value).toBe('*hello*');
+  expect([field.selectionStart, field.selectionEnd]).toEqual([1, 6]);
+  expect(document.activeElement).toBe(field);
+});
+
 it.each(['paste', 'drop'] as const)('shows shared upload controls for an image %s and inserts into live preview', async kind => {
   let resolve!: (url: string) => void;
   function Controlled() {

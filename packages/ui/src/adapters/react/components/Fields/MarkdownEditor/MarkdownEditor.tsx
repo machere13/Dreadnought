@@ -1,6 +1,7 @@
 import { MarkdownEditorAdapter } from '@dreadnought/react/unstyled';
 import type { MarkdownEditorAdapterProps, MarkdownEditorControls } from '@dreadnought/react/unstyled';
 import { useToolbarItem } from '@dreadnought/react/logic';
+import type { TooltipTriggerProps } from '@dreadnought/react/logic';
 import type { CSSProperties } from 'react';
 import type { IconName } from '@dreadnought/ui';
 import { markdownEditorPresentation } from '#presentation/Fields/MarkdownEditor/markdownEditorPresentation.ts';
@@ -10,6 +11,7 @@ import { Toolbar } from '../../Controls/Toolbar/index.ts';
 import { Icon } from '../../DataDisplay/Icon/index.ts';
 import { MarkdownPreview } from '../../DataDisplay/MarkdownPreview/index.ts';
 import { Alert } from '../../Feedback/Alert/index.ts';
+import { Tooltip } from '../../Overlays/Tooltip/index.ts';
 
 const actions = [
   { id: 'bold', label: 'Жирный', icon: 'bold', command: { type: 'bold' } },
@@ -32,9 +34,16 @@ export type MarkdownEditorProps = MarkdownEditorAdapterProps & {
   labels?: Partial<MarkdownEditorLabels>;
 };
 
-function ToolbarButton({ id, label, icon, onClick, disabled = false, loading = false, pressed }: { id: string; label: string; icon: IconName; onClick: () => void; disabled?: boolean; loading?: boolean; pressed?: boolean }) {
-  const { itemProps } = useToolbarItem<HTMLButtonElement>({ value: id, disabled: disabled || loading });
-  return <Button {...itemProps} type="button" size="compact" variant="ghosted" aria-label={label} title={label}
+type ToolbarButtonProps = { id: string; label: string; icon: IconName; onClick: () => void; disabled?: boolean; loading?: boolean; pressed?: boolean };
+
+function ToolbarButton(props: ToolbarButtonProps) {
+  return <Tooltip content={props.label} placement="top">{trigger => <ToolbarButtonContent {...props} trigger={trigger} />}</Tooltip>;
+}
+
+function ToolbarButtonContent({ id, label, icon, onClick, disabled = false, loading = false, pressed, trigger }: ToolbarButtonProps & { trigger: TooltipTriggerProps }) {
+  const { itemProps } = useToolbarItem<HTMLButtonElement>({ value: id, disabled: disabled || loading,
+    ref: trigger.ref, onFocus: trigger.onFocus, onKeyDown: trigger.onKeyDown });
+  return <Button {...trigger} {...itemProps} type="button" size="compact" variant="ghosted" aria-label={label}
     icon={<Icon name={icon} />} disabled={disabled} loading={loading} aria-pressed={pressed} onClick={onClick} />;
 }
 
