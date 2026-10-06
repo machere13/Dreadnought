@@ -6,10 +6,15 @@ export interface UseMarkdownEditorOptions extends Omit<UseTextAreaOptions, 'valu
   value?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
+  historyLimit?: number;
 }
 
 export interface MarkdownEditorControls {
   execute: (command: MarkdownCommand) => void;
+  undo: () => void;
+  redo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
   disabled: boolean;
   readOnly: boolean;
 }
