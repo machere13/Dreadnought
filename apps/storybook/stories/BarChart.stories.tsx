@@ -16,3 +16,7 @@ export const Negative: Story = { args: { width: 600, height: 320, domain: [-100,
 export const Missing: Story = { args: { series: [{ ...series[0], values: { jan: null, feb: 0, mar: 70 } }, series[1]] } };
 export const Empty: Story = { args: { categories: [], series: [] } };
 export const Narrow: Story = { args: { width: 320, height: 240 } };
+const manyCategories = Array.from({ length: 10000 }, (_, index) => ({ id: String(index), label: `№ ${index + 1}` }));
+const manySeries = [{ id: 'a', label: 'Измерения', values: Object.fromEntries(manyCategories.map((category, index) => [category.id, (index % 100) - 50])) }];
+export const LargeData: Story = { args: { label: '10 000 категорий', categories: manyCategories, series: manySeries, domain: [-100, 100], width: 600, height: 320 } };
+export const LargeHorizontal: Story = { args: { ...LargeData.args, orientation: 'horizontal' } };

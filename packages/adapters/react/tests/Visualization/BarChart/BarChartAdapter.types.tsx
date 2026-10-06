@@ -3,6 +3,9 @@ import { BarChartAdapter, type BarChartAdapterProps } from '../../../src/unstyle
 const props: BarChartAdapterProps = { label: 'Столбцы', categories: [], series: [], domain: [-10, 100],
   slotProps: { bar: () => ({ ref: createRef<SVGGElement>() }), tooltipMark: item => ({ title: item.id }) } };
 <BarChartAdapter {...props} />;
+<BarChartAdapter {...props} minCategorySize={80} pageSize={20} slotProps={{ scrollContainer: { ref: createRef<HTMLDivElement>() } }} />;
+// @ts-expect-error pagination state cannot be overridden through native slots
+<BarChartAdapter {...props} slotProps={{ paginationButton: { disabled: false } }} />;
 // @ts-expect-error dimensions must be a pair
 <BarChartAdapter {...props} width={500} />;
 // @ts-expect-error geometry cannot be replaced through slots

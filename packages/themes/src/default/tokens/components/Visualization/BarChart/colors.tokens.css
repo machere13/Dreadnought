@@ -1,4 +1,6 @@
 :root {
+  --dreadnought-bar-chart-scrollbar-thumb: var(--dreadnought-color-border-default);
+  --dreadnought-bar-chart-scrollbar-track: var(--dreadnought-color-surface-canvas);
   --dreadnought-bar-chart-text: var(--dreadnought-color-text-primary);
   --dreadnought-bar-chart-description-text: var(--dreadnought-color-text-placeholder);
   --dreadnought-bar-chart-grid-color: var(--dreadnought-color-border-subtle);

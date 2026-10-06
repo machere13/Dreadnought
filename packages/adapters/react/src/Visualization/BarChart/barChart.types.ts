@@ -1,7 +1,9 @@
 import type { BarCategory, BarSeries, BarRect } from '@dreadnought/core';
 import type { ChartNative as Native } from '../../shared/chartNativeProps.ts';
+import type { ChartPaginationSlots } from '../../shared/useChartPage.tsx';
 
-export interface BarChartSlotProps {
+export interface BarChartSlotProps extends ChartPaginationSlots {
+  scrollContainer?: Native<'div'>;
   plotContainer?: Native<'div'>;
   plot?: Native<'svg', 'width' | 'height' | 'viewBox' | 'preserveAspectRatio' | 'aria-hidden' | 'tabIndex'>;
   grid?: Native<'g'>;
@@ -24,6 +26,8 @@ export type BarChartAdapterProps = Native<'figure', 'role' | 'aria-labelledby' |
   formatValue?: (value: number) => string;
   visibleSeries?: readonly string[]; defaultVisibleSeries?: readonly string[];
   onVisibleSeriesChange?: (series: string[]) => void;
+  pageSize?: number;
+  minCategorySize?: number;
   labels?: { legend?: string; dataTable?: string; empty?: string };
   slotProps?: BarChartSlotProps;
 };

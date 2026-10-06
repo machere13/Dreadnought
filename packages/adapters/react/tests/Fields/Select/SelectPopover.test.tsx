@@ -7,6 +7,22 @@ import { useRef } from 'react';
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 
+it('repositions a retained anchor after its geometry changes without a resize or scroll event', () => {
+  function Sample({ position }: { position: number }) {
+    const anchor = useRef<HTMLButtonElement>(null), popup = useRef<HTMLDivElement>(null);
+    useAnchoredPopover(true, anchor, popup);
+    return <><button style={{ top: position }} ref={element => {
+      anchor.current = element;
+      if (element) element.getBoundingClientRect = () => ({ left: 0, top: Number.parseFloat(element.style.top), bottom: Number.parseFloat(element.style.top) + 20, width: 20 }) as DOMRect;
+    }}>Anchor</button><div ref={popup} data-testid="moving-popup" /></>;
+  }
+  const { rerender, getByTestId } = render(<Sample position={10} />);
+  rerender(<Sample position={20} />);
+  expect(getByTestId('moving-popup').style.top).toBe('20px');
+  rerender(<Sample position={100} />);
+  expect(getByTestId('moving-popup').style.top).toBe('100px');
+});
+
 it('passes the real invoker to the native API when the popup is portaled outside its parent', () => {
   let invoker: HTMLElement | undefined;
   const show = function (this: HTMLElement, options?: { source?: HTMLElement }) { invoker = options?.source; };

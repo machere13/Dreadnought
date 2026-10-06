@@ -3,12 +3,17 @@ import { getBarSeriesClass, barChartPresentation as appearance } from '#presenta
 import { tablePresentation } from '#presentation/DataDisplay/Table/tablePresentation.ts';
 import { tooltipPresentation } from '#presentation/Overlays/Tooltip/tooltipPresentation.ts';
 import { markPresentation } from '#presentation/DataDisplay/Mark/markPresentation.ts';
+import { buttonPresentation } from '#presentation/Controls/Button/buttonPresentation.ts';
 
 export type BarChartProps = BarChartAdapterProps;
 const classes = (...values: (string | undefined)[]) => values.filter(Boolean).join(' ');
 export function BarChart({ className, slotProps = {}, ...props }: BarChartProps) {
   return <BarChartAdapter {...props} className={classes(appearance.root, className)} slotProps={{
     ...slotProps,
+    scrollContainer: { ...slotProps.scrollContainer, className: classes(appearance.scrollContainer, slotProps.scrollContainer?.className) },
+    pagination: { ...slotProps.pagination, className: classes(appearance.pagination, slotProps.pagination?.className) },
+    paginationButton: { ...slotProps.paginationButton, className: classes(buttonPresentation.root, buttonPresentation.variants.secondary, buttonPresentation.sizes.compact, slotProps.paginationButton?.className) },
+    pageInput: { ...slotProps.pageInput, className: classes(appearance.pageInput, slotProps.pageInput?.className) },
     plotContainer: { ...slotProps.plotContainer, className: classes(appearance.plotContainer, slotProps.plotContainer?.className) },
     plot: { ...slotProps.plot, className: classes(appearance.plot, slotProps.plot?.className) },
     grid: { ...slotProps.grid, className: classes(appearance.grid, slotProps.grid?.className) },

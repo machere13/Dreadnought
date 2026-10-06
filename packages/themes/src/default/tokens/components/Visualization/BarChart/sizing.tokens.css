@@ -1,4 +1,5 @@
 :root {
+  --dreadnought-bar-chart-page-input-width: var(--dreadnought-size-x2);
   --dreadnought-bar-chart-plot-max-width: var(--dreadnought-size-x4);
   --dreadnought-bar-chart-legend-min-height: var(--dreadnought-size-control-compact-min-height);
   --dreadnought-bar-chart-legend-radius: var(--dreadnought-border-radius-pill);

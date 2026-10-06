@@ -1,7 +1,10 @@
 import type { LineSeries, LinePoint } from '@dreadnought/core';
 import type { ChartNative as Native } from '../../shared/chartNativeProps.ts';
+import type { ChartPaginationSlots } from '../../shared/useChartPage.tsx';
 
-export interface LineChartSlotProps {
+export interface LineChartSlotProps extends ChartPaginationSlots {
+  rangeControls?: Native<'div'>;
+  rangeInput?: Native<'input', 'type' | 'min' | 'max' | 'value' | 'aria-label'>;
   plotContainer?: Native<'div'>;
   plot?: Native<'svg', 'width' | 'height' | 'viewBox' | 'preserveAspectRatio' | 'aria-hidden' | 'tabIndex'>;
   grid?: Native<'g'>;
@@ -23,6 +26,8 @@ export type LineChartAdapterProps = Native<'figure', 'role' | 'aria-labelledby' 
   formatX?: (value: number) => string; formatY?: (value: number) => string;
   visibleSeries?: readonly string[]; defaultVisibleSeries?: readonly string[];
   onVisibleSeriesChange?: (series: string[]) => void;
+  pageSize?: number;
+  zoom?: boolean;
   labels?: { legend?: string; dataTable?: string; empty?: string };
   slotProps?: LineChartSlotProps;
 };

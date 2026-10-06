@@ -2,12 +2,13 @@
   "id": "component:line-chart", "kind": "component", "name": "LineChart", "family": "Visualization",
   "description": "Линейный SVG-график с явными числовыми шкалами, разрывами данных, легендой и доступной таблицей.",
   "docsUrl": "/components/linechart/#linechart-api", "states": [],
-  "composesWith": ["domain:build-line-layout", "domain:closest-line-point"],
+  "composesWith": ["domain:build-line-layout", "domain:closest-line-point", "domain:sample-line-layout", "domain:line-point-at-x"],
   "constraints": [
     "Явные конечные xDomain/yDomain с min < max; конечные точки внутри диапазонов. Уникальные ID серий и уникальный X внутри серии. null по Y разрывает линию, без подстановки нуля. Точки сортируются по X без изменения входа.",
-    "Наведение ищет ближайшую реальную точку среди видимых серий. Tab выбирает точки; Left/Right, Home/End перемещают фокус без зацикливания; Escape закрывает Tooltip. Подсказка показывает значения видимых серий с точно совпадающим X, без интерполяции отсутствующих значений.",
+    "Наведение двоичным поиском выбирает ближайший исходный X в каждой видимой серии, затем ближайшую из этих точек. Tab выбирает нарисованные маркеры; Left/Right и Home/End проходят все исходные точки видимого диапазона без зацикливания; Escape закрывает Tooltip. Подсказка показывает значения видимых серий с точно совпадающим X, без интерполяции отсутствующих значений.",
     "width/height задаются вместе положительными конечными числами. Без размеров ResizeObserver измеряет контейнер, высота равна 80% ширины. При SSR и отсутствии observer доступна полная таблица.",
-    "Controlled visibleSeries ждёт нового пропса; callback запрашивает изменение. Скрытые серии остаются в полной таблице и учитываются при валидации. Пустые серии допустимы. Поиск точки линейный; zoom, brush, time-scale, smoothing и decimation не включены."
+    "Controlled visibleSeries ждёт нового пропса; callback запрашивает изменение. Скрытые серии остаются в постраничной таблице и учитываются при валидации. pageSize — положительное целое, 50 по умолчанию. Данные передавайте неизменяемыми: подготовка кешируется по ссылке series и значениям domains.",
+    "Геометрия сокращается по ширине области: до четырёх исходных точек на пиксель на серию с сохранением крайних значений и разделения null-сегментов. zoom=true включает два ползунка диапазона X. Исходные значения остаются в Tooltip и таблице. Подготовка и изменение диапазона обходят данные, наведение выполняет O(S log N) поиск. Число серий всё ещё влияет на стоимость, неограниченный объём не гарантируется. Brush, time-scale и smoothing не включены."
   ],
   "bindings": [{
     "id": "react-adapter", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/unstyled", "exportName": "LineChartAdapter",
@@ -19,9 +20,10 @@
       "formatX": "Форматирование X для оси, таблицы, подсказки и доступного имени точки.", "formatY": "Форматирование Y без изменения исходных данных.",
       "width": "Фиксированная ширина; вместе с height.", "height": "Фиксированная высота; вместе с width.",
       "visibleSeries": "Управляемые видимые ID.", "defaultVisibleSeries": "Начальные видимые ID.", "onVisibleSeriesChange": "Запрос новых видимых ID.",
+      "pageSize": "Число строк полной исходной таблицы на странице, положительное целое.", "zoom": "Показывает два ползунка для выбора диапазона X.",
       "labels": "Подписи легенды, таблицы и пустого состояния.", "slotProps": "Нативные свойства, refs и обработчики частей без подмены геометрии и обязательной семантики."
     },
-    "defaults": { "xLabel": "X", "yLabel": "Y" },
+    "defaults": { "xLabel": "X", "yLabel": "Y", "pageSize": 50, "zoom": true },
     "examples": [{ "id": "basic", "code": "import { LineChartAdapter } from '@dreadnought/react/unstyled';\nconst series = [{id:'a',label:'A',data:[{x:0,y:20},{x:5,y:60},{x:10,y:40}]}];\nexport function Example() { return <LineChartAdapter label=\"Измерения\" series={series} xDomain={[0,10]} yDomain={[0,100]} width={500} height={300} />; }" }]
   }]
 }

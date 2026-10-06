@@ -4,6 +4,10 @@
   .root > p { margin: 0; color: var(--dreadnought-bar-chart-description-text); }
   .plotContainer { width: 100%; min-width: 0; max-width: var(--dreadnought-bar-chart-plot-max-width); margin-inline: auto; }
   .plot { display: block; max-width: 100%; }
+  .scrollContainer { scrollbar-color: var(--dreadnought-bar-chart-scrollbar-thumb) var(--dreadnought-bar-chart-scrollbar-track); scrollbar-width: thin; }
+  .pagination { display: flex; align-items: center; gap: var(--dreadnought-bar-chart-legend-gap); }
+  .pageInput { width: var(--dreadnought-bar-chart-page-input-width); padding: var(--dreadnought-bar-chart-legend-padding-block); background: var(--dreadnought-bar-chart-legend-bg); color: var(--dreadnought-bar-chart-text); border: var(--dreadnought-bar-chart-border-width) solid var(--dreadnought-bar-chart-border); border-radius: var(--dreadnought-bar-chart-legend-radius); font: inherit; }
+  .pageInput:focus-visible { outline: var(--dreadnought-bar-chart-focus-width) solid var(--dreadnought-bar-chart-focus-color); outline-offset: var(--dreadnought-bar-chart-focus-offset); }
   .plot text { fill: var(--dreadnought-bar-chart-text); font-size: var(--dreadnought-bar-chart-label-font-size); }
   .axisLabel { fill: var(--dreadnought-bar-chart-text); }
   .grid { fill: none; stroke: var(--dreadnought-bar-chart-grid-color); stroke-width: var(--dreadnought-bar-chart-grid-width); }

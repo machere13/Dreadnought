@@ -4,6 +4,12 @@
   .root > p { margin: 0; color: var(--dreadnought-line-chart-description-text); }
   .plotContainer { width: 100%; min-width: 0; max-width: var(--dreadnought-line-chart-plot-max-width); margin-inline: auto; }
   .plot { display: block; max-width: 100%; }
+  .rangeControls { display: flex; flex-wrap: wrap; gap: var(--dreadnought-line-chart-gap); }
+  .rangeControls label { display: grid; flex: 1; gap: var(--dreadnought-line-chart-legend-gap); min-width: 0; }
+  .rangeInput { width: 100%; accent-color: var(--dreadnought-line-chart-text); }
+  .pagination { display: flex; align-items: center; gap: var(--dreadnought-line-chart-legend-gap); }
+  .pageInput { width: var(--dreadnought-line-chart-page-input-width); padding: var(--dreadnought-line-chart-legend-padding-block); background: var(--dreadnought-line-chart-legend-bg); color: var(--dreadnought-line-chart-text); border: var(--dreadnought-line-chart-border-width) solid var(--dreadnought-line-chart-border); border-radius: var(--dreadnought-line-chart-legend-radius); font: inherit; }
+  .pageInput:focus-visible, .rangeInput:focus-visible { outline: var(--dreadnought-line-chart-focus-width) solid var(--dreadnought-line-chart-focus-color); outline-offset: var(--dreadnought-line-chart-focus-offset); }
   .plot text { fill: var(--dreadnought-line-chart-text); font-size: var(--dreadnought-line-chart-label-font-size); }
   .axisLabel { fill: var(--dreadnought-line-chart-text); }
   .grid { fill: none; stroke: var(--dreadnought-line-chart-grid-color); stroke-width: var(--dreadnought-line-chart-grid-width); }

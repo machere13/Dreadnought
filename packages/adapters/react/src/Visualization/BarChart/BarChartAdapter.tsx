@@ -1,4 +1,4 @@
-import { useCallback, useId, useRef, useState } from 'react';
+import { useCallback, useId, useMemo, useRef, useState } from 'react';
 import { buildBarLayout, getSelectionValue } from '@dreadnought/core';
 import { useChartViewport } from '../../shared/useChartViewport.ts';
 import { chartNativeProps as nativeProps } from '../../shared/chartNativeProps.ts';
@@ -6,10 +6,13 @@ import { attachRef } from '../../shared/attachRef.ts';
 import { TableAdapter } from '../../DataDisplay/Table/index.ts';
 import { BarPlot } from './BarPlot.tsx';
 import type { BarChartAdapterProps } from './barChart.types.ts';
+import { ChartPagination, useChartPage } from '../../shared/useChartPage.tsx';
 
 export function BarChartAdapter({ label, description, categories, series, domain, orientation, gapRatio, width, height, categoryLabel = 'Категория', valueLabel = 'Значение',
-  formatValue = String, visibleSeries, defaultVisibleSeries, onVisibleSeriesChange, labels = {}, slotProps = {}, ...native }: BarChartAdapterProps) {
-  buildBarLayout({ categories, series, domain, orientation, gapRatio, width: 1, height: 1 });
+  formatValue = String, visibleSeries, defaultVisibleSeries, onVisibleSeriesChange, pageSize = 50, minCategorySize = 64, labels = {}, slotProps = {}, ...native }: BarChartAdapterProps) {
+  useMemo(() => buildBarLayout({ categories, series, domain, orientation, gapRatio, width: 1, height: 1 }), [categories, series, domain[0], domain[1], orientation, gapRatio]);
+  if (!Number.isFinite(minCategorySize) || minCategorySize <= 0) throw new RangeError('Category size must be finite and positive');
+  const page = useChartPage(categories, pageSize);
   if ([label, categoryLabel, valueLabel, ...Object.values(labels)].some(value => typeof value !== 'string' || !value.trim())) throw new TypeError('Bar labels must be nonempty strings');
   if (description !== undefined && typeof description !== 'string') throw new TypeError('Bar description must be a string');
   if (typeof formatValue !== 'function') throw new TypeError('Bar formatters must be functions');
@@ -29,7 +32,7 @@ export function BarChartAdapter({ label, description, categories, series, domain
   }, [consumerRef]);
   const viewport = useChartViewport(width, height, plotRef);
   const [internal, setInternal] = useState<readonly string[]>(() => [...(defaultVisibleSeries ?? series.map(item => item.id))]);
-  const visible = (visibleSeries ?? internal).filter(id => series.some(item => item.id === id));
+  const visible = useMemo(() => (visibleSeries ?? internal).filter(id => series.some(item => item.id === id)), [visibleSeries, internal, series]);
   function toggle(value: string) {
     const next = getSelectionValue(visible, { type: 'toggle', value });
     if (visibleSeries === undefined) setInternal([...next]);
@@ -39,7 +42,7 @@ export function BarChartAdapter({ label, description, categories, series, domain
     <figcaption id={`${id}-label`}>{label}</figcaption>
     {description !== undefined && <p id={`${id}-description`}>{description}</p>}
     <div {...nativeProps(slotProps.plotContainer)} ref={attachPlot} data-ui="bar-plot-container">
-      {viewport && <BarPlot {...viewport} categories={categories} series={series} domain={domain} orientation={orientation} gapRatio={gapRatio} visible={visible}
+      {viewport && <BarPlot {...viewport} categories={categories} series={series} domain={domain} orientation={orientation} gapRatio={gapRatio} visible={visible} minCategorySize={minCategorySize}
         slotProps={slotProps} formatValue={formatValue} categoryLabel={categoryLabel} valueLabel={valueLabel} />}
     </div>
     <div {...nativeProps(slotProps.legend)} role="group" aria-label={labels.legend ?? 'Серии'} data-ui="bar-legend">
@@ -54,11 +57,12 @@ export function BarChartAdapter({ label, description, categories, series, domain
       <TableAdapter.Head><TableAdapter.Row><TableAdapter.HeaderCell scope="col">{categoryLabel}</TableAdapter.HeaderCell>
         {series.map(item => <TableAdapter.HeaderCell key={item.id} scope="col">{item.label || item.id} ({valueLabel})</TableAdapter.HeaderCell>)}
       </TableAdapter.Row></TableAdapter.Head>
-      <TableAdapter.Body>{categories.map(category => <TableAdapter.Row key={category.id}><TableAdapter.HeaderCell scope="row">{category.label || category.id}</TableAdapter.HeaderCell>
+      <TableAdapter.Body>{page.rows.map(category => <TableAdapter.Row key={category.id}><TableAdapter.HeaderCell scope="row">{category.label || category.id}</TableAdapter.HeaderCell>
         {series.map(item => { const value = Object.hasOwn(item.values, category.id) ? item.values[category.id] : null;
           return <TableAdapter.Cell key={item.id}>{value == null ? '—' : formatValue(value)}</TableAdapter.Cell>; })}
       </TableAdapter.Row>)}</TableAdapter.Body>
     </TableAdapter>
+    <ChartPagination {...page} slotProps={slotProps} />
     {categories.length === 0 && <p>{labels.empty ?? 'Нет данных'}</p>}
   </figure>;
 }

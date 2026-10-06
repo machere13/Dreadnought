@@ -1,5 +1,21 @@
 [
   {
+    "id": "domain:sample-line-layout", "kind": "domain", "name": "sampleLineLayout", "family": "Charts",
+    "description": "Разрешение-зависимое сокращение подготовленного LineLayout с сохранением экстремумов и разрывов.",
+    "docsUrl": "/components/linechart/#linechart-logic",
+    "constraints": ["source — неизменённый результат buildLineLayout. Положительные конечные width/height, явный xDomain min < max. До четырёх исходных точек на пиксельный столбец и соседние точки у границ на серию; null-сегменты не соединяются. Полные исходные данные не изменяются. При изменении диапазона выполняется линейный обход данных; не вызывайте этот расчёт на каждом pointermove."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "sampleLineLayout",
+      "examples": [{ "id": "basic", "code": "import { buildLineLayout, sampleLineLayout } from '@dreadnought/core';\nconst source = buildLineLayout({series:[{id:'a',label:'A',data:[{x:0,y:20},{x:5,y:60},{x:10,y:40}]}],xDomain:[0,10],yDomain:[0,100],width:1,height:1});\nconst view = sampleLineLayout(source,500,300,[0,10]);" }] }]
+  },
+  {
+    "id": "domain:line-point-at-x", "kind": "domain", "name": "getLinePointAtX", "family": "Charts",
+    "description": "Двоичный поиск ближайшего исходного X в подготовленных точках линии.",
+    "docsUrl": "/components/linechart/#linechart-logic",
+    "constraints": ["points — сегменты одной серии из buildLineLayout, объединённые в порядке X. Конечный X, при равенстве расстояний выбирается меньший X. O(log N) чтений, пустой набор возвращает undefined. Возвращает исходную точку без изменения; это ближайший X, а не евклидов поиск или интерполяция."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getLinePointAtX",
+      "examples": [{ "id": "basic", "code": "import { buildLineLayout, getLinePointAtX } from '@dreadnought/core';\nconst source = buildLineLayout({series:[{id:'a',label:'A',data:[{x:0,y:20},{x:10,y:40}]}],xDomain:[0,10],yDomain:[0,100],width:1,height:1});\nconst point = getLinePointAtX(source.series[0].segments.flat(),7);" }] }]
+  },
+  {
     "id": "domain:build-bar-layout",
     "kind": "domain",
     "name": "buildBarLayout",
