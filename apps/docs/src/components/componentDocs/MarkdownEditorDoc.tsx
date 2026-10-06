@@ -9,7 +9,7 @@ function MarkdownEditorDemo() {
   return <div className={styles.demo}>
     <MarkdownEditor aria-label="Текст Markdown" value={value} onValueChange={setValue} defaultPreview="live" autoSize minRows={6} maxRows={14}
       uploadImage={async () => '/markdown-upload-demo.svg'} />
-    <p>Загрузка в этом примере локальная демонстрационная: выбранный файл не отправляется на сервер, в текст вставляется тестовое изображение.</p>
+    <p>Выберите картинку кнопкой, вставьте её из буфера или перетащите одну картинку в текстовое поле. Вставка идёт в текущее выделение. Это локальная демонстрация: файл не отправляется на сервер, вставляется тестовое изображение.</p>
   </div>;
 }
 

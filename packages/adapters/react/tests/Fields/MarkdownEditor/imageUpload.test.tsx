@@ -236,3 +236,85 @@ it('settles a retry started by an abort listener against an outdated document', 
   expect(editor.imageUploadState).toBe('selecting');
   await act(async () => { editor.cancelImageUpload(); });
 });
+
+it.each(['paste', 'drop'] as const)('uploads an image from %s at the saved selection with one undo step', async kind => {
+  const upload = deferred();
+  const file = new File(['png'], 'image.png', { type: 'image/png' });
+  render(<Editor defaultValue="hello world" uploadImage={async received => {
+    expect(received).toBe(file);
+    return upload.promise;
+  }} />);
+  field().setSelectionRange(0, 5);
+  let allowed = true;
+  await act(async () => { allowed = fireEvent[kind](field(), { [kind === 'paste' ? 'clipboardData' : 'dataTransfer']: { files: [file] } }); });
+  expect(allowed).toBe(false);
+  expect(document.querySelector('input[type=file]')).toBeNull();
+  expect(editor.imageUploadState).toBe('uploading');
+  field().setSelectionRange(11, 11);
+  await act(async () => { upload.resolve('/image.png'); });
+  expect(field().value).toBe('![hello](/image.png) world');
+  act(() => editor.undo());
+  expect(field().value).toBe('hello world');
+  act(() => editor.redo());
+  expect(field().value).toBe('![hello](/image.png) world');
+});
+
+it('accepts image dragover even when files are protected until drop', () => {
+  render(<Editor uploadImage={async () => '/image.png'} />);
+  const transfer = { files: [], items: [{ kind: 'file', type: 'image/png' }], dropEffect: 'none' };
+  expect(fireEvent.dragOver(field(), { dataTransfer: transfer })).toBe(false);
+  expect(transfer.dropEffect).toBe('copy');
+  expect(editor.imageUploadState).toBe('idle');
+});
+
+it.each(['paste', 'drop'] as const)('leaves text, non-images and multiple files native for %s', async kind => {
+  const upload = vi.fn(async () => '/image.png');
+  render(<Editor uploadImage={upload} />);
+  for (const files of [[], [new File(['txt'], 'file.txt', { type: 'text/plain' })],
+    [new File(['a'], 'a.png', { type: 'image/png' }), new File(['b'], 'b.png', { type: 'image/png' })]]) {
+    expect(fireEvent[kind](field(), { [kind === 'paste' ? 'clipboardData' : 'dataTransfer']: { files } })).toBe(true);
+  }
+  expect(upload).not.toHaveBeenCalled();
+  expect(editor.imageUploadState).toBe('idle');
+});
+
+it.each(['paste', 'drop', 'dragOver'] as const)('respects consumer cancellation and editing guards for %s', async kind => {
+  const file = new File(['png'], 'image.png', { type: 'image/png' });
+  const transfer = { files: [file], items: [{ kind: 'file', type: 'image/png' }] };
+  const upload = vi.fn(async () => '/image.png');
+  const event = { [kind === 'paste' ? 'clipboardData' : 'dataTransfer']: transfer };
+  const view = render(<Editor uploadImage={upload} {...{ [`on${kind[0].toUpperCase()}${kind.slice(1)}`]: (e: Event) => e.preventDefault() }} />);
+  fireEvent[kind](field(), event);
+  expect(upload).not.toHaveBeenCalled();
+  for (const guard of [{ disabled: true }, { readOnly: true }, { preview: 'preview' as const }, {}]) {
+    view.rerender(<Editor {...guard} uploadImage={Object.keys(guard).length ? upload : undefined} />);
+    expect(fireEvent[kind](field(), event)).toBe(true);
+  }
+  view.rerender(<Editor uploadImage={upload} />);
+  fireEvent.compositionStart(field());
+  expect(fireEvent[kind](field(), event)).toBe(true);
+  expect(upload).not.toHaveBeenCalled();
+});
+
+it('does not queue a second image while uploading and ignores a cancelled paste result', async () => {
+  const upload = deferred();
+  let signal!: AbortSignal;
+  let calls = 0;
+  render(<Editor defaultValue="hello" uploadImage={(_, context) => { calls++; signal = context.signal; return upload.promise; }} />);
+  const file = new File(['png'], 'image.png', { type: 'image/png' });
+  await act(async () => { fireEvent.paste(field(), { clipboardData: { files: [file] } }); });
+  await act(async () => { expect(fireEvent.drop(field(), { dataTransfer: { files: [file] } })).toBe(false); });
+  expect(calls).toBe(1);
+  act(() => editor.cancelImageUpload());
+  expect(signal.aborted).toBe(true);
+  await act(async () => { upload.resolve('/late.png'); });
+  expect(field().value).toBe('hello');
+  expect(editor.imageUploadState).toBe('idle');
+});
+
+it.each(['paste', 'drop', 'dragOver'] as const)('ignores %s without transfer data', kind => {
+  render(<Editor defaultValue="hello" uploadImage={async () => '/image.png'} />);
+  expect(fireEvent[kind](field(), { [kind === 'paste' ? 'clipboardData' : 'dataTransfer']: null })).toBe(true);
+  expect(field().value).toBe('hello');
+  expect(editor.imageUploadState).toBe('idle');
+});

@@ -5,6 +5,27 @@ import * as ui from '../src/adapters/react/index.ts';
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 
+it.each(['paste', 'drop'] as const)('shows shared upload controls for an image %s and inserts into live preview', async kind => {
+  let resolve!: (url: string) => void;
+  function Controlled() {
+    const [value, setValue] = useState('hello');
+    return <ui.MarkdownEditor aria-label="Notes" value={value} onValueChange={setValue} defaultPreview="live"
+      uploadImage={() => new Promise<string>(yes => { resolve = yes; })} />;
+  }
+  render(<Controlled />);
+  const field = screen.getByRole('textbox') as HTMLTextAreaElement;
+  field.setSelectionRange(0, 5);
+  const file = new File(['png'], 'image.png', { type: 'image/png' });
+  await act(async () => { fireEvent[kind](field, { [kind === 'paste' ? 'clipboardData' : 'dataTransfer']: { files: [file] } }); });
+  expect(screen.getByRole('button', { name: 'Изображение' }).getAttribute('aria-busy')).toBe('true');
+  expect(screen.getByRole('button', { name: 'Отменить загрузку изображения' })).toBeTruthy();
+  await act(async () => { resolve('/image.png'); });
+  expect(screen.getByRole('img', { name: 'hello' }).getAttribute('src')).toBe('/image.png');
+  fireEvent.click(screen.getByRole('button', { name: 'Отменить' }));
+  expect(field.value).toBe('hello');
+  expect(screen.queryByRole('img')).toBeNull();
+});
+
 it('shows upload progress and cancellation through the built-in image button', async () => {
   vi.spyOn(HTMLInputElement.prototype, 'click').mockImplementation(() => {});
   let resolve!: (url: string) => void;

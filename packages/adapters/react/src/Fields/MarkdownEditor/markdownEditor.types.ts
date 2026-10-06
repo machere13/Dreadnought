@@ -26,7 +26,7 @@ export interface MarkdownEditorControls {
   setPreview: (preview: MarkdownEditorPreview) => void;
   disabled: boolean;
   readOnly: boolean;
-  insertImage: () => Promise<void>;
+  insertImage: (file?: File) => Promise<void>;
   cancelImageUpload: () => void;
   imageUploadState: MarkdownImageUploadState;
   imageUploadError: unknown;

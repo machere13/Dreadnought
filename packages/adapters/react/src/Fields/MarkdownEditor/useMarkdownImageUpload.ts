@@ -23,22 +23,23 @@ export function useMarkdownImageUpload(options: {
     request.abort();
   }, []);
 
-  async function insertImage() {
+  async function insertImage(file?: File) {
     const { uploadImage, readDocument, insert } = latest.current;
     const document = readDocument();
     if (!document || active.current) return;
+    if (file && (!uploadImage || !file.type.startsWith('image/'))) return;
     if (!uploadImage) { insert(document, applyMarkdownCommand(document, { type: 'image' })); return; }
     const request = new AbortController();
     active.current = request;
     const valid = () => active.current === request && !request.signal.aborted
       && latest.current.readDocument()?.text === document.text;
-    setState({ status: 'selecting' });
+    setState({ status: file ? 'uploading' : 'selecting' });
     try {
-      const [file] = await pickFiles({ accept: 'image/*', signal: request.signal });
+      const selected = file ?? (await pickFiles({ accept: 'image/*', signal: request.signal }))[0];
       if (!valid()) return;
-      if (!file) { setState({ status: 'idle' }); return; }
+      if (!selected) { setState({ status: 'idle' }); return; }
       setState({ status: 'uploading' });
-      const result = await uploadImage(file, { signal: request.signal });
+      const result = await uploadImage(selected, { signal: request.signal });
       if (!valid()) return;
       const url = typeof result === 'string' ? safeMarkdownUrl(result, 'src') : undefined;
       if (!url) throw new TypeError('Image upload must return a safe, non-empty URL');

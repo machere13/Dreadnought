@@ -26,7 +26,7 @@ function keyCommand(event: KeyboardEvent<HTMLTextAreaElement>): MarkdownCommand 
 }
 
 export function useMarkdownEditor({ value: controlledValue, defaultValue = '', onValueChange, onChange, onSelect,
-  onKeyDown, onCompositionStart, onCompositionEnd, onBeforeInput, onBlur, historyLimit = 100,
+  onKeyDown, onCompositionStart, onCompositionEnd, onBeforeInput, onBlur, onPaste, onDrop, onDragOver, historyLimit = 100,
   preview: controlledPreview, defaultPreview = 'edit', onPreviewChange, uploadImage, ...options }: UseMarkdownEditorOptions = {}): UseMarkdownEditorResult {
   if (!Number.isSafeInteger(historyLimit) || historyLimit <= 0) throw new RangeError('History limit must be a positive safe integer');
   const initial = useRef(normalize(defaultValue));
@@ -103,7 +103,26 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
     },
   });
 
+  const acceptsImage = () => !!uploadImage && !options.disabled && !options.readOnly && !composing.current && preview !== 'preview';
+  function receiveImage(event: { defaultPrevented: boolean; preventDefault(): void }, transfer: DataTransfer | null) {
+    if (event.defaultPrevented || !acceptsImage() || !transfer) return;
+    const files = Array.from(transfer.files);
+    if (files.length !== 1 || !files[0].type.startsWith('image/')) return;
+    event.preventDefault();
+    void image.insertImage(files[0]);
+  }
+
   const area = useTextArea({ ...options, value,
+    onPaste(event) { onPaste?.(event); receiveImage(event, event.clipboardData); },
+    onDrop(event) { onDrop?.(event); receiveImage(event, event.dataTransfer); },
+    onDragOver(event) {
+      onDragOver?.(event);
+      if (event.defaultPrevented || !acceptsImage() || !event.dataTransfer) return;
+      const files = Array.from(event.dataTransfer.items).filter(item => item.kind === 'file');
+      if (files.length !== 1 || !files[0].type.startsWith('image/')) return;
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'copy';
+    },
     onChange(event) {
       onChange?.(event);
       pending.current = null;

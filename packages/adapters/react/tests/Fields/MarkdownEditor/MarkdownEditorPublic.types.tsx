@@ -16,8 +16,11 @@ function Example() {
   } });
   const status: MarkdownImageUploadState = editor.imageUploadState;
   const upload: Promise<void> = editor.insertImage();
+  const pastedUpload: Promise<void> = editor.insertImage(new File([], 'image.png', { type: 'image/png' }));
+  // @ts-expect-error Direct image uploads accept File, not a URL.
+  editor.insertImage('/image.png');
   editor.cancelImageUpload();
-  void status; void upload;
+  void status; void upload; void pastedUpload;
   editor.undo();
   editor.redo();
   editor.setPreview('live');

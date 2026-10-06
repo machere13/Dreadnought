@@ -12,7 +12,7 @@
       "preview": "Управляемый режим edit/live/preview.",
       "defaultPreview": "Начальный неуправляемый режим, по умолчанию edit.",
       "onPreviewChange": "Запрос смены режима; не меняет текст.",
-      "uploadImage": "Обработчик (file, {signal}) => Promise<string> с URL. Кнопка изображения выбирает файл, показывает загрузку и отмену; без обработчика вставляет шаблон. Ошибка отображается через Alert, labels.uploadError и labels.cancelUpload задают подписи.",
+      "uploadImage": "Обработчик (file, {signal}) => Promise<string> с URL. Кнопка выбирает файл; также принимает одну картинку через paste/drop на textarea. Общие загрузка, отмена и Alert. Без обработчика кнопка вставляет шаблон, paste/drop остаются нативными. labels.uploadError и labels.cancelUpload задают подписи.",
       "className": "Дополнительный класс textarea, не внешней обёртки.",
       "style": "Стили textarea; токены внешнего оформления можно задавать на предке.",
       "onValueChange": "Строка Markdown после ввода, команды или undo/redo. Controlled-владелец синхронно обновляет value.",
