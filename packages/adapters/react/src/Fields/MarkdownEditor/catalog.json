@@ -1,0 +1,29 @@
+{
+  "id": "component:markdown-editor",
+  "kind": "component",
+  "name": "MarkdownEditor",
+  "family": "Fields",
+  "description": "Редактирование Markdown через команды core, textarea и пользовательскую панель без готового оформления.",
+  "docsUrl": "/custom-components/#markdown-editor-adapter",
+  "states": ["disabled", "readOnly"],
+  "composesWith": ["domain:apply-markdown-command"],
+  "constraints": [
+    "Реализован только второй React-слой. Нет preview, рендерера, встроенной панели или темы. Задайте доступное имя поля через label или aria-label.",
+    "value/defaultValue — строки; CRLF/CR нормализуются в LF. onValueChange вызывается для ввода и команд; onChange — только для реального ввода. Выделение использует UTF-16 offsets.",
+    "Controlled-владелец должен синхронно принять значение для восстановления выделения. Отказ, преобразование значения, новый ввод и замена элемента отменяют устаревшее восстановление. Несколько controlled-команд без commit не предугадывают принятие prop.",
+    "disabled/readOnly и IME блокируют команды. Tab, Shift+Enter и undo остаются нативными. Программные команды не гарантируют включения в нативную undo-историю.",
+    "className/style и нативные атрибуты относятся к textarea; ref указывает на HTMLTextAreaElement. Uncontrolled form reset возвращает первоначальный defaultValue без callback."
+  ],
+  "bindings": [
+    {
+      "id": "react-logic", "layer": 2, "framework": "react",
+      "importPath": "@dreadnought/react/logic", "exportName": "useMarkdownEditor",
+      "examples": [{ "id": "custom", "code": "import { useMarkdownEditor } from '@dreadnought/react/logic';\nexport function Example() { const editor = useMarkdownEditor({defaultValue:'hello'}); return <><button type=\"button\" onClick={() => editor.execute({type:'bold'})}>Bold</button><textarea {...editor.textAreaProps} ref={editor.textAreaRef} aria-label=\"Markdown\" /></>; }" }]
+    },
+    {
+      "id": "react-adapter", "layer": 2, "framework": "react",
+      "importPath": "@dreadnought/react/unstyled", "exportName": "MarkdownEditorAdapter",
+      "examples": [{ "id": "basic", "code": "import { MarkdownEditorAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <MarkdownEditorAdapter aria-label=\"Markdown\" defaultValue=\"hello\" renderToolbar={({execute,disabled,readOnly}) => <button type=\"button\" disabled={disabled || readOnly} onClick={() => execute({type:'bold'})}>Bold</button>} />; }" }]
+    }
+  ]
+}

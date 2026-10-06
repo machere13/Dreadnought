@@ -3,6 +3,14 @@ import { applyMarkdownCommand } from '../../../src/index.ts';
 import type { MarkdownCommand } from '../../../src/index.ts';
 
 describe('Markdown inline commands', () => {
+  it('does not mistake bold markers for existing italic markers', () => {
+    expect(applyMarkdownCommand({ text: '**hello**', selection: { start: 2, end: 7 } }, { type: 'italic' }))
+      .toEqual({ text: '***hello***', selection: { start: 3, end: 8 } });
+    expect(applyMarkdownCommand({ text: '**hello**', selection: { start: 0, end: 9 } }, { type: 'italic' }))
+      .toEqual({ text: '***hello***', selection: { start: 1, end: 10 } });
+    expect(applyMarkdownCommand({ text: '***hello***', selection: { start: 3, end: 8 } }, { type: 'italic' }))
+      .toEqual({ text: '**hello**', selection: { start: 2, end: 7 } });
+  });
   it.each([
     ['bold', '**hello**', 2, 7],
     ['italic', '*hello*', 1, 6],

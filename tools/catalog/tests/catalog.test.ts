@@ -33,6 +33,13 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes MarkdownEditor only in the implemented React layer', () => {
+    const entry = catalog.entries.find(entry => entry.id === 'component:markdown-editor');
+    expect(entry).toMatchObject({ family: 'Fields', composesWith: ['domain:apply-markdown-command'] });
+    expect(entry!.bindings.map(binding => binding.id)).toEqual(['react-logic', 'react-adapter']);
+    expect(entry!.bindings.every(binding => binding.layer === 2)).toBe(true);
+    for (const binding of entry!.bindings) expect(() => checkExamples(context, binding.examples)).not.toThrow();
+  });
   it('publishes the Markdown domain with a checked framework-independent example', () => {
     const entry = catalog.entries.find(entry => entry.id === 'domain:apply-markdown-command');
     expect(entry).toMatchObject({ kind: 'domain', name: 'applyMarkdownCommand', family: 'Markdown' });

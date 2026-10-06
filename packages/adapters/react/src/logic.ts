@@ -5,6 +5,8 @@ export type { UseButtonOptions } from './Controls/Button/useButton.ts';
 export { useInput } from './Fields/Input/useInput.ts';
 export type { UseInputOptions, TextInputType } from './Fields/Input/useInput.ts';
 export { useTextArea } from './Fields/TextArea/useTextArea.ts';
+export { useMarkdownEditor } from './Fields/MarkdownEditor/useMarkdownEditor.ts';
+export type { UseMarkdownEditorOptions, UseMarkdownEditorResult, MarkdownEditorControls } from './Fields/MarkdownEditor/markdownEditor.types.ts';
 export type { UseTextAreaOptions } from './Fields/TextArea/useTextArea.ts';
 export { useTabs } from './Navigation/Tabs/useTabs.ts';
 export type { UseTabsOptions, UseTabsResult } from './Navigation/Tabs/useTabs.ts';

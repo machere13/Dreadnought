@@ -1,0 +1,26 @@
+import type { MarkdownCommand, MarkdownSelection } from '@dreadnought/core';
+import type { ReactNode, RefCallback, TextareaHTMLAttributes } from 'react';
+import type { UseTextAreaOptions } from '../TextArea/index.ts';
+
+export interface UseMarkdownEditorOptions extends Omit<UseTextAreaOptions, 'value' | 'defaultValue'> {
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
+}
+
+export interface MarkdownEditorControls {
+  execute: (command: MarkdownCommand) => void;
+  disabled: boolean;
+  readOnly: boolean;
+}
+
+export interface UseMarkdownEditorResult extends MarkdownEditorControls {
+  value: string;
+  selection: MarkdownSelection;
+  textAreaProps: TextareaHTMLAttributes<HTMLTextAreaElement>;
+  textAreaRef: RefCallback<HTMLTextAreaElement>;
+}
+
+export interface MarkdownEditorAdapterProps extends UseMarkdownEditorOptions {
+  renderToolbar?: (controls: MarkdownEditorControls) => ReactNode;
+}

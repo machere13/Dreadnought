@@ -5,12 +5,15 @@ export function wrapInline(doc: MarkdownDocument, prefix: string, suffix = prefi
   const range = wordRange(doc);
   const selected = doc.text.slice(range.start, range.end);
   const aroundStart = range.start - prefix.length;
+  const canRemove = (before: string, after: string) => prefix !== '*'
+    || ((before.match(/\*+$/)?.[0].length ?? 0) % 2 === 1 && (after.match(/^\*+/)?.[0].length ?? 0) % 2 === 1);
   if (aroundStart >= 0 && doc.text.slice(aroundStart, range.start) === prefix
-    && doc.text.slice(range.end, range.end + suffix.length) === suffix) {
+    && doc.text.slice(range.end, range.end + suffix.length) === suffix
+    && canRemove(doc.text.slice(0, range.start), doc.text.slice(range.end))) {
     return replaceRange(doc, { start: aroundStart, end: range.end + suffix.length }, selected,
       { start: aroundStart, end: aroundStart + selected.length });
   }
-  if (selected.length >= prefix.length + suffix.length && selected.startsWith(prefix) && selected.endsWith(suffix)) {
+  if (selected.length >= prefix.length + suffix.length && selected.startsWith(prefix) && selected.endsWith(suffix) && canRemove(selected, selected)) {
     const content = selected.slice(prefix.length, -suffix.length);
     return replaceRange(doc, range, content, { start: range.start, end: range.start + content.length });
   }

@@ -203,5 +203,17 @@ const result = applyMarkdownCommand(document, { type: 'bold' });`} />
       <p className={styles.bodyText}>Доступны bold, italic, strikethrough, inlineCode, codeBlock, comment, link, image, heading, quote, list, horizontalRule, table, indent, outdent, newLine, duplicateLines и moveLines. Для heading задайте level от 1 до 6; для list — style unordered, ordered или task; для moveLines — direction previous или next. Indent/outdent принимают size от 1 до 16, по умолчанию 2.</p>
       <p className={styles.footnote}>Команды сохраняют LF/CRLF и работают без DOM и React. История undo, клавиатура, фокус, восстановление выделения и отображение Markdown остаются адаптеру. Это не полный Markdown-парсер и не санитайзер ссылок: безопасное отображение контента должен обеспечивать рендерер.</p>
     </section>
+    <section data-knowledge className={styles.section} aria-labelledby="markdown-editor-adapter">
+      <h2 id="markdown-editor-adapter" className={styles.sectionTitle}>React-адаптер Markdown</h2>
+      <p className={styles.bodyText}><code>MarkdownEditorAdapter</code> связывает команды core с textarea без стилей. Свою панель можно передать через renderToolbar; для собственной разметки используйте useMarkdownEditor из <code>@dreadnought/react/logic</code>.</p>
+      <CodeBlock language="tsx" copyLabels={copyLabels} code={`import { MarkdownEditorAdapter } from '@dreadnought/react/unstyled';
+export function Editor() {
+  return <MarkdownEditorAdapter aria-label="Markdown" defaultValue="hello"
+    renderToolbar={({ execute, disabled, readOnly }) =>
+      <button type="button" disabled={disabled || readOnly}
+        onClick={() => execute({ type: 'bold' })}>Bold</button>} />;
+}`} />
+      <p className={styles.footnote}>onValueChange получает строки после ввода и команд; onChange вызывается только для реального ввода. В controlled-режиме синхронно обновляйте value для восстановления курсора. CRLF/CR нормализуются в LF. Tab и Shift+Enter остаются нативными. Программные команды не гарантируют включения в нативную undo-историю; preview и история редактора не входят в этот этап.</p>
+    </section>
   </article>;
 }
