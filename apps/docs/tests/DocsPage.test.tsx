@@ -13,6 +13,19 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('documents Popover layers with a working interactive panel', () => {
+    render(<DocsPage section="popover" />);
+    expect(document.getElementById('popover-api')).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Popover' }).getAttribute('href')).toBe('/components/popover/');
+    const trigger = screen.getByRole('button', { name: 'Настройки профиля' });
+    fireEvent.click(trigger);
+    const field = screen.getByRole('textbox', { name: 'Имя профиля' });
+    expect(document.activeElement).toBe(field);
+    fireEvent.change(field, { target: { value: 'Ada' } });
+    expect((field as HTMLInputElement).value).toBe('Ada');
+    fireEvent.keyDown(field, { key: 'Escape' });
+    expect(screen.queryByRole('dialog')).toBeNull(); expect(document.activeElement).toBe(trigger);
+  });
   it('keeps only the wordmark in the header and footer', () => {
     render(<DocsPage section="overview" />);
     const header = screen.getByRole('banner');

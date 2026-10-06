@@ -169,6 +169,7 @@ describe('default theme', () => {
       "@import './components/Visualization/LineChart/index.css';",
       "@import './components/Visualization/BarChart/index.css';",
       "@import './components/Overlays/Tooltip/index.css';",
+      "@import './components/Overlays/Popover/index.css';",
       "@import './components/DataDisplay/MarkdownPreview/index.css';",
     ]);
     for (const file of ['colors', 'spacing', 'sizing', 'typography', 'effects', 'motion']) {

@@ -1,0 +1,4 @@
+:root {
+  --dreadnought-popover-padding-block: var(--dreadnought-spacing-x4);
+  --dreadnought-popover-padding-inline: var(--dreadnought-spacing-x4);
+}

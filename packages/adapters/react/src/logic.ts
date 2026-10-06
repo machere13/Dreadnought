@@ -13,6 +13,8 @@ export type { UseTabsOptions, UseTabsResult } from './Navigation/Tabs/useTabs.ts
 export { useAccordion } from './Navigation/Accordion/useAccordion.ts';
 export type { UseAccordionOptions, UseAccordionResult } from './Navigation/Accordion/useAccordion.ts';
 export { useTooltip } from './Overlays/Tooltip/index.ts';
+export { usePopover } from './Overlays/Popover/index.ts';
+export type { UsePopoverOptions, PopoverTriggerProps } from './Overlays/Popover/index.ts';
 export type { UseTooltipOptions, TooltipTriggerProps } from './Overlays/Tooltip/index.ts';
 export { useToast } from './Feedback/Toast/useToast.ts';
 export type { UseToastOptions } from './Feedback/Toast/useToast.ts';

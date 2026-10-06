@@ -1,0 +1,56 @@
+@layer dreadnought {
+  .root {
+    box-sizing: border-box;
+    max-width: min(var(--dreadnought-popover-max-width), 100vw);
+    padding: var(--dreadnought-popover-padding-block) var(--dreadnought-popover-padding-inline);
+    border: var(--dreadnought-popover-border-width) solid var(--dreadnought-popover-border);
+    border-radius: var(--dreadnought-popover-radius);
+    background: var(--dreadnought-popover-bg);
+    color: var(--dreadnought-popover-text);
+    font-family: var(--dreadnought-popover-font-family);
+    font-size: var(--dreadnought-popover-font-size);
+    font-weight: var(--dreadnought-popover-font-weight);
+    line-height: var(--dreadnought-popover-line-height);
+    overflow-wrap: anywhere;
+    overflow: visible;
+    row-gap: var(--dreadnought-popover-gap);
+  }
+  .root > [data-ui='popover-arrow'] {
+    position: absolute;
+    width: var(--dreadnought-popover-arrow-size);
+    height: var(--dreadnought-popover-arrow-size);
+    background: inherit;
+    border: inherit;
+    border-radius: var(--dreadnought-popover-arrow-radius);
+    pointer-events: none;
+    box-sizing: border-box;
+  }
+  .root[data-placement^='top'] > [data-ui='popover-arrow'] {
+    left: var(--dreadnought-popover-arrow-position);
+    top: 100%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    border-top: 0;
+    border-left: 0;
+  }
+  .root[data-placement^='bottom'] > [data-ui='popover-arrow'] {
+    left: var(--dreadnought-popover-arrow-position);
+    bottom: 100%;
+    transform: translate(-50%, 50%) rotate(45deg);
+    border-bottom: 0;
+    border-right: 0;
+  }
+  .root[data-placement^='left'] > [data-ui='popover-arrow'] {
+    top: var(--dreadnought-popover-arrow-position);
+    left: 100%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    border-bottom: 0;
+    border-left: 0;
+  }
+  .root[data-placement^='right'] > [data-ui='popover-arrow'] {
+    top: var(--dreadnought-popover-arrow-position);
+    right: 100%;
+    transform: translate(50%, -50%) rotate(45deg);
+    border-top: 0;
+    border-right: 0;
+  }
+}

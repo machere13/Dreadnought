@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-popover-max-width: var(--dreadnought-size-x5);
+  --dreadnought-popover-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-popover-border-width: var(--dreadnought-border-width-outline);
+  --dreadnought-popover-arrow-size: var(--dreadnought-spacing-x2);
+  --dreadnought-popover-arrow-radius: var(--dreadnought-border-radius-square);
+  --dreadnought-popover-gap: var(--dreadnought-spacing-x1);
+}

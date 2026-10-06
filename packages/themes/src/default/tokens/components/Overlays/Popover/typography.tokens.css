@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-popover-font-family: var(--dreadnought-font-family-ui);
+  --dreadnought-popover-font-size: var(--dreadnought-font-size-body-2);
+  --dreadnought-popover-font-weight: var(--dreadnought-font-weight-body-2);
+  --dreadnought-popover-line-height: var(--dreadnought-line-height-body-2);
+}

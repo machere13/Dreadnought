@@ -1,0 +1,6 @@
+{
+  "componentId": "component:popover",
+  "constraints": ["Оформление меняется через --dreadnought-popover-* в области приложения или конкретного компонента."],
+  "bindings": [{ "id": "react-ui", "layer": 3, "framework": "react", "importPath": "@dreadnought/ui/react", "exportName": "Popover",
+    "examples": [{ "id": "basic", "code": "import { Button, Input, Popover } from '@dreadnought/ui/react';\nexport function Example() { return <Popover aria-label=\"Настройки профиля\" content={({ close }) => <><Input aria-label=\"Имя\" /><Button onClick={close}>Готово</Button></>}>{trigger => <Button {...trigger}>Настройки</Button>}</Popover>; }" }] }]
+}

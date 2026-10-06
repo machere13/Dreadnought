@@ -1,0 +1,9 @@
+{
+  "id": "component:popover", "kind": "component", "name": "Popover", "family": "Overlays",
+  "description": "Немодальная всплывающая панель для кнопок, ссылок и полей, открываемая по клику.",
+  "docsUrl": "/components/popover/#popover-api", "states": ["open", "disabled"],
+  "composesWith": ["behavior:get-disclosure-state", "behavior:get-disclosure-open", "behavior:get-tooltip-position"],
+  "constraints": ["Триггер — кнопка с доступным именем. Панель имеет role=dialog и aria-modal=false.", "Escape и явное закрытие возвращают фокус после фактического закрытия; клик снаружи и Tab не перехватывают фокус.", "При внешнем закрытии родителем фокус возвращается на триггер, только если оставался внутри панели.", "Popover не является меню или модальным диалогом: не запирает фокус и не задаёт навигацию стрелками."],
+  "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getPopoverState",
+    "examples": [{ "id": "state", "code": "import { getPopoverState } from '@dreadnought/core';\nconst state = getPopoverState({ triggerId: 'settings-button', panelId: 'settings-panel', open: true });" }] }]
+}

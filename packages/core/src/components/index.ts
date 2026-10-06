@@ -9,5 +9,6 @@ export * from './Fields/Checkbox/index.ts';
 export * from './Fields/Radio/index.ts';
 export * from './Fields/Select/index.ts';
 export * from './Overlays/Tooltip/index.ts';
+export * from './Overlays/Popover/index.ts';
 export * from './Feedback/Toast/index.ts';
 export * from './Feedback/Loader/index.ts';
