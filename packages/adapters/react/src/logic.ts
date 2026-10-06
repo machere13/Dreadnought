@@ -15,6 +15,8 @@ export type { UseAccordionOptions, UseAccordionResult } from './Navigation/Accor
 export { useTooltip } from './Overlays/Tooltip/index.ts';
 export { usePopover } from './Overlays/Popover/index.ts';
 export { useModal } from './Overlays/Modal/index.ts';
+export { useDrawer } from './Overlays/Drawer/index.ts';
+export type { UseDrawerOptions, DrawerTriggerProps } from './Overlays/Drawer/index.ts';
 export type { UseModalOptions, ModalTriggerProps } from './Overlays/Modal/index.ts';
 export type { UsePopoverOptions, PopoverTriggerProps } from './Overlays/Popover/index.ts';
 export type { UseTooltipOptions, TooltipTriggerProps } from './Overlays/Tooltip/index.ts';
