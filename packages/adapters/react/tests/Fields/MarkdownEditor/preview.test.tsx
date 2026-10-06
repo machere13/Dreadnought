@@ -28,7 +28,26 @@ it('keeps the textarea mounted and history alive across all modes without focusi
   act(() => controls.redo());
   expect(field.value).toBe('**hello**');
   expect(document.activeElement).toBe(field);
-  expect(notify.mock.calls.map(call => call[0])).toEqual(['**hello**', 'hello', '**hello**']);
+  act(() => controls.setPreview('preview'));
+  act(() => controls.undo());
+  act(() => controls.redo());
+  act(() => controls.setPreview('edit'));
+  expect([field.selectionStart, field.selectionEnd]).toEqual([2, 7]);
+  expect(notify.mock.calls.map(call => call[0])).toEqual(['**hello**', 'hello', '**hello**', 'hello', '**hello**']);
+});
+
+it('blurs input inside an iframe when its mode becomes preview', () => {
+  const frame = document.createElement('iframe');
+  document.body.append(frame);
+  const owner = frame.contentDocument!;
+  const view = render(<MarkdownEditorAdapter preview="edit" />, { container: owner.body });
+  try {
+    const field = owner.querySelector('textarea')!;
+    field.focus();
+    expect(owner.activeElement === field).toBe(true);
+    view.rerender(<MarkdownEditorAdapter preview="preview" />);
+    expect(owner.activeElement === field).toBe(false);
+  } finally { view.unmount(); frame.remove(); }
 });
 
 it('preserves a controlled mode when its owner refuses and renders only accepted text', () => {

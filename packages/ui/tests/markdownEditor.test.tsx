@@ -41,6 +41,10 @@ it('shows a live preview and exposes history and selected mode controls', () => 
   fireEvent.click(screen.getByRole('button', { name: 'Жирный' }));
   fireEvent.click(screen.getByRole('button', { name: 'Отменить' }));
   expect(field.value).toBe('# Hello');
+  const redo = screen.getByRole('button', { name: 'Повторить' });
+  redo.focus();
+  fireEvent.click(redo);
+  expect([field.selectionStart, field.selectionEnd]).toEqual([4, 9]);
   fireEvent.click(screen.getByRole('button', { name: 'Предпросмотр' }));
   expect(screen.queryByRole('textbox')).toBeNull();
   expect((screen.getByRole('button', { name: 'Жирный' }) as HTMLButtonElement).disabled).toBe(true);

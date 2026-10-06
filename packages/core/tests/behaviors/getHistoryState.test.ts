@@ -42,4 +42,5 @@ it('validates malformed JS state and actions before even a no-op', () => {
     expect(() => fromJs({ past: [], present: undefined, future: [] }, action)).toThrow(TypeError);
   }
   expect(() => fromJs({ past: [], present: 0, future: [] }, { type: 'undo' }, null)).toThrow(TypeError);
+  expect(() => fromJs({ past: [], present: 0, future: [] }, { type: 'undo' }, { limit: null })).toThrow(RangeError);
 });

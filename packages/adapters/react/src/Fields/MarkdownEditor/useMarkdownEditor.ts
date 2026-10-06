@@ -41,7 +41,8 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
   const history = useRef(baseline(snapshot(value, { start: 0, end: 0 })));
   const group = useRef<{ type: string; time: number } | null>(null);
   const compositionChanged = useRef(false);
-  const pending = useRef<{ document: MarkdownDocument; history: HistoryState<MarkdownDocument>; element: HTMLTextAreaElement; focus: boolean } | null>(null);
+  const compositionEnding = useRef<object | null>(null);
+  const pending = useRef<{ document: MarkdownDocument; history: HistoryState<MarkdownDocument>; element: HTMLTextAreaElement; focus: boolean; composition: boolean } | null>(null);
   const [selection, setSelection] = useState<MarkdownSelection>({ start: 0, end: 0 });
   const [, update] = useState(0);
 
@@ -53,11 +54,15 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
     onPreviewChange?.(next);
   }
 
-  function publish(state: HistoryState<MarkdownDocument>, focus: boolean) {
+  function publish(state: HistoryState<MarkdownDocument>, focus: boolean, composition = false) {
     const current = node.current;
     if (!current) return;
-    pending.current = { document: state.present, history: state, element: current, focus };
-    if (!controlled) { history.current = state; setInternal(state.present.text); }
+    pending.current = { document: state.present, history: state, element: current, focus, composition };
+    if (!controlled) {
+      if (composition && state.present.text !== history.current.present.text) compositionChanged.current = true;
+      history.current = state;
+      setInternal(state.present.text);
+    }
     update(revision => revision + 1);
     onValueChange?.(state.present.text);
   }
@@ -65,6 +70,7 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
   function travel(type: 'undo' | 'redo') {
     if (!node.current || options.disabled || options.readOnly || composing.current) return;
     group.current = null;
+    compositionEnding.current = null;
     const state = history.current;
     const next = getHistoryState(state, { type }, { limit: historyLimit });
     if (next !== state) publish(next, true);
@@ -76,6 +82,7 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
     const previous = !controlled && pending.current?.element === current ? pending.current.document : undefined;
     const result = applyMarkdownCommand(previous ?? { text: current.value, selection: readSelection(current) }, command);
     group.current = null;
+    compositionEnding.current = null;
     const state = getHistoryState(history.current, { type: 'replace', value: previous ?? snapshot(current.value, readSelection(current)) }, { limit: historyLimit });
     publish(recordDocument(state, result, false, historyLimit), true);
   }
@@ -89,13 +96,14 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
       const document = snapshot(next, readSelection(event.currentTarget));
       const inputType = (event.nativeEvent as InputEvent).inputType ?? '';
       const time = Date.now();
-      const merge = composing.current ? compositionChanged.current : group.current?.type === inputType
+      const composition = composing.current || !!compositionEnding.current || inputType === 'insertFromComposition';
+      compositionEnding.current = null;
+      const merge = composition ? compositionChanged.current : group.current?.type === inputType
         && time - group.current.time <= 500 && continuousInput(inputType, history.current.present, document);
       const state = recordDocument(history.current, document, !!merge, historyLimit);
-      if (composing.current && next !== history.current.present.text) compositionChanged.current = true;
-      group.current = continuousInput(inputType, history.current.present, document) ? { type: inputType, time } : null;
+      group.current = !composition && continuousInput(inputType, history.current.present, document) ? { type: inputType, time } : null;
       setSelection(document.selection);
-      publish(state, false);
+      publish(state, false, composition);
     },
     onSelect(event) {
       onSelect?.(event);
@@ -112,6 +120,7 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
     },
     onCompositionStart(event) {
       composing.current = true;
+      compositionEnding.current = null;
       compositionChanged.current = false;
       group.current = null;
       pending.current = null;
@@ -120,6 +129,9 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
     onCompositionEnd(event) {
       composing.current = false;
       group.current = null;
+      const ending = {};
+      compositionEnding.current = ending;
+      queueMicrotask(() => { if (compositionEnding.current === ending) compositionEnding.current = null; });
       onCompositionEnd?.(event);
     },
     onKeyDown(event) {
@@ -140,6 +152,7 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
     if (node.current !== current) {
       pending.current = null;
       composing.current = false;
+      compositionEnding.current = null;
       group.current = null;
     }
     node.current = current;
@@ -151,16 +164,19 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
     const result = pending.current;
     pending.current = null;
     if (result && result.element === node.current && result.document.text === value) {
+      if (result.composition && history.current.present.text !== value) compositionChanged.current = true;
       if (history.current !== result.history) { history.current = result.history; update(revision => revision + 1); }
     } else if (history.current.present.text !== value) {
       history.current = baseline(snapshot(value, node.current ? readSelection(node.current) : { start: 0, end: 0 }));
       group.current = null;
+      compositionChanged.current = false;
+      compositionEnding.current = null;
       update(revision => revision + 1);
     } else if (result) { group.current = null; }
     if (result && result.element === node.current && result.document.text === value
-      && result.focus && preview !== 'preview' && !options.disabled && !options.readOnly && !composing.current) {
-      result.element.focus();
+      && result.focus && !options.disabled && !options.readOnly && !composing.current) {
       result.element.setSelectionRange(result.document.selection.start, result.document.selection.end);
+      if (preview !== 'preview') result.element.focus();
     }
     if (node.current) {
       const next = readSelection(node.current);
@@ -170,7 +186,7 @@ export function useMarkdownEditor({ value: controlledValue, defaultValue = '', o
 
   useLayoutEffect(() => {
     group.current = null;
-    if (preview === 'preview' && node.current === document.activeElement) node.current?.blur();
+    if (preview === 'preview' && node.current === node.current?.ownerDocument.activeElement) node.current?.blur();
   }, [preview]);
 
   useEffect(() => {

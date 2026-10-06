@@ -230,6 +230,49 @@ it('records IME as one step and clears redo after batched new commands', () => {
   expect(field().value).toBe('****');
 });
 
+it('coalesces the final changed input after compositionend with its IME step', () => {
+  render(<Editor />);
+  fireEvent.compositionStart(field());
+  fireEvent.input(field(), { target: { value: 'に' }, inputType: 'insertCompositionText' });
+  fireEvent.compositionEnd(field(), { data: '日本' });
+  fireEvent.input(field(), { target: { value: '日本' }, inputType: 'insertText' });
+  act(() => editor.undo());
+  expect(field().value).toBe('');
+  expect(editor.canUndo).toBe(false);
+  act(() => editor.redo());
+  expect(field().value).toBe('日本');
+});
+
+it('starts a separate typing step after the final composition input', async () => {
+  render(<Editor />);
+  fireEvent.compositionStart(field());
+  fireEvent.input(field(), { target: { value: 'a' }, inputType: 'insertCompositionText' });
+  fireEvent.compositionEnd(field(), { data: 'ab' });
+  fireEvent.input(field(), { target: { value: 'ab' }, inputType: 'insertText' });
+  await act(async () => { await Promise.resolve(); });
+  fireEvent.input(field(), { target: { value: 'abc' }, inputType: 'insertText' });
+  act(() => editor.undo());
+  expect(field().value).toBe('ab');
+  act(() => editor.undo());
+  expect(field().value).toBe('');
+});
+
+it('creates an IME step only after the controlled owner accepts a proposal', () => {
+  function Controlled() {
+    const [value, setValue] = useState('');
+    return <Editor value={value} onValueChange={next => { if (next !== 'に') setValue(next); }} />;
+  }
+  render(<Controlled />);
+  fireEvent.compositionStart(field());
+  fireEvent.input(field(), { target: { value: 'に' }, inputType: 'insertCompositionText' });
+  expect(field().value).toBe('');
+  fireEvent.input(field(), { target: { value: '日本' }, inputType: 'insertCompositionText' });
+  fireEvent.compositionEnd(field(), { data: '日本' });
+  act(() => editor.undo());
+  expect(field().value).toBe('');
+  expect(editor.canUndo).toBe(false);
+});
+
 it('routes native beforeinput history and respects consumer cancellation', () => {
   let cancel = false;
   const handler = vi.fn<NonNullable<UseMarkdownEditorOptions['onBeforeInput']>>(event => { if (cancel) event.preventDefault(); });

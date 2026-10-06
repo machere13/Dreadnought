@@ -16,7 +16,7 @@ export function getHistoryState<T>(state: HistoryState<T>, action: HistoryAction
     throw new TypeError('Invalid history action');
   }
   if (!options || typeof options !== 'object') throw new TypeError('History options must be an object');
-  const limit = options.limit ?? 100;
+  const limit = options.limit === undefined ? 100 : options.limit;
   if (!Number.isSafeInteger(limit) || limit <= 0) throw new RangeError('History limit must be a positive safe integer');
   const { past, present, future } = state;
   switch (action.type) {
