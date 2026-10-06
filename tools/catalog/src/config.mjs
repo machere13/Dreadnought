@@ -13,6 +13,7 @@ export const components = [
   { family: 'Overlays', name: 'Tooltip', sources: [core, adapter, ui] },
   { family: 'Visualization', name: 'RadarChart', sources: [adapter, ui] },
   { family: 'Visualization', name: 'LineChart', sources: [adapter, ui] },
+  { family: 'Visualization', name: 'BarChart', sources: [adapter, ui] },
   { family: 'Controls', name: 'Button', sources: [core, adapter, ui] },
   { family: 'Controls', name: 'Toolbar', sources: [core, adapter, ui] },
   { family: 'Fields', name: 'Input', sources: [core, adapter, ui] },

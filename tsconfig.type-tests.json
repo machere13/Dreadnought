@@ -5,6 +5,7 @@
   },
   "include": [
     "packages/ui/tests/tooltip.types.tsx",
+    "packages/adapters/react/tests/Visualization/BarChart/BarChartAdapter.types.tsx",
     "packages/adapters/react/tests/Visualization/LineChart/LineChartAdapter.types.tsx",
     "packages/adapters/react/tests/Visualization/RadarChart/RadarChartAdapter.types.tsx",
     "packages/core/tests/domains/charts/radar.types.ts",

@@ -1,5 +1,32 @@
 [
   {
+    "id": "domain:build-bar-layout",
+    "kind": "domain",
+    "name": "buildBarLayout",
+    "family": "Charts",
+    "description": "Чистый расчёт группированных столбцов, нулевой оси и отметок шкалы.",
+    "docsUrl": "/components/barchart/#barchart-logic",
+    "constraints": [
+      "Явный конечный domain [min,max], min < max, включает ноль. Уникальные ID категорий и серий. values — собственные конечные числа внутри domain или null; неизвестные категории запрещены. null и отсутствующее значение не создают столбец; ноль оставляет отметку на оси.",
+      "Конечные положительные width/height. orientation vertical/horizontal, gapRatio [0,1). Пустые категории или серии допустимы. Координаты независимы от renderer; нет React, SVG, DOM, CSS, clipping или stacking. Вход не меняется."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "buildBarLayout",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { buildBarLayout } from '@dreadnought/core';\nconst layout = buildBarLayout({categories:[{id:'one',label:'One'}],series:[{id:'a',label:'A',values:{one:-10}}],domain:[-20,40],width:500,height:300});\nconst baseline = layout.baseline;"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "domain:build-line-layout", "kind": "domain", "name": "buildLineLayout", "family": "Charts",
     "description": "Чистые линейные шкалы, координаты, отметки осей и сегменты без соединения пропусков.",
     "docsUrl": "/components/linechart/#linechart-logic",

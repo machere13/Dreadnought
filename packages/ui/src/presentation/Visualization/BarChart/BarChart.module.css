@@ -1,0 +1,45 @@
+@layer dreadnought {
+  .root { display: grid; gap: var(--dreadnought-bar-chart-gap); min-width: 0; margin: 0; color: var(--dreadnought-bar-chart-text); }
+  .root > figcaption { font-weight: var(--dreadnought-bar-chart-title-font-weight); }
+  .root > p { margin: 0; color: var(--dreadnought-bar-chart-description-text); }
+  .plotContainer { width: 100%; min-width: 0; max-width: var(--dreadnought-bar-chart-plot-max-width); margin-inline: auto; }
+  .plot { display: block; max-width: 100%; }
+  .plot text { fill: var(--dreadnought-bar-chart-text); font-size: var(--dreadnought-bar-chart-label-font-size); }
+  .axisLabel { fill: var(--dreadnought-bar-chart-text); }
+  .grid { fill: none; stroke: var(--dreadnought-bar-chart-grid-color); stroke-width: var(--dreadnought-bar-chart-grid-width); }
+  .bar { fill: var(--bar-series-color); cursor: help; outline: none; }
+  .bar rect { stroke: var(--dreadnought-bar-chart-bar-border); stroke-width: var(--dreadnought-bar-chart-border-width); stroke-dasharray: var(--bar-series-dash); }
+  .bar line { stroke: var(--bar-series-color); stroke-width: var(--dreadnought-bar-chart-series-width); }
+  .bar:is(:hover, :focus-visible, [data-active='true']) :is(rect, line) { stroke: var(--dreadnought-bar-chart-focus-color); stroke-width: var(--dreadnought-bar-chart-focus-width); }
+  .series1 { --bar-series-color: var(--dreadnought-bar-chart-series-1-color); --bar-series-dash: var(--dreadnought-bar-chart-dash-solid); --bar-series-border: solid; }
+  .series2 { --bar-series-color: var(--dreadnought-bar-chart-series-2-color); --bar-series-dash: var(--dreadnought-bar-chart-dash-short); --bar-series-border: dashed; }
+  .series3 { --bar-series-color: var(--dreadnought-bar-chart-series-3-color); --bar-series-dash: var(--dreadnought-bar-chart-dash-dot); --bar-series-border: dotted; }
+  .series4 { --bar-series-color: var(--dreadnought-bar-chart-series-4-color); --bar-series-dash: var(--dreadnought-bar-chart-dash-long); --bar-series-border: dashed; }
+  .series5 { --bar-series-color: var(--dreadnought-bar-chart-series-5-color); --bar-series-dash: var(--dreadnought-bar-chart-dash-dot); --bar-series-border: dotted; }
+  .series6 { --bar-series-color: var(--dreadnought-bar-chart-series-6-color); --bar-series-dash: var(--dreadnought-bar-chart-dash-short); --bar-series-border: dashed; }
+  .legend { display: flex; flex-wrap: wrap; gap: var(--dreadnought-bar-chart-legend-gap); }
+  .legendButton { display: inline-flex; align-items: center; gap: var(--dreadnought-bar-chart-legend-gap); min-height: var(--dreadnought-bar-chart-legend-min-height); padding: var(--dreadnought-bar-chart-legend-padding-block) var(--dreadnought-bar-chart-legend-padding-inline); border: var(--dreadnought-bar-chart-border-width) solid var(--dreadnought-bar-chart-border); border-radius: var(--dreadnought-bar-chart-legend-radius); background: var(--dreadnought-bar-chart-legend-bg); color: var(--dreadnought-bar-chart-text); font: inherit; font-variation-settings: var(--dreadnought-bar-chart-legend-font-variation); cursor: pointer; }
+  .legendButton::before { content: ''; width: var(--dreadnought-bar-chart-swatch-width); border-block-start: var(--dreadnought-bar-chart-series-width) var(--bar-series-border) var(--bar-series-color); flex-shrink: 0; }
+  .legendButton:hover { background: var(--dreadnought-bar-chart-legend-bg-hover); }
+  .legendButton[aria-pressed='false'] { text-decoration: line-through; color: var(--dreadnought-bar-chart-description-text); }
+  .legendButton:focus-visible { outline: var(--dreadnought-bar-chart-focus-width) solid var(--dreadnought-bar-chart-focus-color); outline-offset: var(--dreadnought-bar-chart-focus-offset); }
+  .tooltipTable { width: 100%; border-collapse: collapse; }
+  .tooltipTable caption { text-align: start; font-weight: var(--dreadnought-bar-chart-title-font-weight); padding-block-end: var(--dreadnought-bar-chart-tooltip-row-gap); }
+  .tooltipTable :is(th, td) { padding: var(--dreadnought-bar-chart-tooltip-row-gap) 0; text-align: start; vertical-align: middle; }
+  .tooltipTable th { padding-inline: var(--dreadnought-bar-chart-tooltip-column-gap); font-weight: inherit; }
+  .tooltipTable td:last-child { font-variant-numeric: tabular-nums; }
+  .tooltipMark { --dreadnought-mark-color: var(--bar-series-color); }
+  .table { display: block; max-width: 100%; overflow-x: auto; }
+  .table caption { text-align: start; padding-block: var(--dreadnought-bar-chart-legend-padding-block); }
+  .table :is(th, td) { padding: var(--dreadnought-table-active-padding-block) var(--dreadnought-table-active-padding-inline); border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); }
+  .table thead th { background: var(--dreadnought-table-header-bg); color: var(--dreadnought-table-header-text); }
+  @media (forced-colors: active) {
+    .bar { fill: CanvasText; }
+    .bar rect { stroke: Canvas; }
+    .bar line { stroke: CanvasText; }
+    .bar:is(:hover, :focus-visible, [data-active='true']) :is(rect, line) { stroke: Highlight; }
+    .grid { stroke: GrayText; }
+    .plot text { fill: CanvasText; }
+    .legendButton::before { border-color: CanvasText; }
+  }
+}

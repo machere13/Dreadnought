@@ -36,5 +36,6 @@ export * from './Fields/Radio/index.ts';
 export * from './Fields/Select/index.ts';
 export * from './Visualization/RadarChart/index.ts';
 export * from './Visualization/LineChart/index.ts';
+export * from './Visualization/BarChart/index.ts';
 export { TooltipAdapter } from './Overlays/Tooltip/index.ts';
 export type { TooltipAdapterProps, TooltipTriggerProps } from './Overlays/Tooltip/index.ts';

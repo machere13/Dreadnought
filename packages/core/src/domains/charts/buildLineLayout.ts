@@ -1,3 +1,5 @@
+import { validateLinearDomain as validateDomain, linearFraction as fraction, linearTicks as ticks } from './linearScale.ts';
+
 export interface LineDatum { x: number; y: number | null }
 export interface LineSeries { id: string; label: string; data: readonly LineDatum[] }
 export interface LineLayoutOptions {
@@ -13,19 +15,6 @@ export interface LineLayout {
   series: Array<{ id: string; label: string; segments: LinePoint[][] }>;
 }
 
-function validateDomain(domain: readonly [number, number]) {
-  if (!Array.isArray(domain) || domain.length !== 2 || !Number.isFinite(domain[0]) || !Number.isFinite(domain[1])) throw new TypeError('Line domains require two finite numbers');
-  if (domain[0] >= domain[1]) throw new RangeError('Line domains require min < max');
-}
-function fraction(value: number, [min, max]: readonly [number, number]) {
-  return Number.isFinite(max - min) ? (value - min) / (max - min) : (value / 2 - min / 2) / (max / 2 - min / 2);
-}
-function ticks(domain: readonly [number, number], size: number, reverse = false) {
-  return Array.from({ length: 5 }, (_, index) => {
-    const t = index / 4;
-    return { value: domain[0] * (1 - t) + domain[1] * t, position: size * (reverse ? 1 - t : t) };
-  });
-}
 export function buildLineLayout(options: LineLayoutOptions): LineLayout {
   if (!options || typeof options !== 'object' || Array.isArray(options)) throw new TypeError('Line options must be an object');
   const { series, xDomain, yDomain, width, height } = options;

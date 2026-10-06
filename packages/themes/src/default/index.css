@@ -22,4 +22,5 @@
 @import './components/Fields/Select/index.css';
 @import './components/Visualization/RadarChart/index.css';
 @import './components/Visualization/LineChart/index.css';
+@import './components/Visualization/BarChart/index.css';
 @import './components/Overlays/Tooltip/index.css';

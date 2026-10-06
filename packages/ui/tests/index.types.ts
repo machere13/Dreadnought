@@ -7,6 +7,11 @@ import { useTabs } from '@dreadnought/react/logic';
 import { radarChartPresentation, getRadarSeriesClass } from '@dreadnought/ui';
 import { RadarChart } from '@dreadnought/ui/react';
 import type { RadarChartProps } from '@dreadnought/ui/react';
+import { barChartPresentation, getBarSeriesClass } from '@dreadnought/ui';
+import { BarChart, type BarChartProps } from '@dreadnought/ui/react';
+const barProps: BarChartProps = { label: 'Bar', categories: [], series: [], domain: [0, 100] };
+const barSeriesClass: string = getBarSeriesClass('__proto__');
+void [barChartPresentation.root, barSeriesClass, BarChart, barProps];
 
 const rootClass: string = buttonPresentation.root;
 const component: typeof Button = Button;

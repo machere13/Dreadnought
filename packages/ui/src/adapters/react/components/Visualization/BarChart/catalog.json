@@ -1,0 +1,22 @@
+{
+  "componentId": "component:bar-chart",
+  "constraints": [
+    "Цвет и рисунок обводки привязаны к ID серии; шесть сочетаний могут повторяться. Цвет Mark совпадает со столбцом. Настройка одного графика через --dreadnought-bar-chart-* и slotProps."
+  ],
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "BarChart",
+      "description": "Готовый BarChart с токенами темы, Tooltip, Mark, легендой и таблицей.",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { BarChart } from '@dreadnought/ui/react';\nconst categories = [{id:'one',label:'One'},{id:'two',label:'Two'}];\nconst series = [{id:'a',label:'A',values:{one:20,two:-10}}];\nexport function Example() { return <BarChart label=\"Баланс\" categories={categories} series={series} domain={[-20,40]} width={500} height={300} />; }"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "id": "component:bar-chart",
+  "kind": "component",
+  "name": "BarChart",
+  "family": "Visualization",
+  "description": "Группированные вертикальные или горизонтальные столбцы с нулевой осью, Tooltip, легендой и полной таблицей.",
+  "docsUrl": "/components/barchart/#barchart-api",
+  "states": [],
+  "composesWith": [
+    "domain:build-bar-layout"
+  ],
+  "constraints": [
+    "Явный конечный domain [min,max], min < max, включает ноль. Уникальные ID категорий и серий. values — собственные конечные числа внутри domain или null; неизвестные категории запрещены. null и отсутствующее значение не создают столбец; ноль оставляет отметку на оси.",
+    "Серии внутри категории располагаются рядом, не суммируются. orientation vertical или horizontal; gapRatio в [0,1). При скрытии серии свободное место перераспределяется; полный набор проверяется и сохраняется в таблице.",
+    "Tab выбирает столбцы, Left/Right для vertical, Up/Down для horizontal, Home/End перемещают фокус без зацикливания; Escape закрывает Tooltip. Подсказка показывает видимые значения той же категории.",
+    "width/height задаются вместе положительными конечными числами. Без размеров ResizeObserver измеряет контейнер, высота 80% ширины. При SSR или отсутствии observer доступна таблица. Нет stacked, zoom, brush или автоматической агрегации."
+  ],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "BarChartAdapter",
+      "propertyDescriptions": {
+        "categories": "Категории {id,label} в порядке отображения.",
+        "series": "Серии {id,label,values:{[categoryId]:number|null}}.",
+        "domain": "Явный числовой диапазон, включающий ноль.",
+        "orientation": "Направление столбцов: vertical или horizontal.",
+        "gapRatio": "Доля зазора между категориями и столбцами, [0,1).",
+        "label": "Обязательное доступное название.",
+        "description": "Пояснение графика.",
+        "categoryLabel": "Название категориальной оси и колонки таблицы.",
+        "valueLabel": "Название числовой оси.",
+        "formatValue": "Форматирование чисел на оси, в таблице, подсказке и доступном имени.",
+        "width": "Фиксированная ширина, вместе с height.",
+        "height": "Фиксированная высота, вместе с width.",
+        "visibleSeries": "Управляемые видимые ID.",
+        "defaultVisibleSeries": "Начальные видимые ID.",
+        "onVisibleSeriesChange": "Запрос изменения видимых ID.",
+        "labels": "Подписи легенды, таблицы и пустого состояния.",
+        "slotProps": "Свойства, refs и обработчики частей без подмены геометрии и обязательной семантики."
+      },
+      "defaults": {
+        "orientation": "vertical",
+        "gapRatio": 0.2,
+        "categoryLabel": "Категория",
+        "valueLabel": "Значение"
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { BarChartAdapter } from '@dreadnought/react/unstyled';\nconst categories = [{id:'one',label:'One'},{id:'two',label:'Two'}];\nconst series = [{id:'a',label:'A',values:{one:20,two:-10}}];\nexport function Example() { return <BarChartAdapter label=\"Баланс\" categories={categories} series={series} domain={[-20,40]} width={500} height={300} />; }"
+        }
+      ]
+    }
+  ]
+}

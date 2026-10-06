@@ -60,6 +60,9 @@ for (const name of ['buttonPresentation', 'inputPresentation', 'textAreaPresenta
   assert.ok(presentation[name]?.root, `${name} must be exported from the built package`);
 }
 assert.ok(presentation.radarChartPresentation?.root);
+assert.ok(presentation.barChartPresentation?.root);
+assert.equal(typeof presentation.getBarSeriesClass('__proto__'), 'string');
+assert.equal('BarChart' in presentation, false);
 assert.ok(presentation.tooltipPresentation?.root);
 assert.equal('Tooltip' in presentation, false);
 assert.equal(typeof presentation.getRadarSeriesClass('__proto__'), 'string');

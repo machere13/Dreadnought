@@ -13,6 +13,15 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('documents BarChart API and keeps full data when a legend series is hidden', () => {
+    render(<DocsPage section="barchart" />);
+    expect(document.getElementById('barchart-api')).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'BarChart' }).getAttribute('href')).toBe('/components/barchart/');
+    expect(screen.getByRole('rowheader', { name: 'orientation' })).toBeTruthy();
+    const button = screen.getByRole('button', { name: 'Вариант A' });
+    fireEvent.click(button); expect(button.getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByRole('table', { name: 'Сравнение по месяцам: Данные' }).textContent).toContain('85');
+  });
   it('documents LineChart layers, navigation and real legend interaction', () => {
     render(<DocsPage section="linechart" />);
     expect(document.getElementById('linechart-api')).toBeTruthy();

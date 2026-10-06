@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-bar-chart-dash-solid: var(--dreadnought-stroke-dash-solid);
+  --dreadnought-bar-chart-dash-short: var(--dreadnought-stroke-dash-short);
+  --dreadnought-bar-chart-dash-dot: var(--dreadnought-stroke-dash-dot);
+  --dreadnought-bar-chart-dash-long: var(--dreadnought-stroke-dash-long);
+}

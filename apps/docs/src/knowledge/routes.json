@@ -6,5 +6,5 @@
   "/components/breadcrumb/", "/components/codeblock/", "/components/icon/",
   "/components/mark/", "/components/layout/",
   "/components/checkbox/", "/components/radio/", "/components/select/", "/components/toolbar/",
-  "/components/radarchart/", "/components/linechart/", "/components/tooltip/"
+  "/components/radarchart/", "/components/linechart/", "/components/barchart/", "/components/tooltip/"
 ]
