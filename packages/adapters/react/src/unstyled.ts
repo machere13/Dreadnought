@@ -55,4 +55,6 @@ export { ToastAdapter, ToastViewportAdapter } from './Feedback/Toast/index.ts';
 export type { ToastAdapterProps, ToastSlotClassNames, ToastViewportAdapterProps, ToastPlacement, ToastType } from './Feedback/Toast/index.ts';
 export * from './Feedback/Loader/index.ts';
 export * from './Feedback/Progress/index.ts';
+export { PaginationAdapter } from './Navigation/Pagination/index.ts';
+export type { PaginationAdapterProps, PaginationSlotClassNames } from './Navigation/Pagination/index.ts';
 export * from './DataDisplay/MarkdownPreview/index.ts';

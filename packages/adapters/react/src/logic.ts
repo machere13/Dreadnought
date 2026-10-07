@@ -14,6 +14,8 @@ export type { UseTextAreaOptions } from './Fields/TextArea/useTextArea.ts';
 export { useTabs } from './Navigation/Tabs/useTabs.ts';
 export type { UseTabsOptions, UseTabsResult } from './Navigation/Tabs/useTabs.ts';
 export { useAccordion } from './Navigation/Accordion/useAccordion.ts';
+export { usePagination } from './Navigation/Pagination/index.ts';
+export type { UsePaginationOptions, UsePaginationResult } from './Navigation/Pagination/index.ts';
 export type { UseAccordionOptions, UseAccordionResult } from './Navigation/Accordion/useAccordion.ts';
 export { useTooltip } from './Overlays/Tooltip/index.ts';
 export { usePopover } from './Overlays/Popover/index.ts';
