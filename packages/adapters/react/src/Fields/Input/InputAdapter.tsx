@@ -28,8 +28,8 @@ export const InputAdapter = forwardRef<HTMLInputElement, InputAdapterProps>(
           data-slot="control"
         />
         {stepButtonProps && <span data-slot="step-controls">
-          {renderStepButton(stepButtonProps.decrease)}
           {renderStepButton(stepButtonProps.increase)}
+          {renderStepButton(stepButtonProps.decrease)}
         </span>}
         {visibilityButtonProps && (
           <button

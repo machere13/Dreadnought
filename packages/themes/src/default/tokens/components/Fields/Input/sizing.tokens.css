@@ -2,4 +2,7 @@
   --dreadnought-input-min-height: var(--dreadnought-size-control-min-height);
   --dreadnought-input-border-width: var(--dreadnought-border-width-x2);
   --dreadnought-input-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-input-step-width: var(--dreadnought-size-control-compact-min-height);
+  --dreadnought-input-step-icon-size: var(--dreadnought-font-size-caption-2);
+  --dreadnought-input-step-border-width: var(--dreadnought-border-width-outline);
 }

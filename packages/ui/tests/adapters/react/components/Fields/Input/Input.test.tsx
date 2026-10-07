@@ -17,6 +17,23 @@ it('renders compact library Buttons for numerical steps', async () => {
   expect((screen.getByRole('spinbutton') as HTMLInputElement).value).toBe('2');
 });
 
+it('places the increase arrow before the decrease arrow and keeps both reachable by keyboard', async () => {
+  const user = userEvent.setup();
+  render(<Input type="number" aria-label="Quantity" defaultValue="1" />);
+  const [increase, decrease] = screen.getAllByRole('button');
+  expect(increase.getAttribute('aria-label')).toBe('Increase value');
+  expect(decrease.getAttribute('aria-label')).toBe('Decrease value');
+  expect(increase.querySelector('svg')).not.toBeNull();
+  expect(decrease.querySelector('svg')).not.toBeNull();
+  expect(increase.textContent).toBe('');
+  await user.tab();
+  expect(document.activeElement).toBe(screen.getByRole('spinbutton'));
+  await user.tab();
+  expect(document.activeElement).toBe(increase);
+  await user.keyboard('{Enter}');
+  expect((screen.getByRole('spinbutton') as HTMLInputElement).value).toBe('2');
+});
+
 it('covers autofilled control without clipping its text background', () => {
   const css = postcss.parse(readFileSync(resolve('packages/ui/src/presentation/Fields/Input/Input.module.css'), 'utf8'));
   const layer = css.nodes.find((node) => node.type === 'atrule');
