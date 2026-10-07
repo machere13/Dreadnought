@@ -1,0 +1,4 @@
+:root {
+  --dreadnought-progress-height: var(--dreadnought-spacing-x2);
+  --dreadnought-progress-radius: var(--dreadnought-border-radius-pill);
+}

@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "packages/ui/tests/progress.types.tsx",
     "packages/adapters/react/tests/Feedback/Progress/ProgressPublic.types.tsx",
     "packages/ui/tests/adapters/react/components/Fields/Slider/Slider.types.tsx",
     "packages/adapters/react/tests/Fields/Slider/SliderAdapter.types.tsx",

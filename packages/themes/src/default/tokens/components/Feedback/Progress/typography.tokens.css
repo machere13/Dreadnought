@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-font-size-progress: var(--dreadnought-font-size-body-2);
+  --dreadnought-font-weight-progress: var(--dreadnought-font-weight-body-2);
+  --dreadnought-line-height-progress: var(--dreadnought-line-height-body-2);
+}

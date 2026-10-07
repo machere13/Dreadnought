@@ -1,0 +1,7 @@
+:root {
+  --dreadnought-progress-fg: var(--dreadnought-color-text-primary);
+  --dreadnought-progress-track: var(--dreadnought-color-surface-hover);
+  --dreadnought-progress-fill: var(--dreadnought-color-action-primary);
+  --dreadnought-progress-success: var(--dreadnought-color-status-success);
+  --dreadnought-progress-error: var(--dreadnought-color-status-error);
+}
