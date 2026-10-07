@@ -1,4 +1,6 @@
 export { getTextFieldState } from './getTextFieldState.ts';
+export { getVisibleTreeRows } from './getVisibleTreeRows.ts';
+export type { TreeKey, VisibleTreeRow, VisibleTreeRowsOptions } from './getVisibleTreeRows.ts';
 export type { TextFieldState, TextFieldStateOptions } from './getTextFieldState.ts';
 export { getNextEnabledValue } from './getNextEnabledValue.ts';
 export type { NavigationItem, NavigationDirection, NavigationOptions } from './getNextEnabledValue.ts';
