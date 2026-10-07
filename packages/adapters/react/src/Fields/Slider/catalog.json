@@ -1,0 +1,34 @@
+{
+  "id": "component:slider", "kind": "component", "name": "Slider", "family": "Fields",
+  "description": "Выбор числа на горизонтальной линейной шкале с одним бегунком.",
+  "docsUrl": "/components/slider/#slider-api",
+  "composesWith": ["behavior:get-stepped-value", "behavior:get-navigation-direction"],
+  "states": ["disabled", "dragging"],
+  "constraints": [
+    "Один бегунок, горизонтальная линейная шкала LTR. Без range, marks и вертикального режима.",
+    "value управляет принятым значением. onValueChange запрашивает нормализованное число; defaultValue задаёт начальное значение и reset.",
+    "min, max, step и значение должны быть конечными; min <= max, step > 0. max вне сетки округляется вниз до последнего шага.",
+    "ArrowRight/Up увеличивают, ArrowLeft/Down уменьшают, Home/End выбирают края. Отмена события блокирует ввод.",
+    "ref, id, ARIA и обработчики относятся к бегунку; className/style — к root, name/form — к скрытому полю.",
+    "renderThumb должен передать thumbProps одному div, сохраняя ref, ARIA и события. slotProps настраивают root, rail, track, thumb и field.",
+    "disabled и disabled fieldset блокируют ввод и отправку поля; отменённый reset и controlled reset не изменяют значение."
+  ],
+  "bindings": [
+    {
+      "id": "react-logic", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/logic", "exportName": "useSlider",
+      "defaults": { "min": 0, "max": 100, "step": 1, "disabled": false },
+      "examples": [{ "id": "basic", "code": "import { useSlider } from '@dreadnought/react/logic';\nfunction Example() { const slider = useSlider({ name: 'volume', 'aria-label': 'Громкость' }); return <div {...slider.rootProps}><div ref={slider.railRef} /><div {...slider.thumbProps} /><input {...slider.fieldProps} /></div>; }" }]
+    },
+    {
+      "id": "react-adapter", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/unstyled", "exportName": "SliderAdapter",
+      "defaults": { "min": 0, "max": 100, "step": 1, "disabled": false },
+      "propertyDescriptions": {
+        "min": "Нижняя граница числовой сетки.", "max": "Верхняя граница; фактический край — последний доступный шаг.",
+        "step": "Конечный положительный шаг.", "value": "Принятое управляемое число.", "defaultValue": "Исходное неуправляемое число; по умолчанию min.",
+        "onValueChange": "Запрос нового числа, без дубликатов и уведомлений при reset.", "renderThumb": "Рендер одного div с обязательными thumbProps.",
+        "slotProps": "DOM-свойства root, rail, track, thumb и скрытого field."
+      },
+      "examples": [{ "id": "basic", "code": "import { SliderAdapter } from '@dreadnought/react/unstyled';\nconst example = <SliderAdapter aria-label='Громкость' name='volume' defaultValue={25} />;" }]
+    }
+  ]
+}

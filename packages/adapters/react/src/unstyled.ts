@@ -3,6 +3,8 @@ export { ToolbarAdapter } from './Controls/Toolbar/ToolbarAdapter.tsx';
 export type { ToolbarAdapterProps } from './Controls/Toolbar/ToolbarAdapter.tsx';
 export type { ButtonAdapterProps } from './Controls/Button/ButtonAdapter.tsx';
 export { InputAdapter } from './Fields/Input/InputAdapter.tsx';
+export { SliderAdapter } from './Fields/Slider/SliderAdapter.tsx';
+export type { SliderAdapterProps } from './Fields/Slider/SliderAdapter.tsx';
 export type { InputAdapterProps } from './Fields/Input/InputAdapter.tsx';
 export { TextAreaAdapter } from './Fields/TextArea/TextAreaAdapter.tsx';
 export { MarkdownEditorAdapter } from './Fields/MarkdownEditor/MarkdownEditorAdapter.tsx';
