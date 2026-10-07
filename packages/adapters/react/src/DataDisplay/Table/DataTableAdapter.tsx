@@ -1,8 +1,9 @@
 import { useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
-import { getSelectionValue, paginateTableRows } from '@dreadnought/core';
+import { getPaginationState, getSelectionValue, paginateTableRows } from '@dreadnought/core';
 import type { TableSortOrder } from '@dreadnought/core';
 import { CheckboxAdapter } from '../../Fields/Checkbox/CheckboxAdapter.tsx';
+import { PaginationAdapter } from '../../Navigation/Pagination/index.ts';
 import { TableFilterMenu } from './TableFilterMenu.tsx';
 import { useTableWidths } from './useTableWidths.ts';
 import { cellValue, fixedStyle, matchingRows, paginationNumber, recordKey } from './tableData.ts';
@@ -31,9 +32,8 @@ export function DataTableAdapter<RecordType extends object>({
   const activeOrder = activeColumn?.sortOrder !== undefined ? activeColumn.sortOrder : sorting.order;
   const sorted = matchingRows(dataSource, columns, currentFilters(), { columnKey: activeColumn?.key, order: activeOrder });
   const pageSize = paginationNumber(pagination ? pagination.pageSize : undefined, page.pageSize);
-  const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
   const requestedPage = paginationNumber(pagination ? pagination.current : undefined, pageSize !== page.pageSize ? 1 : page.current);
-  const currentPage = Math.min(requestedPage, pageCount);
+  const { current: currentPage, pageCount } = getPaginationState({ total: sorted.length, current: requestedPage, pageSize });
   const storedPage = pagination && pagination.current !== undefined ? page.current : currentPage;
   if (pagination !== false && (storedPage !== page.current || pageSize !== page.pageSize)) {
     setPage({ current: storedPage, pageSize });
@@ -172,10 +172,8 @@ export function DataTableAdapter<RecordType extends object>({
     {scroll ? <div data-slot="scroll-container" style={{ overflow: 'auto', maxHeight: scroll.y, maxWidth: '100%' }}>
       {table}
     </div> : table}
-    {pagination !== false && pageCount > 1 && <nav data-slot="pagination" aria-label="Страницы таблицы">
-      <button type="button" aria-label="Предыдущая страница" disabled={currentPage <= 1} onClick={() => changePage(currentPage - 1)}>‹</button>
-      <span>{currentPage} / {pageCount}</span>
-      <button type="button" aria-label="Следующая страница" disabled={currentPage >= pageCount} onClick={() => changePage(currentPage + 1)}>›</button>
-    </nav>}
+    {pagination !== false && pageCount > 1 && <PaginationAdapter simple total={sorted.length}
+      current={currentPage} pageSize={pageSize} onChange={changePage}
+      aria-label="Страницы таблицы" data-slot="pagination" />}
   </div>;
 }
