@@ -33,6 +33,19 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes Tree honestly across only core and unstyled React', () => {
+    const entry = catalog.entries.find(entry => entry.id === 'component:tree');
+    expect(entry).toMatchObject({ name: 'Tree', family: 'Navigation', docsUrl: '/components/tree/#tree-api' });
+    expect(entry!.bindings.map(binding => binding.layer)).toEqual([1, 2]);
+    expect(entry!.bindings.map(binding => binding.exportName)).toEqual(['getVisibleTreeRows', 'TreeAdapter']);
+    expect(entry!.bindings[1]).toMatchObject({ id: 'react-adapter', importPath: '@dreadnought/react/unstyled' });
+    expect(entry!.bindings.some(binding => binding.id === 'react-ui')).toBe(false);
+    expect(entry!.tokens).toEqual([]);
+    for (const binding of entry!.bindings) expect(() => checkExamples(context, binding.examples)).not.toThrow();
+    const behavior = catalog.entries.find(entry => entry.id === 'behavior:get-tree-key-action');
+    expect(behavior!.bindings[0]).toMatchObject({ layer: 1, importPath: '@dreadnought/core', exportName: 'getTreeKeyAction' });
+    expect(() => checkExamples(context, behavior!.bindings[0].examples)).not.toThrow();
+  });
   it('publishes visible tree rows as a checked core-only behavior', () => {
     const entry = catalog.entries.find(e => e.id === 'behavior:get-visible-tree-rows');
     expect(entry).toMatchObject({ kind: 'behavior', name: 'getVisibleTreeRows', family: 'Behaviors', composesWith: ['behavior:get-selection-value'] });

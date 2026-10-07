@@ -13,6 +13,7 @@ import { toastDoc } from './componentDocs/ToastDoc';
 import { loaderDoc } from './componentDocs/LoaderDoc';
 import { progressDoc } from './componentDocs/ProgressDoc';
 import { paginationDoc } from './componentDocs/PaginationDoc';
+import { treeDoc } from './componentDocs/TreeDoc';
 import { layoutDoc } from './componentDocs/LayoutDoc';
 import { breadcrumbDoc } from './componentDocs/BreadcrumbDoc';
 import { iconDoc } from './componentDocs/IconDoc';
@@ -41,7 +42,7 @@ import { DocsAssistant } from '../assistant/DocsAssistant.tsx';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
-type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'markdowneditor' | 'markdownpreview' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'dropdown' | 'accordion' | 'codeblock' | 'alert' | 'toast' | 'loader' | 'progress' | 'pagination' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'switch' | 'slider' | 'radio' | 'select' | 'radarchart' | 'linechart' | 'barchart' | 'tooltip' | 'popover' | 'modal' | 'drawer';
+type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'markdowneditor' | 'markdownpreview' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'dropdown' | 'accordion' | 'codeblock' | 'alert' | 'toast' | 'loader' | 'progress' | 'pagination' | 'tree' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'switch' | 'slider' | 'radio' | 'select' | 'radarchart' | 'linechart' | 'barchart' | 'tooltip' | 'popover' | 'modal' | 'drawer';
 type DocsSection = 'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
 const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
   { name: 'Controls', sections: ['button', 'toolbar'] },
@@ -49,7 +50,7 @@ const componentFamilies: readonly { name: string; sections: readonly ComponentSe
   { name: 'Feedback', sections: ['alert', 'toast', 'loader', 'progress'] },
   { name: 'Fields', sections: ['input', 'textarea', 'markdowneditor', 'checkbox', 'switch', 'radio', 'select', 'slider'] },
   { name: 'Layout', sections: ['layout'] },
-  { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs', 'menu', 'dropdown', 'pagination'] },
+  { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs', 'menu', 'dropdown', 'pagination', 'tree'] },
   { name: 'Surfaces', sections: ['card'] },
   { name: 'Visualization', sections: ['radarchart', 'linechart', 'barchart'] },
   { name: 'Overlays', sections: ['tooltip', 'popover', 'modal', 'drawer'] },
@@ -263,6 +264,7 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
   loader: loaderDoc,
   progress: progressDoc,
   pagination: paginationDoc,
+  tree: treeDoc,
   layout: layoutDoc,
   breadcrumb: breadcrumbDoc,
   icon: iconDoc,

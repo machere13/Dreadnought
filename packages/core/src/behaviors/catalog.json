@@ -171,6 +171,15 @@
     }]
   },
   {
+    "id": "behavior:get-tree-key-action", "kind": "behavior", "name": "getTreeKeyAction", "family": "Behaviors",
+    "description": "Решает клавиатурное действие дерева по видимым строкам: перенос фокуса или раскрытие ветви без React и DOM.",
+    "docsUrl": "/custom-components/#core-parts",
+    "composesWith": ["behavior:get-visible-tree-rows", "behavior:get-selection-value"],
+    "constraints": ["Принимает актуальные видимые rows из getVisibleTreeRows и точный строковый/числовой currentKey. ArrowUp/Down/Home/End — видимый порядок без зацикливания; край возвращает undefined. ArrowRight раскрывает родителя или переходит к первому ребёнку; ArrowLeft закрывает раскрытого родителя или переходит к его родителю. Enter/Space переключают родителя; лист ничего не делает. Пустые rows, неизвестный currentKey и посторонняя клавиша возвращают undefined. Чистая функция с линейным поиском по видимым строкам; не хранит состояние и не обрабатывает IME, модификаторы, disabled, DOM, preventDefault или реальный фокус — это ответственность адаптера."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getTreeKeyAction",
+      "examples": [{ "id": "keyboard", "code": "import { getVisibleTreeRows, getTreeKeyAction } from '@dreadnought/core';\ntype Node = { id: number; children?: readonly Node[] };\nconst records: readonly Node[] = [{ id: 0, children: [{ id: 1 }] }];\nconst rows = getVisibleTreeRows(records, { getKey: node => node.id, getChildren: node => node.children });\nconst action = getTreeKeyAction(rows, 0, 'ArrowRight');" }] }]
+  },
+  {
     "id": "behavior:get-visible-tree-rows", "kind": "behavior", "name": "getVisibleTreeRows", "family": "Behaviors",
     "description": "Получает видимые строки вложенных данных: раскрытые ветви, глубина и родитель. Для дерева папок, вложенной навигации и строк таблицы без привязки к фреймворку.",
     "docsUrl": "/custom-components/#core-parts",

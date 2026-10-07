@@ -1,0 +1,16 @@
+{
+  "componentId": "component:tree",
+  "bindings": [{ "id": "react-adapter", "layer": 2, "framework": "react",
+    "importPath": "@dreadnought/react/unstyled", "exportName": "TreeAdapter",
+    "propertyDescriptions": {
+      "records": "Вложенные данные; readonly массив.", "getKey": "Уникальный строковый или числовой ключ.",
+      "getChildren": "Дочерние записи или null/undefined.", "getLabel": "Доступное имя пункта без имён потомков.",
+      "expandedKeys": "Раскрытые ключи владельца; запрос принимается новым prop.",
+      "defaultExpandedKeys": "Начальные раскрытые ключи неуправляемого дерева.",
+      "onExpandedKeysChange": "Запрос нового массива раскрытых ключей.", "disabled": "Блокирует раскрытие и клавиатурное управление.",
+      "renderLabel": "Неинтерактивное содержимое названия вместо текста getLabel.",
+      "slotClassNames": "Классы item/content/group/indicator без встроенной темы."
+    }, "defaults": { "defaultExpandedKeys": [], "disabled": false },
+    "examples": [{ "id": "adapter", "code": "import { TreeAdapter } from '@dreadnought/react/unstyled';\ntype Node = { id: string; label: string; children?: readonly Node[] };\nconst records: readonly Node[] = [{ id: 'root', label: 'Документация', children: [{ id: 'leaf', label: 'Начало' }] }];\nexport function Example() { return <TreeAdapter records={records} getKey={node => node.id} getChildren={node => node.children} getLabel={node => node.label} defaultExpandedKeys={['root']} />; }" }]
+  }]
+}

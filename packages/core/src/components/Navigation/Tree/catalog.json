@@ -1,0 +1,16 @@
+{
+  "id": "component:tree", "kind": "component", "name": "Tree", "family": "Navigation",
+  "description": "Вложенное дерево: общий расчёт видимых строк и доступный React-адаптер без темы.",
+  "docsUrl": "/components/tree/#tree-api", "states": [],
+  "composesWith": ["behavior:get-visible-tree-rows", "behavior:get-tree-key-action", "behavior:get-selection-value"],
+  "constraints": [
+    "Только core и неоформленный React-адаптер; готового Tree третьего слоя пока нет.",
+    "Ключи уникальны: строки или конечные числа; 1 и '1' различаются. Данные проверяет getVisibleTreeRows, включая скрытые ветви.",
+    "Без выбора, checkbox, загрузки детей, drag-and-drop, typeahead и виртуализации. renderLabel — неинтерактивное содержимое.",
+    "expandedKeys задаёт владельческое состояние; callback сообщает запрос. Закрытие сохраняет раскрытие потомков."
+  ],
+  "bindings": [{ "id": "core", "layer": 1, "framework": null,
+    "importPath": "@dreadnought/core", "exportName": "getVisibleTreeRows",
+    "examples": [{ "id": "projection", "code": "import { getVisibleTreeRows } from '@dreadnought/core';\ntype Node = { id: string; children?: readonly Node[] };\nconst records: readonly Node[] = [{ id: 'root', children: [{ id: 'leaf' }] }];\nconst rows = getVisibleTreeRows(records, { getKey: node => node.id, getChildren: node => node.children, expandedKeys: ['root'] });" }]
+  }]
+}
