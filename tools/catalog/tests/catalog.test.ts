@@ -33,14 +33,18 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
-  it('publishes Progress as a core-only contract with a checked public example', () => {
+  it('publishes Progress across three layers with checked public examples', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:progress');
     expect(entry).toMatchObject({ kind: 'component', name: 'Progress', family: 'Feedback' });
-    expect(entry!.bindings).toHaveLength(1);
+    expect(entry!.bindings.map(binding => binding.layer)).toEqual([1, 2, 3]);
+    expect(entry!.bindings.map(binding => binding.exportName)).toEqual(['getProgressState', 'ProgressAdapter', 'Progress']);
     expect(entry!.bindings[0]).toMatchObject({ layer: 1, framework: null,
       importPath: '@dreadnought/core', exportName: 'getProgressState', defaults: { value: 0, max: 100 } });
-    expect(entry!.docsUrl).toBe('/custom-components/#core-parts');
-    expect(() => checkExamples(context, entry!.bindings[0].examples)).not.toThrow();
+    expect(entry!.docsUrl).toBe('/components/progress/#progress-api');
+    for (const binding of entry!.bindings) expect(() => checkExamples(context, binding.examples)).not.toThrow();
+    expect(entry!.bindings[1].contracts[0].variants[0].properties.some(property => property.name === 'status')).toBe(false);
+    expect(entry!.bindings[2].defaults).toMatchObject({ value: 0, max: 100, showPercent: true, status: 'normal' });
+    expect(entry!.tokens.length).toBeGreaterThan(0);
   });
   it('publishes Slider as numeric and keyboard behavior composition with checked bindings', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:slider');

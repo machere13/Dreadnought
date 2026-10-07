@@ -1,0 +1,15 @@
+{
+  "componentId": "component:progress",
+  "bindings": [{
+    "id": "react-adapter", "layer": 2, "framework": "react",
+    "importPath": "@dreadnought/react/unstyled", "exportName": "ProgressAdapter",
+    "propertyDescriptions": {
+      "value": "Выполненная часть работы; ограничивается диапазоном от 0 до max.",
+      "max": "Положительный конечный объём всей работы.",
+      "showPercent": "Показывает округлённый процент; ширина заполнения остаётся точной.",
+      "slotClassNames": "Классы дорожки, заполнения и подписи."
+    },
+    "defaults": { "value": 0, "max": 100, "showPercent": true },
+    "examples": [{ "id": "basic", "code": "import { ProgressAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <ProgressAdapter value={3} max={8} aria-label=\"Загрузка файла\" />; }" }]
+  }]
+}

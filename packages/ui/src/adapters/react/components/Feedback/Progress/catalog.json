@@ -1,0 +1,16 @@
+{
+  "componentId": "component:progress",
+  "bindings": [{
+    "id": "react-ui", "layer": 3, "framework": "react",
+    "importPath": "@dreadnought/ui/react", "exportName": "Progress",
+    "propertyDescriptions": {
+      "value": "Выполненная часть работы; ограничивается диапазоном от 0 до max.",
+      "max": "Положительный конечный объём всей работы.",
+      "showPercent": "Показывает округлённый процент; ширина заполнения остаётся точной.",
+      "slotClassNames": "Классы дорожки, заполнения и подписи.",
+      "status": "Визуальное состояние, заданное явно; 100% не включает success автоматически."
+    },
+    "defaults": { "value": 0, "max": 100, "showPercent": true, "status": "normal" },
+    "examples": [{ "id": "basic", "code": "import { Progress } from '@dreadnought/ui/react';\nexport function Example() { return <Progress value={3} max={8} aria-label=\"Загрузка файла\" />; }" }]
+  }]
+}

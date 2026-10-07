@@ -1,9 +1,10 @@
 {
   "id": "component:progress", "kind": "component", "name": "Progress", "family": "Feedback",
-  "description": "Числовое значение выполненной работы, процент и атрибуты доступности без оформления.",
-  "docsUrl": "/custom-components/#core-parts",
+  "description": "Линейный индикатор выполненной работы: числовой core, адаптер без темы и готовая полоса с процентом.",
+  "docsUrl": "/components/progress/#progress-api",
+  "states": [],
   "constraints": [
-    "Только числовой core-контракт; React-адаптер и готовое оформление ещё не реализованы.",
+    "Только определённый числовой прогресс; status принадлежит готовому UI. Без анимации и произвольных children.",
     "value и max конечные; max > 0. value ограничивается [0, max], без округления. Неконечные числа: TypeError; неположительный max: RangeError.",
     "percent не округляется. complete означает достижение max, а не успешность операции. Доступное имя задаёт потребитель."
   ],

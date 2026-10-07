@@ -10,6 +10,12 @@ const identity = { buildId: 'a'.repeat(64), packageVersions: { '@dreadnought/cor
 const manifest = { schemaVersion: 1, ...identity, entries: [entry] };
 
 describe('published knowledge boundaries', () => {
+  it('publishes Progress knowledge at its public API anchor', () => {
+    const url = '/components/progress/#progress-api';
+    const pages = new Map([['/components/progress/', parsePage('<h2 id="progress-api">API</h2>')]]);
+    expect(() => validateLink(url, pages)).not.toThrow();
+    expect(validateManifest({ ...manifest, entries: [{ ...entry, url }] }, identity).entries[0].url).toBe(url);
+  });
   it('publishes Slider knowledge at its public API anchor', () => {
     const url = '/components/slider/#slider-api';
     const pages = new Map([['/components/slider/', parsePage('<h2 id="slider-api">API</h2>')]]);

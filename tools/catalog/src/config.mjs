@@ -14,7 +14,7 @@ export const components = [
   { family: 'Fields', name: 'MarkdownEditor', sources: [adapter, ui] },
   { family: 'Feedback', name: 'Toast', sources: [core, adapter, ui] },
   { family: 'Feedback', name: 'Loader', sources: [core, adapter, ui] },
-  { family: 'Feedback', name: 'Progress', sources: [core] },
+  { family: 'Feedback', name: 'Progress', sources: [core, adapter, ui] },
   { family: 'Overlays', name: 'Tooltip', sources: [core, adapter, ui] },
   { family: 'Overlays', name: 'Popover', sources: [core, adapter, ui] },
   { family: 'Overlays', name: 'Modal', sources: [core, adapter, ui] },
