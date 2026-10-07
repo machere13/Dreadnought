@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "packages/ui/tests/pagination.types.tsx",
     "packages/adapters/react/tests/Navigation/Pagination/PaginationPublic.types.tsx",
     "packages/core/tests/components/Navigation/Pagination/PaginationPublic.types.ts",
     "packages/ui/tests/progress.types.tsx",

@@ -1,0 +1,8 @@
+@layer dreadnought {
+  .dreadnought-text-pagination {
+    font-family: var(--dreadnought-font-family-ui);
+    font-size: var(--dreadnought-font-size-pagination);
+    font-weight: var(--dreadnought-font-weight-pagination);
+    line-height: var(--dreadnought-line-height-pagination);
+  }
+}

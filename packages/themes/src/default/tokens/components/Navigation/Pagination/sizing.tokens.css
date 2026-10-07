@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-pagination-size: var(--dreadnought-size-control-compact-min-height);
+  --dreadnought-pagination-radius: var(--dreadnought-border-radius-pill);
+  --dreadnought-pagination-focus-width: var(--dreadnought-border-width-x2);
+  --dreadnought-pagination-focus-offset: var(--dreadnought-spacing-x1);
+}

@@ -1,0 +1,10 @@
+:root {
+  --dreadnought-pagination-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-pagination-fg: var(--dreadnought-color-text-primary);
+  --dreadnought-pagination-hover-bg: var(--dreadnought-color-surface-hover);
+  --dreadnought-pagination-selected-bg: var(--dreadnought-color-action-primary);
+  --dreadnought-pagination-selected-fg: var(--dreadnought-color-text-on-action-primary);
+  --dreadnought-pagination-selected-hover-bg: var(--dreadnought-color-action-primary-hover);
+  --dreadnought-pagination-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-pagination-disabled-fg: var(--dreadnought-color-text-placeholder);
+}

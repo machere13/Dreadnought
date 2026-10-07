@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-font-size-pagination: var(--dreadnought-font-size-body-2);
+  --dreadnought-font-weight-pagination: var(--dreadnought-font-weight-body-2);
+  --dreadnought-line-height-pagination: var(--dreadnought-line-height-body-2);
+}

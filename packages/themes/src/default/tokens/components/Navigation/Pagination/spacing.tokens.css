@@ -1,0 +1,4 @@
+:root {
+  --dreadnought-pagination-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-pagination-padding: var(--dreadnought-spacing-x2);
+}
