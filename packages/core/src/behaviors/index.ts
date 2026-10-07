@@ -1,5 +1,7 @@
 export { getTextFieldState } from './getTextFieldState.ts';
 export { getVisibleTreeRows } from './getVisibleTreeRows.ts';
+export { getTreeKeyAction } from './getTreeKeyAction.ts';
+export type { TreeKeyAction } from './getTreeKeyAction.ts';
 export type { TreeKey, VisibleTreeRow, VisibleTreeRowsOptions } from './getVisibleTreeRows.ts';
 export type { TextFieldState, TextFieldStateOptions } from './getTextFieldState.ts';
 export { getNextEnabledValue } from './getNextEnabledValue.ts';
