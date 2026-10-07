@@ -1,0 +1,34 @@
+{
+  "componentId": "component:pagination",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Pagination",
+      "propertyDescriptions": {
+        "total": "Число записей.",
+        "current": "Управляемая страница; отображается до принятия следующего запроса владельцем.",
+        "defaultCurrent": "Начальная неуправляемая страница.",
+        "pageSize": "Число записей на странице.",
+        "onChange": "Запрос изменения: (page, pageSize).",
+        "simple": "Стрелки и подпись текущая / всего вместо номеров.",
+        "disabled": "Блокирует переходы.",
+        "slotClassNames": "Классы кнопок, подписи и многоточий."
+      },
+      "defaults": {
+        "defaultCurrent": 1,
+        "pageSize": 10,
+        "disabled": false,
+        "simple": false
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Pagination } from '@dreadnought/ui/react';\nexport function Example() { return <Pagination total={200} defaultCurrent={10} />; }"
+        }
+      ]
+    }
+  ]
+}

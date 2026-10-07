@@ -1,0 +1,34 @@
+{
+  "componentId": "component:pagination",
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "PaginationAdapter",
+      "propertyDescriptions": {
+        "total": "Число записей.",
+        "current": "Управляемая страница; отображается до принятия следующего запроса владельцем.",
+        "defaultCurrent": "Начальная неуправляемая страница.",
+        "pageSize": "Число записей на странице.",
+        "onChange": "Запрос изменения: (page, pageSize).",
+        "simple": "Стрелки и подпись текущая / всего вместо номеров.",
+        "disabled": "Блокирует переходы.",
+        "slotClassNames": "Классы кнопок, подписи и многоточий."
+      },
+      "defaults": {
+        "defaultCurrent": 1,
+        "pageSize": 10,
+        "disabled": false,
+        "simple": false
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { PaginationAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <PaginationAdapter total={200} defaultCurrent={10} />; }"
+        }
+      ]
+    }
+  ]
+}

@@ -5,6 +5,28 @@ import path from 'node:path';
 import { expect, it } from 'vitest';
 import { prepareCatalogDocs } from '../src/catalog/generateDocData.mjs';
 
+it('does not project a core function default onto a controlled React prop', () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'dreadnought-pagination-docs-'));
+  const input = path.join(root, 'tools/catalog/dist/catalog.json');
+  const contract = { variants: [{ properties: [
+    { name: 'current', type: 'number', origin: 'library' },
+    { name: 'defaultCurrent', type: 'number', origin: 'library' },
+  ] }] };
+  const catalog = { packageVersions: {}, entries: [{ kind: 'component', name: 'Pagination', bindings: [
+    { id: 'core', layer: 1, exportName: 'getPaginationState', defaults: { current: 1 }, examples: [{ code: 'getPaginationState({ total: 20 })' }], contracts: [] },
+    { id: 'react-adapter', layer: 2, exportName: 'PaginationAdapter', defaults: { defaultCurrent: 1 }, examples: [{ code: '<PaginationAdapter total={20} />' }], contracts: [contract] },
+    { id: 'react-ui', layer: 3, exportName: 'Pagination', defaults: { defaultCurrent: 1 }, examples: [{ code: '<Pagination total={20} />' }], contracts: [contract] },
+  ] }] };
+  try {
+    mkdirSync(path.dirname(input), { recursive: true });
+    writeFileSync(input, JSON.stringify(catalog));
+    prepareCatalogDocs(root);
+    const doc = JSON.parse(readFileSync(path.join(root, 'apps/docs/src/generated/catalog-docs.json'), 'utf8')).components.pagination;
+    expect(doc.apiRows.map((row: string[]) => [row[0], row[2]])).toEqual([['current', '—'], ['defaultCurrent', '1']]);
+    expect(doc.logicCode).toBe('getPaginationState({ total: 20 })');
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
 it('keeps a separately exported viewport API distinct from its toast', () => {
   const root = mkdtempSync(path.join(tmpdir(), 'dreadnought-docs-viewport-'));
   const binding = (id: string, layer: number, exportName: string, name: string, origin: string) => ({

@@ -13,7 +13,7 @@ function apiRows(entry, binding) {
   const peers = entry.bindings.filter((item) =>
     apiOwner(entry, item) === owner);
   const descriptions = Object.assign({}, ...peers.map((item) => item.propertyDescriptions), binding.propertyDescriptions);
-  const defaults = Object.assign({}, ...peers.map((item) => item.defaults), binding.defaults);
+  const defaults = Object.assign({}, ...peers.filter((item) => item.layer > 1).map((item) => item.defaults), binding.defaults);
   const props = new Map();
   for (const contract of binding.contracts) for (const variant of contract.variants) {
     for (const prop of variant.properties) {

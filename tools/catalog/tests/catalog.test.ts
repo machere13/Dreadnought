@@ -33,6 +33,14 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes Pagination across three layers with checked examples', () => {
+    const entry = catalog.entries.find(entry => entry.id === 'component:pagination');
+    expect(entry).toMatchObject({ name: 'Pagination', family: 'Navigation', docsUrl: '/components/pagination/#pagination-api' });
+    expect(entry!.bindings.map(binding => binding.exportName)).toEqual(['getPaginationState', 'PaginationAdapter', 'Pagination']);
+    expect(entry!.bindings.map(binding => binding.layer)).toEqual([1, 2, 3]);
+    for (const binding of entry!.bindings) expect(() => checkExamples(context, binding.examples)).not.toThrow();
+    expect(entry!.tokens.length).toBeGreaterThan(0);
+  });
   it('publishes Progress across three layers with checked public examples', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:progress');
     expect(entry).toMatchObject({ kind: 'component', name: 'Progress', family: 'Feedback' });

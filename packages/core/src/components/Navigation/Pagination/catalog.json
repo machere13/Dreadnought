@@ -1,0 +1,34 @@
+{
+  "id": "component:pagination",
+  "kind": "component",
+  "name": "Pagination",
+  "family": "Navigation",
+  "description": "Переключение страниц для списков и таблиц: общий расчёт, доступный адаптер и готовые пилюльки.",
+  "docsUrl": "/components/pagination/#pagination-api",
+  "states": [],
+  "constraints": [
+    "total — безопасное целое >= 0; current/pageSize — безопасные целые >= 1; неверные числа вызывают RangeError.",
+    "Максимум девять items; без загрузки данных, переключателя pageSize и быстрого перехода.",
+    "Controlled сообщает запрос; свойства сами не вызывают onChange. Uncontrolled сохраняет нормализованную страницу."
+  ],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "getPaginationState",
+      "defaults": {
+        "current": 1,
+        "pageSize": 10,
+        "disabled": false
+      },
+      "examples": [
+        {
+          "id": "state",
+          "code": "import { getPaginationState } from '@dreadnought/core';\nconst state = getPaginationState({ total: 200, current: 10 });"
+        }
+      ]
+    }
+  ]
+}
