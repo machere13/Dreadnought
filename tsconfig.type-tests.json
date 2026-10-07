@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "packages/adapters/react/tests/Navigation/Tree/TreePublic.types.tsx",
     "packages/core/tests/behaviors/tree.types.ts",
     "packages/ui/tests/pagination.types.tsx",
     "packages/adapters/react/tests/Navigation/Pagination/PaginationPublic.types.tsx",

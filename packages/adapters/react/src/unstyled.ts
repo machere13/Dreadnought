@@ -58,3 +58,5 @@ export * from './Feedback/Progress/index.ts';
 export { PaginationAdapter } from './Navigation/Pagination/index.ts';
 export type { PaginationAdapterProps, PaginationSlotClassNames } from './Navigation/Pagination/index.ts';
 export * from './DataDisplay/MarkdownPreview/index.ts';
+export { TreeAdapter } from './Navigation/Tree/index.ts';
+export type { TreeAdapterProps } from './Navigation/Tree/index.ts';
