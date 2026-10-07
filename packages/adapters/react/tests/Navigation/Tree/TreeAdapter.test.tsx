@@ -1,4 +1,5 @@
-import { createRef, StrictMode } from 'react';
+import { createRef, StrictMode, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { act, cleanup, createEvent, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -175,4 +176,65 @@ it('remembers the visible ancestor across unrelated renders without stealing ext
   view.rerender(<><TreeAdapter {...props} expandedKeys={[0]} data-version="next" /><button>Outside</button></>);
   expect(item('Branch').tabIndex).toBe(0);
   expect(document.activeElement).toBe(outside);
+});
+
+it('restores focus to the same key when reparenting replaces its element', () => {
+  const leaf = { id: 'leaf', label: 'Moved leaf' };
+  const view = render(<TreeAdapter {...props} defaultExpandedKeys={['a', 'b']}
+    records={[{ id: 'a', label: 'A', children: [leaf] }, { id: 'b', label: 'B' }]} />);
+  const previous = item('Moved leaf');
+  focus(previous);
+  view.rerender(<TreeAdapter {...props} defaultExpandedKeys={['a', 'b']}
+    records={[{ id: 'a', label: 'A' }, { id: 'b', label: 'B', children: [leaf] }]} />);
+  expect(previous.isConnected).toBe(false);
+  expect(document.activeElement).toBe(item('Moved leaf'));
+  fireEvent.keyDown(item('Moved leaf'), { key: 'ArrowLeft' });
+  expect(document.activeElement).toBe(item('B'));
+});
+
+it.each(['click', 'keydown'] as const)('keeps item identity across synchronous consumer reorder: %s', kind => {
+  const changed = vi.fn();
+  const branches: Node[] = ['A', 'B'].map(label => ({ id: label, label, children: [{ id: `${label}-child`, label: `${label} child` }] }));
+  function Example() {
+    const [nodes, setNodes] = useState(branches);
+    const reorder = () => flushSync(() => setNodes([branches[1], branches[0]]));
+    return <TreeAdapter {...props} records={nodes} onExpandedKeysChange={changed}
+      onClick={kind === 'click' ? reorder : undefined} onKeyDown={kind === 'keydown' ? reorder : undefined} />;
+  }
+  render(<Example />);
+  focus(item('A'));
+  if (kind === 'click') fireEvent.click(item('A').querySelector('[data-slot="tree-content"]')!);
+  else fireEvent.keyDown(item('A'), { key: 'ArrowRight' });
+  expect(changed).toHaveBeenCalledExactlyOnceWith(['A']);
+  expect(document.activeElement).toBe(item('A'));
+  expect(item('A').getAttribute('aria-expanded')).toBe('true');
+  expect(item('B').getAttribute('aria-expanded')).toBe('false');
+});
+
+it.each(['click', 'keydown'] as const)('ignores an item removed by the consumer callback: %s', kind => {
+  const changed = vi.fn();
+  function Example() {
+    const [nodes, setNodes] = useState(records);
+    const remove = () => flushSync(() => setNodes([records[1]]));
+    return <TreeAdapter {...props} records={nodes} onExpandedKeysChange={changed}
+      onClick={kind === 'click' ? remove : undefined} onKeyDown={kind === 'keydown' ? remove : undefined} />;
+  }
+  render(<Example />);
+  focus(item('Root'));
+  if (kind === 'click') fireEvent.click(item('Root').querySelector('[data-slot="tree-content"]')!);
+  else fireEvent.keyDown(item('Root'), { key: 'ArrowRight' });
+  expect(changed).not.toHaveBeenCalled();
+  expect(document.activeElement).toBe(item('End'));
+});
+
+it('keeps the focused key when focus capture synchronously reorders records', () => {
+  function Example() {
+    const [nodes, setNodes] = useState(records);
+    return <TreeAdapter {...props} records={nodes}
+      onFocusCapture={() => flushSync(() => setNodes([records[1], records[0]]))} />;
+  }
+  render(<Example />);
+  focus(item('Root'));
+  expect(item('Root').tabIndex).toBe(0);
+  expect(item('End').tabIndex).toBe(-1);
 });

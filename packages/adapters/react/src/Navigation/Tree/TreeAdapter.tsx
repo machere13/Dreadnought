@@ -19,6 +19,7 @@ export function TreeAdapter<RecordType, Key extends TreeKey = TreeKey>({
 }: TreeAdapterProps<RecordType, Key>) {
   const tree = useTree({ records, getKey, getChildren, expandedKeys, defaultExpandedKeys, onExpandedKeysChange, disabled });
   const { rows } = tree;
+  const current = useRef({ tree, disabled });
   const root = useRef<HTMLUListElement>(null);
   useImperativeHandle(ref, () => root.current!, []);
   const elements = useRef(new Map<Key, HTMLLIElement>());
@@ -40,11 +41,12 @@ export function TreeAdapter<RecordType, Key extends TreeKey = TreeKey>({
   function focus(key: Key) { elements.current.get(key)?.focus(); }
 
   useLayoutEffect(() => {
+    current.current = { tree, disabled };
     const pending = pendingFocus.current;
     pendingFocus.current = null;
     previousParents.current = parents;
     if (focusedKey !== tabKey) setFocusedKey(tabKey);
-    if (!pending || visible.has(pending.key)) return;
+    if (!pending || pending.element.isConnected) return;
     const doc = pending.element.ownerDocument;
     const active = doc.activeElement;
     if (active && active !== doc.body && active !== pending.element && active !== root.current) return;
@@ -62,27 +64,31 @@ export function TreeAdapter<RecordType, Key extends TreeKey = TreeKey>({
     return Boolean((target as HTMLElement | null)?.closest?.('button,input,select,textarea,a[href],[contenteditable="true"]'));
   }
   function handleKeyDown(event: KeyboardEvent<HTMLUListElement>) {
-    onKeyDown?.(event);
-    if (event.defaultPrevented || event.nativeEvent.isComposing || disabled
-      || event.ctrlKey || event.altKey || event.metaKey || event.shiftKey || interactive(event.target)) return;
     const item = ownItem(event.target);
-    if (!item || event.target !== item) return;
-    const row = rowOf(item);
-    const action = getTreeKeyAction(rows, row.key, event.key);
+    const key = item ? rowOf(item)?.key : undefined;
+    onKeyDown?.(event);
+    if (event.defaultPrevented || event.nativeEvent.isComposing || current.current.disabled
+      || event.ctrlKey || event.altKey || event.metaKey || event.shiftKey || interactive(event.target)) return;
+    if (!item || event.target !== item || key === undefined || elements.current.get(key) !== item) return;
+    const latest = current.current.tree;
+    const row = latest.rows.find(row => row.key === key);
+    if (!row) return;
+    const action = getTreeKeyAction(latest.rows, key, event.key);
     if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)
       || ((event.key === 'Enter' || event.key === ' ') && row.expandable)) event.preventDefault();
     if (action?.type === 'focus') focus(action.key);
-    if (action?.type === 'expand') tree.setExpanded(action.key, action.expanded);
+    if (action?.type === 'expand') latest.setExpanded(action.key, action.expanded);
   }
   function handleClick(event: MouseEvent<HTMLUListElement>) {
-    onClick?.(event);
-    if (event.defaultPrevented || disabled || interactive(event.target)) return;
     const item = ownItem(event.target);
+    const key = item ? rowOf(item)?.key : undefined;
     const content = (event.target as HTMLElement).closest('[data-slot="tree-content"]');
-    if (!item || !content || content.closest('[data-slot="tree-item"]') !== item) return;
-    const row = rowOf(item);
-    focus(row.key);
-    if (row.expandable) tree.toggle(row.key);
+    onClick?.(event);
+    if (event.defaultPrevented || current.current.disabled || interactive(event.target)) return;
+    if (!item || !content || content.closest('[data-slot="tree-item"]') !== item
+      || key === undefined || elements.current.get(key) !== item) return;
+    focus(key);
+    current.current.tree.toggle(key);
   }
 
   const groups = new Map<Key | null, ReactNode[]>();
@@ -116,10 +122,12 @@ export function TreeAdapter<RecordType, Key extends TreeKey = TreeKey>({
     aria-label={labelledBy ? ariaLabel : ariaLabel ?? 'Дерево'} aria-labelledby={labelledBy}
     tabIndex={rows.length ? undefined : 0} onKeyDown={handleKeyDown} onClick={handleClick}
     onFocusCapture={event => {
+      const item = ownItem(event.target);
+      const key = item ? rowOf(item)?.key : undefined;
       onFocusCapture?.(event);
       if (event.defaultPrevented) return;
-      const item = ownItem(event.target);
-      if (item && (event.target as EventTarget) === item) setFocusedKey(rowOf(item).key);
+      if (item && (event.target as EventTarget) === item && key !== undefined
+        && elements.current.get(key) === item) setFocusedKey(key);
     }}>
     {groups.get(null)?.reverse()}
   </ul>;

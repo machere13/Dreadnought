@@ -240,7 +240,7 @@ describe('public catalog', () => {
   });
   it('publishes standalone actions and behaviors with checked public contracts', () => {
     const capabilities = catalog.entries.filter(entry => entry.kind === 'action' || entry.kind === 'behavior');
-    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getCheckableState', 'getComboboxKeyAction', 'getCountdownRemaining', 'getDisclosureOpen', 'getDisclosureState', 'getHistoryState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getSteppedRange', 'getSteppedValue', 'getTooltipPosition', 'getTypeaheadValue', 'getVisibleTreeRows', 'pickFiles', 'readClipboard']);
+    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getCheckableState', 'getComboboxKeyAction', 'getCountdownRemaining', 'getDisclosureOpen', 'getDisclosureState', 'getHistoryState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getSteppedRange', 'getSteppedValue', 'getTooltipPosition', 'getTreeKeyAction', 'getTypeaheadValue', 'getVisibleTreeRows', 'pickFiles', 'readClipboard']);
     expect(capabilities.every(entry => entry.tokens.length === 0 && entry.bindings.length === 1 && entry.bindings[0].layer === 1)).toBe(true);
     const selection = capabilities.find(entry => entry.name === 'getSelectionValue');
     expect(selection.bindings[0].contracts).toHaveLength(3);
