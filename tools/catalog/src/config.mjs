@@ -26,6 +26,7 @@ export const components = [
   { family: 'Fields', name: 'Input', sources: [core, adapter, ui] },
   { family: 'Fields', name: 'TextArea', sources: [core, adapter, ui] },
   { family: 'Fields', name: 'Checkbox', sources: [core, adapter, ui] },
+  { family: 'Fields', name: 'Switch', sources: [adapter, ui] },
   { family: 'Fields', name: 'Radio', sources: [core, adapter, ui] },
   { family: 'Fields', name: 'Select', sources: [core, adapter, ui] },
   { family: 'DataDisplay', name: 'Table', sources: [core, adapter, ui] },

@@ -1,0 +1,8 @@
+{
+  "componentId": "component:switch",
+  "constraints": ["Оформление через --dreadnought-switch-*; переключение без анимации."],
+  "bindings": [{
+    "id": "react-ui", "layer": 3, "framework": "react", "importPath": "@dreadnought/ui/react", "exportName": "Switch",
+    "examples": [{ "id": "basic", "code": "import { Switch } from '@dreadnought/ui/react';\nconst example = <Switch name='alerts' defaultChecked>Уведомления</Switch>;" }]
+  }]
+}

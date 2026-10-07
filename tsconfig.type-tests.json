@@ -9,6 +9,7 @@
     "packages/ui/tests/tooltip.types.tsx",
     "packages/ui/tests/drawer.types.tsx",
     "packages/ui/tests/dropdown.types.tsx",
+    "packages/ui/tests/switch.types.tsx",
     "packages/core/tests/components/Overlays/Drawer/DrawerPublic.types.ts",
     "packages/adapters/react/tests/Visualization/BarChart/BarChartAdapter.types.tsx",
     "packages/adapters/react/tests/Visualization/LineChart/LineChartAdapter.types.tsx",

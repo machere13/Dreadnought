@@ -1,5 +1,13 @@
 [
   {
+    "id": "behavior:get-checkable-state", "kind": "behavior", "name": "getCheckableState", "family": "Behaviors",
+    "description": "Общие checked, disabled, required и invalid для собственного флажка или переключателя.",
+    "docsUrl": "/components/switch/#switch-api",
+    "constraints": ["Нормализует необязательные флаги в false. Не хранит состояние, не обрабатывает DOM, события или форму: это задача адаптера."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getCheckableState",
+      "examples": [{ "id": "state", "code": "import { getCheckableState } from '@dreadnought/core';\nconst state = getCheckableState({ checked: true });" }] }]
+  },
+  {
     "id": "behavior:get-tooltip-position", "kind": "behavior", "name": "getTooltipPosition", "family": "Behaviors",
     "description": "Рассчитывает положение подсказки и стрелки относительно цели без DOM и фреймворка.",
     "docsUrl": "/components/tooltip/#tooltip-api", "composesWith": ["component:tooltip"],

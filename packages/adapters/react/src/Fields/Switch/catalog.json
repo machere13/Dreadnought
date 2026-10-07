@@ -1,0 +1,26 @@
+{
+  "id": "component:switch", "kind": "component", "name": "Switch", "family": "Fields",
+  "description": "Двухпозиционный переключатель настройки на нативном поле checkbox с ролью switch.",
+  "docsUrl": "/components/switch/#switch-api",
+  "composesWith": ["behavior:get-checkable-state"],
+  "states": ["checked", "disabled", "required", "invalid"],
+  "constraints": [
+    "Доступное имя задаёт children, aria-label или aria-labelledby. ref указывает на input.",
+    "checked управляет состоянием; defaultChecked задаёт начальный выбор. onChange получает нативное событие поля.",
+    "Клавиша Space переключает значение. name, value, form, required и сброс формы работают как у нативного checkbox.",
+    "Только два состояния, без indeterminate. Не переопределяйте role и aria-checked: значение определяется checked.",
+    "className и style относятся к метке; slotProps.label и slotProps.indicator настраивают DOM-части. Индикатор декоративный, без интерактивных элементов.",
+    "Отдельный getSwitchState не нужен: основа — общий getCheckableState и нативное поле, без React-состояния и эффектов."
+  ],
+  "bindings": [{
+    "id": "react-adapter", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/unstyled", "exportName": "SwitchAdapter",
+    "defaults": { "disabled": false, "invalid": false },
+    "propertyDescriptions": {
+      "checked": "Управляемое включение.", "defaultChecked": "Начальное неуправляемое включение.",
+      "onChange": "Нативное событие: новое значение event.currentTarget.checked.",
+      "children": "Текст метки рядом с переключателем.", "invalid": "Состояние ошибки.",
+      "slotProps": "DOM-свойства метки label и декоративного indicator.", "value": "Значение включённого поля при отправке формы, не состояние выбора."
+    },
+    "examples": [{ "id": "basic", "code": "import { SwitchAdapter } from '@dreadnought/react/unstyled';\nconst example = <SwitchAdapter name='alerts' defaultChecked>Уведомления</SwitchAdapter>;" }]
+  }]
+}

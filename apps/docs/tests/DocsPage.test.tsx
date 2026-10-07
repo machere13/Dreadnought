@@ -13,6 +13,15 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('documents Switch with an interactive native control and public API', () => {
+    render(<DocsPage section="switch" />);
+    expect(screen.getByRole('heading', { name: 'Switch', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'checked' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Switch' }).getAttribute('href')).toBe('/components/switch/');
+    const input = screen.getByRole('switch', { name: 'Получать уведомления' }) as HTMLInputElement;
+    fireEvent.click(input);
+    expect(input.checked).toBe(true);
+  });
   it('documents Dropdown with a working action menu and its public API', () => {
     render(<DocsPage section="dropdown" />);
     expect(screen.getByRole('heading', { name: 'Dropdown', level: 1 })).toBeTruthy();

@@ -1,0 +1,10 @@
+:root {
+  --dreadnought-switch-text: var(--dreadnought-color-text-primary);
+  --dreadnought-switch-bg: var(--dreadnought-color-action-secondary);
+  --dreadnought-switch-border: var(--dreadnought-color-border-default);
+  --dreadnought-switch-thumb-bg: var(--dreadnought-color-action-primary);
+  --dreadnought-switch-checked-bg: var(--dreadnought-color-action-primary);
+  --dreadnought-switch-checked-thumb-bg: var(--dreadnought-color-text-on-action-primary);
+  --dreadnought-switch-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-switch-invalid: var(--dreadnought-color-status-error);
+}

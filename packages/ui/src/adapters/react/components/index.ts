@@ -17,6 +17,7 @@ export * from './Layout/Layout/index.ts';
 export * from './Navigation/Menu/index.ts';
 export * from './Navigation/Dropdown/index.ts';
 export * from './Fields/Checkbox/index.ts';
+export * from './Fields/Switch/index.ts';
 export * from './Fields/Radio/index.ts';
 export * from './Fields/Select/index.ts';
 export * from './Visualization/RadarChart/index.ts';

@@ -33,6 +33,16 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes Switch with checked public examples and shared checkable behavior', () => {
+    const entry = catalog.entries.find(entry => entry.id === 'component:switch');
+    expect(entry).toMatchObject({ family: 'Fields', composesWith: ['behavior:get-checkable-state'] });
+    expect(entry!.bindings.map(binding => binding.exportName)).toEqual(['SwitchAdapter', 'Switch']);
+    for (const binding of entry!.bindings) expect(() => checkExamples(context, binding.examples)).not.toThrow();
+    expect(entry!.tokens.length).toBeGreaterThan(0);
+    const behavior = catalog.entries.find(entry => entry.id === 'behavior:get-checkable-state');
+    expect(behavior!.bindings[0].exportName).toBe('getCheckableState');
+    expect(() => checkExamples(context, behavior!.bindings[0].examples)).not.toThrow();
+  });
   it('publishes Dropdown as a checked Menu and Popover composition without a synthetic core binding', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:dropdown');
     expect(entry).toMatchObject({ family: 'Navigation', composesWith: ['component:menu', 'component:popover'] });
@@ -174,7 +184,7 @@ describe('public catalog', () => {
   });
   it('publishes standalone actions and behaviors with checked public contracts', () => {
     const capabilities = catalog.entries.filter(entry => entry.kind === 'action' || entry.kind === 'behavior');
-    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getComboboxKeyAction', 'getCountdownRemaining', 'getDisclosureOpen', 'getDisclosureState', 'getHistoryState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getSteppedValue', 'getTooltipPosition', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
+    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getCheckableState', 'getComboboxKeyAction', 'getCountdownRemaining', 'getDisclosureOpen', 'getDisclosureState', 'getHistoryState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getSteppedValue', 'getTooltipPosition', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
     expect(capabilities.every(entry => entry.tokens.length === 0 && entry.bindings.length === 1 && entry.bindings[0].layer === 1)).toBe(true);
     const selection = capabilities.find(entry => entry.name === 'getSelectionValue');
     expect(selection.bindings[0].contracts).toHaveLength(3);
