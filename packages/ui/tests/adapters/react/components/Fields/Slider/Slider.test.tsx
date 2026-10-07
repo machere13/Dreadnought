@@ -5,6 +5,15 @@ import { Slider } from '../../../../../../src/adapters/react/components/Fields/S
 
 afterEach(cleanup);
 
+it('places a vertical Tooltip to the right by default and permits an explicit override', async () => {
+  const { rerender } = render(<Slider orientation="vertical" tooltip={{ openDelay: 0, closeDelay: 0 }} />);
+  fireEvent.focus(screen.getByRole('slider'));
+  const tooltip = await screen.findByRole('tooltip');
+  expect(tooltip.getAttribute('data-placement')).toBe('right');
+  rerender(<Slider orientation="vertical" tooltip={{ placement: 'left', openDelay: 0, closeDelay: 0 }} />);
+  await waitFor(() => expect(screen.getByRole('tooltip').getAttribute('data-placement')).toBe('left'));
+});
+
 it('shows the accepted value in the shared Tooltip on keyboard focus', async () => {
   const user = userEvent.setup();
   render(<Slider aria-label="Volume" defaultValue={25} tooltip={{ openDelay: 0, closeDelay: 0 }} />);

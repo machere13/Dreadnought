@@ -18,6 +18,10 @@ export const Decimal: Story = { args: { min: 0, max: 1, step: 0.1, defaultValue:
 export const Disabled: Story = { args: { disabled: true } };
 export const FixedValue: Story = { args: { min: 4, max: 4, defaultValue: 4 } };
 export const TooltipDisabled: Story = { args: { tooltip: false } };
+export const Vertical: Story = { args: { orientation: 'vertical' } };
+export const VerticalRange: Story = { render: () => <Slider orientation="vertical" range step={null}
+  marks={{ 0: '0', 30: '30', 70: '70', 100: '100' }} defaultValue={[30, 70]}
+  slotProps={{ thumb: [{ 'aria-label': 'От' }, { 'aria-label': 'До' }] }} /> };
 export const Marks: Story = { args: { marks: { 0: '0', 33: '33', 100: '100' }, step: 20 } };
 export const MarksOnly: Story = { args: { marks: { 0: 'Мало', 30: 'Средне', 100: 'Много' }, step: null, defaultValue: 30 } };
 export const RangeWithMarks: Story = { render: () => <Slider range step={null} marks={{ 0: '0', 30: '30', 70: '70', 100: '100' }}

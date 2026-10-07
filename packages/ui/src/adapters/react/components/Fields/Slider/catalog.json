@@ -1,13 +1,14 @@
 {
   "componentId": "component:slider",
-  "constraints": ["Оформление через --dreadnought-slider-* без анимации. Общий Tooltip у бегунка отключается tooltip=false."],
+  "constraints": ["Оформление через --dreadnought-slider-* без анимации. Вертикальная высота по умолчанию 12rem через --dreadnought-slider-vertical-height; style.height задаёт высоту экземпляра. Общий Tooltip по умолчанию сверху для horizontal и справа для vertical; placement переопределяет сторону. tooltip=false отключает подсказку."],
   "bindings": [{
     "id": "react-ui", "layer": 3, "framework": "react", "importPath": "@dreadnought/ui/react", "exportName": "Slider",
-    "defaults": { "min": 0, "max": 100, "step": 1, "disabled": false },
+    "defaults": { "min": 0, "max": 100, "step": 1, "disabled": false, "orientation": "horizontal" },
     "propertyDescriptions": { "tooltip": "false отключает подсказку; formatter, placement, openDelay и closeDelay настраивают общий Tooltip." },
     "examples": [
       { "id": "basic", "code": "import { Slider } from '@dreadnought/ui/react';\nconst example = <Slider aria-label='Громкость' defaultValue={25} name='volume' tooltip={{ formatter: value => `${value}%` }} />;" },
       { "id": "marks", "code": "import { Slider } from '@dreadnought/ui/react';\nconst example = <Slider aria-label='Уровень' step={null} marks={{ 0: 'Мало', 30: 'Средне', 100: 'Много' }} defaultValue={30} />;" },
+      { "id": "vertical", "code": "import { Slider } from '@dreadnought/ui/react';\nconst example = <Slider orientation='vertical' range defaultValue={[30, 70]} style={{ height: '14rem' }} slotProps={{ thumb: [{ 'aria-label': 'От' }, { 'aria-label': 'До' }] }} />;" },
       { "id": "range", "code": "import { Slider } from '@dreadnought/ui/react';\nconst example = <Slider range defaultValue={[20, 80]} name='price' slotProps={{ thumb: [{ 'aria-label': 'Цена от' }, { 'aria-label': 'Цена до' }] }} tooltip={{ formatter: value => `${value} ₽` }} />;" }
     ]
   }]

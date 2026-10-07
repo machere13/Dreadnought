@@ -1,5 +1,6 @@
 :root {
   --dreadnought-slider-height: var(--dreadnought-size-control-min-height);
+  --dreadnought-slider-vertical-height: 12rem;
   --dreadnought-slider-target-size: var(--dreadnought-size-control-compact-min-height);
   --dreadnought-slider-thumb-size: 1rem;
   --dreadnought-slider-rail-height: 4px;

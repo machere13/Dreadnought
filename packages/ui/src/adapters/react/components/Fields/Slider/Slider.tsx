@@ -47,7 +47,7 @@ function TooltipThumb({ thumbProps, trigger, value, index, renderThumb }: {
 export function Slider({ className, tooltip = {}, renderThumb, ...props }: SliderProps) {
   return <SliderAdapter {...props} className={[sliderPresentation.root, className].filter(Boolean).join(' ')}
     renderThumb={tooltip === false ? renderThumb : (thumbProps, value, index) => <Tooltip
-      content={tooltip.formatter ? tooltip.formatter(value) : String(value)} placement={tooltip.placement}
+      content={tooltip.formatter ? tooltip.formatter(value) : String(value)} placement={tooltip.placement ?? (props.orientation === 'vertical' ? 'right' : 'top')}
       openDelay={tooltip.openDelay} closeDelay={tooltip.closeDelay} disabled={thumbProps['aria-disabled'] === true}
       describedBy={thumbProps['aria-describedby']}>
       {trigger => <TooltipThumb thumbProps={thumbProps} trigger={trigger} value={value} index={index} renderThumb={renderThumb} />}

@@ -14,7 +14,7 @@ export function useSlider(options: UseSliderOptions = {}): SliderResult<number |
 }
 
 function useSliderImplementation(options: UseSliderOptions) {
-  const { min = 0, max = 100, step = 1, marks = {}, range = false, value: controlled, defaultValue, disabled: ownDisabled = false,
+  const { min = 0, max = 100, step = 1, marks = {}, range = false, orientation = 'horizontal', value: controlled, defaultValue, disabled: ownDisabled = false,
     onValueChange, name, form, className, style, slotProps = {}, ...props } = options;
   const initial = useRef(defaultValue ?? (range ? [min, max] as const : min));
   const fieldRef = useRef<HTMLInputElement>(null);
@@ -86,12 +86,13 @@ function useSliderImplementation(options: UseSliderOptions) {
     document.addEventListener('reset', reset, true);
     return () => { attached = false; observer.disconnect(); document.removeEventListener('reset', reset, true); };
   });
-  useEffect(() => { stop(); }, [range]);
+  useEffect(() => { stop(); }, [range, orientation]);
   useEffect(() => () => stop(), []);
   function candidate(event: PointerEvent<HTMLDivElement>) {
     const rect = railRef.current?.getBoundingClientRect();
-    if (!rect || rect.width <= 0) return undefined;
-    const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    if (!rect || (orientation === 'vertical' ? rect.height : rect.width) <= 0) return undefined;
+    const ratio = Math.max(0, Math.min(1, orientation === 'vertical'
+      ? 1 - (event.clientY - rect.top) / rect.height : (event.clientX - rect.left) / rect.width));
     return min + (scaleMax - min) * ratio;
   }
   const thumbs = values.map((current, number) => {
@@ -104,7 +105,7 @@ function useSliderImplementation(options: UseSliderOptions) {
     const thumbProps: ComponentPropsWithRef<'div'> & { 'data-slot': string; 'data-index': number } = { ...props, ...thumbSlot, ref,
       id: index === 1 && thumbId && !(Array.isArray(slotProps.thumb) && thumbSlot?.id) ? `${thumbId}-end` : thumbId,
       style: { ...thumbSlot?.style, '--dreadnought-slider-thumb-progress': `${position(current) * 100}%` } as CSSProperties,
-      role: 'slider', 'data-slot': 'thumb', 'data-index': index, 'aria-orientation': 'horizontal',
+      role: 'slider', 'data-slot': 'thumb', 'data-index': index, 'aria-orientation': orientation,
       'aria-valuemin': range && index === 1 ? values[0] : first,
       'aria-valuemax': range && index === 0 ? values[1] : last, 'aria-valuenow': current,
       'aria-disabled': disabled, tabIndex: disabled ? -1 : 0,
@@ -112,8 +113,8 @@ function useSliderImplementation(options: UseSliderOptions) {
         props.onKeyDown?.(event);
         thumbSlot?.onKeyDown?.(event);
         if (isDisabled() || event.defaultPrevented || event.nativeEvent.isComposing || event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) return;
-        const direction = getNavigationDirection(event.key, { orientation: 'horizontal' })
-          ?? getNavigationDirection(event.key, { homeEnd: false });
+        const direction = getNavigationDirection(event.key, { orientation })
+          ?? (orientation === 'horizontal' ? getNavigationDirection(event.key, { homeEnd: false }) : undefined);
         if (!direction) return;
         event.preventDefault();
         const increase = event.key === 'ArrowRight' || event.key === 'ArrowUp';
@@ -138,11 +139,11 @@ function useSliderImplementation(options: UseSliderOptions) {
       type: 'hidden', name, form, value: current, disabled: ownDisabled };
     return { value: current, progress: position(current), thumbRef: ref, thumbProps, fieldProps };
   });
-  const rootProps: ComponentPropsWithRef<'div'> & { 'data-ui': string; 'data-disabled': string | undefined } = { ...slotProps.root, ref: rootRef,
+  const rootProps: ComponentPropsWithRef<'div'> & { 'data-ui': string; 'data-disabled': string | undefined; 'data-orientation': string } = { ...slotProps.root, ref: rootRef,
     className: [className, slotProps.root?.className].filter(Boolean).join(' '),
     style: { ...slotProps.root?.style, ...style, '--dreadnought-slider-progress': `${progress * 100}%`,
       '--dreadnought-slider-start': `${start * 100}%` } as CSSProperties,
-    'data-ui': 'slider', 'data-disabled': disabled ? '' : undefined,
+    'data-ui': 'slider', 'data-disabled': disabled ? '' : undefined, 'data-orientation': orientation,
     onPointerDown: event => {
       slotProps.root?.onPointerDown?.(event);
       if (isDisabled() || event.defaultPrevented || event.button !== 0 || !event.isPrimary || activePointer.current !== null) return;

@@ -3,6 +3,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 export type SliderRange = [number, number];
 
 interface SliderCommonOptions {
+  orientation?: 'horizontal' | 'vertical';
   min?: number;
   max?: number;
   step?: number | null;

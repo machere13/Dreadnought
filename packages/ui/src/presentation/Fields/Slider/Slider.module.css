@@ -76,6 +76,44 @@
   }
   .root [data-slot='mark'][data-active] { color: var(--dreadnought-slider-mark-active-color); }
   .root [data-slot='mark'][data-active]::before { background: var(--dreadnought-slider-mark-active-color); }
+  .root[data-orientation='vertical'] {
+    display: inline-block;
+    min-width: 0;
+    width: var(--dreadnought-slider-height);
+    height: var(--dreadnought-slider-vertical-height);
+    margin-inline: 0;
+    margin-block: var(--dreadnought-slider-inset);
+    touch-action: pan-x;
+  }
+  .root[data-orientation='vertical']:has([data-slot='mark']) { margin-inline-end: var(--dreadnought-slider-vertical-mark-space); }
+  .root[data-orientation='vertical'] [data-slot='rail'], .root[data-orientation='vertical'] [data-slot='track'] {
+    top: auto;
+    bottom: 0;
+    left: 50%;
+    width: var(--dreadnought-slider-rail-height);
+    height: 100%;
+    transform: translateX(-50%);
+  }
+  .root[data-orientation='vertical'] [data-slot='track'] {
+    bottom: var(--dreadnought-slider-start);
+    height: calc(var(--dreadnought-slider-progress) - var(--dreadnought-slider-start));
+  }
+  .root[data-orientation='vertical'] [data-slot='thumb'] {
+    top: auto;
+    bottom: var(--dreadnought-slider-thumb-progress);
+    left: 50%;
+    transform: translate(-50%, 50%);
+  }
+  .root[data-orientation='vertical'] [data-slot='mark'] {
+    top: auto;
+    bottom: var(--dreadnought-slider-mark-progress);
+    left: calc(50% + var(--dreadnought-slider-mark-offset));
+    transform: translateY(50%);
+  }
+  .root[data-orientation='vertical'] [data-slot='mark']::before {
+    top: 50%;
+    left: calc(0px - var(--dreadnought-slider-mark-offset));
+  }
   .root[data-disabled] { opacity: var(--dreadnought-slider-disabled-opacity); cursor: not-allowed; }
   .root[data-disabled] [data-slot='thumb'] { cursor: not-allowed; }
   .root[data-disabled] [data-slot='mark'] { cursor: not-allowed; }
