@@ -27,3 +27,5 @@ export type { UsePopoverOptions, PopoverTriggerProps } from './Overlays/Popover/
 export type { UseTooltipOptions, TooltipTriggerProps } from './Overlays/Tooltip/index.ts';
 export { useToast } from './Feedback/Toast/useToast.ts';
 export type { UseToastOptions } from './Feedback/Toast/useToast.ts';
+export { useTree } from './Navigation/Tree/index.ts';
+export type { UseTreeOptions, UseTreeResult } from './Navigation/Tree/index.ts';
