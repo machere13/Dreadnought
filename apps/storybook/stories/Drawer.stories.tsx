@@ -37,6 +37,3 @@ export const WithPopover: Story = { args: { content: ({ close }) => <><Popover a
   {trigger => <Button {...trigger}>Настройки</Button>}
   </Popover><Button onClick={close}>Готово</Button></> } };
 export const NativeForm: Story = { args: { content: () => <form method="dialog"><Input aria-label="Имя" /><Button type="submit">Сохранить</Button></form> } };
-export const ReducedMotion: Story = {
-  parameters: { docs: { description: { story: 'Включите в системе уменьшение движения (prefers-reduced-motion: reduce): панель открывается без перехода. Отдельный media addon не требуется.' } } },
-};
