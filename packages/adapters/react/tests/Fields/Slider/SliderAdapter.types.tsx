@@ -4,6 +4,7 @@ import { useSlider } from '@dreadnought/react/logic';
 
 const valid = <SliderAdapter ref={createRef<HTMLDivElement>()} value={2} step={0.1} onValueChange={value => value.toFixed(1)}
   renderThumb={props => <div {...props} />} />;
+const discrete = <SliderAdapter step={null} marks={{ 0: 'Low', 30: <span>Medium</span>, 100: 'High' }} />;
 const validRange = <SliderAdapter range value={[1, 2]} onValueChange={value => value[0].toFixed(1)}
   slotProps={{ thumb: [{ 'aria-label': 'From' }, { 'aria-label': 'To' }] }}
   renderThumb={(props, value, index) => <div {...props} data-index={index}>{value}</div>} />;
@@ -25,4 +26,4 @@ const scalarCallback = <SliderAdapter range onValueChange={(value: number) => va
 const anyStep = <SliderAdapter step="any" />;
 // @ts-expect-error A div ref is incompatible with an SVG element ref.
 const svgRef = <SliderAdapter ref={createRef<SVGSVGElement>()} />;
-void [valid, validRange, Logic, RangeLogic, range, scalarRange, tripleRange, scalarCallback, anyStep, svgRef];
+void [valid, discrete, validRange, Logic, RangeLogic, range, scalarRange, tripleRange, scalarCallback, anyStep, svgRef];

@@ -1,11 +1,12 @@
-import type { ComponentPropsWithoutRef } from 'react';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 
 export type SliderRange = [number, number];
 
 interface SliderCommonOptions {
   min?: number;
   max?: number;
-  step?: number;
+  step?: number | null;
+  marks?: Readonly<Record<number, ReactNode>>;
   disabled?: boolean;
   name?: string;
   form?: string;
@@ -31,6 +32,7 @@ export interface SliderSlotProps {
   root?: ComponentPropsWithoutRef<'div'>;
   rail?: ComponentPropsWithoutRef<'div'>;
   track?: ComponentPropsWithoutRef<'div'>;
+  mark?: ComponentPropsWithoutRef<'button'>;
   thumb?: ComponentPropsWithoutRef<'div'> | readonly [ComponentPropsWithoutRef<'div'>, ComponentPropsWithoutRef<'div'>];
   field?: ComponentPropsWithoutRef<'input'> | readonly [ComponentPropsWithoutRef<'input'>, ComponentPropsWithoutRef<'input'>];
 }

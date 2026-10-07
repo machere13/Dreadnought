@@ -7,6 +7,7 @@
     "propertyDescriptions": { "tooltip": "false отключает подсказку; formatter, placement, openDelay и closeDelay настраивают общий Tooltip." },
     "examples": [
       { "id": "basic", "code": "import { Slider } from '@dreadnought/ui/react';\nconst example = <Slider aria-label='Громкость' defaultValue={25} name='volume' tooltip={{ formatter: value => `${value}%` }} />;" },
+      { "id": "marks", "code": "import { Slider } from '@dreadnought/ui/react';\nconst example = <Slider aria-label='Уровень' step={null} marks={{ 0: 'Мало', 30: 'Средне', 100: 'Много' }} defaultValue={30} />;" },
       { "id": "range", "code": "import { Slider } from '@dreadnought/ui/react';\nconst example = <Slider range defaultValue={[20, 80]} name='price' slotProps={{ thumb: [{ 'aria-label': 'Цена от' }, { 'aria-label': 'Цена до' }] }} tooltip={{ formatter: value => `${value} ₽` }} />;" }
     ]
   }]

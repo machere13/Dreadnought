@@ -6,4 +6,6 @@
   --dreadnought-slider-min-width: 5rem;
   --dreadnought-slider-radius: var(--dreadnought-border-radius-pill);
   --dreadnought-slider-focus-width: var(--dreadnought-border-width-x2);
+  --dreadnought-slider-mark-size: 4px;
+  --dreadnought-slider-mark-font-size: 0.75rem;
 }

@@ -30,6 +30,7 @@ export function SliderAdapter({ ref, renderThumb, ...props }: SliderAdapterProps
   return <div {...slider.rootProps}>
     <div {...props.slotProps?.rail} ref={slider.railRef} data-slot="rail" aria-hidden="true" />
     <div {...props.slotProps?.track} data-slot="track" aria-hidden="true" />
+    {slider.marks.map(mark => <button key={mark.value} {...mark.markProps}>{mark.label}</button>)}
     {slider.thumbs.map((thumb, index) => <SliderThumb key={index} {...thumb} index={index as 0 | 1}
       forwardedRef={index === 0 ? ref : undefined} renderThumb={renderThumb} />)}
     {slider.thumbs.map((thumb, index) => <input key={index} {...thumb.fieldProps} />)}

@@ -35,7 +35,7 @@ afterAll(() => {
 describe('public catalog', () => {
   it('publishes Slider as numeric and keyboard behavior composition with checked bindings', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:slider');
-    expect(entry).toMatchObject({ family: 'Fields', composesWith: ['behavior:get-stepped-value', 'behavior:get-stepped-range', 'behavior:get-navigation-direction'] });
+    expect(entry).toMatchObject({ family: 'Fields', composesWith: ['behavior:get-stepped-value', 'behavior:get-stepped-range', 'behavior:get-navigation-direction', 'behavior:get-next-enabled-value'] });
     expect(entry!.bindings.map(binding => binding.exportName)).toEqual(['useSlider', 'SliderAdapter', 'Slider']);
     for (const binding of entry!.bindings) expect(() => checkExamples(context, binding.examples)).not.toThrow();
     expect(entry!.tokens.length).toBeGreaterThan(0);

@@ -3,4 +3,6 @@
   --dreadnought-slider-track-bg: var(--dreadnought-color-action-primary);
   --dreadnought-slider-thumb-bg: var(--dreadnought-color-action-primary);
   --dreadnought-slider-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-slider-mark-color: var(--dreadnought-color-text-placeholder);
+  --dreadnought-slider-mark-active-color: var(--dreadnought-color-text-primary);
 }

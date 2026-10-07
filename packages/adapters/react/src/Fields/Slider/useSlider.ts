@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ComponentPropsWithRef, ComponentPropsWithoutRef, CSSProperties, KeyboardEvent, PointerEvent } from 'react';
-import { getNavigationDirection, getSteppedRange, getSteppedValue } from '@dreadnought/core';
+import { getNavigationDirection, getNextEnabledValue, getSteppedRange, getSteppedValue } from '@dreadnought/core';
 import { useFieldValue } from '../../shared/useFieldValue.ts';
 import type { SliderRange, UseRangeSliderOptions, UseSingleSliderOptions, UseSliderOptions } from './slider.types.ts';
 
@@ -14,7 +14,7 @@ export function useSlider(options: UseSliderOptions = {}): SliderResult<number |
 }
 
 function useSliderImplementation(options: UseSliderOptions) {
-  const { min = 0, max = 100, step = 1, range = false, value: controlled, defaultValue, disabled: ownDisabled = false,
+  const { min = 0, max = 100, step = 1, marks = {}, range = false, value: controlled, defaultValue, disabled: ownDisabled = false,
     onValueChange, name, form, className, style, slotProps = {}, ...props } = options;
   const initial = useRef(defaultValue ?? (range ? [min, max] as const : min));
   const fieldRef = useRef<HTMLInputElement>(null);
@@ -32,12 +32,15 @@ function useSliderImplementation(options: UseSliderOptions) {
       if (options.range) options.onValueChange?.(next as SliderRange);
       else options.onValueChange?.(next as number);
     }, fieldRef, form);
-  const grid = { min, max, step };
+  const points = Object.keys(marks).map(Number).sort((a, b) => a - b);
+  const grid = { min, max, step, points };
+  const first = getSteppedValue(min, grid);
   const last = getSteppedValue(max, grid);
   const value = range ? getSteppedRange(typeof stored === 'number' ? [stored, last] : stored, grid)
     : getSteppedValue(typeof stored === 'number' ? stored : stored[0], grid);
   const values = typeof value === 'number' ? [value] : value;
-  const position = (value: number) => last === min ? 0 : (value - min) / (last - min);
+  const scaleMax = step === null ? max : last;
+  const position = (value: number) => scaleMax === min ? 0 : (value - min) / (scaleMax - min);
   const start = range ? position(values[0]) : 0, progress = position(values[values.length - 1]);
   function request(candidate: number, index: 0 | 1) {
     if (typeof value === 'number') {
@@ -47,6 +50,13 @@ function useSliderImplementation(options: UseSliderOptions) {
       const next = getSteppedRange(value, grid, { index, value: candidate });
       if (next[0] !== value[0] || next[1] !== value[1]) setValue(next);
     }
+  }
+  function nearestThumb(next: number) {
+    if (!range) return 0;
+    const lowerDistance = Math.abs(next - values[0]), upperDistance = Math.abs(next - values[1]);
+    if (lowerDistance !== upperDistance) return lowerDistance < upperDistance ? 0 : 1;
+    if (values[0] === values[1] && next !== values[0]) return next > values[0] ? 1 : 0;
+    return lastActive.current;
   }
   function isDisabled() { return ownDisabled || !!fieldRef.current?.matches(':disabled'); }
   function stop() {
@@ -82,7 +92,7 @@ function useSliderImplementation(options: UseSliderOptions) {
     const rect = railRef.current?.getBoundingClientRect();
     if (!rect || rect.width <= 0) return undefined;
     const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-    return min + (last - min) * ratio;
+    return min + (scaleMax - min) * ratio;
   }
   const thumbs = values.map((current, number) => {
     const index = number as 0 | 1;
@@ -95,7 +105,7 @@ function useSliderImplementation(options: UseSliderOptions) {
       id: index === 1 && thumbId && !(Array.isArray(slotProps.thumb) && thumbSlot?.id) ? `${thumbId}-end` : thumbId,
       style: { ...thumbSlot?.style, '--dreadnought-slider-thumb-progress': `${position(current) * 100}%` } as CSSProperties,
       role: 'slider', 'data-slot': 'thumb', 'data-index': index, 'aria-orientation': 'horizontal',
-      'aria-valuemin': range && index === 1 ? values[0] : min,
+      'aria-valuemin': range && index === 1 ? values[0] : first,
       'aria-valuemax': range && index === 0 ? values[1] : last, 'aria-valuenow': current,
       'aria-disabled': disabled, tabIndex: disabled ? -1 : 0,
       onKeyDown: (event: KeyboardEvent<HTMLDivElement>) => {
@@ -106,8 +116,12 @@ function useSliderImplementation(options: UseSliderOptions) {
           ?? getNavigationDirection(event.key, { homeEnd: false });
         if (!direction) return;
         event.preventDefault();
-        request(direction === 'first' ? min : direction === 'last' ? last
-          : current + (event.key === 'ArrowRight' || event.key === 'ArrowUp' ? step : -step), index);
+        const increase = event.key === 'ArrowRight' || event.key === 'ArrowUp';
+        const next = step === null ? Number(getNextEnabledValue(points.filter(point => point >= min && point <= max)
+          .map(point => ({ value: String(point) })), String(current), direction === 'first' || direction === 'last'
+            ? direction : increase ? 'next' : 'previous', { loop: false }))
+          : direction === 'first' ? first : direction === 'last' ? last : current + (increase ? step : -step);
+        request(next, index);
       },
       onPointerDown: event => { props.onPointerDown?.(event); thumbSlot?.onPointerDown?.(event); },
       onPointerMove: event => { props.onPointerMove?.(event); thumbSlot?.onPointerMove?.(event); },
@@ -134,15 +148,8 @@ function useSliderImplementation(options: UseSliderOptions) {
       if (isDisabled() || event.defaultPrevented || event.button !== 0 || !event.isPrimary || activePointer.current !== null) return;
       const next = candidate(event);
       if (next === undefined) return;
-      let index: 0 | 1 = 0;
-      if (range) {
-        const pressed = thumbs.findIndex(thumb => thumb.thumbRef.current?.contains(event.target as Node));
-        const lowerDistance = Math.abs(next - values[0]), upperDistance = Math.abs(next - values[1]);
-        if (pressed >= 0) index = pressed as 0 | 1;
-        else if (lowerDistance !== upperDistance) index = lowerDistance < upperDistance ? 0 : 1;
-        else if (values[0] === values[1] && next !== values[0]) index = next > values[0] ? 1 : 0;
-        else index = lastActive.current;
-      }
+      const pressed = thumbs.findIndex(thumb => thumb.thumbRef.current?.contains(event.target as Node));
+      const index = pressed >= 0 ? pressed as 0 | 1 : nearestThumb(next);
       event.preventDefault();
       request(next, index);
       const node = thumbs[index].thumbRef.current;
@@ -164,6 +171,25 @@ function useSliderImplementation(options: UseSliderOptions) {
     onLostPointerCapture: event => { slotProps.root?.onLostPointerCapture?.(event); if (activePointer.current?.id === event.pointerId) stop(); },
     onBlur: event => { slotProps.root?.onBlur?.(event); stop(); },
   };
-  return { value, min, max: last, progress, start, disabled, rootRef, railRef, thumbRef, fieldRef, rootProps,
+  const markBindings = points.filter(point => point >= min && point <= max).map(point => {
+    const markProps: ComponentPropsWithoutRef<'button'> & { 'data-slot': string; 'data-active': string | undefined } = {
+      ...slotProps.mark, id: slotProps.mark?.id ? `${slotProps.mark.id}-${point}` : undefined,
+      type: 'button', tabIndex: -1, disabled,
+      'data-slot': 'mark', 'data-active': point >= (range ? values[0] : first) && point <= values[values.length - 1] ? '' : undefined,
+      style: { ...slotProps.mark?.style, '--dreadnought-slider-mark-progress': `${position(point) * 100}%` } as CSSProperties,
+      onPointerDown: event => { slotProps.mark?.onPointerDown?.(event); event.stopPropagation(); },
+      onClick: event => {
+        slotProps.mark?.onClick?.(event);
+        if (event.defaultPrevented || isDisabled()) return;
+        stop();
+        const index = nearestThumb(point);
+        request(point, index);
+        thumbs[index].thumbRef.current?.focus({ preventScroll: true });
+        lastActive.current = index;
+      },
+    };
+    return { value: point, label: marks[point], markProps };
+  });
+  return { value, min: first, max: last, progress, start, disabled, rootRef, railRef, thumbRef, fieldRef, rootProps, marks: markBindings,
     thumbs, thumbProps: thumbs[0].thumbProps, fieldProps: thumbs[0].fieldProps };
 }
