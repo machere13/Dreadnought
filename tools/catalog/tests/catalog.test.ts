@@ -35,10 +35,16 @@ afterAll(() => {
 describe('public catalog', () => {
   it('publishes Slider as numeric and keyboard behavior composition with checked bindings', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:slider');
-    expect(entry).toMatchObject({ family: 'Fields', composesWith: ['behavior:get-stepped-value', 'behavior:get-navigation-direction'] });
+    expect(entry).toMatchObject({ family: 'Fields', composesWith: ['behavior:get-stepped-value', 'behavior:get-stepped-range', 'behavior:get-navigation-direction'] });
     expect(entry!.bindings.map(binding => binding.exportName)).toEqual(['useSlider', 'SliderAdapter', 'Slider']);
     for (const binding of entry!.bindings) expect(() => checkExamples(context, binding.examples)).not.toThrow();
     expect(entry!.tokens.length).toBeGreaterThan(0);
+  });
+  it('publishes a reusable range behavior with checked normalization and update examples', () => {
+    const entry = catalog.entries.find(entry => entry.id === 'behavior:get-stepped-range');
+    expect(entry).toMatchObject({ kind: 'behavior', name: 'getSteppedRange' });
+    expect(entry!.bindings[0]).toMatchObject({ layer: 1, framework: null, importPath: '@dreadnought/core' });
+    expect(() => checkExamples(context, entry!.bindings[0].examples)).not.toThrow();
   });
   it('publishes Switch with checked public examples and shared checkable behavior', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:switch');
@@ -191,7 +197,7 @@ describe('public catalog', () => {
   });
   it('publishes standalone actions and behaviors with checked public contracts', () => {
     const capabilities = catalog.entries.filter(entry => entry.kind === 'action' || entry.kind === 'behavior');
-    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getCheckableState', 'getComboboxKeyAction', 'getCountdownRemaining', 'getDisclosureOpen', 'getDisclosureState', 'getHistoryState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getSteppedValue', 'getTooltipPosition', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
+    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getCheckableState', 'getComboboxKeyAction', 'getCountdownRemaining', 'getDisclosureOpen', 'getDisclosureState', 'getHistoryState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getSteppedRange', 'getSteppedValue', 'getTooltipPosition', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
     expect(capabilities.every(entry => entry.tokens.length === 0 && entry.bindings.length === 1 && entry.bindings[0].layer === 1)).toBe(true);
     const selection = capabilities.find(entry => entry.name === 'getSelectionValue');
     expect(selection.bindings[0].contracts).toHaveLength(3);

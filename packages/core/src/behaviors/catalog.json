@@ -48,6 +48,18 @@
     }]
   },
   {
+    "id": "behavior:get-stepped-range", "kind": "behavior", "name": "getSteppedRange", "family": "Behaviors",
+    "description": "Нормализует пару числовых границ на общей сетке и двигает одну границу без пересечения другой. Для диапазона Slider или собственных числовых полей.",
+    "docsUrl": "/components/slider/#slider-api",
+    "composesWith": ["behavior:get-stepped-value", "component:slider"],
+    "constraints": ["value — пара конечных чисел. Каждое значение нормализуется через getSteppedValue на исходной сетке; результат отсортирован по возрастанию, вход не изменяется. update необязателен: index 0 или 1, value — конечный кандидат. Изменяемая граница ограничивается соседней; совпадение допустимо, перестановка бегунков не выполняется. Нет состояния, DOM, React, событий, выбора активного бегунка или фокуса."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "getSteppedRange",
+      "parameterDefaults": { "1": { "step": 1 } },
+      "examples": [{ "id": "range", "code": "import { getSteppedRange } from '@dreadnought/core';\nconst grid = { min: 0, max: 100, step: 5 };\nconst range = getSteppedRange([82, 18], grid);\nconst next = getSteppedRange(range, grid, { index: 0, value: 90 });" }]
+    }]
+  },
+  {
     "id": "behavior:get-combobox-key-action",
     "kind": "behavior",
     "name": "getComboboxKeyAction",

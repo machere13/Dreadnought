@@ -15,10 +15,11 @@ export type SliderProps = SliderAdapterProps & {
   };
 };
 
-function TooltipThumb({ thumbProps, trigger, value, renderThumb }: {
+function TooltipThumb({ thumbProps, trigger, value, index, renderThumb }: {
   thumbProps: ComponentPropsWithRef<'div'>;
   trigger: TooltipTriggerProps;
   value: number;
+  index: 0 | 1;
   renderThumb: SliderAdapterProps['renderThumb'];
 }) {
   const thumbRef = thumbProps.ref, triggerRef = trigger.ref;
@@ -40,15 +41,15 @@ function TooltipThumb({ thumbProps, trigger, value, renderThumb }: {
     onBlur: event => { thumbProps.onBlur?.(event); trigger.onBlur?.(event); },
     onKeyDown: event => { thumbProps.onKeyDown?.(event); if (!event.defaultPrevented) trigger.onKeyDown?.(event); },
   };
-  return renderThumb ? renderThumb(props, value) : <div {...props} />;
+  return renderThumb ? renderThumb(props, value, index) : <div {...props} />;
 }
 
 export function Slider({ className, tooltip = {}, renderThumb, ...props }: SliderProps) {
   return <SliderAdapter {...props} className={[sliderPresentation.root, className].filter(Boolean).join(' ')}
-    renderThumb={tooltip === false ? renderThumb : (thumbProps, value) => <Tooltip
+    renderThumb={tooltip === false ? renderThumb : (thumbProps, value, index) => <Tooltip
       content={tooltip.formatter ? tooltip.formatter(value) : String(value)} placement={tooltip.placement}
       openDelay={tooltip.openDelay} closeDelay={tooltip.closeDelay} disabled={thumbProps['aria-disabled'] === true}
       describedBy={thumbProps['aria-describedby']}>
-      {trigger => <TooltipThumb thumbProps={thumbProps} trigger={trigger} value={value} renderThumb={renderThumb} />}
+      {trigger => <TooltipThumb thumbProps={thumbProps} trigger={trigger} value={value} index={index} renderThumb={renderThumb} />}
     </Tooltip>} />;
 }

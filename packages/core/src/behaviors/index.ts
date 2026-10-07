@@ -6,6 +6,8 @@ export { getNavigationDirection } from './getNavigationDirection.ts';
 export type { NavigationKeyOptions } from './getNavigationDirection.ts';
 export { getSteppedValue } from './getSteppedValue.ts';
 export type { SteppedValueOptions } from './getSteppedValue.ts';
+export { getSteppedRange } from './getSteppedRange.ts';
+export type { SteppedRangeUpdate } from './getSteppedRange.ts';
 export { getComboboxKeyAction } from './getComboboxKeyAction.ts';
 export type { ComboboxKeyOptions, ComboboxKeyAction } from './getComboboxKeyAction.ts';
 export { getTypeaheadValue } from './getTypeaheadValue.ts';

@@ -70,3 +70,16 @@ it('suppresses Tooltip when disabled, including an ancestor fieldset', async () 
   fireEvent.pointerEnter(screen.getByRole('slider'));
   expect(screen.queryByRole('tooltip')).toBeNull();
 });
+
+it('shows each range endpoint in its own shared Tooltip as keyboard focus moves', async () => {
+  const user = userEvent.setup();
+  render(<Slider range defaultValue={[20, 80]} tooltip={{ formatter: value => `${value}%`, openDelay: 0, closeDelay: 0 }} />);
+  await user.tab();
+  expect((await screen.findByRole('tooltip')).textContent).toBe('20%');
+  await user.keyboard('{ArrowRight}');
+  await waitFor(() => expect(screen.getByRole('tooltip').textContent).toBe('21%'));
+  await user.tab();
+  await waitFor(() => expect(screen.getAllByRole('tooltip').map(node => node.textContent)).toEqual(['80%']));
+  await user.keyboard('{ArrowLeft}');
+  await waitFor(() => expect(screen.getByRole('tooltip').textContent).toBe('79%'));
+});

@@ -1,34 +1,43 @@
 {
   "id": "component:slider", "kind": "component", "name": "Slider", "family": "Fields",
-  "description": "Выбор числа на горизонтальной линейной шкале с одним бегунком.",
+  "description": "Выбор числа или диапазона на горизонтальной линейной шкале.",
   "docsUrl": "/components/slider/#slider-api",
-  "composesWith": ["behavior:get-stepped-value", "behavior:get-navigation-direction"],
+  "composesWith": ["behavior:get-stepped-value", "behavior:get-stepped-range", "behavior:get-navigation-direction"],
   "states": ["disabled", "dragging"],
   "constraints": [
-    "Один бегунок, горизонтальная линейная шкала LTR. Без range, marks и вертикального режима.",
-    "value управляет принятым значением. onValueChange запрашивает нормализованное число; defaultValue задаёт начальное значение и reset.",
+    "Горизонтальная линейная шкала LTR. Без marks и вертикального режима. range=false — число; range=true — пара [от, до], по умолчанию [min, последний шаг].",
+    "value управляет принятым значением. onValueChange запрашивает нормализованное число или пару; defaultValue задаёт начальное значение и reset. Исходная пара сортируется; бегунки не пересекаются, совпадение допустимо.",
     "min, max, step и значение должны быть конечными; min <= max, step > 0. max вне сетки округляется вниз до последнего шага.",
     "ArrowRight/Up увеличивают, ArrowLeft/Down уменьшают, Home/End выбирают края. Отмена события блокирует ввод.",
-    "ref, id, ARIA и обработчики относятся к бегунку; className/style — к root, name/form — к скрытому полю.",
-    "renderThumb должен передать thumbProps одному div, сохраняя ref, ARIA и события. slotProps настраивают root, rail, track, thumb и field.",
+    "ref относится к первому бегунку; id, ARIA и обработчики — к бегункам, className/style — к root. При range второй id получает суффикс -end; tuple slotProps.thumb задаёт отдельные ID и доступные названия.",
+    "Нажатие на шкалу двигает ближайший бегунок; при равном расстоянии — последний активный. У совпавшей пары нажатие слева выбирает нижний, справа — верхний. Нажатие прямо на бегунок сохраняет его идентичность; клавиатура двигает только сфокусированный.",
+    "renderThumb(thumbProps, value, index) вызывается для каждого бегунка, index 0 или 1. Передайте thumbProps одному div, сохраняя ref, ARIA и события. slotProps.thumb/field принимают общий объект или пару объектов.",
+    "name/form относятся к скрытым полям. range отправляет два значения с одним name, от нижнего к верхнему; используйте FormData.getAll(name). useSlider.thumbs содержит thumbProps, fieldProps и thumbRef каждого бегунка; одиночные thumbProps/fieldProps сохранены для совместимости и относятся к первому.",
     "disabled и disabled fieldset блокируют ввод и отправку поля; отменённый reset и controlled reset не изменяют значение."
   ],
   "bindings": [
     {
       "id": "react-logic", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/logic", "exportName": "useSlider",
       "defaults": { "min": 0, "max": 100, "step": 1, "disabled": false },
-      "examples": [{ "id": "basic", "code": "import { useSlider } from '@dreadnought/react/logic';\nfunction Example() { const slider = useSlider({ name: 'volume', 'aria-label': 'Громкость' }); return <div {...slider.rootProps}><div ref={slider.railRef} /><div {...slider.thumbProps} /><input {...slider.fieldProps} /></div>; }" }]
+      "examples": [
+        { "id": "basic", "code": "import { useSlider } from '@dreadnought/react/logic';\nfunction Example() { const slider = useSlider({ name: 'volume', 'aria-label': 'Громкость' }); return <div {...slider.rootProps}><div ref={slider.railRef} /><div {...slider.thumbProps} /><input {...slider.fieldProps} /></div>; }" },
+        { "id": "range", "code": "import { useSlider } from '@dreadnought/react/logic';\nfunction Example() { const slider = useSlider({ range: true, defaultValue: [20, 80], name: 'price', slotProps: { thumb: [{ 'aria-label': 'Цена от' }, { 'aria-label': 'Цена до' }] } }); return <div {...slider.rootProps}><div ref={slider.railRef} />{slider.thumbs.map((thumb, index) => <div key={index}><div {...thumb.thumbProps} /><input {...thumb.fieldProps} /></div>)}</div>; }" }
+      ]
     },
     {
       "id": "react-adapter", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/unstyled", "exportName": "SliderAdapter",
       "defaults": { "min": 0, "max": 100, "step": 1, "disabled": false },
       "propertyDescriptions": {
         "min": "Нижняя граница числовой сетки.", "max": "Верхняя граница; фактический край — последний доступный шаг.",
-        "step": "Конечный положительный шаг.", "value": "Принятое управляемое число.", "defaultValue": "Исходное неуправляемое число; по умолчанию min.",
-        "onValueChange": "Запрос нового числа, без дубликатов и уведомлений при reset.", "renderThumb": "Рендер одного div с обязательными thumbProps.",
-        "slotProps": "DOM-свойства root, rail, track, thumb и скрытого field."
+        "step": "Конечный положительный шаг.", "range": "true включает два бегунка и пару [от, до]; без него используется одно число.",
+        "value": "Принятое управляемое число или пара при range=true.", "defaultValue": "Исходное значение и reset; по умолчанию min или [min, последний шаг].",
+        "onValueChange": "Запрос нового числа или пары, без дубликатов и уведомлений при reset.", "renderThumb": "Рендер div каждого бегунка с обязательными thumbProps, значением и индексом 0/1.",
+        "slotProps": "DOM-свойства root, rail, track, thumb и field. thumb/field принимают общий объект или пару по индексам."
       },
-      "examples": [{ "id": "basic", "code": "import { SliderAdapter } from '@dreadnought/react/unstyled';\nconst example = <SliderAdapter aria-label='Громкость' name='volume' defaultValue={25} />;" }]
+      "examples": [
+        { "id": "basic", "code": "import { SliderAdapter } from '@dreadnought/react/unstyled';\nconst example = <SliderAdapter aria-label='Громкость' name='volume' defaultValue={25} />;" },
+        { "id": "range", "code": "import { SliderAdapter } from '@dreadnought/react/unstyled';\nconst example = <SliderAdapter range name='price' defaultValue={[20, 80]} slotProps={{ thumb: [{ 'aria-label': 'Цена от' }, { 'aria-label': 'Цена до' }] }} />;" }
+      ]
     }
   ]
 }

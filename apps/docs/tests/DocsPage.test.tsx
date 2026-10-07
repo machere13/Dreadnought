@@ -18,6 +18,10 @@ describe('documentation pages', () => {
     const thumb = screen.getByRole('slider', { name: 'Громкость' });
     fireEvent.keyDown(thumb, { key: 'ArrowRight' });
     expect(thumb.getAttribute('aria-valuenow')).toBe('26');
+    const lower = screen.getByRole('slider', { name: 'Цена от' });
+    fireEvent.keyDown(lower, { key: 'ArrowRight' });
+    expect(lower.getAttribute('aria-valuenow')).toBe('25');
+    expect(screen.getByRole('slider', { name: 'Цена до' }).getAttribute('aria-valuenow')).toBe('80');
     expect(screen.getByRole('rowheader', { name: 'onValueChange' })).toBeTruthy();
     expect(screen.getByRole('link', { name: 'Slider' }).getAttribute('href')).toBe('/components/slider/');
   });

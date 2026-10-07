@@ -1,25 +1,44 @@
 import type { ComponentPropsWithoutRef } from 'react';
 
-export interface SliderOptions {
+export type SliderRange = [number, number];
+
+interface SliderCommonOptions {
   min?: number;
   max?: number;
   step?: number;
-  value?: number;
-  defaultValue?: number;
   disabled?: boolean;
-  onValueChange?: (value: number) => void;
   name?: string;
   form?: string;
 }
+
+export interface SingleSliderOptions extends SliderCommonOptions {
+  range?: false;
+  value?: number;
+  defaultValue?: number;
+  onValueChange?: (value: number) => void;
+}
+
+export interface RangeSliderOptions extends SliderCommonOptions {
+  range: true;
+  value?: readonly [number, number];
+  defaultValue?: readonly [number, number];
+  onValueChange?: (value: SliderRange) => void;
+}
+
+export type SliderOptions = SingleSliderOptions | RangeSliderOptions;
 
 export interface SliderSlotProps {
   root?: ComponentPropsWithoutRef<'div'>;
   rail?: ComponentPropsWithoutRef<'div'>;
   track?: ComponentPropsWithoutRef<'div'>;
-  thumb?: ComponentPropsWithoutRef<'div'>;
-  field?: ComponentPropsWithoutRef<'input'>;
+  thumb?: ComponentPropsWithoutRef<'div'> | readonly [ComponentPropsWithoutRef<'div'>, ComponentPropsWithoutRef<'div'>];
+  field?: ComponentPropsWithoutRef<'input'> | readonly [ComponentPropsWithoutRef<'input'>, ComponentPropsWithoutRef<'input'>];
 }
 
-export type UseSliderOptions = SliderOptions & Omit<ComponentPropsWithoutRef<'div'>, 'children' | 'defaultValue' | 'onChange'> & {
+type SliderDOMOptions = Omit<ComponentPropsWithoutRef<'div'>, 'children' | 'defaultValue' | 'onChange'> & {
   slotProps?: SliderSlotProps;
 };
+
+export type UseSingleSliderOptions = SingleSliderOptions & SliderDOMOptions;
+export type UseRangeSliderOptions = RangeSliderOptions & SliderDOMOptions;
+export type UseSliderOptions = UseSingleSliderOptions | UseRangeSliderOptions;

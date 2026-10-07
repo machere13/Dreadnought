@@ -4,7 +4,8 @@ export type { UseToolbarItemOptions, ToolbarItemProps } from './Controls/Toolbar
 export type { UseButtonOptions } from './Controls/Button/useButton.ts';
 export { useInput } from './Fields/Input/useInput.ts';
 export { useSlider } from './Fields/Slider/useSlider.ts';
-export type { SliderOptions, SliderSlotProps, UseSliderOptions } from './Fields/Slider/slider.types.ts';
+export type { SliderOptions, SliderRange, SingleSliderOptions, RangeSliderOptions, SliderSlotProps,
+  UseSliderOptions, UseSingleSliderOptions, UseRangeSliderOptions } from './Fields/Slider/slider.types.ts';
 export type { UseInputOptions, TextInputType, InputType } from './Fields/Input/useInput.ts';
 export { useTextArea } from './Fields/TextArea/useTextArea.ts';
 export { useMarkdownEditor } from './Fields/MarkdownEditor/useMarkdownEditor.ts';

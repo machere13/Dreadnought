@@ -17,11 +17,15 @@
     pointer-events: none;
   }
   .root [data-slot='rail'] { width: 100%; background: var(--dreadnought-slider-rail-bg); }
-  .root [data-slot='track'] { width: var(--dreadnought-slider-progress); background: var(--dreadnought-slider-track-bg); }
+  .root [data-slot='track'] {
+    left: var(--dreadnought-slider-start);
+    width: calc(var(--dreadnought-slider-progress) - var(--dreadnought-slider-start));
+    background: var(--dreadnought-slider-track-bg);
+  }
   .root [data-slot='thumb'] {
     position: absolute;
     top: 50%;
-    left: var(--dreadnought-slider-progress);
+    left: var(--dreadnought-slider-thumb-progress);
     width: var(--dreadnought-slider-target-size);
     height: var(--dreadnought-slider-target-size);
     transform: translate(-50%, -50%);
