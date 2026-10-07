@@ -33,6 +33,7 @@ export const components = [
   { family: 'Surfaces', name: 'Card', sources: [adapter, ui] },
   { family: 'Navigation', name: 'Tabs', sources: [core, adapter, ui] },
   { family: 'Navigation', name: 'Menu', sources: [adapter, ui] },
+  { family: 'Navigation', name: 'Dropdown', sources: [adapter, ui] },
   { family: 'Navigation', name: 'Accordion', sources: [core, adapter, ui] },
   { family: 'DataDisplay', name: 'CodeBlock', sources: [adapter, ui] },
   { family: 'Feedback', name: 'Alert', sources: [adapter, ui] },

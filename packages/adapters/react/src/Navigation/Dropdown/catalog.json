@@ -1,0 +1,41 @@
+{
+  "id": "component:dropdown",
+  "kind": "component",
+  "name": "Dropdown",
+  "family": "Navigation",
+  "docsUrl": "/components/dropdown/#dropdown-api",
+  "description": "Всплывающее меню действий у кнопки: композиция Menu и Popover с общей навигацией, позиционированием и фокусом.",
+  "composesWith": ["component:menu", "component:popover"],
+  "states": ["open", "disabled", "selected"],
+  "constraints": [
+    "Передайте triggerProps одной нативной кнопке или Button с доступным именем и ref.",
+    "Значения пунктов непустые и уникальные; disabled-пункты не вызывают действие и пропускаются при навигации.",
+    "Клик, Enter и Space открывают меню. ArrowDown открывает с первого доступного пункта, ArrowUp — с последнего.",
+    "Выбор вызывает onAction(value) и запрос закрытия. Escape возвращает фокус на кнопку; Tab и клик снаружи не перехватывают внешний фокус.",
+    "В controlled-режиме родитель подтверждает onOpenChange через open. Отказ закрыть меню сохраняет его и текущий фокус.",
+    "Dropdown не имеет отдельного core или useDropdown: используйте имеющиеся behaviors, MenuAdapter и usePopover для собственной композиции.",
+    "Открытие по клику, без hover, вложенных подменю и анимации. Для произвольного содержимого используйте Popover."
+  ],
+  "bindings": [{
+    "id": "react-adapter", "layer": 2, "framework": "react",
+    "importPath": "@dreadnought/react/unstyled", "exportName": "DropdownAdapter",
+    "defaults": { "defaultOpen": false, "disabled": false, "placement": "bottomLeft", "arrow": false, "autoAdjustOverflow": true },
+    "propertyDescriptions": {
+      "items": "Пункты Menu: value, label, необязательные disabled и ariaLabel. label может включать Icon.",
+      "selectedValue": "Включает семантику menuitemradio; выбранное значение остаётся у приложения.",
+      "onAction": "Получает value выбранного пункта перед запросом закрытия.",
+      "children": "Render-функция триггера; передайте все свойства одной кнопке.",
+      "menuProps": "DOM-свойства, ref и класс меню; свойства пунктов через menuProps.slotProps.item. preventDefault в onClick пункта отменяет действие и закрытие.",
+      "open": "Управляемое открытие.",
+      "defaultOpen": "Начальное неуправляемое открытие.",
+      "disabled": "Запрещает открытие и скрывает меню.",
+      "onOpenChange": "Запрашивает открытие или закрытие, не меняя управляемое состояние самостоятельно.",
+      "placement": "12 положений относительно кнопки; по умолчанию bottomLeft.",
+      "arrow": "По умолчанию false; true показывает стрелку, { pointAtCenter: true } направляет её к центру кнопки.",
+      "autoAdjustOverflow": "Автоматическая коррекция положения у края экрана.",
+      "aria-label": "Доступное имя меню; иначе используется имя триггера.",
+      "aria-labelledby": "ID элемента с доступным названием меню."
+    },
+    "examples": [{ "id": "basic", "code": "import { DropdownAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <DropdownAdapter items={[{ value: 'edit', label: 'Редактировать' }, { value: 'delete', label: 'Удалить', disabled: true }]} onAction={value => console.log(value)}>{trigger => <button {...trigger}>Действия</button>}</DropdownAdapter>; }" }]
+  }]
+}

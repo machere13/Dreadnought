@@ -33,6 +33,13 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes Dropdown as a checked Menu and Popover composition without a synthetic core binding', () => {
+    const entry = catalog.entries.find(entry => entry.id === 'component:dropdown');
+    expect(entry).toMatchObject({ family: 'Navigation', composesWith: ['component:menu', 'component:popover'] });
+    expect(entry!.bindings.map(binding => binding.exportName)).toEqual(['DropdownAdapter', 'Dropdown']);
+    for (const binding of entry!.bindings) expect(() => checkExamples(context, binding.examples)).not.toThrow();
+    expect(entry!.tokens.length).toBeGreaterThan(0);
+  });
   it('publishes Drawer aliases and visual-only placement and size', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:drawer');
     expect(entry).toMatchObject({ family: 'Overlays', composesWith: ['component:modal'] });

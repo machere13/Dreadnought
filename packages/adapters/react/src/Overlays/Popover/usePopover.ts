@@ -89,5 +89,5 @@ export function usePopover({ open: controlled, defaultOpen = false, disabled = f
   }, [state.open]);
   const triggerProps: PopoverTriggerProps = { ...state.triggerProps, ref: attach,
     onClick: () => request(!current.current.open, true) };
-  return { open: state.open, triggerProps, contentProps: { ...state.contentProps, ref: popup, tabIndex: -1 }, close: () => request(false, true) };
+  return { open: state.open, triggerProps, contentProps: { ...state.contentProps, ref: popup, tabIndex: -1 }, show: () => request(true), close: () => request(false, true) };
 }

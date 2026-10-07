@@ -1,0 +1,10 @@
+@layer dreadnought {
+  .root[data-ui='dropdown'] { padding: 0; }
+  .menu[data-ui='menu'] {
+    max-height: var(--dreadnought-dropdown-max-height);
+    border: 0;
+    background: transparent;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+}

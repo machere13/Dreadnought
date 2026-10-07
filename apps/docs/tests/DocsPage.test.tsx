@@ -13,6 +13,18 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('documents Dropdown with a working action menu and its public API', () => {
+    render(<DocsPage section="dropdown" />);
+    expect(screen.getByRole('heading', { name: 'Dropdown', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'items' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Dropdown' }).getAttribute('href')).toBe('/components/dropdown/');
+    const trigger = screen.getByRole('button', { name: 'Действия с файлом' });
+    fireEvent.click(trigger);
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Скачать' }));
+    expect(screen.queryByRole('menu')).toBeNull();
+    expect(screen.getByText('Выбрано: Скачать')).toBeTruthy();
+    expect(document.activeElement).toBe(trigger);
+  });
   it('documents Drawer with a working form and visual-only API', () => {
     Object.defineProperties(HTMLDialogElement.prototype, {
       showModal: { configurable: true, value() { this.open = true; } },

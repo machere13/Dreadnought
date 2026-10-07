@@ -1,0 +1,8 @@
+{
+  "componentId": "component:dropdown",
+  "constraints": ["Поверхность и стрелка используют --dreadnought-popover-*, пункты — --dreadnought-menu-*. Максимальная высота списка — --dreadnought-dropdown-max-height; длинное меню прокручивается внутри."],
+  "bindings": [{
+    "id": "react-ui", "layer": 3, "framework": "react", "importPath": "@dreadnought/ui/react", "exportName": "Dropdown",
+    "examples": [{ "id": "basic", "code": "import { Button, Dropdown } from '@dreadnought/ui/react';\nexport function Example() { return <Dropdown items={[{ value: 'edit', label: 'Редактировать' }, { value: 'download', label: 'Скачать' }, { value: 'delete', label: 'Удалить', disabled: true }]} placement=\"bottomRight\" onAction={value => console.log(value)}>{trigger => <Button {...trigger}>Действия</Button>}</Dropdown>; }" }]
+  }]
+}

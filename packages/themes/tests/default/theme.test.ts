@@ -156,6 +156,7 @@ describe('default theme', () => {
       "@import './components/Surfaces/Card/index.css';",
       "@import './components/Navigation/Tabs/index.css';",
       "@import './components/Navigation/Menu/index.css';",
+      "@import './components/Navigation/Dropdown/index.css';",
       "@import './components/Navigation/Accordion/index.css';",
       "@import './components/Feedback/Alert/index.css';",
       "@import './components/Feedback/Toast/index.css';",

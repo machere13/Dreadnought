@@ -5,6 +5,7 @@ import { badgeDoc } from './componentDocs/BadgeDoc';
 import { cardDoc } from './componentDocs/CardDoc';
 import { tabsDoc } from './componentDocs/TabsDoc';
 import { menuDoc } from './componentDocs/MenuDoc';
+import { dropdownDoc } from './componentDocs/DropdownDoc';
 import { accordionDoc } from './componentDocs/AccordionDoc';
 import { codeBlockDoc } from './componentDocs/CodeBlockDoc';
 import { alertDoc } from './componentDocs/AlertDoc';
@@ -36,7 +37,7 @@ import { DocsAssistant } from '../assistant/DocsAssistant.tsx';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
-type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'markdowneditor' | 'markdownpreview' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'accordion' | 'codeblock' | 'alert' | 'toast' | 'loader' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'radio' | 'select' | 'radarchart' | 'linechart' | 'barchart' | 'tooltip' | 'popover' | 'modal' | 'drawer';
+type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'markdowneditor' | 'markdownpreview' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'dropdown' | 'accordion' | 'codeblock' | 'alert' | 'toast' | 'loader' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'radio' | 'select' | 'radarchart' | 'linechart' | 'barchart' | 'tooltip' | 'popover' | 'modal' | 'drawer';
 type DocsSection = 'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
 const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
   { name: 'Controls', sections: ['button', 'toolbar'] },
@@ -44,7 +45,7 @@ const componentFamilies: readonly { name: string; sections: readonly ComponentSe
   { name: 'Feedback', sections: ['alert', 'toast', 'loader'] },
   { name: 'Fields', sections: ['input', 'textarea', 'markdowneditor', 'checkbox', 'radio', 'select'] },
   { name: 'Layout', sections: ['layout'] },
-  { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs', 'menu'] },
+  { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs', 'menu', 'dropdown'] },
   { name: 'Surfaces', sections: ['card'] },
   { name: 'Visualization', sections: ['radarchart', 'linechart', 'barchart'] },
   { name: 'Overlays', sections: ['tooltip', 'popover', 'modal', 'drawer'] },
@@ -245,6 +246,7 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
   toolbar: toolbarDoc,
   tabs: tabsDoc,
   menu: menuDoc,
+  dropdown: dropdownDoc,
   accordion: accordionDoc,
   codeblock: codeBlockDoc,
   alert: alertDoc,

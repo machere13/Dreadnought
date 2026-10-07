@@ -3,7 +3,7 @@
   "bindings": [{
     "id": "react-ui", "layer": 3, "framework": "react",
     "importPath": "@dreadnought/ui/react", "exportName": "Menu",
-    "description": "Оформленный список действий или выбора для самостоятельного использования, Tabs и будущего Dropdown.",
+    "description": "Оформленный список действий или выбора для самостоятельного использования, Tabs и Dropdown.",
     "propertyDescriptions": {
       "items": "Пункты с value, label, необязательными disabled и ariaLabel.",
       "selectedValue": "Проверенное значение: включает семантику menuitemradio. Без него пункты являются действиями menuitem.",
