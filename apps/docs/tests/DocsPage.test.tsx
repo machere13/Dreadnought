@@ -13,6 +13,14 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('keeps numerical input on the Input page with working step controls', () => {
+    render(<DocsPage section="input" />);
+    const input = screen.getByRole('spinbutton', { name: 'Количество' }) as HTMLInputElement;
+    fireEvent.click(screen.getByRole('button', { name: 'Увеличить значение' }));
+    expect(input.value).toBe('2');
+    fireEvent.click(screen.getByRole('button', { name: 'Уменьшить значение' }));
+    expect(input.value).toBe('1');
+  });
   it('documents Switch with an interactive native control and public API', () => {
     render(<DocsPage section="switch" />);
     expect(screen.getByRole('heading', { name: 'Switch', level: 1 })).toBeTruthy();

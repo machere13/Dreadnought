@@ -6,6 +6,18 @@ import { InputAdapter } from '../../../src/Fields/Input/InputAdapter.tsx';
 
 afterEach(cleanup);
 
+it('keeps a stable callback ref attached across rerenders and password visibility changes', async () => {
+  const attached: Array<HTMLInputElement | null> = [];
+  const ref = (node: HTMLInputElement | null) => { attached.push(node); };
+  const { rerender, unmount } = render(<InputAdapter ref={ref} type="password" aria-label="Password" />);
+  const input = screen.getByLabelText('Password');
+  rerender(<InputAdapter ref={ref} type="password" aria-label="Password" placeholder="Updated" />);
+  await userEvent.setup().click(screen.getByRole('button', { name: 'Show password' }));
+  expect(attached).toEqual([input]);
+  unmount();
+  expect(attached).toEqual([input, null]);
+});
+
 it('keeps native controlled input, label, attributes and ref', async () => {
   const user = userEvent.setup();
   const onChange = vi.fn();

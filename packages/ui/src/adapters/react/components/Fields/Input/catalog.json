@@ -8,17 +8,26 @@
       "importPath": "@dreadnought/ui/react",
       "exportName": "Input",
       "propertyDescriptions": {
-        "type": "Текстовый тип поля; password добавляет переключатель видимости.",
+        "type": "Тип поля; password добавляет переключатель видимости, number — кнопки шага.",
         "invalid": "Состояние ошибки.",
-        "passwordVisibilityLabels": "Доступные названия кнопки показа и скрытия пароля."
+        "passwordVisibilityLabels": "Доступные названия кнопки показа и скрытия пароля.",
+        "stepButtonLabels": "Доступные названия кнопок decrease и increase для number.",
+        "renderStepButton": "Собственный рендер кнопки шага; по умолчанию библиотечный Button ghosted compact.",
+        "min": "Нативная нижняя граница числового поля.",
+        "max": "Нативная верхняя граница числового поля.",
+        "step": "Нативный шаг; по умолчанию 1. any отключает кнопки шага."
       },
       "examples": [
         {
           "id": "password",
           "code": "import { Input } from '@dreadnought/ui/react';\nconst example = <Input type='password' aria-label='Пароль' passwordVisibilityLabels={{ show: 'Показать пароль', hide: 'Скрыть пароль' }} />;"
+        },
+        {
+          "id": "number",
+          "code": "import { Input } from '@dreadnought/ui/react';\nconst example = <Input type='number' aria-label='Количество' name='quantity' min={0} max={10} step={0.5} defaultValue='1' stepButtonLabels={{ decrease: 'Уменьшить значение', increase: 'Увеличить значение' }} />;"
         }
       ],
-      "description": "Однострочное текстовое поле. При type=password адаптер показывает кнопку видимости пароля, готовый компонент использует иконку."
+      "description": "Однострочное текстовое или числовое поле. Password использует иконку видимости; number — Button для уменьшения и увеличения значения."
     }
   ]
 }

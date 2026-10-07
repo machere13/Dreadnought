@@ -244,8 +244,8 @@ describe('public catalog', () => {
     expect(properties.find((prop) => prop.name === 'autoComplete')).toBeDefined();
     expect(properties.find((prop) => prop.name === 'aria-label')).toBeDefined();
     expect(properties.find((prop) => prop.name === 'passwordVisibilityLabels')).toBeDefined();
-    expect(properties.find((prop) => prop.name === 'type').values).toEqual(expect.arrayContaining(['text', 'password', 'email']));
-    expect(properties.find((prop) => prop.name === 'type').values).not.toContain('number');
+    expect(properties.find((prop) => prop.name === 'type').values).toEqual(expect.arrayContaining(['text', 'password', 'email', 'number']));
+    expect(properties.find((prop) => prop.name === 'type').values).not.toContain('checkbox');
   });
 
   it('extracts theme tokens and only the explicitly listed components', () => {
@@ -288,7 +288,7 @@ describe('public catalog', () => {
   });
 
   it('type-checks examples and default values, instead of trusting their text', () => {
-    expect(() => checkExamples(context, [{ id: 'wrong-prop', code: "import { Input } from '@dreadnought/ui/react'; const input = <Input type='number' />;" }])).toThrow(/not assignable/);
+    expect(() => checkExamples(context, [{ id: 'wrong-prop', code: "import { Input } from '@dreadnought/ui/react'; const input = <Input type='checkbox' />;" }])).toThrow(/not assignable/);
     expect(() => checkExamples(context, [{ id: 'wrong-ref', code: "import { createRef } from 'react'; import { Button } from '@dreadnought/ui/react'; const link = <Button href='/' ref={createRef<HTMLButtonElement>()} />;" }])).toThrow(/not assignable/);
     const invalid = structuredClone(metadata);
     invalid.find(entry => entry.name === 'Button')!.bindings.find(binding => binding.id === 'react-ui')!.defaults.variant = 'removed-variant';

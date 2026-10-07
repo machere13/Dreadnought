@@ -28,6 +28,27 @@
     text-transform: inherit;
   }
 
+  .input:has([type="number"]) {
+    --dreadnought-input-padding-y: var(--dreadnought-input-toggle-padding);
+  }
+
+  .input [data-slot="control"][type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+  .input [type="number"]::-webkit-inner-spin-button,
+  .input [type="number"]::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+
+  .input [data-slot="step-controls"] {
+    display: inline-flex;
+    flex: none;
+    gap: var(--dreadnought-input-step-gap);
+  }
+
   .input [data-slot="control"]:-webkit-autofill,
   .input [data-slot="control"]:autofill {
     box-shadow: inset 0 0 0 100vmax var(--dreadnought-input-bg);

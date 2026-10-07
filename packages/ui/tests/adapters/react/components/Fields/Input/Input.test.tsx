@@ -8,6 +8,15 @@ import { Input } from '@dreadnought/ui/react';
 
 afterEach(cleanup);
 
+it('renders compact library Buttons for numerical steps', async () => {
+  render(<Input type="number" aria-label="Quantity" defaultValue="1" stepButtonLabels={{ decrease: 'Уменьшить', increase: 'Увеличить' }} />);
+  const increase = screen.getByRole('button', { name: 'Увеличить' });
+  expect(increase.classList.contains('dreadnought-text-button')).toBe(true);
+  expect(increase.getAttribute('data-size')).toBe('compact');
+  await userEvent.click(increase);
+  expect((screen.getByRole('spinbutton') as HTMLInputElement).value).toBe('2');
+});
+
 it('covers autofilled control without clipping its text background', () => {
   const css = postcss.parse(readFileSync(resolve('packages/ui/src/presentation/Fields/Input/Input.module.css'), 'utf8'));
   const layer = css.nodes.find((node) => node.type === 'atrule');

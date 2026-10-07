@@ -3,8 +3,11 @@ import { InputAdapter } from '@dreadnought/react/unstyled';
 
 <InputAdapter ref={createRef<HTMLInputElement>()} type="email" />;
 
-// @ts-expect-error Number inputs use a separate contract.
-<InputAdapter type="number" />;
+<InputAdapter type="number" min={0} max={10} step={0.5} stepButtonLabels={{ decrease: 'Less', increase: 'More' }}
+  renderStepButton={props => <button {...props} />} />;
+
+// @ts-expect-error Checkbox uses its own semantics.
+<InputAdapter type="checkbox" />;
 
 // @ts-expect-error Only input refs are accepted.
 <InputAdapter ref={createRef<HTMLTextAreaElement>()} />;

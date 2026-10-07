@@ -2,6 +2,7 @@ import { inputPresentation } from '#presentation/Fields/Input/inputPresentation.
 import type { ComponentPropsWithRef } from 'react';
 import { InputAdapter } from '@dreadnought/react/unstyled';
 import { Icon } from '../../DataDisplay/Icon/Icon.tsx';
+import { Button } from '../../Controls/Button/Button.tsx';
 
 export type InputProps = ComponentPropsWithRef<typeof InputAdapter>;
 
@@ -10,5 +11,5 @@ export function Input({ className, ...props }: InputProps) {
   return <InputAdapter {...props} passwordVisibilityContent={props.passwordVisibilityContent ?? {
     show: <Icon name="eye" />,
     hide: <Icon name="eye-off" />,
-  }} className={classes} />;
+  }} renderStepButton={props.renderStepButton ?? (buttonProps => <Button {...buttonProps} variant="ghosted" size="compact" />)} className={classes} />;
 }

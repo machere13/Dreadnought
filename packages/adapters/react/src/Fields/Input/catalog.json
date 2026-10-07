@@ -15,12 +15,26 @@
     {
       "name": "visibility-toggle",
       "description": "Кнопка видимости пароля, присутствует только при type=password."
+    },
+    {
+      "name": "step-controls",
+      "description": "Группа кнопок шага для number, отсутствует при step=any."
+    },
+    {
+      "name": "step-decrease",
+      "description": "Кнопка уменьшения числового значения."
+    },
+    {
+      "name": "step-increase",
+      "description": "Кнопка увеличения числового значения."
     }
   ],
   "constraints": [
-    "Поддерживаемые текстовые типы определены публичным контрактом; number и checkbox не входят в Input.",
+    "Поддерживает текстовые типы и number. Checkbox и другие поля с иной семантикой не входят в Input.",
     "Доступное имя задаётся связанным label или aria-label.",
-    "При использовании useInput разметку поля и visibilityButtonProps связывает потребитель.",
+    "При использовании useInput передайте inputProps вместе с ref полю; visibilityButtonProps и stepButtonProps связывают дополнительные кнопки.",
+    "При type=number шаг задают нативные min, max и step; кнопки и ArrowUp/ArrowDown используют stepUp/stepDown. Пустое поле остаётся пустым до ввода или шага; value и onChange сохраняют нативный контракт.",
+    "step=any разрешает произвольные значения без кнопок и собственного обработчика шага. Нет форматирования чисел, локализованного парсинга, длинного удержания или анимации.",
     "Управляемый value требует обработчика onChange либо readOnly."
   ],
   "bindings": [
@@ -37,6 +51,10 @@
         {
           "id": "password",
           "code": "import { useInput } from '@dreadnought/react/logic';\nexport function Example() {\n  const { inputProps, visibilityButtonProps } = useInput({ type: 'password', 'aria-label': 'Пароль' });\n  return <div><input {...inputProps} />{visibilityButtonProps && <button {...visibilityButtonProps} />}</div>;\n}"
+        },
+        {
+          "id": "number",
+          "code": "import { useInput } from '@dreadnought/react/logic';\nexport function Example() { const { inputProps, stepButtonProps } = useInput({ type: 'number', min: 0, max: 10, step: 0.5, 'aria-label': 'Количество' }); return <div><input {...inputProps} />{stepButtonProps && <><button {...stepButtonProps.decrease} /><button {...stepButtonProps.increase} /></>}</div>; }"
         }
       ]
     },
@@ -47,12 +65,18 @@
       "importPath": "@dreadnought/react/unstyled",
       "exportName": "InputAdapter",
       "propertyDescriptions": {
-        "passwordVisibilityContent": "Содержимое кнопки показа и скрытия пароля."
+        "passwordVisibilityContent": "Содержимое кнопки показа и скрытия пароля.",
+        "stepButtonLabels": "Доступные названия кнопок decrease и increase для number.",
+        "renderStepButton": "Рендер кнопки шага; передайте все полученные свойства одному button или Button."
       },
       "examples": [
         {
           "id": "password",
           "code": "import { InputAdapter } from '@dreadnought/react/unstyled';\nconst example = <InputAdapter type='password' aria-label='Пароль' />;"
+        },
+        {
+          "id": "number",
+          "code": "import { InputAdapter } from '@dreadnought/react/unstyled';\nconst example = <InputAdapter type='number' min={0} max={10} step={0.5} aria-label='Количество' />;"
         }
       ]
     }

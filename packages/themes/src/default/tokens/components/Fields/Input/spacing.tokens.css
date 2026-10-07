@@ -3,4 +3,5 @@
   --dreadnought-input-padding-x: var(--dreadnought-spacing-x3);
   --dreadnought-input-gap: var(--dreadnought-spacing-x2);
   --dreadnought-input-toggle-padding: var(--dreadnought-spacing-x1);
+  --dreadnought-input-step-gap: var(--dreadnought-spacing-x1);
 }
