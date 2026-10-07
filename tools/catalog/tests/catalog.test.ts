@@ -33,6 +33,15 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes Progress as a core-only contract with a checked public example', () => {
+    const entry = catalog.entries.find(entry => entry.id === 'component:progress');
+    expect(entry).toMatchObject({ kind: 'component', name: 'Progress', family: 'Feedback' });
+    expect(entry!.bindings).toHaveLength(1);
+    expect(entry!.bindings[0]).toMatchObject({ layer: 1, framework: null,
+      importPath: '@dreadnought/core', exportName: 'getProgressState', defaults: { value: 0, max: 100 } });
+    expect(entry!.docsUrl).toBe('/custom-components/#core-parts');
+    expect(() => checkExamples(context, entry!.bindings[0].examples)).not.toThrow();
+  });
   it('publishes Slider as numeric and keyboard behavior composition with checked bindings', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:slider');
     expect(entry).toMatchObject({ family: 'Fields', composesWith: ['behavior:get-stepped-value', 'behavior:get-stepped-range', 'behavior:get-navigation-direction', 'behavior:get-next-enabled-value'] });

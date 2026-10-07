@@ -1,0 +1,15 @@
+{
+  "id": "component:progress", "kind": "component", "name": "Progress", "family": "Feedback",
+  "description": "Числовое значение выполненной работы, процент и атрибуты доступности без оформления.",
+  "docsUrl": "/custom-components/#core-parts",
+  "constraints": [
+    "Только числовой core-контракт; React-адаптер и готовое оформление ещё не реализованы.",
+    "value и max конечные; max > 0. value ограничивается [0, max], без округления. Неконечные числа: TypeError; неположительный max: RangeError.",
+    "percent не округляется. complete означает достижение max, а не успешность операции. Доступное имя задаёт потребитель."
+  ],
+  "bindings": [{ "id": "core", "layer": 1, "framework": null,
+    "importPath": "@dreadnought/core", "exportName": "getProgressState",
+    "defaults": { "value": 0, "max": 100 },
+    "examples": [{ "id": "state", "code": "import { getProgressState } from '@dreadnought/core';\nconst state = getProgressState({ value: 3, max: 8 });" }]
+  }]
+}
