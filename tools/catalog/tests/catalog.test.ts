@@ -33,6 +33,13 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes Slider as numeric and keyboard behavior composition with checked bindings', () => {
+    const entry = catalog.entries.find(entry => entry.id === 'component:slider');
+    expect(entry).toMatchObject({ family: 'Fields', composesWith: ['behavior:get-stepped-value', 'behavior:get-navigation-direction'] });
+    expect(entry!.bindings.map(binding => binding.exportName)).toEqual(['useSlider', 'SliderAdapter', 'Slider']);
+    for (const binding of entry!.bindings) expect(() => checkExamples(context, binding.examples)).not.toThrow();
+    expect(entry!.tokens.length).toBeGreaterThan(0);
+  });
   it('publishes Switch with checked public examples and shared checkable behavior', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:switch');
     expect(entry).toMatchObject({ family: 'Fields', composesWith: ['behavior:get-checkable-state'] });

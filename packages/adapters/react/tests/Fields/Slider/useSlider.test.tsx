@@ -116,3 +116,14 @@ it('resets only through the current external form owner', async () => {
   await act(async () => (document.getElementById('second') as HTMLFormElement).reset());
   expect(screen.getByRole('slider').getAttribute('aria-valuenow')).toBe('2');
 });
+
+it('follows the actual form owner even when the form prop does not change', async () => {
+  const { rerender } = render(<><form id="owner" /><form id="second" /><Probe form="owner" defaultValue={2} /></>);
+  fireEvent.keyDown(screen.getByRole('slider'), { key: 'ArrowRight' });
+  rerender(<><form id="old" /><form id="owner" /><Probe form="owner" defaultValue={2} /></>);
+  await act(async () => (document.getElementById('owner') as HTMLFormElement).reset());
+  expect(screen.getByRole('slider').getAttribute('aria-valuenow')).toBe('2');
+  fireEvent.keyDown(screen.getByRole('slider'), { key: 'ArrowRight' });
+  await act(async () => (document.getElementById('old') as HTMLFormElement).reset());
+  expect(screen.getByRole('slider').getAttribute('aria-valuenow')).toBe('3');
+});

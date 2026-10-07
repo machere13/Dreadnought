@@ -5,14 +5,17 @@ export function useFieldValue<T>(value: T | undefined, defaultValue: T, onValueC
   ref: RefObject<HTMLInputElement | HTMLSelectElement | HTMLFieldSetElement | null>, formId?: string) {
   const [internal, setInternal] = useState(defaultValue);
   useEffect(() => {
-    const form = ref.current?.form;
+    const document = ref.current?.ownerDocument;
+    let attached = true;
     function reset(event: Event) {
+      const owner = ref.current?.form;
+      if (!owner || event.target !== owner) return;
       queueMicrotask(() => {
-        if (value === undefined && !event.defaultPrevented) setInternal(defaultValue);
+        if (attached && ref.current?.form === owner && value === undefined && !event.defaultPrevented) setInternal(defaultValue);
       });
     }
-    form?.addEventListener('reset', reset);
-    return () => form?.removeEventListener('reset', reset);
+    document?.addEventListener('reset', reset, true);
+    return () => { attached = false; document?.removeEventListener('reset', reset, true); };
   }, [value, defaultValue, ref, formId]);
   return [value === undefined ? internal : value, (next: T) => {
     if (value === undefined) setInternal(next);

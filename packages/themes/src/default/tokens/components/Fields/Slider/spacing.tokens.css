@@ -1,0 +1,4 @@
+:root {
+  --dreadnought-slider-inset: calc(var(--dreadnought-slider-target-size) / 2);
+  --dreadnought-slider-focus-offset: var(--dreadnought-spacing-x1);
+}

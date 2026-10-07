@@ -30,3 +30,4 @@ export * from './Overlays/Drawer/index.ts';
 export * from './Feedback/Toast/index.ts';
 export * from './Feedback/Loader/index.ts';
 export * from './DataDisplay/MarkdownPreview/index.ts';
+export * from './Fields/Slider/index.ts';

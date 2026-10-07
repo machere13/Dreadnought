@@ -13,6 +13,14 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('documents Slider with an editable example and public API', () => {
+    render(<DocsPage section="slider" />);
+    const thumb = screen.getByRole('slider', { name: 'Громкость' });
+    fireEvent.keyDown(thumb, { key: 'ArrowRight' });
+    expect(thumb.getAttribute('aria-valuenow')).toBe('26');
+    expect(screen.getByRole('rowheader', { name: 'onValueChange' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Slider' }).getAttribute('href')).toBe('/components/slider/');
+  });
   it('keeps numerical input on the Input page with working step controls', () => {
     render(<DocsPage section="input" />);
     const input = screen.getByRole('spinbutton', { name: 'Количество' }) as HTMLInputElement;

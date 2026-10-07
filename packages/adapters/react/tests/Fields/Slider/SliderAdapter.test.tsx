@@ -124,9 +124,11 @@ it('releases pointer capture when fieldset is disabled during drag', async () =>
   render(<fieldset><SliderAdapter max={10} /></fieldset>);
   const root = geometry();
   let captured = false;
-  root.setPointerCapture = () => { captured = true; };
-  root.hasPointerCapture = () => captured;
-  root.releasePointerCapture = () => { captured = false; };
+  for (const node of [root, screen.getByRole('slider') as HTMLDivElement]) {
+    node.setPointerCapture = () => { captured = true; };
+    node.hasPointerCapture = () => captured;
+    node.releasePointerCapture = () => { captured = false; };
+  }
   pointer(root, 'pointerdown', 40);
   expect(captured).toBe(true);
   await act(async () => { document.querySelector('fieldset')!.disabled = true; });
@@ -157,4 +159,38 @@ it('enforces semantics and the hidden field value despite slot overrides', () =>
   expect(ref.current?.getAttribute('tabindex')).toBe('0');
   expect(new FormData(document.querySelector('form')!).get('v')).toBe('2');
   expect(screen.queryByRole('textbox')).toBeNull();
+});
+
+it('keeps public and thumb-slot handlers on the actual pointer capture target', () => {
+  const calls: string[] = [];
+  render(<SliderAdapter max={10} onPointerMove={event => { calls.push('move'); event.preventDefault(); }}
+    onPointerUp={() => calls.push('up')} onPointerCancel={() => calls.push('cancel')}
+    onLostPointerCapture={() => calls.push('lost')}
+    slotProps={{ thumb: { onPointerMove: () => calls.push('slot-move'), onPointerUp: () => calls.push('slot-up'),
+      onPointerCancel: () => calls.push('slot-cancel'), onLostPointerCapture: () => calls.push('slot-lost') } }} />);
+  const root = geometry();
+  const thumb = screen.getByRole('slider') as HTMLDivElement;
+  let capturedTarget: Element = root;
+  root.setPointerCapture = () => { capturedTarget = root; };
+  thumb.setPointerCapture = () => { capturedTarget = thumb; };
+  pointer(thumb, 'pointerdown', 40);
+  pointer(capturedTarget, 'pointermove', 90);
+  expect(current()).toBe('4');
+  pointer(capturedTarget, 'pointerup', 90);
+  pointer(thumb, 'pointerdown', 40);
+  pointer(capturedTarget, 'pointercancel', 40);
+  pointer(thumb, 'pointerdown', 40);
+  pointer(capturedTarget, 'lostpointercapture', 40);
+  expect(calls).toEqual(['move', 'slot-move', 'up', 'slot-up', 'cancel', 'slot-cancel', 'lost', 'slot-lost']);
+});
+
+it('does not duplicate public callbacks when pointer events originate on the thumb', () => {
+  const calls: string[] = [];
+  render(<SliderAdapter max={10} onPointerMove={() => calls.push('move')} onPointerUp={() => calls.push('up')} />);
+  geometry();
+  const thumb = screen.getByRole('slider');
+  pointer(thumb, 'pointerdown', 40);
+  pointer(thumb, 'pointermove', 50);
+  pointer(thumb, 'pointerup', 50);
+  expect(calls).toEqual(['move', 'up']);
 });

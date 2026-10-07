@@ -17,6 +17,7 @@ import { iconDoc } from './componentDocs/IconDoc';
 import { markDoc } from './componentDocs/MarkDoc';
 import { checkboxDoc } from './componentDocs/CheckboxDoc';
 import { switchDoc } from './componentDocs/SwitchDoc';
+import { sliderDoc } from './componentDocs/SliderDoc';
 import { radioDoc } from './componentDocs/RadioDoc';
 import { selectDoc } from './componentDocs/SelectDoc';
 import { markdownEditorDoc } from './componentDocs/MarkdownEditorDoc';
@@ -38,13 +39,13 @@ import { DocsAssistant } from '../assistant/DocsAssistant.tsx';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 
-type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'markdowneditor' | 'markdownpreview' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'dropdown' | 'accordion' | 'codeblock' | 'alert' | 'toast' | 'loader' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'switch' | 'radio' | 'select' | 'radarchart' | 'linechart' | 'barchart' | 'tooltip' | 'popover' | 'modal' | 'drawer';
+type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'markdowneditor' | 'markdownpreview' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'dropdown' | 'accordion' | 'codeblock' | 'alert' | 'toast' | 'loader' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'switch' | 'slider' | 'radio' | 'select' | 'radarchart' | 'linechart' | 'barchart' | 'tooltip' | 'popover' | 'modal' | 'drawer';
 type DocsSection = 'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
 const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
   { name: 'Controls', sections: ['button', 'toolbar'] },
   { name: 'DataDisplay', sections: ['badge', 'codeblock', 'icon', 'mark', 'table', 'markdownpreview'] },
   { name: 'Feedback', sections: ['alert', 'toast', 'loader'] },
-  { name: 'Fields', sections: ['input', 'textarea', 'markdowneditor', 'checkbox', 'switch', 'radio', 'select'] },
+  { name: 'Fields', sections: ['input', 'textarea', 'markdowneditor', 'checkbox', 'switch', 'radio', 'select', 'slider'] },
   { name: 'Layout', sections: ['layout'] },
   { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs', 'menu', 'dropdown'] },
   { name: 'Surfaces', sections: ['card'] },
@@ -208,6 +209,7 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
   drawer: drawerDoc,
   checkbox: checkboxDoc,
   switch: switchDoc,
+  slider: sliderDoc,
   radio: radioDoc,
   select: selectDoc,
   button: {

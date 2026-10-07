@@ -9,6 +9,6 @@ function Logic() { const slider = useSlider({ min: -2, max: 2 }); return <div {.
 const range = <SliderAdapter value={[1, 2]} />;
 // @ts-expect-error Only a finite numeric step is supported.
 const anyStep = <SliderAdapter step="any" />;
-// @ts-expect-error The ref points to the focusable div, not the hidden input.
-const inputRef = <SliderAdapter ref={createRef<HTMLInputElement>()} />;
-void [valid, Logic, range, anyStep, inputRef];
+// @ts-expect-error A div ref is incompatible with an SVG element ref.
+const svgRef = <SliderAdapter ref={createRef<SVGSVGElement>()} />;
+void [valid, Logic, range, anyStep, svgRef];

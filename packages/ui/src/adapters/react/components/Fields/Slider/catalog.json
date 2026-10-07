@@ -1,0 +1,10 @@
+{
+  "componentId": "component:slider",
+  "constraints": ["Оформление через --dreadnought-slider-* без анимации. Общий Tooltip у бегунка отключается tooltip=false."],
+  "bindings": [{
+    "id": "react-ui", "layer": 3, "framework": "react", "importPath": "@dreadnought/ui/react", "exportName": "Slider",
+    "defaults": { "min": 0, "max": 100, "step": 1, "disabled": false },
+    "propertyDescriptions": { "tooltip": "false отключает подсказку; formatter, placement, openDelay и closeDelay настраивают общий Tooltip." },
+    "examples": [{ "id": "basic", "code": "import { Slider } from '@dreadnought/ui/react';\nconst example = <Slider aria-label='Громкость' defaultValue={25} name='volume' tooltip={{ formatter: value => `${value}%` }} />;" }]
+  }]
+}

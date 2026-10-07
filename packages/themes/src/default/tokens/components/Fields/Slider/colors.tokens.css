@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-slider-rail-bg: var(--dreadnought-color-action-secondary);
+  --dreadnought-slider-track-bg: var(--dreadnought-color-action-primary);
+  --dreadnought-slider-thumb-bg: var(--dreadnought-color-action-primary);
+  --dreadnought-slider-focus: var(--dreadnought-color-focus-ring);
+}

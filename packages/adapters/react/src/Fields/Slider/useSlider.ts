@@ -27,7 +27,7 @@ export function useSlider({ min = 0, max = 100, step = 1, value: controlled, def
   function stop() {
     const id = activePointer.current;
     activePointer.current = null;
-    if (id !== null && rootRef.current?.hasPointerCapture?.(id)) rootRef.current.releasePointerCapture(id);
+    if (id !== null && thumbRef.current?.hasPointerCapture?.(id)) thumbRef.current.releasePointerCapture(id);
   }
   useEffect(() => {
     const field = fieldRef.current;
@@ -42,13 +42,13 @@ export function useSlider({ min = 0, max = 100, step = 1, value: controlled, def
     for (let node = field.parentElement; node; node = node.parentElement) {
       if (node.tagName === 'FIELDSET') observer.observe(node, { attributes: true, attributeFilter: ['disabled'] });
     }
-    const owner = field.form;
-    let attached = true;
+    const document = field.ownerDocument;
     function reset(event: Event) {
-      queueMicrotask(() => { if (attached && controlled === undefined && !event.defaultPrevented) stop(); });
+      if (event.target !== fieldRef.current?.form) return;
+      queueMicrotask(() => { if (event.target === fieldRef.current?.form && controlled === undefined && !event.defaultPrevented) stop(); });
     }
-    owner?.addEventListener('reset', reset);
-    return () => { attached = false; observer.disconnect(); owner?.removeEventListener('reset', reset); };
+    document.addEventListener('reset', reset, true);
+    return () => { observer.disconnect(); document.removeEventListener('reset', reset, true); };
   });
   useEffect(() => () => stop(), []);
   function move(event: PointerEvent<HTMLDivElement>) {
@@ -92,7 +92,7 @@ export function useSlider({ min = 0, max = 100, step = 1, value: controlled, def
       event.preventDefault();
       thumbRef.current?.focus({ preventScroll: true });
       activePointer.current = event.pointerId;
-      event.currentTarget.setPointerCapture?.(event.pointerId);
+      thumbRef.current?.setPointerCapture?.(event.pointerId);
     },
     onPointerMove: event => {
       slotProps.root?.onPointerMove?.(event);

@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "packages/ui/tests/adapters/react/components/Fields/Slider/Slider.types.tsx",
     "packages/adapters/react/tests/Fields/Slider/SliderAdapter.types.tsx",
     "packages/adapters/react/tests/Fields/MarkdownEditor/MarkdownEditorPublic.types.tsx",
     "packages/core/tests/domains/markdown/markdown.types.ts",

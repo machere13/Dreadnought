@@ -1,0 +1,9 @@
+:root {
+  --dreadnought-slider-height: var(--dreadnought-size-control-min-height);
+  --dreadnought-slider-target-size: var(--dreadnought-size-control-compact-min-height);
+  --dreadnought-slider-thumb-size: 1rem;
+  --dreadnought-slider-rail-height: 4px;
+  --dreadnought-slider-min-width: 5rem;
+  --dreadnought-slider-radius: var(--dreadnought-border-radius-pill);
+  --dreadnought-slider-focus-width: var(--dreadnought-border-width-x2);
+}
