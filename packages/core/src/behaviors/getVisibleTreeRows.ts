@@ -15,8 +15,9 @@ export interface VisibleTreeRowsOptions<RecordType, Key extends TreeKey = TreeKe
 
 export function getVisibleTreeRows<RecordType, Key extends TreeKey = TreeKey>(
   records: readonly RecordType[],
-  { getKey, getChildren, expandedKeys = [] }: VisibleTreeRowsOptions<RecordType, Key>,
+  options: VisibleTreeRowsOptions<RecordType, Key>,
 ): VisibleTreeRow<RecordType, Key>[] {
+  const { getKey, getChildren, expandedKeys = [] } = options;
   const expanded = new Set(expandedKeys);
   const seen = new Set<Key>();
   const rows: VisibleTreeRow<RecordType, Key>[] = [];

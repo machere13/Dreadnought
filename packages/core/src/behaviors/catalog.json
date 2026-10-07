@@ -169,5 +169,14 @@
       "importPath": "@dreadnought/core", "exportName": "getNextEnabledValue",
       "examples": [{"id": "usage", "code": "import { getNextEnabledValue } from '@dreadnought/core';\nconst items = [{ value: 'first' }, { value: 'disabled', disabled: true }, { value: 'last' }];\nconst next = getNextEnabledValue(items, 'first', 'next', { loop: false });\nconst first = getNextEnabledValue(items, 'last', 'first');\n// Результат — ключ; actual focus и обработчик клавиатуры остаются в вашем коде."}]
     }]
+  },
+  {
+    "id": "behavior:get-visible-tree-rows", "kind": "behavior", "name": "getVisibleTreeRows", "family": "Behaviors",
+    "description": "Получает видимые строки вложенных данных: раскрытые ветви, глубина и родитель. Для дерева папок, вложенной навигации и строк таблицы без привязки к фреймворку.",
+    "docsUrl": "/custom-components/#core-parts",
+    "composesWith": ["behavior:get-selection-value"],
+    "constraints": ["Чистая функция. getKey/getChildren — чистые callbacks; getChildren возвращает массив/null/undefined. expandedKeys по умолчанию пуст, неизвестные и повторные ключи игнорируются. Корни depth=0/parentKey=null; preorder сохраняет порядок и record-ссылки. expanded true только при наличии детей. Закрытие родителя не удаляет раскрытые ключи детей: набор принадлежит вызывающему коду, переключайте его через getSelectionValue. Ключи уникальны во всём дереве: строки или конечные числа, 1 и '1' различаются. Повтор ключа/цикл, неверный ключ или дети вызывают TypeError; ошибки callbacks не поглощаются. Обход без рекурсии проверяет даже скрытые ветви: O(N+E) времени и памяти. Не выполняет выбор, фокус, ARIA, поиск, виртуализацию или загрузку детей."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getVisibleTreeRows",
+      "examples": [{ "id": "composition", "code": "import { getVisibleTreeRows, getSelectionValue } from '@dreadnought/core';\ntype Folder = { id: string; nodes?: readonly Folder[] };\nconst folders: readonly Folder[] = [{ id: 'docs', nodes: [{ id: 'file' }] }];\nconst expanded = getSelectionValue<string>([], { type: 'toggle', value: 'docs' });\nconst rows = getVisibleTreeRows(folders, { getKey: folder => folder.id, getChildren: folder => folder.nodes, expandedKeys: expanded });" }] }]
   }
 ]

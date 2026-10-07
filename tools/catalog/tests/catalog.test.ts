@@ -33,6 +33,15 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes visible tree rows as a checked core-only behavior', () => {
+    const entry = catalog.entries.find(e => e.id === 'behavior:get-visible-tree-rows');
+    expect(entry).toMatchObject({ kind: 'behavior', name: 'getVisibleTreeRows', family: 'Behaviors', composesWith: ['behavior:get-selection-value'] });
+    expect(entry!.tokens).toEqual([]);
+    expect(entry!.bindings).toHaveLength(1);
+    expect(entry!.bindings[0]).toMatchObject({ layer: 1, framework: null, importPath: '@dreadnought/core', exportName: 'getVisibleTreeRows' });
+    expect(entry!.bindings[0].contracts[0].parameters.map(p => p.name)).toEqual(['records', 'options']);
+    expect(() => checkExamples(context, entry!.bindings[0].examples)).not.toThrow();
+  });
   it('publishes Pagination across three layers with checked examples', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:pagination');
     expect(entry).toMatchObject({ name: 'Pagination', family: 'Navigation', docsUrl: '/components/pagination/#pagination-api' });
@@ -218,7 +227,7 @@ describe('public catalog', () => {
   });
   it('publishes standalone actions and behaviors with checked public contracts', () => {
     const capabilities = catalog.entries.filter(entry => entry.kind === 'action' || entry.kind === 'behavior');
-    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getCheckableState', 'getComboboxKeyAction', 'getCountdownRemaining', 'getDisclosureOpen', 'getDisclosureState', 'getHistoryState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getSteppedRange', 'getSteppedValue', 'getTooltipPosition', 'getTypeaheadValue', 'pickFiles', 'readClipboard']);
+    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getCheckableState', 'getComboboxKeyAction', 'getCountdownRemaining', 'getDisclosureOpen', 'getDisclosureState', 'getHistoryState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getSteppedRange', 'getSteppedValue', 'getTooltipPosition', 'getTypeaheadValue', 'getVisibleTreeRows', 'pickFiles', 'readClipboard']);
     expect(capabilities.every(entry => entry.tokens.length === 0 && entry.bindings.length === 1 && entry.bindings[0].layer === 1)).toBe(true);
     const selection = capabilities.find(entry => entry.name === 'getSelectionValue');
     expect(selection.bindings[0].contracts).toHaveLength(3);
