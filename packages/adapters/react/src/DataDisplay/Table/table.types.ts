@@ -18,7 +18,7 @@ export type TableColumn<RecordType extends object> = {
   onHeaderCell?: (column: TableColumn<RecordType>, index: number) => Omit<ComponentPropsWithRef<'th'>, 'children' | 'dangerouslySetInnerHTML'>;
   width?: number;
   fixed?: 'left' | 'right';
-  sorter?: (a: RecordType, b: RecordType) => number;
+  sorter?: ((a: RecordType, b: RecordType) => number) | { compare: (a: RecordType, b: RecordType) => number; multiple: number };
   sortOrder?: TableSortOrder;
   defaultSortOrder?: Exclude<TableSortOrder, null>;
   sortLabel?: string;
@@ -77,6 +77,6 @@ export type TableDataAdapterProps<RecordType extends object> = Omit<ComponentPro
     pagination: { current: number; pageSize: number },
     filters: TableChangeFilters,
     sorter: TableChangeSorter,
-    extra: { action: 'sort' | 'filter' | 'paginate'; currentDataSource: readonly RecordType[] },
+    extra: { action: 'sort' | 'filter' | 'paginate'; currentDataSource: readonly RecordType[]; sorters: readonly TableChangeSorter[] },
   ) => void;
 };

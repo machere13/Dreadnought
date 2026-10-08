@@ -9,6 +9,15 @@
   "constraints": ["Задайте устойчивый rowKey. Режим columns/dataSource и составная разметка — альтернативные способы построения таблицы."],
   "bindings": [
     {
+      "id": "core-multiple-sort",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "sortTableRowsBy",
+      "description": "Стабильная сортировка цепочкой { compare, order } в порядке приоритета. null пропускается; равные строки сохраняют исходный порядок. Возвращает новый массив, исходный не изменяет.",
+      "examples": [{ "id": "multiple-sort", "code": "import { sortTableRowsBy } from '@dreadnought/core';\nconst rows = [{ team: 'Design', age: 29 }, { team: 'Design', age: 25 }];\nconst sorted = sortTableRowsBy(rows, [{ compare: (a, b) => a.team.localeCompare(b.team), order: 'ascend' }, { compare: (a, b) => a.age - b.age, order: 'descend' }]);" }]
+    },
+    {
       "id": "core-headers",
       "layer": 1,
       "framework": null,

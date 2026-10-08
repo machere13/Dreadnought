@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { filterTableRows, getTableHeaderRows, sortTableRows } from '@dreadnought/core';
+import { filterTableRows, getTableHeaderRows, sortTableRowsBy } from '@dreadnought/core';
 import type { TableChangeFilters, TableChangeSorter, TableColumn, TableDataAdapterProps, TableRowKey } from './table.types.ts';
 
 export function groupedColumns<RecordType extends object>(source: readonly TableColumn<RecordType>[]) {
@@ -23,12 +23,15 @@ export function groupedColumns<RecordType extends object>(source: readonly Table
 }
 
 export function matchingRows<RecordType extends object>(data: readonly RecordType[], columns: readonly TableColumn<RecordType>[],
-  filters: TableChangeFilters, sorter: TableChangeSorter) {
+  filters: TableChangeFilters, sorters: readonly TableChangeSorter[]) {
   const filtered = filterTableRows(data, columns.filter(column => column.onFilter).map(column => ({
     values: filters[column.key] ?? [], predicate: column.onFilter!,
   })));
-  const column = columns.find(column => column.key === sorter.columnKey);
-  return sortTableRows(filtered, column?.sorter, sorter.order);
+  return sortTableRowsBy(filtered, sorters.flatMap(sorter => {
+    const column = columns.find(column => column.key === sorter.columnKey);
+    const compare = typeof column?.sorter === 'object' ? column.sorter.compare : column?.sorter;
+    return compare ? [{ compare, order: sorter.order }] : [];
+  }));
 }
 
 export function cellValue<RecordType extends object>(record: RecordType, dataIndex: TableColumn<RecordType>['dataIndex']) {

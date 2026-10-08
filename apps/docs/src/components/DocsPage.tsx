@@ -190,6 +190,13 @@ function TableDemo() {
       bordered
     />
     <p><code>summary(rows)</code> получает строки текущей страницы после фильтрации и сортировки. При <code>pagination=false</code> — все подходящие строки. Верните строки через <code>Table.Row</code> и ячейки через <code>Table.Cell</code>: <code>tfoot</code> создаётся автоматически. Формулы и <code>colSpan</code> задаёт приложение; <code>null</code> скрывает итог. Итоги прокручиваются с таблицей, закрепление колонок на ручные ячейки не переносится.</p>
+    <p>Для нескольких колонок задайте <code>sorter: {'{ compare, multiple }'}</code>: большее <code>multiple</code> означает более высокий приоритет, равные приоритеты следуют порядку колонок. Нажмите «Команда», затем «Участник»: имя уточняет порядок внутри команды. Третье нажатие сбрасывает только выбранную колонку. Обычная функция <code>sorter</code> переключает таблицу обратно на одиночную сортировку. <code>sortOrder</code> управляет состоянием, <code>defaultSortOrder</code> задаёт начальное значение. Управляемая одиночная сортировка имеет приоритет над цепочкой. Третий аргумент <code>onChange</code> остаётся объектом выбранной колонки; полный порядок доступен в <code>extra.sorters</code>, при фильтре и пагинации — тоже.</p>
+    <Table<{ key: number; team: string; name: string }> aria-label="Множественная сортировка" bordered pagination={false}
+      dataSource={[{ key: 1, team: 'Разработка', name: 'Марк' }, { key: 2, team: 'Дизайн', name: 'Нина' }, { key: 3, team: 'Разработка', name: 'Анна' }, { key: 4, team: 'Дизайн', name: 'Лев' }]}
+      columns={[
+        { key: 'team', title: 'Команда', dataIndex: 'team', sorter: { compare: (a, b) => a.team.localeCompare(b.team), multiple: 2 } },
+        { key: 'name', title: 'Участник', dataIndex: 'name', sorter: { compare: (a, b) => a.name.localeCompare(b.name), multiple: 1 } },
+      ]} />
     <Table<{ key: number; item: string; amount: number }> aria-label="Итоги страницы" bordered pagination={{ pageSize: 2 }}
       dataSource={[{ key: 1, item: 'Дизайн', amount: 120 }, { key: 2, item: 'Разработка', amount: 240 }, { key: 3, item: 'Тестирование', amount: 80 }]}
       columns={[{ key: 'item', title: 'Работа', dataIndex: 'item' }, { key: 'amount', title: 'Часы', dataIndex: 'amount', align: 'right', sorter: (a, b) => a.amount - b.amount }]}

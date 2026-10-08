@@ -162,3 +162,11 @@ export const Summary: Story = { render: () => <Table<(typeof people)[number]> ar
   summary={rows => <Table.Row><Table.HeaderCell scope="row">Средний возраст на странице</Table.HeaderCell>
     <Table.Cell style={{ textAlign: 'right' }}>{rows.length ? (rows.reduce((sum, row) => sum + row.age, 0) / rows.length).toFixed(1) : '—'}</Table.Cell>
   </Table.Row>} /> };
+
+export const MultipleSorters: Story = { render: () => <Table<(typeof people)[number]> aria-label="Множественная сортировка" bordered
+  rowKey="id" dataSource={people} pagination={false}
+  columns={[
+    { key: 'role', title: 'Роль', dataIndex: 'role', defaultSortOrder: 'ascend', sorter: { compare: (a, b) => a.role.localeCompare(b.role), multiple: 2 } },
+    { key: 'age', title: 'Возраст', dataIndex: 'age', defaultSortOrder: 'ascend', sorter: { compare: (a, b) => a.age - b.age, multiple: 1 } },
+    { key: 'name', title: 'Имя', dataIndex: 'name' },
+  ]} /> };

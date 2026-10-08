@@ -1,7 +1,6 @@
 import { Fragment, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { getDisclosureState, getPaginationState, getSelectionValue, paginateTableRows } from '@dreadnought/core';
-import type { TableSortOrder } from '@dreadnought/core';
 import { CheckboxAdapter } from '../../Fields/Checkbox/CheckboxAdapter.tsx';
 import { PaginationAdapter } from '../../Navigation/Pagination/index.ts';
 import { TableFilterMenu } from './TableFilterMenu.tsx';
@@ -9,6 +8,7 @@ import { TableDetailRow } from './TableDetailRow.tsx';
 import { TableEllipsis } from './TableEllipsis.tsx';
 import { ButtonAdapter } from '../../Controls/Button/index.ts';
 import { useTableWidths } from './useTableWidths.ts';
+import { changeSorters, defaultSorters, resolveSorters } from './tableSort.ts';
 import { cellValue, fixedStyle, groupedColumns, matchingRows, paginationNumber, recordKey } from './tableData.ts';
 import type { TableChangeFilters, TableChangeSorter, TableColumn, TableDataAdapterProps, TableFilterValue, TableRowKey } from './table.types.ts';
 
@@ -39,8 +39,9 @@ export function DataTableAdapter<RecordType extends object>({
   useImperativeHandle(tableProps.ref, () => tableRef.current!);
   const headerStyle: CSSProperties = sticky
     ? { position: 'sticky', top: typeof sticky === 'object' ? sticky.offsetHeader ?? 0 : 0, zIndex: 2 } : {};
-  const defaultSorted = columns.find((column) => column.defaultSortOrder);
-  const [sorting, setSorting] = useState<{ key: string; order: TableSortOrder }>({ key: defaultSorted?.key ?? '', order: defaultSorted?.defaultSortOrder ?? null });
+  const [sorting, setSorting] = useState(() => defaultSorters(columns));
+  const pendingSorting = useRef(sorting);
+  useLayoutEffect(() => { pendingSorting.current = sorting; }, [sorting]);
   const [filters, setFilters] = useState<Record<string, readonly TableFilterValue[]>>(() =>
     Object.fromEntries(columns.map(column => [column.key, column.defaultFilteredValue ?? []])));
   const pendingFilters = useRef(filters);
@@ -50,9 +51,8 @@ export function DataTableAdapter<RecordType extends object>({
     pageSize: paginationNumber(pagination ? pagination.pageSize ?? pagination.defaultPageSize : undefined, 10),
   }));
   const [selected, setSelected] = useState<TableRowKey[]>([...(rowSelection?.defaultSelectedRowKeys ?? [])]);
-  const activeColumn = columns.find((column) => column.sortOrder !== undefined) ?? columns.find((column) => column.key === sorting.key);
-  const activeOrder = activeColumn?.sortOrder !== undefined ? activeColumn.sortOrder : sorting.order;
-  const sorted = matchingRows(dataSource, columns, currentFilters(), { columnKey: activeColumn?.key, order: activeOrder });
+  const activeSorters = resolveSorters(columns, sorting);
+  const sorted = matchingRows(dataSource, columns, currentFilters(), activeSorters);
   const pageSize = paginationNumber(pagination ? pagination.pageSize : undefined, page.pageSize);
   const requestedPage = paginationNumber(pagination ? pagination.current : undefined, pageSize !== page.pageSize ? 1 : page.current);
   const { current: currentPage, pageCount } = getPaginationState({ total: sorted.length, current: requestedPage, pageSize });
@@ -81,26 +81,36 @@ export function DataTableAdapter<RecordType extends object>({
     ]));
   }
 
-  function publishChange(action: 'sort' | 'filter' | 'paginate', nextPage: number, nextFilters: TableChangeFilters, nextSorter: TableChangeSorter) {
+  function currentSorter(): TableChangeSorter {
+    return resolveSorters(columns, pendingSorting.current)[0] ?? { columnKey: columns.find(column => column.sortOrder !== undefined)?.key ?? pendingSorting.current[0]?.columnKey, order: null };
+  }
+
+  function publishChange(action: 'sort' | 'filter' | 'paginate', nextPage: number, nextFilters: TableChangeFilters, nextSorter: TableChangeSorter,
+    sorters = resolveSorters(columns, pendingSorting.current)) {
     onChange?.(
       { current: nextPage, pageSize },
       nextFilters,
       nextSorter,
-      { action, currentDataSource: matchingRows(dataSource, columns, nextFilters, nextSorter) },
+      { action, sorters, currentDataSource: matchingRows(dataSource, columns, nextFilters, sorters) },
     );
   }
 
   function changeSort(column: TableColumn<RecordType>) {
-    const current = column.key === activeColumn?.key ? activeOrder : null;
+    const current = resolveSorters(columns, pendingSorting.current).find(sorter => sorter.columnKey === column.key)?.order ?? null;
     const order = current === null ? 'ascend' : current === 'ascend' ? 'descend' : null;
-    if (column.sortOrder === undefined) setSorting({ key: column.key, order });
-    publishChange('sort', currentPage, currentFilters(undefined, pendingFilters.current), { columnKey: column.key, order });
+    const next: TableChangeSorter = { columnKey: column.key, order };
+    const requested = changeSorters(columns, pendingSorting.current, next);
+    if (column.sortOrder === undefined) {
+      pendingSorting.current = requested;
+      setSorting(requested);
+    }
+    publishChange('sort', currentPage, currentFilters(undefined, pendingFilters.current), next, resolveSorters(columns, requested, next));
   }
   function changePage(next: number) {
     if (pagination === false) return;
     if (pagination?.current === undefined) setPage({ current: next, pageSize });
     pagination?.onChange?.(next, pageSize);
-    publishChange('paginate', next, currentFilters(undefined, pendingFilters.current), { columnKey: activeColumn?.key, order: activeOrder });
+    publishChange('paginate', next, currentFilters(undefined, pendingFilters.current), currentSorter());
   }
   function changeFilter(column: TableColumn<RecordType>, values: TableFilterValue[]) {
     if (column.filteredValue === undefined) {
@@ -111,7 +121,7 @@ export function DataTableAdapter<RecordType extends object>({
       if (pagination?.current === undefined) setPage({ current: 1, pageSize });
       pagination?.onChange?.(1, pageSize);
     }
-    publishChange('filter', 1, currentFilters({ key: column.key, values }, pendingFilters.current), { columnKey: activeColumn?.key, order: activeOrder });
+    publishChange('filter', 1, currentFilters({ key: column.key, values }, pendingFilters.current), currentSorter());
   }
   function changeSelection(next: TableRowKey[]) {
     if (rowSelection?.selectedRowKeys === undefined) setSelected(next);
@@ -156,9 +166,10 @@ export function DataTableAdapter<RecordType extends object>({
         const group = Boolean(column.children?.length);
         const cellProps = headerCells[rowIndex]![index];
         if (cellProps?.colSpan === 0 || cellProps?.rowSpan === 0) return null;
-        const order = !group && activeColumn?.key === column.key ? activeOrder : null;
+        const order = !group ? activeSorters.find(sorter => sorter.columnKey === column.key)?.order ?? null : null;
         const values = filterValues(column);
-        const ariaSort = !group && column.sorter
+        const sortIndex = activeSorters.findIndex(sorter => sorter.columnKey === column.key);
+        const ariaSort = !group && column.sorter && (activeSorters.length < 2 || sortIndex === 0)
           ? order === 'ascend' ? 'ascending' : order === 'descend' ? 'descending' : 'none'
           : undefined;
         return <th
@@ -172,6 +183,8 @@ export function DataTableAdapter<RecordType extends object>({
           data-column-index={group ? undefined : columnIndex}
           data-fixed={column.fixed}
           aria-sort={ariaSort}
+          aria-description={cellProps?.['aria-description'] ?? (order && activeSorters.length > 1
+            ? `Сортировка ${order === 'ascend' ? 'по возрастанию' : 'по убыванию'}, приоритет ${sortIndex + 1}` : undefined)}
           style={{ textAlign: column.align, ...cellProps?.style, ...fixedStyle(columns, column.fixed === 'right' ? columnIndex + colSpan - 1 : columnIndex, widths, controlWidth),
             ...(group ? { width: undefined, minWidth: undefined } : {}), ...headerStyle,
             ...(sticky ? { top: (headerStyle.top as number) + (headerOffsets[rowIndex] ?? 0) } : {}), ...(column.fixed ? { zIndex: 3 } : {}) }}

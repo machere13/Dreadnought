@@ -18,3 +18,11 @@ const grouped: readonly TableColumn<Person>[] = [{ key: 'person', title: 'Person
   { key: 'id', title: 'ID', dataIndex: 'id', hidden: false, align: 'right', ellipsis: true, onCell: person => ({ title: String(person.id) }) },
 ] }];
 void <Table<Person> columns={grouped} dataSource={[{ id: 1, name: 'Anna' }]} rowKey="id" slotProps={{ tooltip: { openDelay: 0, placement: 'bottom' } }} />;
+void <Table<Person> columns={[
+  { key: 'name', title: 'Name', sorter: { compare: (a, b) => a.name.localeCompare(b.name), multiple: 2 } },
+  { key: 'id', title: 'ID', sorter: { compare: (a, b) => a.id - b.id, multiple: 1 } },
+]} dataSource={[{ id: 1, name: 'Anna' }]} onChange={(_page, _filters, sorter, extra) => {
+  const key: string | undefined = sorter.columnKey;
+  const orders: readonly ('ascend' | 'descend' | null)[] = extra.sorters.map(item => item.order);
+  void key; void orders;
+}} />;

@@ -27,7 +27,7 @@ it('emits one controlled request and waits for acceptance', () => {
   expect(changed).toHaveBeenCalledExactlyOnceWith(3, 1);
   expect(tableChanged).toHaveBeenCalledTimes(1);
   expect(tableChanged.mock.calls[0]![0]).toEqual({ current: 3, pageSize: 1 });
-  expect(tableChanged.mock.calls[0]![3]).toEqual({ action: 'paginate', currentDataSource: rows });
+  expect(tableChanged.mock.calls[0]![3]).toEqual({ action: 'paginate', sorters: [], currentDataSource: rows });
   expect(screen.getByRole('cell', { name: 'B' })).toBeTruthy();
   view.rerender(<TableAdapter columns={columns} dataSource={rows}
     pagination={{ current: 3, pageSize: 1, onChange: changed }} />);

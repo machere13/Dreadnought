@@ -96,7 +96,7 @@ describe('Table data transitions', () => {
     applyFilter();
     expect(changes).toEqual([
       ['pagination', 1, 1],
-      ['table', 1, ['A'], null, { action: 'filter', currentDataSource: [records[1]] }],
+      ['table', 1, ['A'], null, { action: 'filter', sorters: [], currentDataSource: [records[1]] }],
     ]);
     expect(screen.getByRole('cell', { name: 'A' })).toBeTruthy();
   });
@@ -110,8 +110,8 @@ describe('Table data transitions', () => {
     expect(screen.getByRole('cell', { name: 'B' })).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'Следующая страница' }));
     expect(changes).toEqual([
-      [{ current: 2, pageSize: 1 }, { action: 'sort', currentDataSource: [records[1], records[0], records[2]] }],
-      [{ current: 3, pageSize: 1 }, { action: 'paginate', currentDataSource: [records[1], records[0], records[2]] }],
+      [{ current: 2, pageSize: 1 }, { action: 'sort', sorters: [{ columnKey: 'name', order: 'ascend' }], currentDataSource: [records[1], records[0], records[2]] }],
+      [{ current: 3, pageSize: 1 }, { action: 'paginate', sorters: [{ columnKey: 'name', order: 'ascend' }], currentDataSource: [records[1], records[0], records[2]] }],
     ]);
     expect(screen.getByRole('cell', { name: 'C' })).toBeTruthy();
   });
