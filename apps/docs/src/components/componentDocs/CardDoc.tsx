@@ -7,12 +7,19 @@ import styles from '../DocsPage.module.css';
 function CardDemo() {
   const [expanded, setExpanded] = useState(false);
 
-  return <div className={styles.demo}>
-    <Card className={styles.demoCard}>
-      <h3>Композиция без лишних ограничений</h3>
+  return <div className={`${styles.demo} ${styles.demoStack}`}>
+    <Card className={styles.demoCard} title="Композиция без лишних ограничений"
+      extra={<Button size="compact" variant="ghosted"
+        onClick={() => setExpanded(value => !value)}>{expanded ? 'Скрыть' : 'Подробнее'}</Button>}>
       <p>Карточка объединяет содержимое и действия.</p>
-      <Button size="compact" onClick={() => setExpanded((value) => !value)}>{expanded ? 'Скрыть' : 'Подробнее'}</Button>
       {expanded && <p>В карточку можно вложить любые компоненты.</p>}
+    </Card>
+    <Card className={styles.demoCard} title="Компактная карточка" size="compact">
+      <p>Уменьшенные отступы для плотных интерфейсов.</p>
+    </Card>
+    <Card className={styles.demoCard} variant="borderless">
+      <strong>Без шапки и рамки</strong>
+      <p>Произвольное содержимое с тем же тёмным фоном.</p>
     </Card>
   </div>;
 }
@@ -22,6 +29,6 @@ export const cardDoc: ComponentDoc = {
   title: 'Card',
   description: 'Оформленный контейнер для произвольного содержимого: текста, элементов управления и вложенных компонентов.',
   adapterDescription: 'Адаптер даёт контейнер без темы. Card не требует отдельной логики или состояния в core.',
-  footnote: <>Поддерживаются стандартные свойства <code>&lt;div&gt;</code>. Если карточка целиком выполняет действие, используйте подходящий интерактивный элемент внутри.</>,
+  footnote: <>Без <code>title/extra</code> шапка не создаётся. Карточка сама не является кнопкой: действия задавайте кнопкой или ссылкой внутри.</>,
   demo: <CardDemo />,
 };

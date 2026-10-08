@@ -1,3 +1,5 @@
 :root {
-  --dreadnought-card-padding: var(--dreadnought-spacing-x4);
+  --dreadnought-card-padding: calc(var(--dreadnought-spacing-x4) * 1.5);
+  --dreadnought-card-compact-padding: var(--dreadnought-spacing-x3);
+  --dreadnought-card-header-gap: var(--dreadnought-spacing-x3);
 }

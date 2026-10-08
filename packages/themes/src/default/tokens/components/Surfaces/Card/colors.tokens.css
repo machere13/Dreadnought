@@ -1,3 +1,5 @@
 :root {
-  --dreadnought-card-bg: var(--dreadnought-color-surface-subtle);
+  --dreadnought-card-bg: var(--dreadnought-color-surface-panel);
+  --dreadnought-card-text: var(--dreadnought-color-text-primary);
+  --dreadnought-card-border: var(--dreadnought-color-border-muted);
 }

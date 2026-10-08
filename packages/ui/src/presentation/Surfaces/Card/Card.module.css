@@ -1,7 +1,37 @@
 @layer dreadnought {
   .root {
+    box-sizing: border-box;
+    min-width: 0;
     padding: var(--dreadnought-card-padding);
+    color: var(--dreadnought-card-text);
+    border: var(--dreadnought-card-border-width) solid var(--dreadnought-card-border);
     border-radius: var(--dreadnought-card-radius);
     background: var(--dreadnought-card-bg);
   }
+
+  .root[data-variant='borderless'] { border-color: transparent; }
+  .root[data-size='compact'] { --dreadnought-card-padding: var(--dreadnought-card-compact-padding); }
+  .root[data-has-header='true'] { padding: 0; }
+
+  .header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--dreadnought-card-header-gap);
+    padding: var(--dreadnought-card-padding);
+    border-bottom: var(--dreadnought-card-border-width) solid var(--dreadnought-card-border);
+  }
+
+  .title {
+    flex: 1 1 12rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font-size: var(--dreadnought-font-size-h6);
+    font-weight: var(--dreadnought-font-weight-h6);
+    line-height: var(--dreadnought-line-height-h6);
+  }
+
+  .title :where(h1, h2, h3, h4, h5, h6) { margin: 0; }
+  .extra { margin-inline-start: auto; max-width: 100%; }
+  .body { min-width: 0; padding: var(--dreadnought-card-padding); }
 }

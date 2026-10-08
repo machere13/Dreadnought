@@ -24,6 +24,7 @@ const tokens = new Map([
   ...declarations('components/Navigation/Tabs/colors.tokens.css'),
   ...declarations('components/DataDisplay/Badge/colors.tokens.css'),
   ...declarations('components/Surfaces/Card/colors.tokens.css'),
+  ...declarations('components/DataDisplay/CodeBlock/colors.tokens.css'),
   ...declarations('components/Visualization/RadarChart/colors.tokens.css'),
 ]);
 
@@ -73,6 +74,14 @@ function borderWidth(name: string): number {
 }
 
 describe('default dark theme contrast', () => {
+  it('keeps card and code surfaces darker than controls while preserving readable text', () => {
+    for (const name of ['card-bg', 'code-block-bg']) {
+      expect(luminance(color(name)), name).toBeLessThan(luminance(color('color-surface-default')));
+      expect(luminance(color(name)), name).toBeGreaterThan(luminance(color('color-surface-canvas')));
+      expect(contrast('color-text-primary', name), name).toBeGreaterThanOrEqual(4.5);
+      expect(contrast('color-text-placeholder', name), name).toBeGreaterThanOrEqual(4.5);
+    }
+  });
   it('keeps every Radar series visible on dark and scoped light surfaces', () => {
     expect(contrast('radar-chart-text', 'color-surface-canvas')).toBeGreaterThanOrEqual(4.5);
     for (let index = 1; index <= 6; index++) {
@@ -107,10 +116,11 @@ describe('default dark theme contrast', () => {
   });
 
   it('uses dark, distinguishable surfaces for fields, tabs and cards', () => {
-    for (const name of ['input-bg', 'text-area-bg', 'tabs-list-bg', 'card-bg']) {
+    for (const name of ['input-bg', 'text-area-bg', 'tabs-list-bg']) {
       expect(Math.max(...color(name)), name).toBeLessThan(128);
       expect(contrast('color-surface-canvas', name), name).toBeGreaterThanOrEqual(1.2);
     }
+    expect(contrast('card-bg', 'card-border')).toBeGreaterThanOrEqual(1.4);
     expect(contrast('tabs-list-bg', 'tabs-tab-bg-selected')).toBeGreaterThanOrEqual(1.5);
     expect(contrast('tabs-tab-bg-selected', 'tabs-tab-fg-selected')).toBeGreaterThanOrEqual(4.5);
     expect(contrast('input-bg', 'input-text')).toBeGreaterThanOrEqual(4.5);

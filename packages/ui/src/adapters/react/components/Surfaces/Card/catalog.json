@@ -10,14 +10,19 @@
       "description": "Контейнер для текста, элементов управления и вложенных компонентов.",
       "propertyDescriptions": {
         "children": "Содержимое карточки.",
+        "title": "Содержимое шапки; это не нативная подсказка title.",
+        "extra": "Действия или другое содержимое справа в шапке.",
+        "variant": "Карточка с рамкой или без неё.",
+        "size": "Обычные или уменьшенные отступы.",
+        "slotClassNames": "Классы header, title, extra и body. Без шапки children остаются прямыми потомками корня; слот body не создаётся.",
         "className": "Локальное оформление.",
         "ref": "Ссылка на корневой элемент."
       },
-      "defaults": {},
+      "defaults": { "variant": "outlined", "size": "default" },
       "examples": [
         {
           "id": "basic",
-          "code": "import { Card } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Card><h3>Заголовок</h3><p>Содержимое карточки</p></Card>;\n}"
+          "code": "import { Button, Card } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Card title=\"Проект\" extra={<Button size=\"compact\" variant=\"ghosted\">Открыть</Button>}>\n    <p>Содержимое карточки</p>\n  </Card>;\n}"
         }
       ]
     }

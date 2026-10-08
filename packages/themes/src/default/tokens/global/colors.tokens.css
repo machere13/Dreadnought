@@ -1,6 +1,8 @@
 :root {
   --dreadnought-color-surface-overlay: rgb(23 23 23 / 60%);
   --dreadnought-color-surface-canvas: rgb(23 23 23 / 100%);
+  --dreadnought-color-surface-panel: rgb(32 32 32 / 100%);
+  --dreadnought-color-surface-code: rgb(29 29 29 / 100%);
   --dreadnought-color-surface-default: rgb(40 40 40 / 100%);
   --dreadnought-color-surface-subtle: rgb(48 48 48 / 100%);
   --dreadnought-color-surface-hover: rgb(61 61 61 / 100%);
@@ -18,6 +20,7 @@
   --dreadnought-color-text-placeholder: rgb(176 176 176 / 100%);
   --dreadnought-color-border-default: rgb(128 128 128 / 100%);
   --dreadnought-color-border-subtle: rgb(82 82 82 / 100%);
+  --dreadnought-color-border-muted: rgb(58 58 58 / 100%);
   --dreadnought-color-focus-ring: rgb(190 190 190 / 100%);
   --dreadnought-color-status-error: rgb(255 117 117 / 100%);
   --dreadnought-color-status-warning: rgb(245 188 102 / 100%);

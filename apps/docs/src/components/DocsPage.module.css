@@ -246,7 +246,6 @@
 .fieldDemo > label { color: var(--dreadnought-color-text-primary); font-size: var(--dreadnought-font-size-label-2); }
 .fieldDemo > [data-ui] { width: 100%; }
 .demoCard { max-width: 32rem; }
-.demoCard h3 { margin-block: 0 var(--dreadnought-spacing-x4); color: var(--dreadnought-color-text-primary); }
 .demoCard p { color: var(--dreadnought-color-text-placeholder); }
 
 .layerExamples { display: grid; gap: calc(var(--dreadnought-spacing-x4) * 2); }
@@ -266,7 +265,7 @@
 .footnote { margin: var(--dreadnought-spacing-x4) 0 0; font-size: var(--dreadnought-font-size-body-3); }
 
 .layerList { display: grid; gap: var(--dreadnought-spacing-x2); margin-block: calc(var(--dreadnought-spacing-x4) * 2); }
-.layerCard { display: grid; gap: var(--dreadnought-spacing-x1); border: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle); }
+.layerCard { display: grid; gap: var(--dreadnought-spacing-x1); }
 .layerList strong { color: var(--dreadnought-color-text-primary); }
 .layerList span { color: var(--dreadnought-color-text-placeholder); }
 .overviewActions { display: flex; flex-wrap: wrap; gap: var(--dreadnought-spacing-x2); }

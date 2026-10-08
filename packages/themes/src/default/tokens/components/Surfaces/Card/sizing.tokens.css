@@ -1,3 +1,4 @@
 :root {
   --dreadnought-card-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-card-border-width: var(--dreadnought-border-width-outline);
 }
