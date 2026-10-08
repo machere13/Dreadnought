@@ -9,10 +9,10 @@
       "exportName": "Table",
       "description": "Таблица данных с сортировкой, фильтрацией, выбором строк и пагинацией; поддерживает также составную разметку.",
       "propertyDescriptions": {
+        "columns": "children задаёт вложенные группы; colSpan/rowSpan шапки считаются автоматически. Ключи всех колонок и групп уникальны, циклы отклоняются. Сортировка, фильтры, render, onCell и width относятся к конечным колонкам. fixed группы наследуют потомки; группа не может пересекать fixed-области. onHeaderCell(column, firstLeafIndex) работает и для групп. Нативные rowSpan/colSpan=0 скрывают ячейку; ручные spans согласует приложение, width/fixed/sticky/aria-sort сохраняются. filteredValue:null очищает управляемый фильтр.",
         "expandable": "Детали строки: expandedRowRender(record, pageIndex), rowExpandable(record), expandedRowKeys/defaultExpandedRowKeys. Ключи сохраняются при сортировке, фильтрах и пагинации; управляемое раскрытие ждёт обновления props. onExpand(expanded, record), затем onExpandedRowsChange(keys). Детали монтируются только открытыми и удаляются при закрытии; состояние формы храните снаружи. Фокус из закрываемых деталей возвращается к кнопке строки. expandIcon(expanded, record) заменяет только содержимое кнопки, columnTitle — заголовок колонки. Не объединяйте rowSpan через раскрываемые строки.",
         "onRow": "Нативные свойства, события и ref строки: (record, index). Индекс относится к текущей странице после фильтрации и сортировки; data-selected сохраняется.",
-        "onHeaderRow": "Нативные свойства, события и ref строки заголовков: (columns, index); для одноуровневой шапки index=0.",
-        "columns": "Колонки и правила отображения, сортировки и фильтрации. onCell(record, pageIndex) и onHeaderCell(column, columnIndex) возвращают нативные свойства, события и ref; содержимое задаётся render/title. rowSpan/colSpan=0 скрывает ячейку. Приложение согласует spans с порядком строк и не объединяет через границы fixed-областей. Для колонок с объединённой/скрытой шапкой задавайте width. width/fixed/sticky и aria-sort сохраняются. filteredValue: null — пустой управляемый фильтр; defaultFilteredValue задаётся только при создании.",
+        "onHeaderRow": "Нативные свойства, события и ref каждой строки шапки: (columnsOfThisRow, rowIndex), начиная с 0. Колонки с rowSpan из предыдущего уровня не повторяются.",
         "dataSource": "Строки таблицы.",
         "rowKey": "Устойчивый ключ строки. При rowSelection или expandable обязателен rowKey или record.key: уникальная строка либо конечное число.",
         "pagination": "current/pageSize — положительные безопасные целые числа; defaultCurrent/defaultPageSize задаются только при создании. Фильтр запрашивает страницу 1, сортировка сохраняет страницу.",
@@ -25,6 +25,7 @@
       },
       "defaults": {},
       "examples": [
+        { "id": "grouped-headers", "code": "import { Table } from '@dreadnought/ui/react';\ntype Person = { key: number; name: string; city: string };\nconst example = <Table<Person> bordered sticky pagination={false} dataSource={[{ key: 1, name: 'Anna', city: 'Moscow' }]} columns={[{ key: 'person', title: 'Person', children: [{ key: 'name', title: 'Name', dataIndex: 'name' }, { key: 'city', title: 'City', dataIndex: 'city' }] }]} />;" },
         {
           "id": "expandable-rows",
           "code": "import { Table } from '@dreadnought/ui/react';\ntype Person = { key: number; name: string; city: string };\nconst example = <Table<Person> pagination={false} dataSource={[{ key: 1, name: 'Anna', city: 'Moscow' }]} columns={[{ key: 'name', title: 'Name', dataIndex: 'name' }]} expandable={{ expandedRowRender: record => <p>{record.city}</p>, defaultExpandedRowKeys: [1] }} />;"

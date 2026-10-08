@@ -6,6 +6,13 @@ import { Table } from '@dreadnought/ui/react';
 afterEach(cleanup);
 
 describe('Table', () => {
+  it('passes grouped columns through the ready facade', () => {
+    render(<Table columns={[{ key: 'person', title: 'Person', children: [
+      { key: 'name', title: 'Name', dataIndex: 'name' }, { key: 'city', title: 'City', dataIndex: 'city' },
+    ] }]} dataSource={[{ key: 1, name: 'Anna', city: 'Moscow' }]} />);
+    expect(screen.getByRole('columnheader', { name: 'Person' }).getAttribute('colspan')).toBe('2');
+    expect(screen.getByRole('cell', { name: 'Moscow' })).toBeTruthy();
+  });
   it('uses the shared icon and preserves custom expansion content', () => {
     const props = { columns: [{ key: 'name', title: 'Name', dataIndex: 'name' as const }], dataSource: [{ key: 1, name: 'Anna' }] };
     const view = render(<Table {...props} expandable={{ expandedRowRender: row => <p>{row.name} details</p> }} />);

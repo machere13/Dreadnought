@@ -1,6 +1,26 @@
 import type { CSSProperties } from 'react';
-import { filterTableRows, sortTableRows } from '@dreadnought/core';
+import { filterTableRows, getTableHeaderRows, sortTableRows } from '@dreadnought/core';
 import type { TableChangeFilters, TableChangeSorter, TableColumn, TableDataAdapterProps, TableRowKey } from './table.types.ts';
+
+export function groupedColumns<RecordType extends object>(source: readonly TableColumn<RecordType>[]) {
+  const layout = getTableHeaderRows(source);
+  const resolved = new Map<string, TableColumn<RecordType>>();
+  for (const row of layout.rows) for (const cell of row) {
+    const column = cell.column;
+    const fixed = column.fixed ?? (cell.parentKey === null ? undefined : resolved.get(cell.parentKey)?.fixed);
+    resolved.set(column.key, fixed === column.fixed ? column : { ...column, fixed });
+  }
+  const columns = layout.columns.map(column => resolved.get(column.key)!);
+  for (const row of layout.rows) for (const cell of row) {
+    if (!cell.column.children?.length) continue;
+    const children = columns.slice(cell.columnIndex, cell.columnIndex + cell.colSpan);
+    const fixed = children[0]?.fixed;
+    if (children.some(column => column.fixed !== fixed)) throw new TypeError('Table column groups cannot cross fixed regions.');
+    const column = resolved.get(cell.column.key)!;
+    resolved.set(column.key, fixed === column.fixed ? column : { ...column, fixed });
+  }
+  return { columns, rows: layout.rows.length ? layout.rows.map(row => row.map(cell => ({ ...cell, column: resolved.get(cell.column.key)! }))) : [[]] };
+}
 
 export function matchingRows<RecordType extends object>(data: readonly RecordType[], columns: readonly TableColumn<RecordType>[],
   filters: TableChangeFilters, sorter: TableChangeSorter) {

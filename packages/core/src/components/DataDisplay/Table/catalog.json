@@ -9,6 +9,15 @@
   "constraints": ["Задайте устойчивый rowKey. Режим columns/dataSource и составная разметка — альтернативные способы построения таблицы."],
   "bindings": [
     {
+      "id": "core-headers",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "getTableHeaderRows",
+      "description": "Независимый от фреймворка расчёт многоуровневой шапки: конечные columns и rows с column, columnIndex, parentKey, colSpan, rowSpan. Сохраняет исходные объекты. Ключи уникальны; пустой children означает конечную колонку. Циклы и дубли отклоняются.",
+      "examples": [{ "id": "grouped-headers", "code": "import { getTableHeaderRows } from '@dreadnought/core';\ntype Column = { key: string; title: string; children?: readonly Column[] };\nconst columns: readonly Column[] = [{ key: 'name', title: 'Name' }, { key: 'contacts', title: 'Contacts', children: [{ key: 'email', title: 'Email' }, { key: 'phone', title: 'Phone' }] }];\nconst layout = getTableHeaderRows(columns);\nconst header = layout.rows.map(row => row.map(cell => ({ title: cell.column.title, colSpan: cell.colSpan, rowSpan: cell.rowSpan })));" }]
+    },
+    {
       "id": "core",
       "layer": 1,
       "framework": null,

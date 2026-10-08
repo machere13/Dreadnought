@@ -12,3 +12,8 @@ const example = <Table<Person> expandable={expandable} columns={columns} dataSou
   onRow={(record, index) => ({ ref: createRef<HTMLTableRowElement>(), title: `${record.id}:${index}` })}
   onHeaderRow={(columns, index) => ({ title: `${columns.length}:${index}` })} />;
 void example;
+const grouped: readonly TableColumn<Person>[] = [{ key: 'person', title: 'Person', children: [
+  { key: 'name', title: 'Name', dataIndex: 'name', sorter: (a, b) => a.name.localeCompare(b.name) },
+  { key: 'id', title: 'ID', dataIndex: 'id', onCell: person => ({ title: String(person.id) }) },
+] }];
+void <Table<Person> columns={grouped} dataSource={[{ id: 1, name: 'Anna' }]} rowKey="id" />;

@@ -9,18 +9,19 @@
       "exportName": "TableAdapter",
       "description": "Доступная разметка и поведение без готового оформления.",
       "propertyDescriptions": {
+        "columns": "children задаёт вложенные группы; colSpan/rowSpan шапки считаются автоматически. Ключи всех колонок и групп уникальны, циклы отклоняются. Сортировка, фильтры, render, onCell и width относятся к конечным колонкам. fixed группы наследуют потомки; группа не может пересекать fixed-области. onHeaderCell(column, firstLeafIndex) работает и для групп. Нативные rowSpan/colSpan=0 скрывают ячейку; ручные spans согласует приложение, width/fixed/sticky/aria-sort сохраняются. filteredValue:null очищает управляемый фильтр.",
         "expandable": "Детали строки: expandedRowRender(record, pageIndex), rowExpandable(record), expandedRowKeys/defaultExpandedRowKeys. Управляемое раскрытие ждёт props; ключи сохраняются при сортировке, фильтрах и пагинации. onExpand(expanded, record), затем onExpandedRowsChange(keys). Детали монтируются только открытыми, удаляются при закрытии; фокус из деталей возвращается к кнопке строки. expandIcon(expanded, record) заменяет содержимое семантической кнопки; columnTitle задаёт заголовок. Не объединяйте rowSpan через раскрываемые строки.",
         "onRow": "Нативные свойства, события и ref строки: (record, index). Индекс относится к текущей странице после фильтрации и сортировки; data-selected сохраняется.",
-        "onHeaderRow": "Нативные свойства, события и ref строки заголовков: (columns, index); для одноуровневой шапки index=0.",
+        "onHeaderRow": "Нативные свойства, события и ref каждой строки шапки: (columnsOfThisRow, rowIndex), начиная с 0. Колонки с rowSpan из предыдущего уровня не повторяются.",
         "rowKey": "При rowSelection или expandable нужен уникальный устойчивый ключ из rowKey или record.key: строка либо конечное число.",
         "rowSelection": "Шапка выбирает только доступные строки текущей страницы; mixed при частичном выборе, disabled при пустом доступном наборе. Выбранные disabled и внестраничные ключи сохраняются. Radio-группы таблиц и фильтров изолированы.",
-        "columns": "onCell(record, pageIndex) и onHeaderCell(column, columnIndex) возвращают нативные свойства, события и ref ячеек; содержимое задаётся render/title. rowSpan/colSpan=0 скрывает ячейку, иначе используются нативные spans. Приложение согласует spans с текущим порядком строк; не объединяйте через границы fixed-областей. Для колонок с объединённой/скрытой шапкой задавайте width. width/fixed/sticky и aria-sort сохраняются при передаче стилей. filteredValue: null — пустой управляемый фильтр; defaultFilteredValue применяется только при создании.",
         "sticky": "Закрепление шапки; offsetHeader — отступ внутри собственного scroll-контейнера таблицы.",
         "scroll": "Собственный контейнер прокрутки; x — минимальная ширина таблицы, y — максимальная высота контейнера. Изменения ширин отслеживаются через ResizeObserver.",
         "pagination": "current/pageSize — положительные безопасные целые числа. defaultCurrent/defaultPageSize применяются только при создании. Фильтр запрашивает страницу 1, сортировка сохраняет текущую.",
         "onChange": "extra.action: sort/filter/paginate; currentDataSource содержит все строки после фильтрации и сортировки, до пагинации. При фильтре и смене страницы сначала вызывается pagination.onChange, затем onChange. Изменение props событий не вызывает."
       },
       "examples": [
+        { "id": "grouped-headers", "code": "import { TableAdapter } from '@dreadnought/react/unstyled';\ntype Person = { key: number; name: string; city: string };\nconst example = <TableAdapter<Person> sticky pagination={false} dataSource={[{ key: 1, name: 'Anna', city: 'Moscow' }]} columns={[{ key: 'person', title: 'Person', children: [{ key: 'name', title: 'Name', dataIndex: 'name' }, { key: 'city', title: 'City', dataIndex: 'city' }] }]} />;" },
         {
           "id": "expandable-rows",
           "code": "import { TableAdapter } from '@dreadnought/react/unstyled';\ntype Person = { key: number; name: string };\nconst example = <TableAdapter<Person> pagination={false} dataSource={[{ key: 1, name: 'Anna' }]} columns={[{ key: 'name', title: 'Name', dataIndex: 'name' }]} expandable={{ expandedRowRender: record => <p>{record.name}</p>, defaultExpandedRowKeys: [1] }} />;"

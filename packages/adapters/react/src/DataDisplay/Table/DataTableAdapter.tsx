@@ -1,4 +1,4 @@
-import { Fragment, useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { getDisclosureState, getPaginationState, getSelectionValue, paginateTableRows } from '@dreadnought/core';
 import type { TableSortOrder } from '@dreadnought/core';
@@ -8,16 +8,28 @@ import { TableFilterMenu } from './TableFilterMenu.tsx';
 import { TableDetailRow } from './TableDetailRow.tsx';
 import { ButtonAdapter } from '../../Controls/Button/index.ts';
 import { useTableWidths } from './useTableWidths.ts';
-import { cellValue, fixedStyle, matchingRows, paginationNumber, recordKey } from './tableData.ts';
+import { cellValue, fixedStyle, groupedColumns, matchingRows, paginationNumber, recordKey } from './tableData.ts';
 import type { TableChangeFilters, TableChangeSorter, TableColumn, TableDataAdapterProps, TableFilterValue, TableRowKey } from './table.types.ts';
 
 export function DataTableAdapter<RecordType extends object>({
-  columns, dataSource, rowKey, pagination, rowSelection, expandable, onRow, onHeaderRow, sticky, scroll, locale, onChange, ...tableProps
+  columns: columnTree, dataSource, rowKey, pagination, rowSelection, expandable, onRow, onHeaderRow, sticky, scroll, locale, onChange, ...tableProps
 }: TableDataAdapterProps<RecordType>) {
   const selectionName = useId();
-  const headerCells = columns.map((column, index) => column.onHeaderCell?.(column, index));
-  const headerSpans = headerCells.map(cell => `${cell?.colSpan ?? 1}:${cell?.rowSpan ?? 1}`).join(',');
-  const { table: tableRef, widths, selectionWidth, expansionWidth } = useTableWidths(columns, Boolean(rowSelection), headerSpans, Boolean(expandable));
+  const { columns, rows: headerRows } = useMemo(() => groupedColumns(columnTree), [columnTree]);
+  const headerCells = headerRows.map(row => row.map(cell => cell.column.onHeaderCell?.(cell.column, cell.columnIndex)));
+  const headerSpans = headerRows.map((row, rowIndex) => row.map((cell, index) =>
+    `${cell.column.key}:${headerCells[rowIndex]![index]?.colSpan ?? cell.colSpan}:${headerCells[rowIndex]![index]?.rowSpan ?? cell.rowSpan}`).join(',')).join(';');
+  const { table: tableRef, widths, selectionWidth, expansionWidth, headerOffsets } = useTableWidths(columns,
+    { selection: Boolean(rowSelection), expansion: Boolean(expandable), sticky: Boolean(sticky), signature: headerSpans });
+  const headerIds = new Map<string, string>();
+  const columnHeaders = columns.map(() => [] as string[]);
+  headerRows.forEach((row, rowIndex) => row.forEach((cell, index) => {
+    const props = headerCells[rowIndex]![index];
+    if (props?.colSpan === 0 || props?.rowSpan === 0) return;
+    const id = props?.id ?? `${selectionName}-header-${encodeURIComponent(cell.column.key)}`;
+    headerIds.set(cell.column.key, id);
+    for (let leaf = cell.columnIndex; leaf < cell.columnIndex + cell.colSpan; leaf++) columnHeaders[leaf]!.push(id);
+  }));
   const controlWidth = selectionWidth + expansionWidth;
   const [expanded, setExpanded] = useState<TableRowKey[]>(() => [...(expandable?.defaultExpandedRowKeys ?? [])]);
   const expandedKeys = expandable?.expandedRowKeys ?? expanded;
@@ -121,8 +133,8 @@ export function DataTableAdapter<RecordType extends object>({
   } as CSSProperties;
 
   const table = <table {...tableProps} ref={tableRef} data-ui="table" data-sticky={Boolean(sticky)} style={tableStyle}>
-    <thead><tr {...onHeaderRow?.(columns, 0)}>
-      {rowSelection && <th scope="col" data-slot="selection-cell" data-fixed="left" style={{ ...headerStyle, position: 'sticky', left: 0, zIndex: 3 }} aria-label="Выбор строк">
+    <thead>{headerRows.map((headerRow, rowIndex) => <tr key={rowIndex} {...onHeaderRow?.(headerRow.map(cell => cell.column), rowIndex)}>
+      {rowIndex === 0 && rowSelection && <th rowSpan={headerRows.length} scope="col" data-slot="selection-cell" data-fixed="left" style={{ ...headerStyle, position: 'sticky', left: 0, zIndex: 3 }} aria-label="Выбор строк">
         {rowSelection.type !== 'radio' && <CheckboxAdapter
           aria-label="Выбрать все строки на странице"
           checked={keysOnPage.length > 0 && selectedOnPage === keysOnPage.length}
@@ -133,29 +145,36 @@ export function DataTableAdapter<RecordType extends object>({
             : selectedKeys.filter((key) => !keysOnPage.includes(key)))}
         />}
       </th>}
-      {expandable && <th scope="col" data-slot="expansion-cell" data-fixed="left"
+      {rowIndex === 0 && expandable && <th rowSpan={headerRows.length} scope="col" data-slot="expansion-cell" data-fixed="left"
         style={{ ...headerStyle, position: 'sticky', left: selectionWidth, zIndex: 3 }} aria-label="Раскрытие строк">
         {expandable.columnTitle}
       </th>}
-      {columns.map((column, index) => {
-        const cellProps = headerCells[index];
+      {headerRow.map((cell, index) => {
+        const { column, columnIndex, colSpan, rowSpan } = cell;
+        const group = Boolean(column.children?.length);
+        const cellProps = headerCells[rowIndex]![index];
         if (cellProps?.colSpan === 0 || cellProps?.rowSpan === 0) return null;
-        const order = activeColumn?.key === column.key ? activeOrder : null;
+        const order = !group && activeColumn?.key === column.key ? activeOrder : null;
         const values = filterValues(column);
-        const ariaSort = column.sorter
+        const ariaSort = !group && column.sorter
           ? order === 'ascend' ? 'ascending' : order === 'descend' ? 'descending' : 'none'
           : undefined;
         return <th
           {...cellProps}
           key={column.key}
-          scope={cellProps?.scope ?? 'col'}
+          id={headerIds.get(column.key)}
+          scope={cellProps?.scope ?? (group ? 'colgroup' : 'col')}
+          colSpan={cellProps?.colSpan ?? colSpan}
+          rowSpan={cellProps?.rowSpan ?? rowSpan}
           data-slot="header-cell"
-          data-column-index={index}
+          data-column-index={group ? undefined : columnIndex}
           data-fixed={column.fixed}
           aria-sort={ariaSort}
-          style={{ ...cellProps?.style, ...fixedStyle(columns, index, widths, controlWidth), ...headerStyle, ...(column.fixed ? { zIndex: 3 } : {}) }}
+          style={{ ...cellProps?.style, ...fixedStyle(columns, column.fixed === 'right' ? columnIndex + colSpan - 1 : columnIndex, widths, controlWidth),
+            ...(group ? { width: undefined, minWidth: undefined } : {}), ...headerStyle,
+            ...(sticky ? { top: (headerStyle.top as number) + (headerOffsets[rowIndex] ?? 0) } : {}), ...(column.fixed ? { zIndex: 3 } : {}) }}
         >
-          {column.sorter ? <button
+          {!group && column.sorter ? <button
             type="button"
             data-slot="sort-trigger"
             aria-label={column.sortLabel ?? `Сортировать ${String(column.title ?? column.key)}`}
@@ -164,10 +183,10 @@ export function DataTableAdapter<RecordType extends object>({
             {column.title}
             <span data-slot="sort-indicator" aria-hidden="true">{order === 'ascend' ? '↑' : order === 'descend' ? '↓' : '↕'}</span>
           </button> : column.title}
-          <TableFilterMenu column={column} values={values} onApply={(next) => changeFilter(column, next)} />
+          {!group && <TableFilterMenu column={column} values={values} onApply={(next) => changeFilter(column, next)} />}
         </th>;
       })}
-    </tr></thead>
+    </tr>)}</thead>
     <tbody>{rows.length ? rows.map((record, rowIndex) => {
       const key = recordKey(record, rowKey, rowSelection || expandable ? undefined : (currentPage - 1) * pageSize + rowIndex);
       const canExpand = Boolean(expandable && (expandable.rowExpandable?.(record) ?? true));
@@ -197,6 +216,7 @@ export function DataTableAdapter<RecordType extends object>({
           if (cellProps?.colSpan === 0 || cellProps?.rowSpan === 0) return null;
           const value = cellValue(record, column.dataIndex);
           return <td {...cellProps} key={column.key} data-slot="cell" data-fixed={column.fixed}
+            headers={cellProps?.headers ?? columnHeaders[index]?.join(' ')}
             style={{ ...cellProps?.style, ...fixedStyle(columns, index, widths, controlWidth) }}>
             {column.render ? column.render(value, record, rowIndex) : String(value ?? '')}
           </td>;

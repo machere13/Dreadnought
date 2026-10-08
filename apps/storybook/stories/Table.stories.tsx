@@ -124,3 +124,17 @@ export const ExpandableRows: Story = { render: () => <Table<(typeof people)[numb
     { key: 'role', title: 'Роль', dataIndex: 'role', width: 260 }]}
   expandable={{ defaultExpandedRowKeys: [1], rowExpandable: record => record.id !== 5,
     expandedRowRender: record => <p>{record.name}: {record.age} лет, {record.city}</p> }} /> };
+
+export const GroupedHeaders: Story = { render: () => <Table<(typeof people)[number]> aria-label="Группы колонок"
+  bordered sticky scroll={{ x: 900, y: 260 }} rowKey="id" dataSource={people} pagination={false} rowSelection={{}}
+  expandable={{ expandedRowRender: record => <p>{record.name} — {record.role}</p> }}
+  columns={[
+    { key: 'person', title: 'Участник', fixed: 'left', children: [
+      { key: 'name', title: 'Имя', dataIndex: 'name', width: 160 },
+      { key: 'age', title: 'Возраст', dataIndex: 'age', width: 100, sorter: (a, b) => a.age - b.age },
+    ] },
+    { key: 'work', title: 'Работа', children: [
+      { key: 'role', title: 'Роль', dataIndex: 'role', width: 240 },
+      { key: 'location', title: 'Местоположение', children: [{ key: 'city', title: 'Город', dataIndex: 'city', width: 260 }] },
+    ] },
+  ]} /> };

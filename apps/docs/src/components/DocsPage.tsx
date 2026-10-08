@@ -167,6 +167,15 @@ function ButtonDemo() {
 
 function TableDemo() {
   return <div className={styles.demo}>
+    <Table<{ key: number; name: string; email: string; city: string }> aria-label="Многоуровневая шапка" bordered sticky scroll={{ x: 700, y: 240 }} pagination={false}
+      dataSource={[{ key: 1, name: 'Анна', email: 'anna@example.com', city: 'Москва' }, { key: 2, name: 'Марк', email: 'mark@example.com', city: 'Казань' }]}
+      columns={[
+        { key: 'name', title: 'Участник', dataIndex: 'name', width: 160, fixed: 'left' },
+        { key: 'contacts', title: 'Контакты', children: [
+          { key: 'email', title: 'Почта', dataIndex: 'email', width: 260 },
+          { key: 'address', title: 'Адрес', children: [{ key: 'city', title: 'Город', dataIndex: 'city', width: 180 }] },
+        ] },
+      ]} />
     <Table
       aria-label="Пример таблицы"
       rowKey="id"
@@ -256,9 +265,9 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
   table: {
   ...getCatalogDoc('table'),
     title: 'Table',
-    description: 'Структурированные данные с сортировкой, фильтрами, выбором строк, пагинацией, объединением ячеек и закреплением шапки и колонок.',
+    description: 'Структурированные данные с группами колонок, сортировкой, фильтрами, выбором и раскрытием строк, пагинацией и закреплением шапки.',
     adapterDescription: 'Адаптер сохраняет семантику и поведение таблицы, но позволяет оформить её самостоятельно.',
-    logicDescription: 'Функции ядра обрабатывают строки данных, если нужна собственная разметка таблицы.',
+    logicDescription: 'Ядро рассчитывает уровни и объединения шапки, сортирует и фильтрует строки — независимо от фреймворка.',
     footnote: <>Для закреплённых колонок задайте <code>fixed</code>; их ширина измеряется автоматически, <code>width</code> задаёт необязательный минимум. Для колонок с объединённым или скрытым заголовком указывайте <code>width</code>: ширину каждой части нельзя измерить отдельно. <code>scroll</code> создаёт собственный контейнер прокрутки. При <code>rowSelection</code> обязателен уникальный ключ из <code>rowKey</code> или <code>record.key</code>: строка либо конечное число. <code>filteredValue: null</code> очищает управляемый фильтр. Фильтрация запрашивает страницу 1, сортировка сохраняет страницу; причина изменения доступна в <code>extra.action</code>. <code>onRow</code>, <code>onHeaderRow</code>, <code>column.onCell</code> и <code>column.onHeaderCell</code> возвращают нативные свойства, события и ref. Индекс строки относится к текущей странице после сортировки и фильтрации. Содержимое задаётся через render/title; геометрия width/fixed/sticky и aria-sort сохраняются. <code>rowSpan/colSpan=0</code> скрывает ячейку; остальные значения объединяют её. Согласованные spans и их пересчёт при изменении порядка строк задаёт приложение; не объединяйте ячейки через границу закреплённых областей.</>,
     demo: <TableDemo />,
   },

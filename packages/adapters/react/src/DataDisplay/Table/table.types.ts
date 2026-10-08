@@ -7,6 +7,7 @@ export type TableFilterValue = string | number;
 export type TableColumn<RecordType extends object> = {
   key: string;
   title: ReactNode;
+  children?: readonly TableColumn<RecordType>[];
   dataIndex?: keyof RecordType | readonly (string | number)[];
   render?: (value: unknown, record: RecordType, index: number) => ReactNode;
   onCell?: (record: RecordType, index: number) => Omit<ComponentPropsWithRef<'td'>, 'children' | 'dangerouslySetInnerHTML'>;
