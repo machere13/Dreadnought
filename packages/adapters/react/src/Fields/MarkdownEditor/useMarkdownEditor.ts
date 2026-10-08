@@ -23,6 +23,14 @@ import {
 import { beforeInputEvent } from './beforeInputEvent.ts';
 import { useMarkdownImageUpload } from './useMarkdownImageUpload.ts';
 
+type PendingEdit = {
+  document: MarkdownDocument;
+  history: HistoryState<MarkdownDocument>;
+  element: HTMLTextAreaElement;
+  focus: boolean;
+  composition: boolean;
+};
+
 const normalize = (text: string) => text.replace(/\r\n?/g, '\n');
 const readSelection = (node: HTMLTextAreaElement): MarkdownSelection => ({
   start: node.selectionStart,
@@ -94,13 +102,7 @@ export function useMarkdownEditor({
   const group = useRef<{ type: string; time: number } | null>(null);
   const compositionChanged = useRef(false);
   const compositionEnding = useRef<object | null>(null);
-  const pending = useRef<{
-    document: MarkdownDocument;
-    history: HistoryState<MarkdownDocument>;
-    element: HTMLTextAreaElement;
-    focus: boolean;
-    composition: boolean;
-  } | null>(null);
+  const pendingEdit = useRef<PendingEdit | null>(null);
   const [selection, setSelection] = useState<MarkdownSelection>({ start: 0, end: 0 });
   const [, update] = useState(0);
 
@@ -118,7 +120,7 @@ export function useMarkdownEditor({
     onPreviewChange?.(next);
   }
 
-  function publish(state: HistoryState<MarkdownDocument>, focus: boolean, composition = false) {
+  function proposeEdit(state: HistoryState<MarkdownDocument>, focus: boolean, composition = false) {
     const current = node.current;
     if (!current) {
       return;
@@ -126,7 +128,7 @@ export function useMarkdownEditor({
     if (state.present.text !== history.current.present.text) {
       image.cancelImageUpload();
     }
-    pending.current = {
+    pendingEdit.current = {
       document: state.present,
       history: state,
       element: current,
@@ -153,8 +155,19 @@ export function useMarkdownEditor({
     const state = history.current;
     const next = getHistoryState(state, { type }, { limit: historyLimit });
     if (next !== state) {
-      publish(next, true);
+      proposeEdit(next, true);
     }
+  }
+
+  function proposeDocument(previous: MarkdownDocument, next: MarkdownDocument) {
+    group.current = null;
+    compositionEnding.current = null;
+    const state = getHistoryState(
+      history.current,
+      { type: 'replace', value: previous },
+      { limit: historyLimit },
+    );
+    proposeEdit(recordDocument(state, next, false, historyLimit), true);
   }
 
   function execute(command: MarkdownCommand) {
@@ -169,19 +182,14 @@ export function useMarkdownEditor({
       return;
     }
     const previous =
-      !controlled && pending.current?.element === current ? pending.current.document : undefined;
+      !controlled && pendingEdit.current?.element === current
+        ? pendingEdit.current.document
+        : undefined;
     const result = applyMarkdownCommand(
       previous ?? { text: current.value, selection: readSelection(current) },
       command,
     );
-    group.current = null;
-    compositionEnding.current = null;
-    const state = getHistoryState(
-      history.current,
-      { type: 'replace', value: previous ?? snapshot(current.value, readSelection(current)) },
-      { limit: historyLimit },
-    );
-    publish(recordDocument(state, result, false, historyLimit), true);
+    proposeDocument(previous ?? snapshot(current.value, readSelection(current)), result);
   }
 
   const image = useMarkdownImageUpload({
@@ -197,20 +205,11 @@ export function useMarkdownEditor({
       ) {
         return null;
       }
-      return !controlled && pending.current?.element === current
-        ? pending.current.document
+      return !controlled && pendingEdit.current?.element === current
+        ? pendingEdit.current.document
         : snapshot(current.value, readSelection(current));
     },
-    insert: (document, result) => {
-      group.current = null;
-      compositionEnding.current = null;
-      const state = getHistoryState(
-        history.current,
-        { type: 'replace', value: document },
-        { limit: historyLimit },
-      );
-      publish(recordDocument(state, result, false, historyLimit), true);
-    },
+    insert: proposeDocument,
   });
 
   const acceptsImage = () =>
@@ -259,7 +258,7 @@ export function useMarkdownEditor({
     },
     onChange(event) {
       onChange?.(event);
-      pending.current = null;
+      pendingEdit.current = null;
       if (event.defaultPrevented || options.disabled || options.readOnly) {
         return;
       }
@@ -281,14 +280,14 @@ export function useMarkdownEditor({
           ? { type: inputType, time }
           : null;
       setSelection(document.selection);
-      publish(state, false, composition);
+      proposeEdit(state, false, composition);
     },
     onSelect(event) {
       onSelect?.(event);
-      if (event.defaultPrevented || pending.current) {
+      if (event.defaultPrevented || pendingEdit.current) {
         return;
       }
-      pending.current = null;
+      pendingEdit.current = null;
       const next = readSelection(event.currentTarget);
       if (!sameSelection(history.current.present.selection, next)) {
         group.current = null;
@@ -310,7 +309,7 @@ export function useMarkdownEditor({
       compositionEnding.current = null;
       compositionChanged.current = false;
       group.current = null;
-      pending.current = null;
+      pendingEdit.current = null;
       onCompositionStart?.(event);
     },
     onCompositionEnd(event) {
@@ -359,7 +358,7 @@ export function useMarkdownEditor({
     (current: HTMLTextAreaElement | null) => {
       if (node.current !== current) {
         image.cancelImageUpload();
-        pending.current = null;
+        pendingEdit.current = null;
         composing.current = false;
         compositionEnding.current = null;
         group.current = null;
@@ -371,15 +370,32 @@ export function useMarkdownEditor({
     [area.textAreaRef, image.cancelImageUpload],
   );
 
+  function restoreSelection(edit: PendingEdit) {
+    if (
+      edit.element !== node.current ||
+      edit.document.text !== value ||
+      !edit.focus ||
+      options.disabled ||
+      options.readOnly ||
+      composing.current
+    ) {
+      return;
+    }
+    edit.element.setSelectionRange(edit.document.selection.start, edit.document.selection.end);
+    if (preview !== 'preview') {
+      edit.element.focus();
+    }
+  }
+
   useLayoutEffect(() => {
-    const result = pending.current;
-    pending.current = null;
-    if (result && result.element === node.current && result.document.text === value) {
-      if (result.composition && history.current.present.text !== value) {
+    const edit = pendingEdit.current;
+    pendingEdit.current = null;
+    if (edit && edit.element === node.current && edit.document.text === value) {
+      if (edit.composition && history.current.present.text !== value) {
         compositionChanged.current = true;
       }
-      if (history.current !== result.history) {
-        history.current = result.history;
+      if (history.current !== edit.history) {
+        history.current = edit.history;
         update((revision) => revision + 1);
       }
     } else if (history.current.present.text !== value) {
@@ -391,25 +407,11 @@ export function useMarkdownEditor({
       compositionChanged.current = false;
       compositionEnding.current = null;
       update((revision) => revision + 1);
-    } else if (result) {
+    } else if (edit) {
       group.current = null;
     }
-    if (
-      result &&
-      result.element === node.current &&
-      result.document.text === value &&
-      result.focus &&
-      !options.disabled &&
-      !options.readOnly &&
-      !composing.current
-    ) {
-      result.element.setSelectionRange(
-        result.document.selection.start,
-        result.document.selection.end,
-      );
-      if (preview !== 'preview') {
-        result.element.focus();
-      }
+    if (edit) {
+      restoreSelection(edit);
     }
     if (node.current) {
       const next = readSelection(node.current);
@@ -467,7 +469,7 @@ export function useMarkdownEditor({
           return;
         }
         image.cancelImageUpload();
-        pending.current = null;
+        pendingEdit.current = null;
         group.current = null;
         if (!controlled) {
           history.current = baseline(snapshot(initial.current, { start: 0, end: 0 }));
