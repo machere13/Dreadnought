@@ -6,6 +6,9 @@
   .root thead > tr:first-child > :is(.headerCell, [data-slot='header-cell']):first-child { border-start-start-radius: var(--dreadnought-table-header-radius); }
   .root thead > tr:first-child > :is(.headerCell, [data-slot='header-cell']):last-child { border-start-end-radius: var(--dreadnought-table-header-radius); }
   .root [data-slot='header-cell'][scope='colgroup'] { text-align: center; }
+  .root[data-ellipsis='true'] { table-layout: fixed; }
+  .root [data-slot='ellipsis'] { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .root [data-slot='ellipsis']:focus-visible { outline: var(--dreadnought-table-border-width) solid currentColor; outline-offset: var(--dreadnought-table-control-gap); }
   .root[data-row-hoverable='true'] tbody tr:hover > * { background: var(--dreadnought-table-row-bg-hover); }
   .root[data-size='middle'] { --dreadnought-table-active-padding-block: var(--dreadnought-table-cell-padding-block-middle); --dreadnought-table-active-padding-inline: var(--dreadnought-table-cell-padding-inline-middle); }
   .root[data-size='small'] { --dreadnought-table-active-padding-block: var(--dreadnought-table-cell-padding-block-small); --dreadnought-table-active-padding-inline: var(--dreadnought-table-cell-padding-inline-small); }

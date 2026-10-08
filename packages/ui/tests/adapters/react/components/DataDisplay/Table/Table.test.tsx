@@ -6,6 +6,19 @@ import { Table } from '@dreadnought/ui/react';
 afterEach(cleanup);
 
 describe('Table', () => {
+  it('styles the shared ellipsis tooltip without losing consumer options', () => {
+    render(<Table columns={[{ key: 'name', title: 'Name', dataIndex: 'name', ellipsis: true }]}
+      slotProps={{ tooltip: { className: 'consumer-tooltip', closeDelay: 0, placement: 'bottom' } }}
+      dataSource={[{ key: 1, name: 'Full name' }]} />);
+    const trigger = screen.getByText('Full name');
+    fireEvent.focus(trigger);
+    const tooltip = screen.getByRole('tooltip');
+    expect(tooltip.className).toContain('consumer-tooltip');
+    expect(tooltip.className).not.toBe('consumer-tooltip');
+    expect(tooltip.textContent).toBe('Full name');
+    fireEvent.blur(trigger);
+    expect(screen.queryByRole('tooltip')).toBeNull();
+  });
   it('passes grouped columns through the ready facade', () => {
     render(<Table columns={[{ key: 'person', title: 'Person', children: [
       { key: 'name', title: 'Name', dataIndex: 'name' }, { key: 'city', title: 'City', dataIndex: 'city' },

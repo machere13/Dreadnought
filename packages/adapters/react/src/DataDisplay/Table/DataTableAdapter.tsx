@@ -6,13 +6,14 @@ import { CheckboxAdapter } from '../../Fields/Checkbox/CheckboxAdapter.tsx';
 import { PaginationAdapter } from '../../Navigation/Pagination/index.ts';
 import { TableFilterMenu } from './TableFilterMenu.tsx';
 import { TableDetailRow } from './TableDetailRow.tsx';
+import { TableEllipsis } from './TableEllipsis.tsx';
 import { ButtonAdapter } from '../../Controls/Button/index.ts';
 import { useTableWidths } from './useTableWidths.ts';
 import { cellValue, fixedStyle, groupedColumns, matchingRows, paginationNumber, recordKey } from './tableData.ts';
 import type { TableChangeFilters, TableChangeSorter, TableColumn, TableDataAdapterProps, TableFilterValue, TableRowKey } from './table.types.ts';
 
 export function DataTableAdapter<RecordType extends object>({
-  columns: columnTree, dataSource, rowKey, pagination, rowSelection, expandable, onRow, onHeaderRow, sticky, scroll, locale, onChange, ...tableProps
+  columns: columnTree, dataSource, rowKey, pagination, rowSelection, expandable, onRow, onHeaderRow, sticky, scroll, locale, slotProps, onChange, ...tableProps
 }: TableDataAdapterProps<RecordType>) {
   const selectionName = useId();
   const { columns, rows: headerRows } = useMemo(() => groupedColumns(columnTree), [columnTree]);
@@ -132,7 +133,7 @@ export function DataTableAdapter<RecordType extends object>({
     ...(scroll?.x ? { minWidth: scroll.x } : {}),
   } as CSSProperties;
 
-  const table = <table {...tableProps} ref={tableRef} data-ui="table" data-sticky={Boolean(sticky)} style={tableStyle}>
+  const table = <table {...tableProps} ref={tableRef} data-ui="table" data-sticky={Boolean(sticky)} data-ellipsis={columns.some(column => column.ellipsis)} style={tableStyle}>
     <thead>{headerRows.map((headerRow, rowIndex) => <tr key={rowIndex} {...onHeaderRow?.(headerRow.map(cell => cell.column), rowIndex)}>
       {rowIndex === 0 && rowSelection && <th rowSpan={headerRows.length} scope="col" data-slot="selection-cell" data-fixed="left" style={{ ...headerStyle, position: 'sticky', left: 0, zIndex: 3 }} aria-label="Выбор строк">
         {rowSelection.type !== 'radio' && <CheckboxAdapter
@@ -170,7 +171,7 @@ export function DataTableAdapter<RecordType extends object>({
           data-column-index={group ? undefined : columnIndex}
           data-fixed={column.fixed}
           aria-sort={ariaSort}
-          style={{ ...cellProps?.style, ...fixedStyle(columns, column.fixed === 'right' ? columnIndex + colSpan - 1 : columnIndex, widths, controlWidth),
+          style={{ textAlign: column.align, ...cellProps?.style, ...fixedStyle(columns, column.fixed === 'right' ? columnIndex + colSpan - 1 : columnIndex, widths, controlWidth),
             ...(group ? { width: undefined, minWidth: undefined } : {}), ...headerStyle,
             ...(sticky ? { top: (headerStyle.top as number) + (headerOffsets[rowIndex] ?? 0) } : {}), ...(column.fixed ? { zIndex: 3 } : {}) }}
         >
@@ -182,7 +183,7 @@ export function DataTableAdapter<RecordType extends object>({
           >
             {column.title}
             <span data-slot="sort-indicator" aria-hidden="true">{order === 'ascend' ? '↑' : order === 'descend' ? '↓' : '↕'}</span>
-          </button> : column.title}
+          </button> : column.ellipsis ? <TableEllipsis tooltip={slotProps?.tooltip}>{column.title}</TableEllipsis> : column.title}
           {!group && <TableFilterMenu column={column} values={values} onApply={(next) => changeFilter(column, next)} />}
         </th>;
       })}
@@ -215,10 +216,11 @@ export function DataTableAdapter<RecordType extends object>({
           const cellProps = column.onCell?.(record, rowIndex);
           if (cellProps?.colSpan === 0 || cellProps?.rowSpan === 0) return null;
           const value = cellValue(record, column.dataIndex);
+          const content = column.render ? column.render(value, record, rowIndex) : String(value ?? '');
           return <td {...cellProps} key={column.key} data-slot="cell" data-fixed={column.fixed}
             headers={cellProps?.headers ?? columnHeaders[index]?.join(' ')}
-            style={{ ...cellProps?.style, ...fixedStyle(columns, index, widths, controlWidth) }}>
-            {column.render ? column.render(value, record, rowIndex) : String(value ?? '')}
+            style={{ textAlign: column.align, ...cellProps?.style, ...fixedStyle(columns, index, widths, controlWidth) }}>
+            {column.ellipsis ? <TableEllipsis tooltip={slotProps?.tooltip}>{content}</TableEllipsis> : content}
           </td>;
         })}
       </tr>{open && expandable && <TableDetailRow id={disclosure.panelProps.id} triggerId={disclosure.triggerProps.id}

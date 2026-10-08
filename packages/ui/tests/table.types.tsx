@@ -14,6 +14,6 @@ const example = <Table<Person> expandable={expandable} columns={columns} dataSou
 void example;
 const grouped: readonly TableColumn<Person>[] = [{ key: 'person', title: 'Person', children: [
   { key: 'name', title: 'Name', dataIndex: 'name', sorter: (a, b) => a.name.localeCompare(b.name) },
-  { key: 'id', title: 'ID', dataIndex: 'id', onCell: person => ({ title: String(person.id) }) },
+  { key: 'id', title: 'ID', dataIndex: 'id', hidden: false, align: 'right', ellipsis: true, onCell: person => ({ title: String(person.id) }) },
 ] }];
-void <Table<Person> columns={grouped} dataSource={[{ id: 1, name: 'Anna' }]} rowKey="id" />;
+void <Table<Person> columns={grouped} dataSource={[{ id: 1, name: 'Anna' }]} rowKey="id" slotProps={{ tooltip: { openDelay: 0, placement: 'bottom' } }} />;

@@ -14,7 +14,7 @@
       "framework": null,
       "importPath": "@dreadnought/core",
       "exportName": "getTableHeaderRows",
-      "description": "Независимый от фреймворка расчёт многоуровневой шапки: конечные columns и rows с column, columnIndex, parentKey, colSpan, rowSpan. Сохраняет исходные объекты. Ключи уникальны; пустой children означает конечную колонку. Циклы и дубли отклоняются.",
+      "description": "Независимый от фреймворка расчёт шапки: конечные columns и rows с column, columnIndex, parentKey, colSpan, rowSpan. hidden удаляет колонку или всю ветку; группы без видимых потомков удаляются, глубина и spans пересчитываются. Сохраняет исходные объекты. Пустой children означает конечную колонку. Ключи уникальны; циклы и дубли отклоняются, в том числе в скрытых ветках.",
       "examples": [{ "id": "grouped-headers", "code": "import { getTableHeaderRows } from '@dreadnought/core';\ntype Column = { key: string; title: string; children?: readonly Column[] };\nconst columns: readonly Column[] = [{ key: 'name', title: 'Name' }, { key: 'contacts', title: 'Contacts', children: [{ key: 'email', title: 'Email' }, { key: 'phone', title: 'Phone' }] }];\nconst layout = getTableHeaderRows(columns);\nconst header = layout.rows.map(row => row.map(cell => ({ title: cell.column.title, colSpan: cell.colSpan, rowSpan: cell.rowSpan })));" }]
     },
     {

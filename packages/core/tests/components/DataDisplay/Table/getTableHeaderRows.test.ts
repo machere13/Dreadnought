@@ -38,3 +38,17 @@ it('handles deeply nested groups without recursive stack overflow', () => {
   expect(result.rows).toHaveLength(12001);
   expect(result.columns.map(column => column.key)).toEqual(['leaf']);
 });
+
+it('removes hidden branches and empty groups before calculating depth and spans', () => {
+  const result = core.getTableHeaderRows([
+    { key: 'name' },
+    { key: 'contact', children: [{ key: 'email', hidden: true }, { key: 'city' }] },
+    { key: 'empty', children: [{ key: 'zip', hidden: true }] },
+    { key: 'secret', hidden: true, children: [{ key: 'deep', children: [{ key: 'value' }] }] },
+  ]);
+  expect(result.columns.map(column => column.key)).toEqual(['name', 'city']);
+  expect(result.rows.map(row => row.map(cell => [cell.column.key, cell.columnIndex, cell.colSpan, cell.rowSpan]))).toEqual([
+    [['name', 0, 1, 2], ['contact', 1, 1, 1]], [['city', 1, 1, 1]],
+  ]);
+  expect(core.getTableHeaderRows([{ key: 'hidden', hidden: true }])).toEqual({ columns: [], rows: [] });
+});

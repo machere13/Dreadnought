@@ -166,14 +166,16 @@ function ButtonDemo() {
 }
 
 function TableDemo() {
+  const [hideCity, setHideCity] = useState(false);
   return <div className={styles.demo}>
-    <Table<{ key: number; name: string; email: string; city: string }> aria-label="Многоуровневая шапка" bordered sticky scroll={{ x: 700, y: 240 }} pagination={false}
-      dataSource={[{ key: 1, name: 'Анна', email: 'anna@example.com', city: 'Москва' }, { key: 2, name: 'Марк', email: 'mark@example.com', city: 'Казань' }]}
+    <Button variant="secondary" size="compact" onClick={() => setHideCity(!hideCity)}>{hideCity ? 'Показать город' : 'Скрыть город'}</Button>
+    <Table<{ key: number; name: string; email: string; city: string }> aria-label="Многоуровневая шапка" bordered sticky scroll={{ x: 700, y: 320 }} pagination={false}
+      dataSource={[{ key: 1, name: 'Анна', email: 'anna.very.long.email.address.for.documentation@example.com', city: 'Москва' }, { key: 2, name: 'Марк', email: 'mark@example.com', city: 'Казань' }]}
       columns={[
         { key: 'name', title: 'Участник', dataIndex: 'name', width: 160, fixed: 'left' },
         { key: 'contacts', title: 'Контакты', children: [
-          { key: 'email', title: 'Почта', dataIndex: 'email', width: 260 },
-          { key: 'address', title: 'Адрес', children: [{ key: 'city', title: 'Город', dataIndex: 'city', width: 180 }] },
+          { key: 'email', title: 'Почта', dataIndex: 'email', width: 260, ellipsis: true },
+          { key: 'address', title: 'Адрес', children: [{ key: 'city', title: 'Город', dataIndex: 'city', width: 180, align: 'center', hidden: hideCity }] },
         ] },
       ]} />
     <Table

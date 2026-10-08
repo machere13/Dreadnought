@@ -1,5 +1,6 @@
 import type { ComponentPropsWithRef, ReactNode } from 'react';
 import type { TableSortOrder } from '@dreadnought/core';
+import type { TooltipAdapterProps } from '../../Overlays/Tooltip/index.ts';
 
 export type TableRowKey = string | number;
 export type TableFilterValue = string | number;
@@ -8,6 +9,9 @@ export type TableColumn<RecordType extends object> = {
   key: string;
   title: ReactNode;
   children?: readonly TableColumn<RecordType>[];
+  hidden?: boolean;
+  align?: 'left' | 'center' | 'right';
+  ellipsis?: boolean;
   dataIndex?: keyof RecordType | readonly (string | number)[];
   render?: (value: unknown, record: RecordType, index: number) => ReactNode;
   onCell?: (record: RecordType, index: number) => Omit<ComponentPropsWithRef<'td'>, 'children' | 'dangerouslySetInnerHTML'>;
@@ -67,6 +71,7 @@ export type TableDataAdapterProps<RecordType extends object> = Omit<ComponentPro
   sticky?: boolean | { offsetHeader?: number };
   scroll?: { x?: number | string; y?: number | string };
   locale?: { emptyText?: ReactNode };
+  slotProps?: { tooltip?: Omit<TooltipAdapterProps, 'children' | 'content'> };
   onChange?: (
     pagination: { current: number; pageSize: number },
     filters: TableChangeFilters,

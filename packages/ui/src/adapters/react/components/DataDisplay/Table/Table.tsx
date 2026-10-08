@@ -1,6 +1,7 @@
 import { TableAdapter, TableBodyAdapter, TableCellAdapter, TableHeadAdapter, TableHeaderCellAdapter, TableRowAdapter } from '@dreadnought/react/unstyled';
 import type { TableAdapterProps, TableDataAdapterProps, TableMarkupAdapterProps, TableCellAdapterProps, TableHeaderCellAdapterProps } from '@dreadnought/react/unstyled';
 import { tablePresentation } from '#presentation/DataDisplay/Table/tablePresentation.ts';
+import { tooltipPresentation } from '#presentation/Overlays/Tooltip/tooltipPresentation.ts';
 import { Icon } from '../Icon/index.ts';
 
 function classes(library: string, consumer?: string) { return [library, consumer].filter(Boolean).join(' '); }
@@ -22,6 +23,7 @@ function TableRoot<RecordType extends object>({ className, size = 'default', bor
     'data-row-hoverable': rowHoverable,
   };
   if ('columns' in props && 'dataSource' in props) return <TableAdapter {...props} {...appearance}
+    slotProps={{ ...props.slotProps, tooltip: { ...props.slotProps?.tooltip, className: classes(tooltipPresentation.root, props.slotProps?.tooltip?.className) } }}
     expandable={props.expandable ? { ...props.expandable, expandIcon: props.expandable.expandIcon ?? (() => <Icon name="down" />) } : undefined} />;
   return <TableAdapter {...props} {...appearance} />;
 }

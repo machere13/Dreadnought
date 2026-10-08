@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Table } from '@dreadnought/ui/react';
+import { Button, Table } from '@dreadnought/ui/react';
 import { TableAdapter } from '@dreadnought/react/unstyled';
 import { useState } from 'react';
 
@@ -138,3 +138,20 @@ export const GroupedHeaders: Story = { render: () => <Table<(typeof people)[numb
       { key: 'location', title: 'Местоположение', children: [{ key: 'city', title: 'Город', dataIndex: 'city', width: 260 }] },
     ] },
   ]} /> };
+
+function ColumnDisplayExample() {
+  const [hidden, setHidden] = useState(false);
+  return <>
+    <Button size="compact" variant="secondary" onClick={() => setHidden(!hidden)}>{hidden ? 'Показать город' : 'Скрыть город'}</Button>
+    <Table<(typeof people)[number]> aria-label="Отображение колонок" bordered pagination={false} dataSource={people}
+      columns={[
+        { key: 'person', title: 'Участник', children: [
+          { key: 'name', title: 'Имя', dataIndex: 'name', width: 120 },
+          { key: 'age', title: 'Возраст', dataIndex: 'age', width: 100, align: 'right' },
+        ] },
+        { key: 'role', title: 'Роль', dataIndex: 'role', width: 160, align: 'center' },
+        { key: 'address', title: 'Адрес', children: [{ key: 'city', title: 'Город', dataIndex: 'city', width: 140, ellipsis: true, hidden }] },
+      ]} />
+  </>;
+}
+export const ColumnDisplay: Story = { render: () => <ColumnDisplayExample /> };
