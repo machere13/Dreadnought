@@ -10,6 +10,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 export const Search: Story = { args: { searchable: true, allowClear: true } };
+export const Groups: Story = { args: { searchable: true, defaultOpen: true, options: [
+  { value: 'none', label: 'Без команды' },
+  { label: 'Команда', options: options.slice(0, 3) },
+  { label: 'Гости', options: [{ value: 'guest', label: 'Даша' }] },
+  { label: 'Архив', disabled: true, options: [{ value: 'former', label: 'Бывший участник' }] },
+] } };
 export const Multiple: Story = { args: { multiple: true, searchable: true, allowClear: true, defaultValue: ['anna'] } };
 export const Disabled: Story = { args: { disabled: true, defaultValue: 'anna' } };
 export const Invalid: Story = { args: { invalid: true } };

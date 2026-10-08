@@ -15,6 +15,9 @@ function SelectDemo() {
     <Select aria-label="Подробные варианты" options={options}
       optionRender={option => <span>{option.label} <small>— {option.value}</small></span>} />
     <Select aria-label="Загрузка вариантов" options={[]} loading loadingContent="Загружаем варианты…" placeholder="Откройте список" />
+    <Select aria-label="Выбор по командам" searchable placeholder="Выберите участника" options={[
+      { label: 'Команда', options }, { label: 'Гости', options: [{ value: 'guest', label: 'Даша' }] },
+    ]} />
     </div>
     <p role="status">Исполнитель: {value ?? 'не выбран'}</p>
   </div>;
@@ -23,7 +26,7 @@ function SelectDemo() {
 export const selectDoc: ComponentDoc = {
   ...getCatalogDoc('select'),
   title: 'Select',
-  description: 'Выбор из списка: одиночный или множественный, с поиском и очисткой. Меню открывается поверх страницы и не расширяет её.',
+  description: 'Выбор из списка: одиночный или множественный, с группами, поиском и очисткой. Меню открывается поверх страницы и не расширяет её.',
   adapterDescription: 'Адаптер предоставляет разметку и поведение без оформления. Токены и CSS Modules подключает готовый компонент.',
   footnote: 'multiple требует массив строк; без него value — строка или null. name передаёт выбранные значения в форму. ref указывает на combobox. Для серверного поиска используйте searchable, searchValue/onSearch, filterOption={false} и loading. Запрос и защиту от устаревших ответов выполняет приложение. optionRender меняет строку списка, но label остаётся текстом для поиска, поля и доступного имени. Не вкладывайте в option интерактивные элементы. open/onOpenChange управляют открытием; defaultOpen задаёт начальное состояние. При выборе, закрытии и очистке поисковая строка сбрасывается через onSearch; в controlled-режиме новое значение должен передать владелец.',
   demo: <SelectDemo />,

@@ -1,9 +1,11 @@
 import { createRef } from 'react';
-import { Checkbox, Radio, Select } from '@dreadnought/ui/react';
+import { Checkbox, Radio, Select, type SelectOptionGroup } from '@dreadnought/ui/react';
 
 const inputRef = createRef<HTMLInputElement>();
 const groupRef = createRef<HTMLFieldSetElement>();
 const options = [{ value: 'a', label: 'Первый' }];
+const section: SelectOptionGroup = { label: 'Команда', options, disabled: false };
+const grouped = <Select options={[section, ...options]} slotProps={{ group: { className: 'group' }, groupLabel: { className: 'label' } }} />;
 const single = <Select ref={inputRef} options={options} value="a" onValueChange={value => { const result: string | null = value; void result; }} />;
 const multiple = <Select multiple options={options} value={['a']} onValueChange={value => { const result: string[] = value; void result; }} />;
 const remote = <Select options={options} searchable open searchValue="test" filterOption={false} loading
@@ -19,4 +21,4 @@ const invalidSingle = <Select options={options} value={['a']} />;
 const invalidMultiple = <Select multiple options={options} value="a" />;
 // @ts-expect-error Public ref is the input, not its wrapper.
 const invalidRef = <Select options={options} ref={createRef<HTMLDivElement>()} />;
-void [single, multiple, remote, checkbox, group, radio, invalidSingle, invalidMultiple, invalidRef];
+void [grouped, single, multiple, remote, checkbox, group, radio, invalidSingle, invalidMultiple, invalidRef];

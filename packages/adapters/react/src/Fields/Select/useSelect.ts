@@ -48,11 +48,11 @@ export function useSelect(props: SelectAdapterProps) {
   function changeSelection(action: SelectionAction<string>) {
     setValue(getSelectionValue(props.multiple ? state.values : state.values[0] ?? null, action, {
       disabled: props.disabled || control.current?.matches(':disabled'), required: props.required,
-      disabledValues: props.options.filter(option => option.disabled).map(option => option.value),
+      disabledValues: state.options.filter(option => option.disabled).map(option => option.value),
     }));
   }
   function choose(v: string) {
-    const option = props.options.find(option => option.value === v);
+    const option = state.options.find(option => option.value === v);
     if (props.disabled || !option || option.disabled || control.current?.matches(':disabled')) return;
     changeSelection({ type: props.multiple ? 'toggle' : 'select', value: v });
     setValidationInvalid(false);

@@ -14,6 +14,14 @@
       "description": "Список вариантов в native top layer."
     },
     {
+      "name": "group",
+      "description": "Раздел вариантов с доступным именем; группа и её заголовок не выбираются."
+    },
+    {
+      "name": "groupLabel",
+      "description": "Текст заголовка группы; оформление меняется через slotProps.groupLabel."
+    },
+    {
       "name": "option",
       "description": "Строка варианта с сохранёнными role, label, selected и disabled; содержимое меняется optionRender."
     },
@@ -31,6 +39,7 @@
     "Стили настраиваются через компонентные токены и slotProps.",
     "При multiple значение и defaultValue — массив строк; иначе строка или null.",
     "Варианты имеют уникальное непустое value; disabled исключает выбор.",
+    "Группы задаются как { label, options, disabled? }; допускается один уровень групп и смешивание с обычными вариантами. disabled группы отключает всех её детей. Поиск фильтрует варианты, а пустые группы скрываются.",
     "Для серверного поиска: searchable, searchValue/onSearch, filterOption=false, options и loading. Запрос и отмена устаревших ответов остаются в приложении.",
     "optionRender меняет содержимое строки, но label остаётся текстом для поля, формы и доступного имени; не вкладывайте интерактивные элементы.",
     "open и searchValue управляются владельцем; defaultOpen/defaultSearchValue действуют только при инициализации. Выбор, очистка и закрытие запрашивают сброс поиска через onSearch.",
@@ -44,7 +53,7 @@
       "importPath": "@dreadnought/react/unstyled",
       "exportName": "SelectAdapter",
       "propertyDescriptions": {
-        "options": "Варианты с уникальным непустым value, текстовым label и необязательным disabled.",
+        "options": "Варианты { value, label, disabled? } и группы { label, options, disabled? }. Значения уникальны во всём списке; группы не выбираются.",
         "value": "Строка или null для одиночного выбора; массив для multiple.",
         "defaultValue": "Начальное значение в неуправляемом режиме.",
         "onValueChange": "Возвращает выбранное значение; при очистке null или пустой массив.",
@@ -62,7 +71,8 @@
         "optionRender": "Рендерер содержимого варианта: option и active/selected/index. Не заменяет семантику и обработчики строки.",
         "allowClear": "Кнопка очистки выбора.",
         "invalid": "Состояние ошибки.",
-        "emptyContent": "Содержимое пустого списка."
+        "emptyContent": "Содержимое пустого списка.",
+        "slotProps": "Слоты root/control/popup/option/clear/group/groupLabel. Группы исчезают при отсутствии совпадений; поиск выполняется по label вариантов."
       },
       "defaults": {
         "multiple": false,

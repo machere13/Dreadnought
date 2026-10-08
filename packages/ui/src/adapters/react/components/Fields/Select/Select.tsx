@@ -10,6 +10,7 @@ export function Select({ className, slotProps, ...props }: SelectProps) {
     slotProps={{ ...slotProps,
       popup: { ...slotProps?.popup, className: classes(selectPresentation.popup, slotProps?.popup?.className) },
       option: { ...slotProps?.option, className: classes(selectPresentation.option, slotProps?.option?.className) },
+      groupLabel: { ...slotProps?.groupLabel, className: classes(selectPresentation.groupLabel, slotProps?.groupLabel?.className) },
       clear: { ...slotProps?.clear, className: classes(selectPresentation.clear, slotProps?.clear?.className) },
     }} />;
 }

@@ -8,7 +8,7 @@
       "importPath": "@dreadnought/ui/react",
       "exportName": "Select",
       "propertyDescriptions": {
-        "options": "Варианты с уникальным непустым value, текстовым label и необязательным disabled.",
+        "options": "Варианты { value, label, disabled? } и группы { label, options, disabled? }. Значения уникальны во всём списке; группы не выбираются.",
         "value": "Строка или null для одиночного выбора; массив для multiple.",
         "defaultValue": "Начальное значение в неуправляемом режиме.",
         "onValueChange": "Возвращает выбранное значение; при очистке null или пустой массив.",
@@ -26,7 +26,8 @@
         "optionRender": "Рендерер содержимого варианта: option и active/selected/index. Не заменяет семантику и обработчики строки.",
         "allowClear": "Кнопка очистки выбора.",
         "invalid": "Состояние ошибки.",
-        "emptyContent": "Содержимое пустого списка."
+        "emptyContent": "Содержимое пустого списка.",
+        "slotProps": "Слоты root/control/popup/option/clear/group/groupLabel. Группы исчезают при отсутствии совпадений; поиск выполняется по label вариантов."
       },
       "defaults": {
         "multiple": false,

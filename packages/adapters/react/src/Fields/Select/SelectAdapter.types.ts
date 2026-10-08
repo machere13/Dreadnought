@@ -3,7 +3,7 @@ import type { SelectOption, SelectCoreOptions } from '@dreadnought/core';
 
 export type SelectAdapterProps = Omit<ComponentPropsWithRef<'input'>,
   'value' | 'defaultValue' | 'onChange' | 'type' | 'multiple' | 'children' | 'readOnly' | 'size'> & {
-  options: readonly SelectOption[];
+  options: SelectCoreOptions['options'];
   searchable?: boolean;
   open?: boolean;
   defaultOpen?: boolean;
@@ -26,6 +26,8 @@ export type SelectAdapterProps = Omit<ComponentPropsWithRef<'input'>,
     control?: ComponentPropsWithoutRef<'input'>;
     popup?: ComponentPropsWithoutRef<'div'>;
     option?: ComponentPropsWithoutRef<'div'>;
+    group?: ComponentPropsWithoutRef<'div'>;
+    groupLabel?: ComponentPropsWithoutRef<'div'>;
     clear?: ComponentPropsWithoutRef<'button'>;
   };
 } & (

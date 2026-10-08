@@ -1,7 +1,7 @@
 :root {
   --dreadnought-menu-bg: var(--dreadnought-color-surface-default);
   --dreadnought-menu-fg: var(--dreadnought-color-text-primary);
-  --dreadnought-menu-group-fg: var(--dreadnought-color-text-secondary);
+  --dreadnought-menu-group-fg: var(--dreadnought-color-text-placeholder);
   --dreadnought-menu-border: var(--dreadnought-color-border-default);
   --dreadnought-menu-item-bg-hover: var(--dreadnought-color-surface-hover);
   --dreadnought-menu-item-bg-selected: var(--dreadnought-color-surface-selected);

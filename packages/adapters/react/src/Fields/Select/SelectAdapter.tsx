@@ -11,7 +11,15 @@ export function SelectAdapter(props: SelectAdapterProps) {
     className, style, ref, name, required, disabled, slotProps = {}, onKeyDown, onClick, onBlur, ...inputProps } = props;
   useImperativeHandle(ref, () => select.control.current!);
   const display = select.state.selectedOptions.map(option => option.label).join(', ');
-  const additional = select.state.selectedOptions.filter(option => !options.some(item => item.value === option.value));
+  const additional = select.state.selectedOptions.filter(option => !select.state.options.some(item => item.value === option.value));
+  const indices = new Map(select.state.filteredOptions.map((option, index) => [option.value, index]));
+  const renderOption = (option: (typeof select.state.options)[number]) => <div {...slotProps.option} key={option.value} id={select.optionId(option.value)}
+    aria-label={option.label} role="option" aria-selected={select.state.values.includes(option.value)} aria-disabled={option.disabled || undefined}
+    data-slot="option" data-active={option.value === select.activeValue ? '' : undefined} onClick={event => {
+      slotProps.option?.onClick?.(event); if (!event.defaultPrevented) select.choose(option.value);
+    }}>{optionRender ? optionRender(option, { active: option.value === select.activeValue,
+      selected: select.state.values.includes(option.value), index: indices.get(option.value)! }) : option.label}</div>;
+  const nativeOption = (option: (typeof select.state.options)[number]) => <option key={option.value} value={option.value} disabled={option.disabled}>{option.label}</option>;
   return <div {...slotProps.root} ref={select.root} data-ui="select" data-disabled={disabled ? '' : undefined}
     data-invalid={select.state.invalid ? '' : undefined} data-open={select.open ? '' : undefined} data-loading={loading ? '' : undefined}
     className={[className, slotProps.root?.className].filter(Boolean).join(' ')} style={style ?? slotProps.root?.style} onClick={event => {
@@ -55,7 +63,9 @@ export function SelectAdapter(props: SelectAdapterProps) {
         if (control) control.dispatchEvent(new control.ownerDocument.defaultView!.Event('invalid', { cancelable: true }));
       }}>
       {!multiple && <option value="" />}
-      {[...options, ...additional].map(option => <option key={option.value} value={option.value} disabled={option.disabled}>{option.label}</option>)}
+      {select.state.groups.map((group, index) => group.label === undefined ? group.options.map(nativeOption)
+        : <optgroup key={index} label={group.label} disabled={group.disabled}>{group.options.map(nativeOption)}</optgroup>)}
+      {additional.map(nativeOption)}
     </select>
     <div {...slotProps.popup} ref={select.popup} id={`${select.id}-listbox`} role="listbox" popover="manual" hidden={!select.open}
       aria-busy={loading || undefined}
@@ -64,13 +74,11 @@ export function SelectAdapter(props: SelectAdapterProps) {
       aria-multiselectable={multiple || undefined}
       onMouseDown={event => { slotProps.popup?.onMouseDown?.(event); event.preventDefault(); }}>
       {loading && <div data-slot="loading" role="status">{loadingContent}</div>}
-      {select.state.filteredOptions.map((option, index) => <div {...slotProps.option} key={option.value} id={select.optionId(option.value)}
-        aria-label={option.label}
-        role="option" aria-selected={select.state.values.includes(option.value)} aria-disabled={option.disabled || undefined}
-        data-slot="option" data-active={option.value === select.activeValue ? '' : undefined} onClick={event => {
-          slotProps.option?.onClick?.(event); if (!event.defaultPrevented) select.choose(option.value);
-        }}>{optionRender ? optionRender(option, { active: option.value === select.activeValue,
-          selected: select.state.values.includes(option.value), index }) : option.label}</div>)}
+      {select.state.filteredGroups.map((group, index) => group.label === undefined ? group.options.map(renderOption)
+        : <div {...slotProps.group} key={index} role="group" aria-labelledby={`${select.id}-group-${index}`} data-slot="group">
+          <div {...slotProps.groupLabel} id={`${select.id}-group-${index}`} data-slot="group-label">{group.label}</div>
+          {group.options.map(renderOption)}
+        </div>)}
       {!loading && select.state.filteredOptions.length === 0 && <div data-slot="empty" role="status">{emptyContent}</div>}
     </div>
   </div>;

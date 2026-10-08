@@ -3,7 +3,7 @@
   "kind": "component",
   "name": "Select",
   "family": "Fields",
-  "description": "Выбор одного или нескольких вариантов с поиском, очисткой и клавиатурной навигацией.",
+  "description": "Выбор одного или нескольких вариантов с группами, поиском, очисткой и клавиатурной навигацией.",
   "docsUrl": "/components/select/#select-api",
   "states": [
     "disabled",
@@ -20,6 +20,10 @@
       "importPath": "@dreadnought/core",
       "exportName": "getSelectState",
       "examples": [
+        {
+          "id": "groups",
+          "code": "import { getSelectState } from '@dreadnought/core';\nconst state = getSelectState({ options: [{ label: 'Команда', options: [{ value: 'anna', label: 'Анна' }] }], query: 'анн' });\nconst groups = state.filteredGroups;"
+        },
         {
           "id": "state",
           "code": "import { getSelectState } from '@dreadnought/core';\nconst state = getSelectState({ options: [{ value: 'anna', label: 'Анна' }], value: 'anna' });"

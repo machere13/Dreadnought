@@ -7,4 +7,5 @@
   --dreadnought-select-invalid: var(--dreadnought-color-status-error);
   --dreadnought-select-hover: var(--dreadnought-color-surface-hover);
   --dreadnought-select-selected: var(--dreadnought-color-surface-selected);
+  --dreadnought-select-group-text: var(--dreadnought-color-text-placeholder);
 }
