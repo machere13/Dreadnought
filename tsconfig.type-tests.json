@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "packages/ui/tests/table.types.tsx",
     "packages/ui/tests/menu.types.tsx",
     "packages/core/tests/behaviors/menu.types.ts",
     "packages/ui/tests/tree.types.tsx",

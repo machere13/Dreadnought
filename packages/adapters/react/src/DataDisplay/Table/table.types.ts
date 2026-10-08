@@ -9,6 +9,8 @@ export type TableColumn<RecordType extends object> = {
   title: ReactNode;
   dataIndex?: keyof RecordType | readonly (string | number)[];
   render?: (value: unknown, record: RecordType, index: number) => ReactNode;
+  onCell?: (record: RecordType, index: number) => Omit<ComponentPropsWithRef<'td'>, 'children' | 'dangerouslySetInnerHTML'>;
+  onHeaderCell?: (column: TableColumn<RecordType>, index: number) => Omit<ComponentPropsWithRef<'th'>, 'children' | 'dangerouslySetInnerHTML'>;
   width?: number;
   fixed?: 'left' | 'right';
   sorter?: (a: RecordType, b: RecordType) => number;
@@ -47,6 +49,8 @@ export type TableDataAdapterProps<RecordType extends object> = Omit<ComponentPro
   rowKey?: keyof RecordType | ((record: RecordType) => TableRowKey);
   pagination?: false | TablePagination;
   rowSelection?: TableRowSelection<RecordType>;
+  onRow?: (record: RecordType, index: number) => Omit<ComponentPropsWithRef<'tr'>, 'children' | 'dangerouslySetInnerHTML'>;
+  onHeaderRow?: (columns: readonly TableColumn<RecordType>[], index: number) => Omit<ComponentPropsWithRef<'tr'>, 'children' | 'dangerouslySetInnerHTML'>;
   sticky?: boolean | { offsetHeader?: number };
   scroll?: { x?: number | string; y?: number | string };
   locale?: { emptyText?: ReactNode };

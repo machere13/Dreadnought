@@ -9,15 +9,21 @@
       "exportName": "TableAdapter",
       "description": "Доступная разметка и поведение без готового оформления.",
       "propertyDescriptions": {
+        "onRow": "Нативные свойства, события и ref строки: (record, index). Индекс относится к текущей странице после фильтрации и сортировки; data-selected сохраняется.",
+        "onHeaderRow": "Нативные свойства, события и ref строки заголовков: (columns, index); для одноуровневой шапки index=0.",
         "rowKey": "При rowSelection нужен уникальный устойчивый ключ из rowKey или record.key: строка либо конечное число.",
         "rowSelection": "Шапка выбирает только доступные строки текущей страницы; mixed при частичном выборе, disabled при пустом доступном наборе. Выбранные disabled и внестраничные ключи сохраняются. Radio-группы таблиц и фильтров изолированы.",
-        "columns": "filteredValue: null — пустой управляемый фильтр; defaultFilteredValue применяется только при создании. fixed использует измеренные ширины колонок; width необязательна и задаёт минимальную ширину.",
+        "columns": "onCell(record, pageIndex) и onHeaderCell(column, columnIndex) возвращают нативные свойства, события и ref ячеек; содержимое задаётся render/title. rowSpan/colSpan=0 скрывает ячейку, иначе используются нативные spans. Приложение согласует spans с текущим порядком строк; не объединяйте через границы fixed-областей. Для колонок с объединённой/скрытой шапкой задавайте width. width/fixed/sticky и aria-sort сохраняются при передаче стилей. filteredValue: null — пустой управляемый фильтр; defaultFilteredValue применяется только при создании.",
         "sticky": "Закрепление шапки; offsetHeader — отступ внутри собственного scroll-контейнера таблицы.",
         "scroll": "Собственный контейнер прокрутки; x — минимальная ширина таблицы, y — максимальная высота контейнера. Изменения ширин отслеживаются через ResizeObserver.",
         "pagination": "current/pageSize — положительные безопасные целые числа. defaultCurrent/defaultPageSize применяются только при создании. Фильтр запрашивает страницу 1, сортировка сохраняет текущую.",
         "onChange": "extra.action: sort/filter/paginate; currentDataSource содержит все строки после фильтрации и сортировки, до пагинации. При фильтре и смене страницы сначала вызывается pagination.onChange, затем onChange. Изменение props событий не вызывает."
       },
       "examples": [
+        {
+          "id": "merged-cells",
+          "code": "import { TableAdapter } from '@dreadnought/react/unstyled';\ntype Member = { key: number; team: string };\nconst example = <TableAdapter<Member> pagination={false} dataSource={[{ key: 1, team: 'Design' }, { key: 2, team: 'Design' }]} onRow={record => ({ title: String(record.key) })} columns={[{ key: 'team', title: 'Team', dataIndex: 'team', onCell: (_record, index) => ({ rowSpan: index === 0 ? 2 : 0 }), onHeaderCell: () => ({ title: 'Team name' }) }]} />;"
+        },
         {
           "id": "basic",
           "code": "import { TableAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  return <TableAdapter rowKey=\"id\" dataSource={[{ id: 1, name: 'Борис' }, { id: 2, name: 'Анна' }]} columns={[{ key: 'name', title: 'Имя', dataIndex: 'name', sorter: (a, b) => a.name.localeCompare(b.name) }]} />;\n}"

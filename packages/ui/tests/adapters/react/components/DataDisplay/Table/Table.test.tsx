@@ -6,6 +6,17 @@ import { Table } from '@dreadnought/ui/react';
 afterEach(cleanup);
 
 describe('Table', () => {
+  it('preserves dynamic row and cell props through the ready facade', () => {
+    render(<Table pagination={false} dataSource={[{ key: 1, name: 'Анна' }]}
+      onRow={record => ({ title: `row:${record.key}` })}
+      columns={[{ key: 'name', title: 'Имя', dataIndex: 'name', onCell: () => ({ className: 'custom-cell', colSpan: 2 }),
+        onHeaderCell: () => ({ title: 'custom-header' }) }]} />);
+    const cell = screen.getByRole('cell', { name: 'Анна' });
+    expect(cell.className).toContain('custom-cell');
+    expect(cell.getAttribute('colspan')).toBe('2');
+    expect(cell.closest('tr')?.title).toBe('row:1');
+    expect(screen.getByRole('columnheader', { name: 'Имя' }).title).toBe('custom-header');
+  });
   it('renders data-driven columns through the ready component', () => {
     render(<Table
       aria-label="Команда"

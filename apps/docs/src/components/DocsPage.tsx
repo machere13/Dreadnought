@@ -178,6 +178,13 @@ function TableDemo() {
       pagination={false}
       bordered
     />
+    <Table<{ id: number; team: string; name: string }> aria-label="Объединённые ячейки" rowKey="id" pagination={false} bordered
+      dataSource={[{ id: 1, team: 'Дизайн', name: 'Анна' }, { id: 2, team: 'Дизайн', name: 'Нина' }, { id: 3, team: 'Разработка', name: 'Марк' }]}
+      onRow={record => ({ title: `Участник: ${record.name}` })}
+      columns={[
+        { key: 'team', title: 'Команда', dataIndex: 'team', onCell: (_record, index) => ({ rowSpan: index === 0 ? 2 : index === 1 ? 0 : 1 }) },
+        { key: 'name', title: 'Участник', dataIndex: 'name', onHeaderCell: () => ({ title: 'Имя участника' }) },
+      ]} />
   </div>;
 }
 
@@ -245,10 +252,10 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
   table: {
   ...getCatalogDoc('table'),
     title: 'Table',
-    description: 'Структурированные данные с сортировкой, фильтрами, выбором строк, пагинацией и закреплением шапки и колонок.',
+    description: 'Структурированные данные с сортировкой, фильтрами, выбором строк, пагинацией, объединением ячеек и закреплением шапки и колонок.',
     adapterDescription: 'Адаптер сохраняет семантику и поведение таблицы, но позволяет оформить её самостоятельно.',
     logicDescription: 'Функции ядра обрабатывают строки данных, если нужна собственная разметка таблицы.',
-    footnote: <>Для закреплённых колонок задайте <code>fixed</code>; их ширина измеряется автоматически, <code>width</code> задаёт необязательный минимум. <code>scroll</code> создаёт собственный контейнер прокрутки. При <code>rowSelection</code> обязателен уникальный ключ из <code>rowKey</code> или <code>record.key</code>: строка либо конечное число. <code>filteredValue: null</code> очищает управляемый фильтр. Фильтрация запрашивает страницу 1, сортировка сохраняет страницу; причина изменения доступна в <code>extra.action</code>.</>,
+    footnote: <>Для закреплённых колонок задайте <code>fixed</code>; их ширина измеряется автоматически, <code>width</code> задаёт необязательный минимум. Для колонок с объединённым или скрытым заголовком указывайте <code>width</code>: ширину каждой части нельзя измерить отдельно. <code>scroll</code> создаёт собственный контейнер прокрутки. При <code>rowSelection</code> обязателен уникальный ключ из <code>rowKey</code> или <code>record.key</code>: строка либо конечное число. <code>filteredValue: null</code> очищает управляемый фильтр. Фильтрация запрашивает страницу 1, сортировка сохраняет страницу; причина изменения доступна в <code>extra.action</code>. <code>onRow</code>, <code>onHeaderRow</code>, <code>column.onCell</code> и <code>column.onHeaderCell</code> возвращают нативные свойства, события и ref. Индекс строки относится к текущей странице после сортировки и фильтрации. Содержимое задаётся через render/title; геометрия width/fixed/sticky и aria-sort сохраняются. <code>rowSpan/colSpan=0</code> скрывает ячейку; остальные значения объединяют её. Согласованные spans и их пересчёт при изменении порядка строк задаёт приложение; не объединяйте ячейки через границу закреплённых областей.</>,
     demo: <TableDemo />,
   },
   badge: badgeDoc,
