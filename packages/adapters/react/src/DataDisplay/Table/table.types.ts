@@ -59,13 +59,14 @@ export type TableExpandable<RecordType extends object> = {
   columnTitle?: ReactNode;
 };
 
-export type TableDataAdapterProps<RecordType extends object> = Omit<ComponentPropsWithRef<'table'>, 'children' | 'onChange'> & {
+export type TableDataAdapterProps<RecordType extends object> = Omit<ComponentPropsWithRef<'table'>, 'children' | 'onChange' | 'summary'> & {
   columns: readonly TableColumn<RecordType>[];
   dataSource: readonly RecordType[];
   rowKey?: keyof RecordType | ((record: RecordType) => TableRowKey);
   pagination?: false | TablePagination;
   rowSelection?: TableRowSelection<RecordType>;
   expandable?: TableExpandable<RecordType>;
+  summary?: (rows: readonly RecordType[]) => ReactNode;
   onRow?: (record: RecordType, index: number) => Omit<ComponentPropsWithRef<'tr'>, 'children' | 'dangerouslySetInnerHTML'>;
   onHeaderRow?: (columns: readonly TableColumn<RecordType>[], index: number) => Omit<ComponentPropsWithRef<'tr'>, 'children' | 'dangerouslySetInnerHTML'>;
   sticky?: boolean | { offsetHeader?: number };

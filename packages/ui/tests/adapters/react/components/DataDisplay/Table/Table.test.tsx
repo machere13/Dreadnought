@@ -6,6 +6,18 @@ import { Table } from '@dreadnought/ui/react';
 afterEach(cleanup);
 
 describe('Table', () => {
+  it('renders styled summary cells with native spans and consumer properties', () => {
+    render(<Table columns={[{ key: 'name', title: 'Name', dataIndex: 'name' }]} dataSource={[{ key: 1, name: 'Anna' }]}
+      rowSelection={{}} expandable={{ expandedRowRender: row => row.name }}
+      summary={rows => <Table.Row><Table.HeaderCell scope="row" colSpan={2}>Total</Table.HeaderCell>
+        <Table.Cell className="consumer-total" title="Page count">{rows.length}</Table.Cell></Table.Row>} />);
+    const total = screen.getByRole('cell', { name: '1' });
+    expect(total.closest('tfoot')?.dataset.slot).toBe('summary');
+    expect(total.className).toContain('consumer-total');
+    expect(total.className).not.toBe('consumer-total');
+    expect(total.title).toBe('Page count');
+    expect(screen.getByRole('rowheader', { name: 'Total' }).getAttribute('colspan')).toBe('2');
+  });
   it('styles the shared ellipsis tooltip without losing consumer options', () => {
     render(<Table columns={[{ key: 'name', title: 'Name', dataIndex: 'name', ellipsis: true }]}
       slotProps={{ tooltip: { className: 'consumer-tooltip', closeDelay: 0, placement: 'bottom' } }}

@@ -155,3 +155,10 @@ function ColumnDisplayExample() {
   </>;
 }
 export const ColumnDisplay: Story = { render: () => <ColumnDisplayExample /> };
+
+export const Summary: Story = { render: () => <Table<(typeof people)[number]> aria-label="Итоги страницы" bordered
+  rowKey="id" dataSource={people} pagination={{ pageSize: 2 }}
+  columns={[{ key: 'name', title: 'Участник', dataIndex: 'name' }, { key: 'age', title: 'Возраст', dataIndex: 'age', align: 'right', sorter: (a, b) => a.age - b.age }]}
+  summary={rows => <Table.Row><Table.HeaderCell scope="row">Средний возраст на странице</Table.HeaderCell>
+    <Table.Cell style={{ textAlign: 'right' }}>{rows.length ? (rows.reduce((sum, row) => sum + row.age, 0) / rows.length).toFixed(1) : '—'}</Table.Cell>
+  </Table.Row>} /> };

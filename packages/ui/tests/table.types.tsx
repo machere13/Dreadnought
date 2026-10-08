@@ -10,7 +10,8 @@ const expandable: TableExpandable<Person> = { expandedRowRender: record => recor
   onExpandedRowsChange: keys => { void keys; }, expandIcon: expanded => expanded ? 'Close' : 'Open' };
 const example = <Table<Person> expandable={expandable} columns={columns} dataSource={[{ id: 1, name: 'Anna' }]} rowKey="id"
   onRow={(record, index) => ({ ref: createRef<HTMLTableRowElement>(), title: `${record.id}:${index}` })}
-  onHeaderRow={(columns, index) => ({ title: `${columns.length}:${index}` })} />;
+  onHeaderRow={(columns, index) => ({ title: `${columns.length}:${index}` })}
+  summary={rows => <Table.Row><Table.Cell colSpan={2}>{rows.map(row => row.name).join(', ')}</Table.Cell></Table.Row>} />;
 void example;
 const grouped: readonly TableColumn<Person>[] = [{ key: 'person', title: 'Person', children: [
   { key: 'name', title: 'Name', dataIndex: 'name', sorter: (a, b) => a.name.localeCompare(b.name) },

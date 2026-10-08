@@ -17,6 +17,10 @@
   .root[data-bordered='true'] tbody tr:last-child > * { border-block-end: 0; }
   .headerCell[scope='row'] { color: var(--dreadnought-table-text); }
   .cell { color: var(--dreadnought-table-text); }
+  .root tfoot > tr > * { background: var(--dreadnought-table-control-bg); }
+  .root[data-bordered='true'] tfoot > tr:last-child > * { border-block-end: 0; }
+  .root[data-bordered='true'] tfoot > tr:last-child > *:first-child { border-end-start-radius: var(--dreadnought-table-header-radius); }
+  .root[data-bordered='true'] tfoot > tr:last-child > *:last-child { border-end-end-radius: var(--dreadnought-table-header-radius); }
   .root [data-slot='sort-trigger'], .root [data-slot='filter-trigger'] { display: inline-flex; align-items: center; gap: var(--dreadnought-table-control-gap); border: 0; padding: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
   .root [data-slot='sort-indicator'] { color: var(--dreadnought-table-header-text); }
   .root [data-slot='filter-control'] { position: relative; display: inline-flex; margin-inline-start: var(--dreadnought-table-control-gap); }

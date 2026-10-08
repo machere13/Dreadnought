@@ -13,7 +13,7 @@ import { cellValue, fixedStyle, groupedColumns, matchingRows, paginationNumber, 
 import type { TableChangeFilters, TableChangeSorter, TableColumn, TableDataAdapterProps, TableFilterValue, TableRowKey } from './table.types.ts';
 
 export function DataTableAdapter<RecordType extends object>({
-  columns: columnTree, dataSource, rowKey, pagination, rowSelection, expandable, onRow, onHeaderRow, sticky, scroll, locale, slotProps, onChange, ...tableProps
+  columns: columnTree, dataSource, rowKey, pagination, rowSelection, expandable, summary, onRow, onHeaderRow, sticky, scroll, locale, slotProps, onChange, ...tableProps
 }: TableDataAdapterProps<RecordType>) {
   const selectionName = useId();
   const { columns, rows: headerRows } = useMemo(() => groupedColumns(columnTree), [columnTree]);
@@ -132,6 +132,7 @@ export function DataTableAdapter<RecordType extends object>({
     ...tableProps.style,
     ...(scroll?.x ? { minWidth: scroll.x } : {}),
   } as CSSProperties;
+  const footer = summary?.(rows);
 
   const table = <table {...tableProps} ref={tableRef} data-ui="table" data-sticky={Boolean(sticky)} data-ellipsis={columns.some(column => column.ellipsis)} style={tableStyle}>
     <thead>{headerRows.map((headerRow, rowIndex) => <tr key={rowIndex} {...onHeaderRow?.(headerRow.map(cell => cell.column), rowIndex)}>
@@ -228,6 +229,7 @@ export function DataTableAdapter<RecordType extends object>({
     }) : <tr><td data-slot="empty" colSpan={columns.length + (rowSelection ? 1 : 0) + (expandable ? 1 : 0)}>
       {locale?.emptyText ?? 'Нет данных'}
     </td></tr>}</tbody>
+    {footer != null && footer !== false && <tfoot data-slot="summary">{footer}</tfoot>}
   </table>;
 
   return <div data-slot="table-container">
