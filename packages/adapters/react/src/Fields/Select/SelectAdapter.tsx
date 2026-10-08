@@ -1,4 +1,5 @@
 import { useImperativeHandle } from 'react';
+import type { ChangeEvent, FocusEvent, FormEvent, MouseEvent } from 'react';
 import { useSelect } from './useSelect.ts';
 import type { SelectAdapterProps } from './SelectAdapter.types.ts';
 
@@ -47,6 +48,96 @@ export function SelectAdapter(props: SelectAdapterProps) {
   const indices = new Map(
     select.state.filteredOptions.map((option, index) => [option.value, index]),
   );
+
+  function handleRootClick(event: MouseEvent<HTMLDivElement>) {
+    slotProps.root?.onClick?.(event);
+    if (
+      !event.defaultPrevented &&
+      event.target !== select.control.current &&
+      !select.control.current?.matches(':disabled') &&
+      !(event.target as Element).closest('button, [data-slot="popup"]')
+    ) {
+      select.control.current?.focus();
+      select.setExpanded(true);
+    }
+  }
+
+  function handleRootBlur(event: FocusEvent<HTMLDivElement>) {
+    slotProps.root?.onBlur?.(event);
+    if (!event.defaultPrevented && !event.currentTarget.contains(event.relatedTarget)) {
+      select.close();
+    }
+  }
+
+  function handleControlInvalid(event: FormEvent<HTMLInputElement>) {
+    props.onInvalid?.(event);
+    slotProps.control?.onInvalid?.(event);
+    select.setValidationInvalid(true);
+    if (!event.defaultPrevented) {
+      event.currentTarget.focus();
+    }
+  }
+
+  function handleControlChange(event: ChangeEvent<HTMLInputElement>) {
+    slotProps.control?.onChange?.(event);
+    if (!event.defaultPrevented && searchable) {
+      select.setQuery(event.currentTarget.value);
+      select.setActive('');
+      select.setExpanded(true);
+    }
+  }
+
+  function handleControlClick(event: MouseEvent<HTMLInputElement>) {
+    onClick?.(event);
+    slotProps.control?.onClick?.(event);
+    if (!event.defaultPrevented) {
+      select.setExpanded(true);
+    }
+  }
+
+  function handleControlBlur(event: FocusEvent<HTMLInputElement>) {
+    onBlur?.(event);
+    slotProps.control?.onBlur?.(event);
+  }
+
+  function handleClearClick(event: MouseEvent<HTMLButtonElement>) {
+    slotProps.clear?.onClick?.(event);
+    if (!event.defaultPrevented) {
+      select.clear();
+    }
+  }
+
+  function handleNativeChange(event: ChangeEvent<HTMLSelectElement>) {
+    select.setValue(
+      multiple
+        ? Array.from(event.currentTarget.selectedOptions, (option) => option.value)
+        : event.currentTarget.value || null,
+    );
+  }
+
+  function handleNativeInvalid(event: FormEvent<HTMLSelectElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    const control = select.control.current;
+    if (control) {
+      control.dispatchEvent(
+        new control.ownerDocument.defaultView!.Event('invalid', { cancelable: true }),
+      );
+    }
+  }
+
+  function handlePopupMouseDown(event: MouseEvent<HTMLDivElement>) {
+    slotProps.popup?.onMouseDown?.(event);
+    event.preventDefault();
+  }
+
+  function handleOptionClick(event: MouseEvent<HTMLDivElement>, value: string) {
+    slotProps.option?.onClick?.(event);
+    if (!event.defaultPrevented) {
+      select.choose(value);
+    }
+  }
+
   const renderOption = (option: (typeof select.state.options)[number]) => (
     <div
       {...slotProps.option}
@@ -58,12 +149,7 @@ export function SelectAdapter(props: SelectAdapterProps) {
       aria-disabled={option.disabled || undefined}
       data-slot="option"
       data-active={option.value === select.activeValue ? '' : undefined}
-      onClick={(event) => {
-        slotProps.option?.onClick?.(event);
-        if (!event.defaultPrevented) {
-          select.choose(option.value);
-        }
-      }}
+      onClick={(event) => handleOptionClick(event, option.value)}
     >
       {optionRender
         ? optionRender(option, {
@@ -90,24 +176,8 @@ export function SelectAdapter(props: SelectAdapterProps) {
       data-loading={loading ? '' : undefined}
       className={[className, slotProps.root?.className].filter(Boolean).join(' ')}
       style={style ?? slotProps.root?.style}
-      onClick={(event) => {
-        slotProps.root?.onClick?.(event);
-        if (
-          !event.defaultPrevented &&
-          event.target !== select.control.current &&
-          !select.control.current?.matches(':disabled') &&
-          !(event.target as Element).closest('button, [data-slot="popup"]')
-        ) {
-          select.control.current?.focus();
-          select.setExpanded(true);
-        }
-      }}
-      onBlur={(event) => {
-        slotProps.root?.onBlur?.(event);
-        if (!event.defaultPrevented && !event.currentTarget.contains(event.relatedTarget)) {
-          select.close();
-        }
-      }}
+      onClick={handleRootClick}
+      onBlur={handleRootBlur}
     >
       <input
         {...inputProps}
@@ -130,33 +200,10 @@ export function SelectAdapter(props: SelectAdapterProps) {
         aria-invalid={select.state.invalid || inputProps['aria-invalid'] || undefined}
         value={searchable && select.open ? select.query : display}
         placeholder={searchable && select.open && display ? display : inputProps.placeholder}
-        onInvalid={(event) => {
-          props.onInvalid?.(event);
-          slotProps.control?.onInvalid?.(event);
-          select.setValidationInvalid(true);
-          if (!event.defaultPrevented) {
-            event.currentTarget.focus();
-          }
-        }}
-        onChange={(event) => {
-          slotProps.control?.onChange?.(event);
-          if (!event.defaultPrevented && searchable) {
-            select.setQuery(event.currentTarget.value);
-            select.setActive('');
-            select.setExpanded(true);
-          }
-        }}
-        onClick={(event) => {
-          onClick?.(event);
-          slotProps.control?.onClick?.(event);
-          if (!event.defaultPrevented) {
-            select.setExpanded(true);
-          }
-        }}
-        onBlur={(event) => {
-          onBlur?.(event);
-          slotProps.control?.onBlur?.(event);
-        }}
+        onInvalid={handleControlInvalid}
+        onChange={handleControlChange}
+        onClick={handleControlClick}
+        onBlur={handleControlBlur}
         onKeyDown={select.onKeyDown}
       />
       {allowClear && select.state.values.length > 0 && (
@@ -166,12 +213,7 @@ export function SelectAdapter(props: SelectAdapterProps) {
           data-slot="clear"
           disabled={disabled}
           aria-label={clearLabel}
-          onClick={(event) => {
-            slotProps.clear?.onClick?.(event);
-            if (!event.defaultPrevented) {
-              select.clear();
-            }
-          }}
+          onClick={handleClearClick}
         >
           {clearContent}
         </button>
@@ -191,23 +233,8 @@ export function SelectAdapter(props: SelectAdapterProps) {
         tabIndex={-1}
         multiple={multiple}
         value={multiple ? [...select.state.values] : (select.state.values[0] ?? '')}
-        onChange={(event) => {
-          select.setValue(
-            multiple
-              ? Array.from(event.currentTarget.selectedOptions, (option) => option.value)
-              : event.currentTarget.value || null,
-          );
-        }}
-        onInvalid={(event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          const control = select.control.current;
-          if (control) {
-            control.dispatchEvent(
-              new control.ownerDocument.defaultView!.Event('invalid', { cancelable: true }),
-            );
-          }
-        }}
+        onChange={handleNativeChange}
+        onInvalid={handleNativeInvalid}
       >
         {!multiple && <option value="" />}
         {select.state.groups.map((group, index) =>
@@ -236,10 +263,7 @@ export function SelectAdapter(props: SelectAdapterProps) {
           (slotProps.popup?.['aria-label'] ? undefined : props['aria-labelledby'])
         }
         aria-multiselectable={multiple || undefined}
-        onMouseDown={(event) => {
-          slotProps.popup?.onMouseDown?.(event);
-          event.preventDefault();
-        }}
+        onMouseDown={handlePopupMouseDown}
       >
         {loading && (
           <div data-slot="loading" role="status">

@@ -12,6 +12,7 @@ import type {
   TableMarkupAdapterProps,
   TableCellAdapterProps,
   TableHeaderCellAdapterProps,
+  TableFilterSlots,
 } from '@dreadnought/react/unstyled';
 import { tablePresentation } from '#presentation/DataDisplay/Table/tablePresentation.ts';
 import { tooltipPresentation } from '#presentation/Overlays/Tooltip/tooltipPresentation.ts';
@@ -50,57 +51,54 @@ function TableRoot<RecordType extends object>({
     'data-row-hoverable': rowHoverable,
   };
   if ('columns' in props && 'dataSource' in props) {
+    const filterSlots: TableFilterSlots = {
+      renderSearch: (inputProps) => <Input {...inputProps} />,
+      renderButton: (buttonProps) => <Button {...buttonProps} size="compact" variant="secondary" />,
+      icon: <Icon name="filter" />,
+      ...props.slotProps?.filter,
+    };
+    const tooltipSlots = {
+      ...props.slotProps?.tooltip,
+      className: classes(tooltipPresentation.root, props.slotProps?.tooltip?.className),
+    };
+    const loaderSlots = {
+      showLabel: false,
+      ...props.slotProps?.loader,
+      className: classes(loaderPresentation.root, props.slotProps?.loader?.className),
+      'data-custom-indicator': props.slotProps?.loader?.indicator != null || undefined,
+      slotClassNames: {
+        indicator: classes(
+          loaderPresentation.indicator,
+          props.slotProps?.loader?.slotClassNames?.indicator,
+        ),
+        graphic: classes(
+          loaderPresentation.graphic,
+          props.slotProps?.loader?.slotClassNames?.graphic,
+        ),
+        label: classes(loaderPresentation.label, props.slotProps?.loader?.slotClassNames?.label),
+        content: classes(
+          loaderPresentation.content,
+          props.slotProps?.loader?.slotClassNames?.content,
+        ),
+      },
+    };
+    const expandable = props.expandable
+      ? {
+          ...props.expandable,
+          expandIcon: props.expandable.expandIcon ?? (() => <Icon name="down" />),
+        }
+      : undefined;
     return (
       <TableAdapter
         {...props}
         {...appearance}
         slotProps={{
           ...props.slotProps,
-          filter: {
-            renderSearch: (inputProps) => <Input {...inputProps} />,
-            renderButton: (buttonProps) => (
-              <Button {...buttonProps} size="compact" variant="secondary" />
-            ),
-            icon: <Icon name="filter" />,
-            ...props.slotProps?.filter,
-          },
-          tooltip: {
-            ...props.slotProps?.tooltip,
-            className: classes(tooltipPresentation.root, props.slotProps?.tooltip?.className),
-          },
-          loader: {
-            showLabel: false,
-            ...props.slotProps?.loader,
-            className: classes(loaderPresentation.root, props.slotProps?.loader?.className),
-            ...{ 'data-custom-indicator': props.slotProps?.loader?.indicator != null || undefined },
-            slotClassNames: {
-              indicator: classes(
-                loaderPresentation.indicator,
-                props.slotProps?.loader?.slotClassNames?.indicator,
-              ),
-              graphic: classes(
-                loaderPresentation.graphic,
-                props.slotProps?.loader?.slotClassNames?.graphic,
-              ),
-              label: classes(
-                loaderPresentation.label,
-                props.slotProps?.loader?.slotClassNames?.label,
-              ),
-              content: classes(
-                loaderPresentation.content,
-                props.slotProps?.loader?.slotClassNames?.content,
-              ),
-            },
-          },
+          filter: filterSlots,
+          tooltip: tooltipSlots,
+          loader: loaderSlots,
         }}
-        expandable={
-          props.expandable
-            ? {
-                ...props.expandable,
-                expandIcon: props.expandable.expandIcon ?? (() => <Icon name="down" />),
-              }
-            : undefined
-        }
+        expandable={expandable}
       />
     );
   }

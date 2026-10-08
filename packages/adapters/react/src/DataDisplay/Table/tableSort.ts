@@ -16,12 +16,12 @@ export function defaultSorters<RecordType extends object>(
 export function resolveSorters<RecordType extends object>(
   columns: readonly TableColumn<RecordType>[],
   state: readonly TableChangeSorter[],
-  override?: TableChangeSorter,
+  requestedSorter?: TableChangeSorter,
 ): TableChangeSorter[] {
   const controlledSingle = columns.find(
     (column) => !isMultiple(column) && column.sortOrder !== undefined,
   );
-  const result = columns.flatMap((column) => {
+  const resolvedSorters = columns.flatMap((column) => {
     if (
       typeof column.sorter === 'object' &&
       (!Number.isFinite(column.sorter.multiple) ||
@@ -31,35 +31,36 @@ export function resolveSorters<RecordType extends object>(
         'Table multiple sorter requires a finite priority and an optional compare function.',
       );
     }
-    const order =
-      override?.columnKey === column.key
-        ? override.order
-        : column.sortOrder !== undefined
-          ? column.sortOrder
-          : state.find((sorter) => sorter.columnKey === column.key)?.order;
+    let order: TableChangeSorter['order'] | undefined;
+    if (requestedSorter?.columnKey === column.key) {
+      order = requestedSorter.order;
+    } else if (column.sortOrder !== undefined) {
+      order = column.sortOrder;
+    } else {
+      order = state.find((sorter) => sorter.columnKey === column.key)?.order;
+    }
     return order ? [{ columnKey: column.key, order }] : [];
   });
   const requestedSingle =
-    override && columns.find((column) => column.key === override.columnKey && !isMultiple(column));
+    requestedSorter &&
+    columns.find((column) => column.key === requestedSorter.columnKey && !isMultiple(column));
   if (requestedSingle) {
-    return result.filter((sorter) => sorter.columnKey === requestedSingle.key);
+    return resolvedSorters.filter((sorter) => sorter.columnKey === requestedSingle.key);
   }
   if (controlledSingle) {
-    return result.filter((sorter) => sorter.columnKey === controlledSingle.key);
+    return resolvedSorters.filter((sorter) => sorter.columnKey === controlledSingle.key);
   }
-  const single = result.find(
+  const single = resolvedSorters.find(
     (sorter) => !isMultiple(columns.find((column) => column.key === sorter.columnKey)!),
   );
   if (single) {
     return [single];
   }
-  return result.sort((a, b) => {
-    const priority = (key: string | undefined) => {
-      const sorter = columns.find((column) => column.key === key)?.sorter;
-      return typeof sorter === 'object' ? sorter.multiple : 0;
-    };
-    return priority(b.columnKey) - priority(a.columnKey);
-  });
+  function getPriority(key: string | undefined) {
+    const sorter = columns.find((column) => column.key === key)?.sorter;
+    return typeof sorter === 'object' ? sorter.multiple : 0;
+  }
+  return resolvedSorters.sort((a, b) => getPriority(b.columnKey) - getPriority(a.columnKey));
 }
 
 export function changeSorters<RecordType extends object>(
