@@ -46,6 +46,44 @@ export function groupedColumns<RecordType extends object>(
   };
 }
 
+export function tableHeaders<RecordType extends object>(
+  rows: ReturnType<typeof groupedColumns<RecordType>>['rows'],
+  idPrefix: string,
+  columnCount: number,
+) {
+  const cells = rows.map((row) =>
+    row.map((cell) => cell.column.onHeaderCell?.(cell.column, cell.columnIndex)),
+  );
+  const signature = rows
+    .map((row, rowIndex) =>
+      row
+        .map((cell, index) => {
+          const props = cells[rowIndex]![index];
+          const colSpan = props?.colSpan ?? cell.colSpan;
+          const rowSpan = props?.rowSpan ?? cell.rowSpan;
+          return `${cell.column.key}:${colSpan}:${rowSpan}`;
+        })
+        .join(','),
+    )
+    .join(';');
+  const ids = new Map<string, string>();
+  const columnHeaders = Array.from({ length: columnCount }, () => [] as string[]);
+  rows.forEach((row, rowIndex) =>
+    row.forEach((cell, index) => {
+      const props = cells[rowIndex]![index];
+      if (props?.colSpan === 0 || props?.rowSpan === 0) {
+        return;
+      }
+      const id = props?.id ?? `${idPrefix}-header-${encodeURIComponent(cell.column.key)}`;
+      ids.set(cell.column.key, id);
+      for (let leaf = cell.columnIndex; leaf < cell.columnIndex + cell.colSpan; leaf++) {
+        columnHeaders[leaf]!.push(id);
+      }
+    }),
+  );
+  return { cells, signature, ids, columnHeaders };
+}
+
 export function matchingRows<RecordType extends object>(
   data: readonly RecordType[],
   columns: readonly TableColumn<RecordType>[],

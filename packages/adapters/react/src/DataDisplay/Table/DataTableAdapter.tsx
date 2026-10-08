@@ -30,6 +30,7 @@ import {
   matchingRows,
   paginationNumber,
   recordKey,
+  tableHeaders,
 } from './tableData.ts';
 import type {
   TableChangeFilters,
@@ -71,19 +72,7 @@ export function DataTableAdapter<RecordType extends object>({
   ) {
     throw new TypeError('Table sorter without compare requires processing="manual".');
   }
-  const headerCells = headerRows.map((row) =>
-    row.map((cell) => cell.column.onHeaderCell?.(cell.column, cell.columnIndex)),
-  );
-  const headerSpans = headerRows
-    .map((row, rowIndex) =>
-      row
-        .map(
-          (cell, index) =>
-            `${cell.column.key}:${headerCells[rowIndex]![index]?.colSpan ?? cell.colSpan}:${headerCells[rowIndex]![index]?.rowSpan ?? cell.rowSpan}`,
-        )
-        .join(','),
-    )
-    .join(';');
+  const headers = tableHeaders(headerRows, selectionName, columns.length);
   const {
     table: tableRef,
     widths,
@@ -94,23 +83,8 @@ export function DataTableAdapter<RecordType extends object>({
     selection: Boolean(rowSelection),
     expansion: Boolean(expandable),
     sticky: Boolean(sticky),
-    signature: headerSpans,
+    signature: headers.signature,
   });
-  const headerIds = new Map<string, string>();
-  const columnHeaders = columns.map(() => [] as string[]);
-  headerRows.forEach((row, rowIndex) =>
-    row.forEach((cell, index) => {
-      const props = headerCells[rowIndex]![index];
-      if (props?.colSpan === 0 || props?.rowSpan === 0) {
-        return;
-      }
-      const id = props?.id ?? `${selectionName}-header-${encodeURIComponent(cell.column.key)}`;
-      headerIds.set(cell.column.key, id);
-      for (let leaf = cell.columnIndex; leaf < cell.columnIndex + cell.colSpan; leaf++) {
-        columnHeaders[leaf]!.push(id);
-      }
-    }),
-  );
   const controlWidth = selectionWidth + expansionWidth;
   const [expanded, setExpanded] = useState<TableRowKey[]>(() => [
     ...(expandable?.defaultExpandedRowKeys ?? []),
@@ -314,6 +288,126 @@ export function DataTableAdapter<RecordType extends object>({
     expandable?.onExpandedRowsChange?.(next);
   }
 
+  function renderHeaderCell(
+    cell: (typeof headerRows)[number][number],
+    index: number,
+    rowIndex: number,
+  ) {
+    const { column, columnIndex, colSpan, rowSpan } = cell;
+    const group = Boolean(column.children?.length);
+    const cellProps = headers.cells[rowIndex]![index];
+    if (cellProps?.colSpan === 0 || cellProps?.rowSpan === 0) {
+      return null;
+    }
+    const order = !group
+      ? (activeSorters.find((sorter) => sorter.columnKey === column.key)?.order ?? null)
+      : null;
+    const values = filterValues(column);
+    const sortIndex = activeSorters.findIndex((sorter) => sorter.columnKey === column.key);
+    const ariaSort =
+      !group && column.sorter && (activeSorters.length < 2 || sortIndex === 0)
+        ? order === 'ascend'
+          ? 'ascending'
+          : order === 'descend'
+            ? 'descending'
+            : 'none'
+        : undefined;
+    return (
+      <th
+        {...cellProps}
+        key={column.key}
+        id={headers.ids.get(column.key)}
+        scope={cellProps?.scope ?? (group ? 'colgroup' : 'col')}
+        colSpan={cellProps?.colSpan ?? colSpan}
+        rowSpan={cellProps?.rowSpan ?? rowSpan}
+        data-slot="header-cell"
+        data-column-index={group ? undefined : columnIndex}
+        data-fixed={column.fixed}
+        aria-sort={ariaSort}
+        aria-description={
+          cellProps?.['aria-description'] ??
+          (order && activeSorters.length > 1
+            ? `Сортировка ${order === 'ascend' ? 'по возрастанию' : 'по убыванию'}, приоритет ${sortIndex + 1}`
+            : undefined)
+        }
+        style={{
+          textAlign: column.align,
+          ...cellProps?.style,
+          ...fixedStyle(
+            columns,
+            column.fixed === 'right' ? columnIndex + colSpan - 1 : columnIndex,
+            widths,
+            controlWidth,
+          ),
+          ...(group ? { width: undefined, minWidth: undefined } : {}),
+          ...headerStyle,
+          ...(sticky ? { top: (headerStyle.top as number) + (headerOffsets[rowIndex] ?? 0) } : {}),
+          ...(column.fixed ? { zIndex: 3 } : {}),
+        }}
+      >
+        {!group && column.sorter ? (
+          <button
+            type="button"
+            data-slot="sort-trigger"
+            aria-label={column.sortLabel ?? `Сортировать ${String(column.title ?? column.key)}`}
+            onClick={() => changeSort(column)}
+          >
+            {column.title}
+            <span data-slot="sort-indicator" aria-hidden="true">
+              {order === 'ascend' ? '↑' : order === 'descend' ? '↓' : '↕'}
+            </span>
+          </button>
+        ) : column.ellipsis ? (
+          <TableEllipsis tooltip={slotProps?.tooltip}>{column.title}</TableEllipsis>
+        ) : (
+          column.title
+        )}
+        {!group && (
+          <TableFilterMenu
+            column={column}
+            values={values}
+            slots={slotProps?.filter}
+            onApply={(next) => changeFilter(column, next)}
+          />
+        )}
+      </th>
+    );
+  }
+
+  function renderCell(
+    record: RecordType,
+    rowIndex: number,
+    column: TableColumn<RecordType>,
+    index: number,
+  ) {
+    const cellProps = column.onCell?.(record, rowIndex);
+    if (cellProps?.colSpan === 0 || cellProps?.rowSpan === 0) {
+      return null;
+    }
+    const value = cellValue(record, column.dataIndex);
+    const content = column.render ? column.render(value, record, rowIndex) : String(value ?? '');
+    return (
+      <td
+        {...cellProps}
+        key={column.key}
+        data-slot="cell"
+        data-fixed={column.fixed}
+        headers={cellProps?.headers ?? headers.columnHeaders[index]?.join(' ')}
+        style={{
+          textAlign: column.align,
+          ...cellProps?.style,
+          ...fixedStyle(columns, index, widths, controlWidth),
+        }}
+      >
+        {column.ellipsis ? (
+          <TableEllipsis tooltip={slotProps?.tooltip}>{content}</TableEllipsis>
+        ) : (
+          content
+        )}
+      </td>
+    );
+  }
+
   const tableStyle = {
     ...tableProps.style,
     ...(scroll?.x ? { minWidth: scroll.x } : {}),
@@ -377,93 +471,7 @@ export function DataTableAdapter<RecordType extends object>({
                 {expandable.columnTitle}
               </th>
             )}
-            {headerRow.map((cell, index) => {
-              const { column, columnIndex, colSpan, rowSpan } = cell;
-              const group = Boolean(column.children?.length);
-              const cellProps = headerCells[rowIndex]![index];
-              if (cellProps?.colSpan === 0 || cellProps?.rowSpan === 0) {
-                return null;
-              }
-              const order = !group
-                ? (activeSorters.find((sorter) => sorter.columnKey === column.key)?.order ?? null)
-                : null;
-              const values = filterValues(column);
-              const sortIndex = activeSorters.findIndex(
-                (sorter) => sorter.columnKey === column.key,
-              );
-              const ariaSort =
-                !group && column.sorter && (activeSorters.length < 2 || sortIndex === 0)
-                  ? order === 'ascend'
-                    ? 'ascending'
-                    : order === 'descend'
-                      ? 'descending'
-                      : 'none'
-                  : undefined;
-              return (
-                <th
-                  {...cellProps}
-                  key={column.key}
-                  id={headerIds.get(column.key)}
-                  scope={cellProps?.scope ?? (group ? 'colgroup' : 'col')}
-                  colSpan={cellProps?.colSpan ?? colSpan}
-                  rowSpan={cellProps?.rowSpan ?? rowSpan}
-                  data-slot="header-cell"
-                  data-column-index={group ? undefined : columnIndex}
-                  data-fixed={column.fixed}
-                  aria-sort={ariaSort}
-                  aria-description={
-                    cellProps?.['aria-description'] ??
-                    (order && activeSorters.length > 1
-                      ? `Сортировка ${order === 'ascend' ? 'по возрастанию' : 'по убыванию'}, приоритет ${sortIndex + 1}`
-                      : undefined)
-                  }
-                  style={{
-                    textAlign: column.align,
-                    ...cellProps?.style,
-                    ...fixedStyle(
-                      columns,
-                      column.fixed === 'right' ? columnIndex + colSpan - 1 : columnIndex,
-                      widths,
-                      controlWidth,
-                    ),
-                    ...(group ? { width: undefined, minWidth: undefined } : {}),
-                    ...headerStyle,
-                    ...(sticky
-                      ? { top: (headerStyle.top as number) + (headerOffsets[rowIndex] ?? 0) }
-                      : {}),
-                    ...(column.fixed ? { zIndex: 3 } : {}),
-                  }}
-                >
-                  {!group && column.sorter ? (
-                    <button
-                      type="button"
-                      data-slot="sort-trigger"
-                      aria-label={
-                        column.sortLabel ?? `Сортировать ${String(column.title ?? column.key)}`
-                      }
-                      onClick={() => changeSort(column)}
-                    >
-                      {column.title}
-                      <span data-slot="sort-indicator" aria-hidden="true">
-                        {order === 'ascend' ? '↑' : order === 'descend' ? '↓' : '↕'}
-                      </span>
-                    </button>
-                  ) : column.ellipsis ? (
-                    <TableEllipsis tooltip={slotProps?.tooltip}>{column.title}</TableEllipsis>
-                  ) : (
-                    column.title
-                  )}
-                  {!group && (
-                    <TableFilterMenu
-                      column={column}
-                      values={values}
-                      slots={slotProps?.filter}
-                      onApply={(next) => changeFilter(column, next)}
-                    />
-                  )}
-                </th>
-              );
-            })}
+            {headerRow.map((cell, index) => renderHeaderCell(cell, index, rowIndex))}
           </tr>
         ))}
       </thead>
@@ -530,36 +538,7 @@ export function DataTableAdapter<RecordType extends object>({
                       )}
                     </td>
                   )}
-                  {columns.map((column, index) => {
-                    const cellProps = column.onCell?.(record, rowIndex);
-                    if (cellProps?.colSpan === 0 || cellProps?.rowSpan === 0) {
-                      return null;
-                    }
-                    const value = cellValue(record, column.dataIndex);
-                    const content = column.render
-                      ? column.render(value, record, rowIndex)
-                      : String(value ?? '');
-                    return (
-                      <td
-                        {...cellProps}
-                        key={column.key}
-                        data-slot="cell"
-                        data-fixed={column.fixed}
-                        headers={cellProps?.headers ?? columnHeaders[index]?.join(' ')}
-                        style={{
-                          textAlign: column.align,
-                          ...cellProps?.style,
-                          ...fixedStyle(columns, index, widths, controlWidth),
-                        }}
-                      >
-                        {column.ellipsis ? (
-                          <TableEllipsis tooltip={slotProps?.tooltip}>{content}</TableEllipsis>
-                        ) : (
-                          content
-                        )}
-                      </td>
-                    );
-                  })}
+                  {columns.map((column, index) => renderCell(record, rowIndex, column, index))}
                 </tr>
                 {open && expandable && (
                   <TableDetailRow
