@@ -15,7 +15,8 @@
   .item { margin: 0; padding: 0; list-style: none; outline: none; }
 
   .content {
-    display: block;
+    display: flex;
+    align-items: center;
     position: relative;
     box-sizing: border-box;
     min-height: var(--dreadnought-tree-row-min-height);
@@ -36,6 +37,7 @@
   .root[aria-disabled='true'] .content { cursor: not-allowed; }
 
   .indicator {
+    --dreadnought-icon-size: var(--dreadnought-tree-indicator-size);
     position: absolute;
     inset-inline-start: var(--dreadnought-tree-padding-x);
     top: 50%;
@@ -45,17 +47,11 @@
     justify-content: center;
     width: var(--dreadnought-tree-indicator-size);
     height: var(--dreadnought-tree-indicator-size);
-    font-size: 0;
+    font-size: var(--dreadnought-tree-indicator-size);
   }
-  .indicator::before {
-    content: '';
-    box-sizing: border-box;
-    width: var(--dreadnought-tree-chevron-size);
-    height: var(--dreadnought-tree-chevron-size);
-    border-right: var(--dreadnought-tree-chevron-width) solid currentColor;
-    border-bottom: var(--dreadnought-tree-chevron-width) solid currentColor;
-    transform: rotate(-45deg);
+  .indicator > * {
+    transform: rotate(-90deg);
   }
-  .item[aria-expanded='true'] > .content > .indicator::before { transform: rotate(45deg); }
-  .root:dir(rtl) .item[aria-expanded='false'] > .content > .indicator::before { transform: rotate(135deg); }
+  .item[aria-expanded='true'] > .content > .indicator > * { transform: rotate(0deg); }
+  .root:dir(rtl) .item[aria-expanded='false'] > .content > .indicator > * { transform: rotate(90deg); }
 }

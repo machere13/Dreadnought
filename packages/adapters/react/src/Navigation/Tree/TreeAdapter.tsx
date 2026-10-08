@@ -9,12 +9,13 @@ export type TreeAdapterProps<RecordType, Key extends TreeKey = TreeKey> =
   UseTreeOptions<RecordType, Key> & Omit<ComponentPropsWithRef<'ul'>, 'children'> & {
     getLabel: (record: RecordType) => string;
     renderLabel?: (row: VisibleTreeRow<RecordType, Key>) => ReactNode;
+    renderIndicator?: (row: VisibleTreeRow<RecordType, Key>) => ReactNode;
     slotClassNames?: { item?: string; content?: string; group?: string; indicator?: string };
   };
 
 export function TreeAdapter<RecordType, Key extends TreeKey = TreeKey>({
   records, getKey, getChildren, expandedKeys, defaultExpandedKeys, onExpandedKeysChange,
-  disabled = false, getLabel, renderLabel, slotClassNames, ref, onKeyDown, onClick, onFocusCapture,
+  disabled = false, getLabel, renderLabel, renderIndicator, slotClassNames, ref, onKeyDown, onClick, onFocusCapture,
   'aria-label': ariaLabel, 'aria-labelledby': labelledBy, ...domProps
 }: TreeAdapterProps<RecordType, Key>) {
   const tree = useTree({ records, getKey, getChildren, expandedKeys, defaultExpandedKeys, onExpandedKeysChange, disabled });
@@ -109,7 +110,7 @@ export function TreeAdapter<RecordType, Key extends TreeKey = TreeKey>({
       }}>
       <span data-slot="tree-content" className={slotClassNames?.content}>
         {row.expandable && <span data-slot="tree-indicator" className={slotClassNames?.indicator}
-          aria-hidden="true">{row.expanded ? '▾' : '▸'}</span>}
+          aria-hidden="true">{renderIndicator ? renderIndicator(row) : row.expanded ? '▾' : '▸'}</span>}
         {renderLabel ? renderLabel(row) : getLabel(row.record)}
       </span>
       {children?.length ? <ul role="group" data-slot="tree-group"

@@ -11,6 +11,17 @@ const props = { records: [{ id: 0, label: 'Root', children: [{ id: 1, label: 'Le
   getKey: (node: Node) => node.id, getChildren: (node: Node) => node.children,
   getLabel: (node: Node) => node.label };
 
+it('uses the shared Ant Design icon for branches, not text triangles', () => {
+  render(<Tree {...props} />);
+  const branch = screen.getByRole('treeitem', { name: 'Root' });
+  const indicator = branch.querySelector('[data-slot="tree-indicator"]')!;
+  expect(indicator.querySelector('svg[data-icon="down"]')).not.toBeNull();
+  expect(indicator.textContent).toBe('');
+  fireEvent.click(indicator.querySelector('svg')!);
+  expect(branch.getAttribute('aria-expanded')).toBe('true');
+  expect(screen.getByRole('treeitem', { name: 'Leaf' }).querySelector('[data-slot="tree-indicator"]')).toBeNull();
+});
+
 it('merges all presentation slots without changing generic records, refs or custom labels', () => {
   const ref = createRef<HTMLUListElement>();
   render(<><Tree {...props} ref={ref} aria-label="Ready" className="own-root" id="files"

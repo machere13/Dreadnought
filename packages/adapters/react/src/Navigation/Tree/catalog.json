@@ -9,6 +9,7 @@
       "defaultExpandedKeys": "Начальные раскрытые ключи неуправляемого дерева.",
       "onExpandedKeysChange": "Запрос нового массива раскрытых ключей.", "disabled": "Блокирует раскрытие и клавиатурное управление.",
       "renderLabel": "Неинтерактивное содержимое названия вместо текста getLabel.",
+      "renderIndicator": "Неинтерактивное содержимое индикатора раскрытия вместо текстового треугольника.",
       "slotClassNames": "Классы item/content/group/indicator без встроенной темы."
     }, "defaults": { "defaultExpandedKeys": [], "disabled": false },
     "examples": [{ "id": "adapter", "code": "import { TreeAdapter } from '@dreadnought/react/unstyled';\ntype Node = { id: string; label: string; children?: readonly Node[] };\nconst records: readonly Node[] = [{ id: 'root', label: 'Документация', children: [{ id: 'leaf', label: 'Начало' }] }];\nexport function Example() { return <TreeAdapter records={records} getKey={node => node.id} getChildren={node => node.children} getLabel={node => node.label} defaultExpandedKeys={['root']} />; }" }]

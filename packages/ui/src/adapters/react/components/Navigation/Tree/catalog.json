@@ -14,6 +14,7 @@
       "onExpandedKeysChange": "Запрос нового массива раскрытых ключей.",
       "disabled": "Блокирует раскрытие и клавиатурное управление.",
       "renderLabel": "Неинтерактивное содержимое названия вместо текста getLabel.",
+      "renderIndicator": "Неинтерактивное содержимое индикатора раскрытия вместо стандартной иконки.",
       "slotClassNames": "Дополнительные классы item/content/group/indicator; оформление сохраняется."
     },
     "defaults": { "defaultExpandedKeys": [], "disabled": false },
