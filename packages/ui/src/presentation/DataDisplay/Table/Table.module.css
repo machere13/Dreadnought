@@ -21,6 +21,11 @@
   .root [data-slot='filter-actions'] button { border: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); border-radius: var(--dreadnought-table-header-radius); padding: var(--dreadnought-table-cell-padding-block-small) var(--dreadnought-table-cell-padding-inline-small); background: var(--dreadnought-table-control-bg); color: var(--dreadnought-table-control-text); cursor: pointer; }
   .root [data-slot='selection-cell'] { width: var(--dreadnought-table-selection-width); text-align: center; border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); }
   .root [data-slot='selection-cell'] input { accent-color: var(--dreadnought-table-selection-accent); }
+  .root [data-slot='expansion-cell'] { width: var(--dreadnought-table-selection-width); text-align: center; border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); }
+  .root [data-slot='expand-trigger'] { display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: var(--dreadnought-table-header-radius); padding: var(--dreadnought-table-cell-padding-block-small); background: transparent; color: inherit; cursor: pointer; }
+  .root [data-slot='expand-trigger']:focus-visible { outline: var(--dreadnought-table-border-width) solid currentColor; outline-offset: var(--dreadnought-table-control-gap); }
+  .root [data-slot='expand-trigger'][aria-expanded='false'] [data-ui='icon'] { transform: rotate(-90deg); }
+  .root [data-slot='detail-cell'] { padding: var(--dreadnought-table-cell-padding-block) var(--dreadnought-table-cell-padding-inline); border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); background: var(--dreadnought-table-control-bg); }
   .root tbody tr[data-selected='true'] > * { background: var(--dreadnought-table-row-bg-selected); }
   .root [data-slot='empty'] { padding: var(--dreadnought-table-cell-padding-block) var(--dreadnought-table-cell-padding-inline); text-align: center; color: var(--dreadnought-table-header-text); }
   .root [data-fixed] { position: sticky; z-index: 1; background: var(--dreadnought-table-bg); }

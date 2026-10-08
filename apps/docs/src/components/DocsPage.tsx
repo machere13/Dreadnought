@@ -178,6 +178,10 @@ function TableDemo() {
       pagination={false}
       bordered
     />
+    <Table<{ id: number; name: string; city: string }> aria-label="Раскрываемые строки" rowKey="id" pagination={false}
+      dataSource={[{ id: 1, name: 'Анна', city: 'Москва' }, { id: 2, name: 'Марк', city: 'Казань' }]}
+      columns={[{ key: 'name', title: 'Участник', dataIndex: 'name' }]}
+      expandable={{ defaultExpandedRowKeys: [1], expandedRowRender: record => <p>Город: {record.city}</p> }} />
     <Table<{ id: number; team: string; name: string }> aria-label="Объединённые ячейки" rowKey="id" pagination={false} bordered
       dataSource={[{ id: 1, team: 'Дизайн', name: 'Анна' }, { id: 2, team: 'Дизайн', name: 'Нина' }, { id: 3, team: 'Разработка', name: 'Марк' }]}
       onRow={record => ({ title: `Участник: ${record.name}` })}

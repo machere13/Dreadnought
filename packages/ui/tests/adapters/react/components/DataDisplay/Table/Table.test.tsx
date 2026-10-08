@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { TableAdapter } from '@dreadnought/react/unstyled';
 import { Table } from '@dreadnought/ui/react';
@@ -6,6 +6,16 @@ import { Table } from '@dreadnought/ui/react';
 afterEach(cleanup);
 
 describe('Table', () => {
+  it('uses the shared icon and preserves custom expansion content', () => {
+    const props = { columns: [{ key: 'name', title: 'Name', dataIndex: 'name' as const }], dataSource: [{ key: 1, name: 'Anna' }] };
+    const view = render(<Table {...props} expandable={{ expandedRowRender: row => <p>{row.name} details</p> }} />);
+    const trigger = screen.getByRole('button', { name: 'Раскрыть строку 1' });
+    expect(trigger.querySelector('[data-ui="icon"] svg')).toBeTruthy();
+    fireEvent.click(trigger);
+    expect(screen.getByText('Anna details').closest('td')?.dataset.slot).toBe('detail-cell');
+    view.rerender(<Table {...props} expandable={{ expandedRowRender: row => row.name, expandIcon: () => <span>Custom icon</span> }} />);
+    expect(screen.getByRole('button', { name: 'Свернуть строку 1' }).textContent).toContain('Custom icon');
+  });
   it('preserves dynamic row and cell props through the ready facade', () => {
     render(<Table pagination={false} dataSource={[{ key: 1, name: 'Анна' }]}
       onRow={record => ({ title: `row:${record.key}` })}

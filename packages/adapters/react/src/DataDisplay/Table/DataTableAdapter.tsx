@@ -1,21 +1,28 @@
-import { useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
-import { getPaginationState, getSelectionValue, paginateTableRows } from '@dreadnought/core';
+import { getDisclosureState, getPaginationState, getSelectionValue, paginateTableRows } from '@dreadnought/core';
 import type { TableSortOrder } from '@dreadnought/core';
 import { CheckboxAdapter } from '../../Fields/Checkbox/CheckboxAdapter.tsx';
 import { PaginationAdapter } from '../../Navigation/Pagination/index.ts';
 import { TableFilterMenu } from './TableFilterMenu.tsx';
+import { TableDetailRow } from './TableDetailRow.tsx';
+import { ButtonAdapter } from '../../Controls/Button/index.ts';
 import { useTableWidths } from './useTableWidths.ts';
 import { cellValue, fixedStyle, matchingRows, paginationNumber, recordKey } from './tableData.ts';
 import type { TableChangeFilters, TableChangeSorter, TableColumn, TableDataAdapterProps, TableFilterValue, TableRowKey } from './table.types.ts';
 
 export function DataTableAdapter<RecordType extends object>({
-  columns, dataSource, rowKey, pagination, rowSelection, onRow, onHeaderRow, sticky, scroll, locale, onChange, ...tableProps
+  columns, dataSource, rowKey, pagination, rowSelection, expandable, onRow, onHeaderRow, sticky, scroll, locale, onChange, ...tableProps
 }: TableDataAdapterProps<RecordType>) {
   const selectionName = useId();
   const headerCells = columns.map((column, index) => column.onHeaderCell?.(column, index));
   const headerSpans = headerCells.map(cell => `${cell?.colSpan ?? 1}:${cell?.rowSpan ?? 1}`).join(',');
-  const { table: tableRef, widths, selectionWidth } = useTableWidths(columns, Boolean(rowSelection), headerSpans);
+  const { table: tableRef, widths, selectionWidth, expansionWidth } = useTableWidths(columns, Boolean(rowSelection), headerSpans, Boolean(expandable));
+  const controlWidth = selectionWidth + expansionWidth;
+  const [expanded, setExpanded] = useState<TableRowKey[]>(() => [...(expandable?.defaultExpandedRowKeys ?? [])]);
+  const expandedKeys = expandable?.expandedRowKeys ?? expanded;
+  const pendingExpanded = useRef(expandedKeys);
+  useLayoutEffect(() => { pendingExpanded.current = expandedKeys; }, [expandedKeys]);
   useImperativeHandle(tableProps.ref, () => tableRef.current!);
   const headerStyle: CSSProperties = sticky
     ? { position: 'sticky', top: typeof sticky === 'object' ? sticky.offsetHeader ?? 0 : 0, zIndex: 2 } : {};
@@ -42,11 +49,11 @@ export function DataTableAdapter<RecordType extends object>({
   }
   const rows = pagination === false ? sorted : paginateTableRows(sorted, currentPage, pageSize);
   const selectedKeys = rowSelection?.selectedRowKeys ?? selected;
-  const sourceKeys = rowSelection ? dataSource.map(record => recordKey(record, rowKey)) : [];
+  const sourceKeys = rowSelection || expandable ? dataSource.map(record => recordKey(record, rowKey)) : [];
   if (new Set(sourceKeys.map(String)).size !== sourceKeys.length) {
-    throw new Error('Table rowSelection requires unique rowKey or record.key values.');
+    throw new Error('Table selection and expansion require unique rowKey or record.key values.');
   }
-  const keysOnPage = rows.map((record, index) => recordKey(record, rowKey, rowSelection ? undefined : (currentPage - 1) * pageSize + index))
+  const keysOnPage = rows.map((record, index) => recordKey(record, rowKey, rowSelection || expandable ? undefined : (currentPage - 1) * pageSize + index))
     .filter((_, index) => !rowSelection?.getCheckboxProps?.(rows[index]!)?.disabled);
   const selectedOnPage = keysOnPage.filter(key => selectedKeys.includes(key)).length;
 
@@ -97,6 +104,16 @@ export function DataTableAdapter<RecordType extends object>({
     if (rowSelection?.selectedRowKeys === undefined) setSelected(next);
     rowSelection?.onChange?.(next, dataSource.filter((_, index) => next.includes(sourceKeys[index]!)));
   }
+  function changeExpansion(record: RecordType, key: TableRowKey) {
+    const previous = expandable?.expandedRowKeys ?? pendingExpanded.current;
+    const next = getSelectionValue(previous, { type: 'toggle', value: key });
+    if (expandable?.expandedRowKeys === undefined) {
+      pendingExpanded.current = next;
+      setExpanded(next);
+    }
+    expandable?.onExpand?.(next.includes(key), record);
+    expandable?.onExpandedRowsChange?.(next);
+  }
 
   const tableStyle = {
     ...tableProps.style,
@@ -116,6 +133,10 @@ export function DataTableAdapter<RecordType extends object>({
             : selectedKeys.filter((key) => !keysOnPage.includes(key)))}
         />}
       </th>}
+      {expandable && <th scope="col" data-slot="expansion-cell" data-fixed="left"
+        style={{ ...headerStyle, position: 'sticky', left: selectionWidth, zIndex: 3 }} aria-label="Раскрытие строк">
+        {expandable.columnTitle}
+      </th>}
       {columns.map((column, index) => {
         const cellProps = headerCells[index];
         if (cellProps?.colSpan === 0 || cellProps?.rowSpan === 0) return null;
@@ -132,7 +153,7 @@ export function DataTableAdapter<RecordType extends object>({
           data-column-index={index}
           data-fixed={column.fixed}
           aria-sort={ariaSort}
-          style={{ ...cellProps?.style, ...fixedStyle(columns, index, widths, selectionWidth), ...headerStyle, ...(column.fixed ? { zIndex: 3 } : {}) }}
+          style={{ ...cellProps?.style, ...fixedStyle(columns, index, widths, controlWidth), ...headerStyle, ...(column.fixed ? { zIndex: 3 } : {}) }}
         >
           {column.sorter ? <button
             type="button"
@@ -148,8 +169,11 @@ export function DataTableAdapter<RecordType extends object>({
       })}
     </tr></thead>
     <tbody>{rows.length ? rows.map((record, rowIndex) => {
-      const key = recordKey(record, rowKey, rowSelection ? undefined : (currentPage - 1) * pageSize + rowIndex);
-      return <tr {...onRow?.(record, rowIndex)} key={key} data-selected={selectedKeys.includes(key)}>
+      const key = recordKey(record, rowKey, rowSelection || expandable ? undefined : (currentPage - 1) * pageSize + rowIndex);
+      const canExpand = Boolean(expandable && (expandable.rowExpandable?.(record) ?? true));
+      const open = canExpand && expandedKeys.includes(key);
+      const disclosure = getDisclosureState({ open, triggerId: `${selectionName}-${encodeURIComponent(String(key))}-trigger`, panelId: `${selectionName}-${encodeURIComponent(String(key))}-detail` });
+      return <Fragment key={key}><tr {...onRow?.(record, rowIndex)} data-selected={selectedKeys.includes(key)}>
         {rowSelection && <td data-slot="selection-cell" data-fixed="left" style={{ position: 'sticky', left: 0, zIndex: 1 }}>
           <input
             type={rowSelection.type === 'radio' ? 'radio' : 'checkbox'}
@@ -162,17 +186,24 @@ export function DataTableAdapter<RecordType extends object>({
               : getSelectionValue(selectedKeys, { type: event.target.checked ? 'select' : 'deselect', value: key }))}
           />
         </td>}
+        {expandable && <td data-slot="expansion-cell" data-fixed="left" style={{ position: 'sticky', left: selectionWidth, zIndex: 1 }}>
+          {canExpand && <ButtonAdapter {...disclosure.triggerProps} data-slot="expand-trigger"
+            aria-label={`${open ? 'Свернуть' : 'Раскрыть'} строку ${key}`} onClick={() => changeExpansion(record, key)}>
+            {expandable.expandIcon?.(open, record) ?? <span aria-hidden="true">{open ? '−' : '+'}</span>}
+          </ButtonAdapter>}
+        </td>}
         {columns.map((column, index) => {
           const cellProps = column.onCell?.(record, rowIndex);
           if (cellProps?.colSpan === 0 || cellProps?.rowSpan === 0) return null;
           const value = cellValue(record, column.dataIndex);
           return <td {...cellProps} key={column.key} data-slot="cell" data-fixed={column.fixed}
-            style={{ ...cellProps?.style, ...fixedStyle(columns, index, widths, selectionWidth) }}>
+            style={{ ...cellProps?.style, ...fixedStyle(columns, index, widths, controlWidth) }}>
             {column.render ? column.render(value, record, rowIndex) : String(value ?? '')}
           </td>;
         })}
-      </tr>;
-    }) : <tr><td data-slot="empty" colSpan={columns.length + (rowSelection ? 1 : 0)}>
+      </tr>{open && expandable && <TableDetailRow id={disclosure.panelProps.id} triggerId={disclosure.triggerProps.id}
+        colSpan={columns.length + (rowSelection ? 1 : 0) + 1}>{expandable.expandedRowRender(record, rowIndex)}</TableDetailRow>}</Fragment>;
+    }) : <tr><td data-slot="empty" colSpan={columns.length + (rowSelection ? 1 : 0) + (expandable ? 1 : 0)}>
       {locale?.emptyText ?? 'Нет данных'}
     </td></tr>}</tbody>
   </table>;

@@ -23,7 +23,7 @@ export function recordKey<RecordType extends object>(record: RecordType, rowKey:
   const value = typeof rowKey === 'function' ? rowKey(record) : record[rowKey ?? 'key' as keyof RecordType];
   if (typeof value === 'string' || typeof value === 'number' && Number.isFinite(value)) return value;
   if (index !== undefined) return index;
-  throw new Error('Table rowSelection requires a string or finite number from rowKey or record.key.');
+  throw new Error('Table selection and expansion require a string or finite number from rowKey or record.key.');
 }
 
 export function paginationNumber(value: number | undefined, fallback: number): number {

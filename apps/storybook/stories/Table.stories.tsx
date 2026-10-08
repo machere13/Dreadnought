@@ -117,3 +117,10 @@ export const MergedCells: Story = { render: () => <Table<{ id: number; team: str
     { key: 'team', title: 'Команда', dataIndex: 'team', onCell: (_record, index) => ({ rowSpan: index === 0 ? 2 : index === 1 ? 0 : 1 }) },
     { key: 'name', title: 'Участник', dataIndex: 'name', onHeaderCell: () => ({ title: 'Имя участника' }) },
   ]} /> };
+
+export const ExpandableRows: Story = { render: () => <Table<(typeof people)[number]> aria-label="Подробности участников"
+  rowKey="id" dataSource={people} rowSelection={{}} sticky scroll={{ x: 700, y: 320 }} pagination={{ pageSize: 3 }}
+  columns={[{ key: 'name', title: 'Имя', dataIndex: 'name', fixed: 'left', width: 180 },
+    { key: 'role', title: 'Роль', dataIndex: 'role', width: 260 }]}
+  expandable={{ defaultExpandedRowKeys: [1], rowExpandable: record => record.id !== 5,
+    expandedRowRender: record => <p>{record.name}: {record.age} лет, {record.city}</p> }} /> };

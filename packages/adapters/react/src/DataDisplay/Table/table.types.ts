@@ -43,12 +43,24 @@ export type TableRowSelection<RecordType extends object> = {
 export type TableChangeFilters = Record<string, readonly TableFilterValue[]>;
 export type TableChangeSorter = { columnKey?: string; order: TableSortOrder };
 
+export type TableExpandable<RecordType extends object> = {
+  expandedRowRender: (record: RecordType, index: number) => ReactNode;
+  expandedRowKeys?: readonly TableRowKey[];
+  defaultExpandedRowKeys?: readonly TableRowKey[];
+  rowExpandable?: (record: RecordType) => boolean;
+  onExpand?: (expanded: boolean, record: RecordType) => void;
+  onExpandedRowsChange?: (keys: TableRowKey[]) => void;
+  expandIcon?: (expanded: boolean, record: RecordType) => ReactNode;
+  columnTitle?: ReactNode;
+};
+
 export type TableDataAdapterProps<RecordType extends object> = Omit<ComponentPropsWithRef<'table'>, 'children' | 'onChange'> & {
   columns: readonly TableColumn<RecordType>[];
   dataSource: readonly RecordType[];
   rowKey?: keyof RecordType | ((record: RecordType) => TableRowKey);
   pagination?: false | TablePagination;
   rowSelection?: TableRowSelection<RecordType>;
+  expandable?: TableExpandable<RecordType>;
   onRow?: (record: RecordType, index: number) => Omit<ComponentPropsWithRef<'tr'>, 'children' | 'dangerouslySetInnerHTML'>;
   onHeaderRow?: (columns: readonly TableColumn<RecordType>[], index: number) => Omit<ComponentPropsWithRef<'tr'>, 'children' | 'dangerouslySetInnerHTML'>;
   sticky?: boolean | { offsetHeader?: number };

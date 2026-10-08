@@ -5,6 +5,26 @@ import { TableAdapter } from '../../../src/DataDisplay/Table/index.ts';
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
+it('accounts for selection and expansion widths before fixed data columns', () => {
+  vi.spyOn(HTMLTableCellElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLTableCellElement) {
+    return { width: [44, 40, 180, 100][this.cellIndex] ?? 0 } as DOMRect;
+  });
+  render(<TableAdapter columns={[{ key: 'a', title: 'A', fixed: 'left' }, { key: 'b', title: 'B', fixed: 'left' }]}
+    dataSource={[{ key: 1 }]} rowSelection={{}} expandable={{ expandedRowRender: () => 'Details' }} />);
+  expect(screen.getByRole('columnheader', { name: 'Раскрытие строк' }).style.left).toBe('44px');
+  expect(screen.getByRole('columnheader', { name: 'A' }).style.left).toBe('84px');
+  expect(screen.getByRole('columnheader', { name: 'B' }).style.left).toBe('264px');
+});
+
+it('keeps sticky selection and expansion controls separate without fixed data columns', () => {
+  vi.spyOn(HTMLTableCellElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLTableCellElement) {
+    return { width: [44, 40, 180][this.cellIndex] ?? 0 } as DOMRect;
+  });
+  render(<TableAdapter columns={[{ key: 'a', title: 'A' }]} dataSource={[{ key: 1 }]}
+    rowSelection={{}} expandable={{ expandedRowRender: () => 'Details' }} />);
+  expect(screen.getByRole('columnheader', { name: 'Раскрытие строк' }).style.left).toBe('44px');
+});
+
 it('uses actual selection and column widths for both fixed edges and updates after resize', () => {
   let widths = [44, 180, 90, 200, 110];
   let resize = () => {};
