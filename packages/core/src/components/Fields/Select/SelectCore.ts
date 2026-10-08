@@ -5,6 +5,7 @@ export interface SelectCoreOptions {
   value?: SelectValue;
   multiple?: boolean;
   query?: string;
+  filterOption?: boolean | ((query: string, option: SelectOption) => boolean);
   disabled?: boolean;
   required?: boolean;
   invalid?: boolean;

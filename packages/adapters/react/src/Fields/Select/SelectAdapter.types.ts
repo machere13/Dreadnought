@@ -1,10 +1,20 @@
 import type { ComponentPropsWithRef, ComponentPropsWithoutRef, ReactNode } from 'react';
-import type { SelectOption } from '@dreadnought/core';
+import type { SelectOption, SelectCoreOptions } from '@dreadnought/core';
 
 export type SelectAdapterProps = Omit<ComponentPropsWithRef<'input'>,
   'value' | 'defaultValue' | 'onChange' | 'type' | 'multiple' | 'children' | 'readOnly' | 'size'> & {
   options: readonly SelectOption[];
   searchable?: boolean;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  searchValue?: string;
+  defaultSearchValue?: string;
+  onSearch?: (value: string) => void;
+  filterOption?: SelectCoreOptions['filterOption'];
+  loading?: boolean;
+  loadingContent?: ReactNode;
+  optionRender?: (option: SelectOption, state: { active: boolean; selected: boolean; index: number }) => ReactNode;
   allowClear?: boolean;
   invalid?: boolean;
   emptyContent?: ReactNode;

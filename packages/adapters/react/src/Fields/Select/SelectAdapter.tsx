@@ -6,15 +6,17 @@ export function SelectAdapter(props: SelectAdapterProps) {
   const select = useSelect(props);
   const { options, value, defaultValue, onValueChange, multiple, searchable = false, allowClear,
     invalid, emptyContent = 'Нет вариантов', clearLabel = 'Очистить выбор', indicator = '▾', clearContent = '×',
+    open, defaultOpen, onOpenChange, searchValue, defaultSearchValue, onSearch, filterOption,
+    loading = false, loadingContent = 'Загрузка…', optionRender,
     className, style, ref, name, required, disabled, slotProps = {}, onKeyDown, onClick, onBlur, ...inputProps } = props;
   useImperativeHandle(ref, () => select.control.current!);
   const display = select.state.selectedOptions.map(option => option.label).join(', ');
   const additional = select.state.selectedOptions.filter(option => !options.some(item => item.value === option.value));
   return <div {...slotProps.root} ref={select.root} data-ui="select" data-disabled={disabled ? '' : undefined}
-    data-invalid={select.state.invalid ? '' : undefined} data-open={select.open ? '' : undefined}
+    data-invalid={select.state.invalid ? '' : undefined} data-open={select.open ? '' : undefined} data-loading={loading ? '' : undefined}
     className={[className, slotProps.root?.className].filter(Boolean).join(' ')} style={style ?? slotProps.root?.style} onClick={event => {
       slotProps.root?.onClick?.(event);
-      if (!event.defaultPrevented && !select.control.current?.matches(':disabled') && !(event.target as Element).closest('button, [data-slot="popup"]')) {
+      if (!event.defaultPrevented && event.target !== select.control.current && !select.control.current?.matches(':disabled') && !(event.target as Element).closest('button, [data-slot="popup"]')) {
         select.control.current?.focus(); select.setExpanded(true);
       }
     }} onBlur={event => {
@@ -55,18 +57,21 @@ export function SelectAdapter(props: SelectAdapterProps) {
       {!multiple && <option value="" />}
       {[...options, ...additional].map(option => <option key={option.value} value={option.value} disabled={option.disabled}>{option.label}</option>)}
     </select>
-    <div {...slotProps.popup} ref={select.popup} id={`${select.id}-listbox`} role="listbox" popover="auto" hidden={!select.open}
+    <div {...slotProps.popup} ref={select.popup} id={`${select.id}-listbox`} role="listbox" popover="manual" hidden={!select.open}
+      aria-busy={loading || undefined}
       data-slot="popup" aria-label={slotProps.popup?.['aria-label'] ?? props['aria-label'] ?? 'Варианты'}
       aria-labelledby={slotProps.popup?.['aria-labelledby'] ?? (slotProps.popup?.['aria-label'] ? undefined : props['aria-labelledby'])}
-      aria-multiselectable={multiple || undefined} onToggle={event => {
-        slotProps.popup?.onToggle?.(event); if (event.newState === 'closed') select.close();
-      }} onMouseDown={event => { slotProps.popup?.onMouseDown?.(event); event.preventDefault(); }}>
-      {select.state.filteredOptions.map(option => <div {...slotProps.option} key={option.value} id={select.optionId(option.value)}
+      aria-multiselectable={multiple || undefined}
+      onMouseDown={event => { slotProps.popup?.onMouseDown?.(event); event.preventDefault(); }}>
+      {loading && <div data-slot="loading" role="status">{loadingContent}</div>}
+      {select.state.filteredOptions.map((option, index) => <div {...slotProps.option} key={option.value} id={select.optionId(option.value)}
+        aria-label={option.label}
         role="option" aria-selected={select.state.values.includes(option.value)} aria-disabled={option.disabled || undefined}
         data-slot="option" data-active={option.value === select.activeValue ? '' : undefined} onClick={event => {
           slotProps.option?.onClick?.(event); if (!event.defaultPrevented) select.choose(option.value);
-        }}>{option.label}</div>)}
-      {select.state.filteredOptions.length === 0 && <div data-slot="empty" role="status">{emptyContent}</div>}
+        }}>{optionRender ? optionRender(option, { active: option.value === select.activeValue,
+          selected: select.state.values.includes(option.value), index }) : option.label}</div>)}
+      {!loading && select.state.filteredOptions.length === 0 && <div data-slot="empty" role="status">{emptyContent}</div>}
     </div>
   </div>;
 }

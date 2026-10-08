@@ -8,3 +8,9 @@ it('filters by label without dropping the selected value and validates unique op
   expect(state.selectedOptions.map(item => item.value)).toEqual(['b']);
   expect(() => core.getSelectState({ options: [...options, options[0]] })).toThrow();
 });
+
+it('can leave remote results unfiltered or use a custom search predicate', () => {
+  expect(core.getSelectState({ options, query: 'unmatched', filterOption: false }).filteredOptions).toEqual(options);
+  expect(core.getSelectState({ options, query: 'b', filterOption: (query, option) => option.value === query }).filteredOptions)
+    .toEqual([options[1]]);
+});

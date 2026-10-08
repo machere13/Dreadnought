@@ -14,6 +14,16 @@
         "onValueChange": "Возвращает выбранное значение; при очистке null или пустой массив.",
         "multiple": "Выбор нескольких вариантов.",
         "searchable": "Фильтрация вариантов по тексту label.",
+        "open": "Управляемое открытие списка; disabled принудительно скрывает список.",
+        "defaultOpen": "Начальное открытие в неуправляемом режиме.",
+        "onOpenChange": "Запрос изменения открытого состояния.",
+        "searchValue": "Управляемая поисковая строка.",
+        "defaultSearchValue": "Начальная поисковая строка в неуправляемом режиме.",
+        "onSearch": "Поисковая строка при вводе и сбросе после выбора, очистки или закрытия.",
+        "filterOption": "По умолчанию поиск по label; false отключает локальную фильтрацию, функция задаёт своё правило.",
+        "loading": "Состояние загрузки результатов без блокировки существующих вариантов.",
+        "loadingContent": "Содержимое статуса загрузки вместо пустого состояния.",
+        "optionRender": "Рендерер содержимого варианта: option и active/selected/index. Не заменяет семантику и обработчики строки.",
         "allowClear": "Кнопка очистки выбора.",
         "invalid": "Состояние ошибки.",
         "emptyContent": "Содержимое пустого списка."
@@ -24,12 +34,20 @@
         "allowClear": false,
         "disabled": false,
         "required": false,
-        "invalid": false
+        "invalid": false,
+        "defaultOpen": false,
+        "defaultSearchValue": "",
+        "filterOption": true,
+        "loading": false
       },
       "examples": [
         {
           "id": "basic",
           "code": "import { Select } from '@dreadnought/ui/react';\nconst example = <Select aria-label='Исполнитель' options={[{ value: 'anna', label: 'Анна' }, { value: 'vera', label: 'Вера' }]} searchable allowClear />;"
+        },
+        {
+          "id": "remote-search",
+          "code": "import { Select } from '@dreadnought/ui/react';\nimport { useEffect, useState } from 'react';\nfunction Example() {\n  const [search, setSearch] = useState('');\n  const [options, setOptions] = useState<{ value: string; label: string }[]>([]);\n  const [loading, setLoading] = useState(false);\n  const [error, setError] = useState(false);\n  useEffect(() => {\n    const controller = new AbortController();\n    setLoading(true);\n    setError(false);\n    fetch('/api/people?q=' + encodeURIComponent(search), { signal: controller.signal })\n      .then(response => { if (!response.ok) throw new Error('Search failed'); return response.json(); })\n      .then(results => { if (!controller.signal.aborted) setOptions(results); })\n      .catch(() => { if (!controller.signal.aborted) { setOptions([]); setError(true); } })\n      .finally(() => { if (!controller.signal.aborted) setLoading(false); });\n    return () => controller.abort();\n  }, [search]);\n  return <Select aria-label='Исполнитель' options={options} searchable searchValue={search} onSearch={setSearch} filterOption={false} loading={loading} emptyContent={error ? 'Не удалось загрузить варианты' : 'Нет вариантов'} />;\n}"
         }
       ]
     }

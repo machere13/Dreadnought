@@ -8,13 +8,33 @@
     {
       "name": "control",
       "description": "Поле ввода; ref указывает на него."
+    },
+    {
+      "name": "popup",
+      "description": "Список вариантов в native top layer."
+    },
+    {
+      "name": "option",
+      "description": "Строка варианта с сохранёнными role, label, selected и disabled; содержимое меняется optionRender."
+    },
+    {
+      "name": "loading",
+      "description": "Статус загрузки; содержимое задаётся loadingContent."
+    },
+    {
+      "name": "empty",
+      "description": "Пустое состояние, скрытое при loading."
     }
   ],
   "constraints": [
     "Задавайте доступное имя через текст метки, label или aria-label.",
     "Стили настраиваются через компонентные токены и slotProps.",
     "При multiple значение и defaultValue — массив строк; иначе строка или null.",
-    "Варианты имеют уникальное непустое value; disabled исключает выбор."
+    "Варианты имеют уникальное непустое value; disabled исключает выбор.",
+    "Для серверного поиска: searchable, searchValue/onSearch, filterOption=false, options и loading. Запрос и отмена устаревших ответов остаются в приложении.",
+    "optionRender меняет содержимое строки, но label остаётся текстом для поля, формы и доступного имени; не вкладывайте интерактивные элементы.",
+    "open и searchValue управляются владельцем; defaultOpen/defaultSearchValue действуют только при инициализации. Выбор, очистка и закрытие запрашивают сброс поиска через onSearch.",
+    "loading показывает статус, скрывает emptyContent и не блокирует выбор уже загруженных вариантов. disabled скрывает popup независимо от open."
   ],
   "bindings": [
     {
@@ -30,6 +50,16 @@
         "onValueChange": "Возвращает выбранное значение; при очистке null или пустой массив.",
         "multiple": "Выбор нескольких вариантов.",
         "searchable": "Фильтрация вариантов по тексту label.",
+        "open": "Управляемое открытие списка; disabled принудительно скрывает список.",
+        "defaultOpen": "Начальное открытие в неуправляемом режиме.",
+        "onOpenChange": "Запрос изменения открытого состояния.",
+        "searchValue": "Управляемая поисковая строка.",
+        "defaultSearchValue": "Начальная поисковая строка в неуправляемом режиме.",
+        "onSearch": "Поисковая строка при вводе и сбросе после выбора, очистки или закрытия.",
+        "filterOption": "По умолчанию поиск по label; false отключает локальную фильтрацию, функция задаёт своё правило.",
+        "loading": "Состояние загрузки результатов без блокировки существующих вариантов.",
+        "loadingContent": "Содержимое статуса загрузки вместо пустого состояния.",
+        "optionRender": "Рендерер содержимого варианта: option и active/selected/index. Не заменяет семантику и обработчики строки.",
         "allowClear": "Кнопка очистки выбора.",
         "invalid": "Состояние ошибки.",
         "emptyContent": "Содержимое пустого списка."
@@ -40,7 +70,11 @@
         "allowClear": false,
         "disabled": false,
         "required": false,
-        "invalid": false
+        "invalid": false,
+        "defaultOpen": false,
+        "defaultSearchValue": "",
+        "filterOption": true,
+        "loading": false
       },
       "examples": [
         {

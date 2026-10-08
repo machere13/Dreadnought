@@ -6,6 +6,10 @@ const groupRef = createRef<HTMLFieldSetElement>();
 const options = [{ value: 'a', label: 'Первый' }];
 const single = <Select ref={inputRef} options={options} value="a" onValueChange={value => { const result: string | null = value; void result; }} />;
 const multiple = <Select multiple options={options} value={['a']} onValueChange={value => { const result: string[] = value; void result; }} />;
+const remote = <Select options={options} searchable open searchValue="test" filterOption={false} loading
+  onOpenChange={open => { const result: boolean = open; void result; }}
+  onSearch={search => { const result: string = search; void result; }}
+  optionRender={(option, state) => <span>{option.label} {state.selected ? 'selected' : state.index}</span>} />;
 const checkbox = <Checkbox ref={inputRef} indeterminate name="consent">Согласие</Checkbox>;
 const group = <Checkbox.Group ref={groupRef} options={options} defaultValue={['a']} />;
 const radio = <Radio.Group options={options} value="a" onValueChange={value => { const result: string = value; void result; }} />;
@@ -15,4 +19,4 @@ const invalidSingle = <Select options={options} value={['a']} />;
 const invalidMultiple = <Select multiple options={options} value="a" />;
 // @ts-expect-error Public ref is the input, not its wrapper.
 const invalidRef = <Select options={options} ref={createRef<HTMLDivElement>()} />;
-void [single, multiple, checkbox, group, radio, invalidSingle, invalidMultiple, invalidRef];
+void [single, multiple, remote, checkbox, group, radio, invalidSingle, invalidMultiple, invalidRef];

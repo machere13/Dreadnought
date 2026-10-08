@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { getComboboxKeyAction, getNextEnabledValue, getSelectState, getSelectionValue } from '@dreadnought/core';
+import { getComboboxKeyAction, getDisclosureOpen, getNextEnabledValue, getSelectState, getSelectionValue } from '@dreadnought/core';
 import type { SelectValue, SelectionAction } from '@dreadnought/core';
 import type { KeyboardEvent } from 'react';
 import type { SelectAdapterProps } from './SelectAdapter.types.ts';
@@ -13,21 +13,37 @@ export function useSelect(props: SelectAdapterProps) {
   const native = useRef<HTMLSelectElement>(null);
   const root = useRef<HTMLDivElement>(null);
   const popup = useRef<HTMLDivElement>(null);
-  const [expanded, setExpanded] = useState(false);
-  const [query, setQuery] = useState('');
+  const [expanded, setLocalExpanded] = useState(props.defaultOpen ?? false);
+  const [localQuery, setLocalQuery] = useState(props.defaultSearchValue ?? '');
+  const query = props.searchValue ?? localQuery;
   const [active, setActive] = useState('');
   const [validationInvalid, setValidationInvalid] = useState(false);
   const [value, setValue] = useFieldValue<SelectValue>(props.value, props.defaultValue ?? (props.multiple ? empty : null), next => {
     if (props.multiple) props.onValueChange?.(next as string[]);
     else props.onValueChange?.(next as string | null);
   }, native, props.form);
-  const open = expanded && !props.disabled;
+  const open = (props.open ?? expanded) && !props.disabled;
+  const current = useRef({ open, query, props });
+  current.current = { open, query, props };
   const state = getSelectState({ ...props, value, query: open ? query : '', invalid: props.invalid || validationInvalid });
   const activeValue = state.filteredOptions.find(option => option.value === active && !option.disabled)?.value
     ?? state.filteredOptions.find(option => state.values.includes(option.value) && !option.disabled)?.value
     ?? state.filteredOptions.find(option => !option.disabled)?.value;
   const optionId = (v: string) => `${id}-option-${encodeURIComponent(v)}`;
 
+  function setExpanded(next: boolean) {
+    const snapshot = current.current;
+    next = getDisclosureOpen(snapshot.open, next ? 'open' : 'close', { disabled: snapshot.props.disabled || control.current?.matches(':disabled') });
+    if (next === snapshot.open) return;
+    if (snapshot.props.open === undefined) { snapshot.open = next; setLocalExpanded(next); }
+    snapshot.props.onOpenChange?.(next);
+  }
+  function setQuery(next: string) {
+    const snapshot = current.current;
+    if (next === snapshot.query) return;
+    if (snapshot.props.searchValue === undefined) { snapshot.query = next; setLocalQuery(next); }
+    snapshot.props.onSearch?.(next);
+  }
   function close() { setExpanded(false); setQuery(''); }
   function changeSelection(action: SelectionAction<string>) {
     setValue(getSelectionValue(props.multiple ? state.values : state.values[0] ?? null, action, {
@@ -39,12 +55,11 @@ export function useSelect(props: SelectAdapterProps) {
     const option = props.options.find(option => option.value === v);
     if (props.disabled || !option || option.disabled || control.current?.matches(':disabled')) return;
     changeSelection({ type: props.multiple ? 'toggle' : 'select', value: v });
-    setQuery('');
     setValidationInvalid(false);
-    if (!props.multiple) close();
+    if (props.multiple) setQuery(''); else close();
     control.current?.focus();
   }
-  function clear() { changeSelection({ type: 'clear' }); setQuery(''); setValidationInvalid(false); close(); control.current?.focus(); }
+  function clear() { changeSelection({ type: 'clear' }); setValidationInvalid(false); close(); control.current?.focus(); }
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     props.onKeyDown?.(event);
     props.slotProps?.control?.onKeyDown?.(event);
@@ -63,7 +78,17 @@ export function useSelect(props: SelectAdapterProps) {
   }
   useAnchoredPopover(open, root, popup);
   useEffect(() => {
-    if (props.disabled) close();
+    const document = root.current?.ownerDocument;
+    if (!open || !document) return;
+    function outside(event: PointerEvent) {
+      const path = event.composedPath();
+      if (!event.defaultPrevented && !path.includes(root.current!) && !path.includes(popup.current!)) close();
+    }
+    document.addEventListener('pointerdown', outside);
+    return () => document.removeEventListener('pointerdown', outside);
+  }, [open]);
+  useEffect(() => {
+    if (props.disabled) { setLocalExpanded(false); setQuery(''); }
   }, [props.disabled]);
   useEffect(() => {
     if (open && activeValue) popup.current?.ownerDocument.getElementById(optionId(activeValue))?.scrollIntoView?.({ block: 'nearest' });

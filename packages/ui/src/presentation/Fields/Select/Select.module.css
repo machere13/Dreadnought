@@ -15,5 +15,5 @@
   .option:hover, .option[data-active] { background: var(--dreadnought-select-hover); }
   .option[aria-selected='true'] { background: var(--dreadnought-select-selected); font-weight: var(--dreadnought-font-weight-label-1); }
   .option[aria-disabled='true'] { opacity: var(--dreadnought-select-disabled-opacity); cursor: not-allowed; }
-  .popup [data-slot='empty'] { padding: var(--dreadnought-select-option-padding-y) var(--dreadnought-select-option-padding-x); color: var(--dreadnought-select-placeholder); }
+  .popup [data-slot='empty'], .popup [data-slot='loading'] { padding: var(--dreadnought-select-option-padding-y) var(--dreadnought-select-option-padding-x); color: var(--dreadnought-select-placeholder); }
 }

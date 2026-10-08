@@ -9,7 +9,8 @@
     "disabled",
     "required",
     "invalid",
-    "open"
+    "open",
+    "loading"
   ],
   "bindings": [
     {
