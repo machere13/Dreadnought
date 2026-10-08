@@ -6,6 +6,16 @@ import { Table } from '@dreadnought/ui/react';
 afterEach(cleanup);
 
 describe('Table', () => {
+  it('uses themed Input, Buttons and the named filter icon inside the default panel', () => {
+    render(<Table columns={[{ key: 'name', title: 'Name', dataIndex: 'name', filterSearch: true,
+      filters: [{ text: 'Anna', value: 'Anna' }], onFilter: (value, row) => row.name === value }]} dataSource={[{ key: 1, name: 'Anna' }]} />);
+    const trigger = screen.getByRole('button', { name: 'Фильтр Name' });
+    expect(trigger.querySelector('[data-ui="icon"] svg[data-icon="filter"]')).toBeTruthy();
+    fireEvent.click(trigger);
+    expect(screen.getByRole('searchbox').closest('[data-ui="input"]')?.className).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Применить' }).getAttribute('data-ui')).toBe('button');
+    expect(screen.getByRole('button', { name: 'Сбросить' }).getAttribute('data-variant')).toBe('secondary');
+  });
   it('styles the shared loader, keeps consumer options and preserves focused rows', () => {
     const props = { processing: 'manual' as const, pagination: { total: 10, current: 2, pageSize: 2 },
       columns: [{ key: 'name', title: 'Name', dataIndex: 'name' as const, sorter: true as const }], dataSource: [{ key: 3, name: 'Anna' }] };

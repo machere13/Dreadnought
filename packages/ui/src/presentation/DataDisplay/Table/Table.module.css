@@ -23,10 +23,10 @@
   .root[data-bordered='true'] tfoot > tr:last-child > *:last-child { border-end-end-radius: var(--dreadnought-table-header-radius); }
   .root [data-slot='sort-trigger'], .root [data-slot='filter-trigger'] { display: inline-flex; align-items: center; gap: var(--dreadnought-table-control-gap); border: 0; padding: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
   .root [data-slot='sort-indicator'] { color: var(--dreadnought-table-header-text); }
+  .root [data-slot='filter-trigger'][data-filtered='true'] { color: var(--dreadnought-table-text); background: var(--dreadnought-table-row-bg-selected); border-radius: var(--dreadnought-table-header-radius); }
   .root [data-slot='filter-control'] { position: relative; display: inline-flex; margin-inline-start: var(--dreadnought-table-control-gap); }
   .root [data-slot='filter-menu'] { position: fixed; inset: auto; margin: 0; display: grid; gap: var(--dreadnought-table-control-gap); min-width: max-content; padding: var(--dreadnought-table-cell-padding-block); border: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); border-radius: var(--dreadnought-table-header-radius); background: var(--dreadnought-table-control-bg); color: var(--dreadnought-table-control-text); }
   .root [data-slot='filter-option'], .root [data-slot='filter-actions'] { display: flex; align-items: center; gap: var(--dreadnought-table-control-gap); }
-  .root [data-slot='filter-actions'] button { border: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); border-radius: var(--dreadnought-table-header-radius); padding: var(--dreadnought-table-cell-padding-block-small) var(--dreadnought-table-cell-padding-inline-small); background: var(--dreadnought-table-control-bg); color: var(--dreadnought-table-control-text); cursor: pointer; }
   .root [data-slot='selection-cell'] { width: var(--dreadnought-table-selection-width); text-align: center; border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); }
   .root [data-slot='selection-cell'] input { accent-color: var(--dreadnought-table-selection-accent); }
   .root [data-slot='expansion-cell'] { width: var(--dreadnought-table-selection-width); text-align: center; border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); }

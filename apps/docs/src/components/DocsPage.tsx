@@ -19,6 +19,7 @@ import { breadcrumbDoc } from './componentDocs/BreadcrumbDoc';
 import { iconDoc } from './componentDocs/IconDoc';
 import { markDoc } from './componentDocs/MarkDoc';
 import { TableManualDemo } from './componentDocs/TableManualDemo';
+import { TableFiltersDemo } from './componentDocs/TableFiltersDemo';
 import { checkboxDoc } from './componentDocs/CheckboxDoc';
 import { switchDoc } from './componentDocs/SwitchDoc';
 import { sliderDoc } from './componentDocs/SliderDoc';
@@ -170,6 +171,7 @@ function TableDemo() {
   const [hideCity, setHideCity] = useState(false);
   return <div className={styles.demo}>
     <TableManualDemo />
+    <TableFiltersDemo />
     <p><code>processing="local"</code> — обработка полного набора данных внутри таблицы. <code>processing="manual"</code> — показ переданной страницы без локальных фильтров, сортировки и обрезки. Для пагинации укажите <code>pagination.total</code>; без пагинации передайте <code>pagination=false</code>. Серверные колонки используют <code>sorter: true</code> или <code>sorter: {'{ multiple: 2 }'}</code>. <code>onChange</code> сообщает запрос, а <code>extra.currentDataSource</code> и <code>summary</code> получают переданные строки. <code>loading</code> использует Loader и не удаляет таблицу или фокус; параметры Loader доступны в <code>slotProps.loader</code>. Выбранные ключи сохраняются между страницами, но <code>rowSelection.onChange</code> возвращает записи только из доступной страницы.</p>
     <Button variant="secondary" size="compact" onClick={() => setHideCity(!hideCity)}>{hideCity ? 'Показать город' : 'Скрыть город'}</Button>
     <Table<{ key: number; name: string; email: string; city: string }> aria-label="Многоуровневая шапка" bordered sticky scroll={{ x: 700, y: 320 }} pagination={false}

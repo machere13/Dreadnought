@@ -4,6 +4,8 @@ import { tablePresentation } from '#presentation/DataDisplay/Table/tablePresenta
 import { tooltipPresentation } from '#presentation/Overlays/Tooltip/tooltipPresentation.ts';
 import { loaderPresentation } from '#presentation/Feedback/Loader/loaderPresentation.ts';
 import { Icon } from '../Icon/index.ts';
+import { Input } from '../../Fields/Input/index.ts';
+import { Button } from '../../Controls/Button/index.ts';
 
 function classes(library: string, consumer?: string) { return [library, consumer].filter(Boolean).join(' '); }
 
@@ -25,6 +27,12 @@ function TableRoot<RecordType extends object>({ className, size = 'default', bor
   };
   if ('columns' in props && 'dataSource' in props) return <TableAdapter {...props} {...appearance}
     slotProps={{ ...props.slotProps,
+      filter: {
+        renderSearch: inputProps => <Input {...inputProps} />,
+        renderButton: buttonProps => <Button {...buttonProps} size="compact" variant="secondary" />,
+        icon: <Icon name="filter" />,
+        ...props.slotProps?.filter,
+      },
       tooltip: { ...props.slotProps?.tooltip, className: classes(tooltipPresentation.root, props.slotProps?.tooltip?.className) },
       loader: { showLabel: false, ...props.slotProps?.loader,
         className: classes(loaderPresentation.root, props.slotProps?.loader?.className),

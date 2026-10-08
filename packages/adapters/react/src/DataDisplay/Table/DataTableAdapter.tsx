@@ -82,7 +82,7 @@ export function DataTableAdapter<RecordType extends object>({
   }
 
   function currentFilters(override?: { key: string; values: readonly TableFilterValue[] }, source = filters): TableChangeFilters {
-    return Object.fromEntries(columns.filter((column) => column.filters || column.onFilter).map((column) => [
+    return Object.fromEntries(columns.filter((column) => column.filters || column.filterDropdown || column.onFilter).map((column) => [
       column.key,
       override?.key === column.key ? override.values : filterValues(column, source),
     ]));
@@ -205,7 +205,7 @@ export function DataTableAdapter<RecordType extends object>({
             {column.title}
             <span data-slot="sort-indicator" aria-hidden="true">{order === 'ascend' ? '↑' : order === 'descend' ? '↓' : '↕'}</span>
           </button> : column.ellipsis ? <TableEllipsis tooltip={slotProps?.tooltip}>{column.title}</TableEllipsis> : column.title}
-          {!group && <TableFilterMenu column={column} values={values} onApply={(next) => changeFilter(column, next)} />}
+          {!group && <TableFilterMenu column={column} values={values} slots={slotProps?.filter} onApply={(next) => changeFilter(column, next)} />}
         </th>;
       })}
     </tr>)}</thead>

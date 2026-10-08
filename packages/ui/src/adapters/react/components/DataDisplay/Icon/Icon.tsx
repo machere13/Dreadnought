@@ -1,6 +1,7 @@
 import { CheckCircleOutlined, CheckOutlined, CloseCircleOutlined, CloseOutlined, CopyOutlined, DownOutlined, EllipsisOutlined, EyeInvisibleOutlined, EyeOutlined, InfoCircleOutlined, MenuOutlined, SearchOutlined, WarningOutlined } from '@ant-design/icons';
 import { BoldOutlined, ItalicOutlined, StrikethroughOutlined, FontSizeOutlined, DoubleRightOutlined, UnorderedListOutlined, OrderedListOutlined, CodeOutlined, FileTextOutlined, LinkOutlined, PictureOutlined, TableOutlined } from '@ant-design/icons';
 import { UndoOutlined, RedoOutlined, LayoutOutlined } from '@ant-design/icons';
+import { FilterOutlined } from '@ant-design/icons';
 import { IconAdapter } from '@dreadnought/react/unstyled';
 import type { IconAdapterProps } from '@dreadnought/react/unstyled';
 import type { ComponentType } from 'react';
@@ -11,6 +12,7 @@ const icons = {
   eye: EyeOutlined,
   'eye-off': EyeInvisibleOutlined,
   search: SearchOutlined,
+  filter: FilterOutlined,
   copy: CopyOutlined,
   check: CheckOutlined,
   close: CloseOutlined,

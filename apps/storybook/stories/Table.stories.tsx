@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button, Table } from '@dreadnought/ui/react';
+import { Button, Input, Table } from '@dreadnought/ui/react';
 import { TableAdapter } from '@dreadnought/react/unstyled';
 import { useState } from 'react';
 
@@ -187,3 +187,17 @@ function ManualPageExample() {
   </>;
 }
 export const ManualPage: Story = { render: () => <ManualPageExample /> };
+
+export const FilterPanels: Story = { render: () => <Table<(typeof people)[number]> aria-label="Фильтры команды" bordered pagination={false} rowKey="id" dataSource={people}
+  columns={[
+    { key: 'name', title: 'Участник', dataIndex: 'name' },
+    { key: 'role', title: 'Роль', dataIndex: 'role', filterSearch: true,
+      filters: ['Дизайнер', 'Разработчик', 'Редактор'].map(role => ({ text: role, value: role })), onFilter: (value, row) => row.role === value },
+    { key: 'age', title: 'Возраст', dataIndex: 'age', onFilter: (value, row) => row.age >= Number(value),
+      filterDropdown: ({ selectedKeys, setSelectedKeys, confirm, clearFilters }) => <>
+        <Input type="number" min={0} aria-label="Минимальный возраст" value={String(selectedKeys[0] ?? '')}
+          onChange={event => setSelectedKeys(event.target.value ? [event.target.value] : [])} />
+        <Button size="compact" onClick={() => confirm()}>Применить</Button>
+        <Button size="compact" variant="secondary" onClick={() => clearFilters()}>Сбросить</Button>
+      </> },
+  ]} /> };

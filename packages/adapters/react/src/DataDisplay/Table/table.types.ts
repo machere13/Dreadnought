@@ -5,6 +5,19 @@ import type { LoaderAdapterProps } from '../../Feedback/Loader/index.ts';
 
 export type TableRowKey = string | number;
 export type TableFilterValue = string | number;
+export type TableFilterOption = { text: string; value: TableFilterValue };
+export type TableFilterDropdownProps = {
+  selectedKeys: readonly TableFilterValue[];
+  setSelectedKeys: (keys: readonly TableFilterValue[]) => void;
+  confirm: (options?: { closeDropdown?: boolean }) => void;
+  clearFilters: (options?: { confirm?: boolean; closeDropdown?: boolean }) => void;
+  close: () => void;
+};
+export type TableFilterSlots = {
+  renderSearch?: (props: Omit<ComponentPropsWithRef<'input'>, 'type'> & { type: 'search' }) => ReactNode;
+  renderButton?: (props: ComponentPropsWithRef<'button'>) => ReactNode;
+  icon?: ReactNode;
+};
 
 export type TableColumn<RecordType extends object> = {
   key: string;
@@ -23,7 +36,9 @@ export type TableColumn<RecordType extends object> = {
   sortOrder?: TableSortOrder;
   defaultSortOrder?: Exclude<TableSortOrder, null>;
   sortLabel?: string;
-  filters?: readonly { text: string; value: TableFilterValue }[];
+  filters?: readonly TableFilterOption[];
+  filterSearch?: boolean | ((input: string, option: TableFilterOption) => boolean);
+  filterDropdown?: (props: TableFilterDropdownProps) => ReactNode;
   onFilter?: (value: TableFilterValue, record: RecordType) => boolean;
   filteredValue?: readonly TableFilterValue[] | null;
   defaultFilteredValue?: readonly TableFilterValue[];
@@ -79,6 +94,7 @@ export type TableDataAdapterProps<RecordType extends object> = Omit<ComponentPro
   slotProps?: {
     tooltip?: Omit<TooltipAdapterProps, 'children' | 'content'>;
     loader?: Omit<LoaderAdapterProps, 'children' | 'loading'>;
+    filter?: TableFilterSlots;
   };
   onChange?: (
     pagination: { current: number; pageSize: number },

@@ -13,6 +13,12 @@ const example = <Table<Person> expandable={expandable} columns={columns} dataSou
   onHeaderRow={(columns, index) => ({ title: `${columns.length}:${index}` })}
   summary={rows => <Table.Row><Table.Cell colSpan={2}>{rows.map(row => row.name).join(', ')}</Table.Cell></Table.Row>} />;
 void example;
+void <Table<Person> dataSource={[{ id: 1, name: 'Anna' }]} columns={[{ key: 'name', title: 'Name', dataIndex: 'name',
+  filterSearch: (input, option) => option.text.includes(input),
+  filterDropdown: ({ selectedKeys, setSelectedKeys, confirm, clearFilters, close }) => <button onClick={() => {
+    setSelectedKeys(['Anna']); confirm({ closeDropdown: false }); clearFilters({ confirm: false, closeDropdown: false }); close();
+  }}>{selectedKeys.join(',')}</button>, onFilter: (value, record) => record.name === value,
+}]} slotProps={{ filter: { renderSearch: props => <input {...props} />, renderButton: props => <button {...props} />, icon: 'Filter' } }} />;
 void <Table<Person> processing="manual" loading dataSource={[{ id: 3, name: 'Anna' }]} rowKey="id"
   pagination={{ current: 2, pageSize: 2, total: 10 }} slotProps={{ loader: { label: 'Loading', indicator: '…', showLabel: true } }}
   columns={[{ key: 'name', title: 'Name', sorter: true }, { key: 'id', title: 'ID', sorter: { multiple: 2 } }]} />;
