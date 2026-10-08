@@ -23,7 +23,9 @@ describe('getTypeaheadValue', () => {
   });
 
   it('can retain the current match when extending a query', () => {
-    expect(core.getTypeaheadValue(items, 'settings', 'на', { includeCurrent: true })).toBe('settings');
+    expect(core.getTypeaheadValue(items, 'settings', 'на', { includeCurrent: true })).toBe(
+      'settings',
+    );
   });
 
   it('returns undefined for an empty query or no available match without mutating input', () => {

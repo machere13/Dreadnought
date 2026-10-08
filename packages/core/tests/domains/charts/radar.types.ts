@@ -1,8 +1,14 @@
 import { buildRadarLayout } from '@dreadnought/core';
 import type { RadarMetric, RadarSeries, RadarLayoutOptions, RadarLayout } from '@dreadnought/core';
 
-const metrics = [{ id: 'a', label: '', domain: [0, 1] }, { id: 'b', label: '', domain: [0, 1] }, { id: 'c', label: '', domain: [0, 1], reverse: true }] as const satisfies readonly RadarMetric[];
-const series = [{ id: 's', label: '', values: { a: 1, b: 0.5, c: 0 } }] as const satisfies readonly RadarSeries[];
+const metrics = [
+  { id: 'a', label: '', domain: [0, 1] },
+  { id: 'b', label: '', domain: [0, 1] },
+  { id: 'c', label: '', domain: [0, 1], reverse: true },
+] as const satisfies readonly RadarMetric[];
+const series = [
+  { id: 's', label: '', values: { a: 1, b: 0.5, c: 0 } },
+] as const satisfies readonly RadarSeries[];
 const options: RadarLayoutOptions = { metrics, series, radius: 100 };
 const layout: RadarLayout = buildRadarLayout(options);
 layout.seriesPoints[0].points[0].normalizedValue satisfies number;

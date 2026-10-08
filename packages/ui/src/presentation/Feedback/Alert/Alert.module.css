@@ -10,18 +10,30 @@
     color: var(--dreadnought-alert-fg);
   }
 
-  .root[data-type="info"] { --dreadnought-alert-accent: var(--dreadnought-alert-info-accent); }
-  .root[data-type="success"] { --dreadnought-alert-accent: var(--dreadnought-alert-success-accent); }
-  .root[data-type="warning"] { --dreadnought-alert-accent: var(--dreadnought-alert-warning-accent); }
-  .root[data-type="error"] { --dreadnought-alert-accent: var(--dreadnought-alert-error-accent); }
+  .root[data-type='info'] {
+    --dreadnought-alert-accent: var(--dreadnought-alert-info-accent);
+  }
+  .root[data-type='success'] {
+    --dreadnought-alert-accent: var(--dreadnought-alert-success-accent);
+  }
+  .root[data-type='warning'] {
+    --dreadnought-alert-accent: var(--dreadnought-alert-warning-accent);
+  }
+  .root[data-type='error'] {
+    --dreadnought-alert-accent: var(--dreadnought-alert-error-accent);
+  }
 
-  .root[data-variant="outlined"] {
+  .root[data-variant='outlined'] {
     --dreadnought-alert-bg: var(--dreadnought-alert-outlined-bg);
     --dreadnought-alert-border-color: var(--dreadnought-alert-accent);
   }
 
-  .root[data-variant="filled"] {
-    --dreadnought-alert-bg: color-mix(in srgb, var(--dreadnought-alert-accent) 14%, var(--dreadnought-alert-filled-base));
+  .root[data-variant='filled'] {
+    --dreadnought-alert-bg: color-mix(
+      in srgb,
+      var(--dreadnought-alert-accent) 14%,
+      var(--dreadnought-alert-filled-base)
+    );
     --dreadnought-alert-border-color: var(--dreadnought-alert-filled-border);
   }
 
@@ -31,7 +43,11 @@
     margin-inline-end: var(--dreadnought-alert-gap);
     color: var(--dreadnought-alert-accent);
   }
-  .title, .description { grid-column: 2; min-width: 0; }
+  .title,
+  .description {
+    grid-column: 2;
+    min-width: 0;
+  }
   .actions {
     grid-column: 3;
     grid-row: 1 / span 2;
@@ -52,8 +68,12 @@
     color: var(--dreadnought-alert-close-fg);
     cursor: pointer;
   }
-  .close:hover { background: var(--dreadnought-alert-close-bg-hover); }
-  .close:focus-visible { outline: var(--dreadnought-alert-focus-width) solid var(--dreadnought-alert-focus-ring); }
+  .close:hover {
+    background: var(--dreadnought-alert-close-bg-hover);
+  }
+  .close:focus-visible {
+    outline: var(--dreadnought-alert-focus-width) solid var(--dreadnought-alert-focus-ring);
+  }
 
   @media (max-width: 30rem) {
     .actions {

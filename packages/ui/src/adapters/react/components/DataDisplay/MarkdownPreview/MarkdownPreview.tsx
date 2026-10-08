@@ -5,5 +5,10 @@ import { markdownPreviewPresentation } from '#presentation/DataDisplay/MarkdownP
 export type MarkdownPreviewProps = MarkdownPreviewAdapterProps;
 
 export function MarkdownPreview({ className, ...props }: MarkdownPreviewProps) {
-  return <MarkdownPreviewAdapter {...props} className={[markdownPreviewPresentation.root, className].filter(Boolean).join(' ')} />;
+  return (
+    <MarkdownPreviewAdapter
+      {...props}
+      className={[markdownPreviewPresentation.root, className].filter(Boolean).join(' ')}
+    />
+  );
 }

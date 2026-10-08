@@ -7,4 +7,7 @@ export type { LayoutContentAdapterProps } from './LayoutContentAdapter.tsx';
 export { LayoutFooterAdapter } from './LayoutFooterAdapter.tsx';
 export type { LayoutFooterAdapterProps } from './LayoutFooterAdapter.tsx';
 export { LayoutSidebarAdapter } from './LayoutSidebarAdapter.tsx';
-export type { LayoutSidebarAdapterProps, LayoutSidebarSlotClassNames } from './LayoutSidebarAdapter.tsx';
+export type {
+  LayoutSidebarAdapterProps,
+  LayoutSidebarSlotClassNames,
+} from './LayoutSidebarAdapter.tsx';

@@ -17,18 +17,23 @@ describe('default Accordion theme', () => {
     const styles = read('packages/ui/src/presentation/Navigation/Accordion/Accordion.module.css');
     const typography = read(`${themeRoot}/components/Navigation/Accordion/typography.css`);
     const sources = [...global, ...local, styles, typography];
-    const names = new Set(sources.flatMap((source) =>
-      [...source.matchAll(/(--dreadnought-[\w-]+)\s*:/g)].map((match) => match[1]),
-    ));
+    const names = new Set(
+      sources.flatMap((source) =>
+        [...source.matchAll(/(--dreadnought-[\w-]+)\s*:/g)].map((match) => match[1]),
+      ),
+    );
     for (const source of sources) {
       for (const [, reference] of source.matchAll(/var\((--dreadnought-[\w-]+)\)/g)) {
         expect(names.has(reference), `undefined ${reference}`).toBe(true);
       }
     }
     const entry = read(`${themeRoot}/index.css`);
-    expect(entry.match(/@import '\.\/components\/Navigation\/Accordion\/index\.css';/g)).toHaveLength(1);
-    expect(read(`${themeRoot}/components/Navigation/Accordion/index.css`))
-      .toContain("@import '../../../tokens/components/Navigation/Accordion/index.css'");
+    expect(
+      entry.match(/@import '\.\/components\/Navigation\/Accordion\/index\.css';/g),
+    ).toHaveLength(1);
+    expect(read(`${themeRoot}/components/Navigation/Accordion/index.css`)).toContain(
+      "@import '../../../tokens/components/Navigation/Accordion/index.css'",
+    );
   });
 
   it('keeps hidden panels hidden even when normal panel styling sets display', () => {

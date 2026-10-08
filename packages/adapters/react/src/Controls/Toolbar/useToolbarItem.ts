@@ -19,27 +19,53 @@ export interface ToolbarItemProps<T extends HTMLElement = HTMLButtonElement> {
   onKeyDown: KeyboardEventHandler<T>;
 }
 
-export function useToolbarItem<T extends HTMLElement = HTMLButtonElement>({ value, disabled = false, ref, onFocus, onKeyDown }: UseToolbarItemOptions<T>): { itemProps: ToolbarItemProps<T> } {
-  const { register, activate, navigate, orientation, navigation, tabStopValue } = useToolbarContext();
-  const itemRef = useCallback((element: T | null) => {
-    if (!element) return;
-    return attachRef(element, ref, register({ value, disabled, element }));
-  }, [register, value, disabled, ref]);
+export function useToolbarItem<T extends HTMLElement = HTMLButtonElement>({
+  value,
+  disabled = false,
+  ref,
+  onFocus,
+  onKeyDown,
+}: UseToolbarItemOptions<T>): { itemProps: ToolbarItemProps<T> } {
+  const { register, activate, navigate, orientation, navigation, tabStopValue } =
+    useToolbarContext();
+  const itemRef = useCallback(
+    (element: T | null) => {
+      if (!element) {
+        return;
+      }
+      return attachRef(element, ref, register({ value, disabled, element }));
+    },
+    [register, value, disabled, ref],
+  );
   return {
     itemProps: {
       ref: itemRef,
       ...(navigation === 'native' ? {} : { tabIndex: tabStopValue === value ? 0 : -1 }),
       onFocus(event) {
         onFocus?.(event);
-        if (!event.defaultPrevented && event.target === event.currentTarget) activate(value);
+        if (!event.defaultPrevented && event.target === event.currentTarget) {
+          activate(value);
+        }
       },
       onKeyDown(event) {
         onKeyDown?.(event);
-        if (navigation !== 'roving' || disabled || event.defaultPrevented || event.nativeEvent.isComposing
-          || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey
-          || event.target !== event.currentTarget) return;
+        if (
+          navigation !== 'roving' ||
+          disabled ||
+          event.defaultPrevented ||
+          event.nativeEvent.isComposing ||
+          event.altKey ||
+          event.ctrlKey ||
+          event.metaKey ||
+          event.shiftKey ||
+          event.target !== event.currentTarget
+        ) {
+          return;
+        }
         const direction = getNavigationDirection(event.key, { orientation });
-        if (!direction) return;
+        if (!direction) {
+          return;
+        }
         event.preventDefault();
         navigate(value, direction);
       },

@@ -5,7 +5,9 @@ export interface PickFilesOptions {
 }
 
 export function pickFiles(options: PickFilesOptions = {}): Promise<File[]> {
-  if (options.signal?.aborted) return Promise.resolve([]);
+  if (options.signal?.aborted) {
+    return Promise.resolve([]);
+  }
   return new Promise((resolve, reject) => {
     const input = document.createElement('input');
     input.type = 'file';

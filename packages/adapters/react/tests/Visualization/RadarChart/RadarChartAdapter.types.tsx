@@ -4,9 +4,18 @@ import { RadarChartAdapter, type RadarChartAdapterProps } from '../../../src/uns
 
 const metrics: readonly RadarMetric[] = [];
 const series: readonly RadarSeries[] = [];
-const props: RadarChartAdapterProps = { label: 'Radar', metrics, series, ref: createRef<HTMLElement>(),
-  slotProps: { axis: metric => ({ className: metric.id }), series: item => ({ className: item.id }),
-    plotContainer: { ref: createRef<HTMLDivElement>() }, legendButton: item => ({ title: item.label }) } };
+const props: RadarChartAdapterProps = {
+  label: 'Radar',
+  metrics,
+  series,
+  ref: createRef<HTMLElement>(),
+  slotProps: {
+    axis: (metric) => ({ className: metric.id }),
+    series: (item) => ({ className: item.id }),
+    plotContainer: { ref: createRef<HTMLDivElement>() },
+    legendButton: (item) => ({ title: item.label }),
+  },
+};
 <RadarChartAdapter {...props} />;
 <RadarChartAdapter label="Radar" metrics={metrics} series={series} width={400} height={320} />;
 // @ts-expect-error label is required

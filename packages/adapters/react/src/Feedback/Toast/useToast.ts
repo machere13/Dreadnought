@@ -8,9 +8,16 @@ export interface UseToastOptions {
   onOpenChange?: (open: boolean) => void;
 }
 
-export function useToast({ open: controlledOpen, defaultOpen = true, duration = 3000, onOpenChange }: UseToastOptions = {}) {
+export function useToast({
+  open: controlledOpen,
+  defaultOpen = true,
+  duration = 3000,
+  onOpenChange,
+}: UseToastOptions = {}) {
   getCountdownRemaining(duration, 0);
-  if (duration > 2147483647) throw new RangeError('Toast duration exceeds the browser timer limit.');
+  if (duration > 2147483647) {
+    throw new RangeError('Toast duration exceeds the browser timer limit.');
+  }
   const [localOpen, setLocalOpen] = useState(defaultOpen);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -18,9 +25,13 @@ export function useToast({ open: controlledOpen, defaultOpen = true, duration = 
   const remaining = useRef(duration);
   const requested = useRef(false);
   const callback = useRef(onOpenChange);
-  useEffect(() => { callback.current = onOpenChange; }, [onOpenChange]);
+  useEffect(() => {
+    callback.current = onOpenChange;
+  }, [onOpenChange]);
   const close = useCallback(() => {
-    if (requested.current) return;
+    if (requested.current) {
+      return;
+    }
     requested.current = true;
     setLocalOpen(false);
     callback.current?.(false);
@@ -28,15 +39,23 @@ export function useToast({ open: controlledOpen, defaultOpen = true, duration = 
   useEffect(() => {
     remaining.current = duration;
     requested.current = false;
-    if (!open) { setHovered(false); setFocused(false); }
+    if (!open) {
+      setHovered(false);
+      setFocused(false);
+    }
   }, [duration, open]);
   useEffect(() => {
-    if (!open || duration === 0 || hovered || focused || requested.current) return;
+    if (!open || duration === 0 || hovered || focused || requested.current) {
+      return;
+    }
     const started = Date.now();
     const timer = setTimeout(close, remaining.current);
     return () => {
       clearTimeout(timer);
-      remaining.current = getCountdownRemaining(remaining.current, Math.max(0, Date.now() - started));
+      remaining.current = getCountdownRemaining(
+        remaining.current,
+        Math.max(0, Date.now() - started),
+      );
     };
   }, [open, duration, hovered, focused, close]);
   return { open, close, setHovered, setFocused };

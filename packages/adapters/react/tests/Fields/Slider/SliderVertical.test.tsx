@@ -2,16 +2,34 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, expect, it, vi } from 'vitest';
 import { SliderAdapter } from '../../../src/Fields/Slider/SliderAdapter.tsx';
 
-afterEach(() => { cleanup(); vi.restoreAllMocks(); });
-const values = () => screen.getAllByRole('slider').map(node => node.getAttribute('aria-valuenow'));
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+});
+const values = () =>
+  screen.getAllByRole('slider').map((node) => node.getAttribute('aria-valuenow'));
 function geometry(height = 200) {
   vi.spyOn(document.querySelector('[data-slot="rail"]')!, 'getBoundingClientRect').mockReturnValue({
-    left: 50, right: 54, width: 4, top: 100, bottom: 100 + height, height, x: 50, y: 100, toJSON() {},
+    left: 50,
+    right: 54,
+    width: 4,
+    top: 100,
+    bottom: 100 + height,
+    height,
+    x: 50,
+    y: 100,
+    toJSON() {},
   });
   return document.querySelector('[data-ui="slider"]')!;
 }
 function pointer(node: Element, type: string, y: number, x = 51) {
-  const event = new MouseEvent(type, { bubbles: true, cancelable: true, clientX: x, clientY: y, button: 0 });
+  const event = new MouseEvent(type, {
+    bubbles: true,
+    cancelable: true,
+    clientX: x,
+    clientY: y,
+    button: 0,
+  });
   Object.defineProperties(event, { pointerId: { value: 1 }, isPrimary: { value: true } });
   fireEvent(node, event);
 }
@@ -72,8 +90,17 @@ it('moves the closest range thumb on vertical pointer input without crossing it'
 });
 
 it('uses vertical arrows to choose only marks and restores form defaults', async () => {
-  render(<form><SliderAdapter orientation="vertical" step={null} marks={{ 0: 'Low', 30: 'Medium', 100: 'High' }}
-    defaultValue={30} name="amount" /></form>);
+  render(
+    <form>
+      <SliderAdapter
+        orientation="vertical"
+        step={null}
+        marks={{ 0: 'Low', 30: 'Medium', 100: 'High' }}
+        defaultValue={30}
+        name="amount"
+      />
+    </form>,
+  );
   const thumb = screen.getByRole('slider');
   fireEvent.keyDown(thumb, { key: 'ArrowUp' });
   expect(values()).toEqual(['100']);

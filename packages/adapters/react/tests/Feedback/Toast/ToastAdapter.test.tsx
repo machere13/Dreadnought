@@ -2,22 +2,50 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, expect, it, vi } from 'vitest';
 import * as adapter from '../../../src/unstyled.ts';
 
-afterEach(() => { cleanup(); vi.useRealTimers(); });
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 
 it('starts a fresh countdown when a hovered controlled toast reopens', () => {
   vi.useFakeTimers();
   const changes: boolean[] = [];
-  const { rerender } = render(<adapter.ToastAdapter title="Готово" open duration={1000} onOpenChange={open => changes.push(open)} />);
+  const { rerender } = render(
+    <adapter.ToastAdapter
+      title="Готово"
+      open
+      duration={1000}
+      onOpenChange={(open) => changes.push(open)}
+    />,
+  );
   fireEvent.mouseEnter(screen.getByRole('status'));
-  rerender(<adapter.ToastAdapter title="Готово" open={false} duration={1000} onOpenChange={open => changes.push(open)} />);
-  rerender(<adapter.ToastAdapter title="Готово" open duration={1000} onOpenChange={open => changes.push(open)} />);
+  rerender(
+    <adapter.ToastAdapter
+      title="Готово"
+      open={false}
+      duration={1000}
+      onOpenChange={(open) => changes.push(open)}
+    />,
+  );
+  rerender(
+    <adapter.ToastAdapter
+      title="Готово"
+      open
+      duration={1000}
+      onOpenChange={(open) => changes.push(open)}
+    />,
+  );
   act(() => vi.advanceTimersByTime(1000));
   expect(changes).toEqual([false]);
 });
 
 it('rejects durations that browser timers cannot represent', () => {
-  expect(() => render(<adapter.ToastAdapter title="Некорректный таймер" duration={Infinity} />)).toThrow();
-  expect(() => render(<adapter.ToastAdapter title="Некорректный таймер" duration={2147483648} />)).toThrow();
+  expect(() =>
+    render(<adapter.ToastAdapter title="Некорректный таймер" duration={Infinity} />),
+  ).toThrow();
+  expect(() =>
+    render(<adapter.ToastAdapter title="Некорректный таймер" duration={2147483648} />),
+  ).toThrow();
 });
 
 it('pauses the remaining countdown on hover and keyboard focus', () => {
@@ -44,11 +72,27 @@ it('requests controlled closing once without removing externally controlled cont
   expect(adapter).toHaveProperty('ToastAdapter');
   vi.useFakeTimers();
   const changes: boolean[] = [];
-  const { rerender } = render(<adapter.ToastAdapter title="Ошибка" type="error" open duration={1000} onOpenChange={open => changes.push(open)} />);
+  const { rerender } = render(
+    <adapter.ToastAdapter
+      title="Ошибка"
+      type="error"
+      open
+      duration={1000}
+      onOpenChange={(open) => changes.push(open)}
+    />,
+  );
   expect(screen.getByRole('alert')).toBeTruthy();
   act(() => vi.advanceTimersByTime(1000));
   expect(changes).toEqual([false]);
-  rerender(<adapter.ToastAdapter title="Ошибка" type="error" open duration={1000} onOpenChange={open => changes.push(open)} />);
+  rerender(
+    <adapter.ToastAdapter
+      title="Ошибка"
+      type="error"
+      open
+      duration={1000}
+      onOpenChange={(open) => changes.push(open)}
+    />,
+  );
   act(() => vi.advanceTimersByTime(5000));
   expect(changes).toEqual([false]);
   expect(screen.getByText('Ошибка')).toBeTruthy();
@@ -62,7 +106,9 @@ it('allows persistent notifications to be dismissed and cleans up pending timers
   fireEvent.click(screen.getByRole('button'));
   expect(screen.queryByText('Постоянное')).toBeNull();
   const changes: boolean[] = [];
-  const { unmount } = render(<adapter.ToastAdapter title="Временное" onOpenChange={open => changes.push(open)} />);
+  const { unmount } = render(
+    <adapter.ToastAdapter title="Временное" onOpenChange={(open) => changes.push(open)} />,
+  );
   unmount();
   act(() => vi.advanceTimersByTime(10000));
   expect(changes).toEqual([]);

@@ -5,5 +5,10 @@ import { layoutPresentation } from '#presentation/Layout/Layout/layoutPresentati
 export type LayoutFooterProps = LayoutFooterAdapterProps;
 
 export function LayoutFooter({ className, ...props }: LayoutFooterProps) {
-  return <LayoutFooterAdapter {...props} className={[layoutPresentation.footer, className].filter(Boolean).join(' ')} />;
+  return (
+    <LayoutFooterAdapter
+      {...props}
+      className={[layoutPresentation.footer, className].filter(Boolean).join(' ')}
+    />
+  );
 }

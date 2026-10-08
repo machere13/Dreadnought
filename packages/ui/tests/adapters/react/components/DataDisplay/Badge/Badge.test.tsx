@@ -15,14 +15,26 @@ describe('Badge', () => {
     expect(badge?.getAttribute('data-appearance')).toBe('ghosted');
     expect(badge?.classList.length).toBe(3);
     expect(document.querySelector('[data-slot="icon"]')).toBeNull();
-    rerender(<Badge appearance="ghosted" icon={<Mark shape="circle" />}>Ready</Badge>);
+    rerender(
+      <Badge appearance="ghosted" icon={<Mark shape="circle" />}>
+        Ready
+      </Badge>,
+    );
     expect(document.querySelector('[data-slot="icon"] [data-ui="mark"]')).not.toBeNull();
-    rerender(<Badge appearance="ghosted" icon={<Icon name="check" />}>Ready</Badge>);
+    rerender(
+      <Badge appearance="ghosted" icon={<Icon name="check" />}>
+        Ready
+      </Badge>,
+    );
     expect(document.querySelector('[data-slot="icon"] [data-ui="icon"] svg')).not.toBeNull();
   });
   it('styles a standalone label with the solid appearance by default', () => {
     const root = createRef<HTMLSpanElement>();
-    render(<Badge ref={root} className="custom" data-test-id="release">Beta</Badge>);
+    render(
+      <Badge ref={root} className="custom" data-test-id="release">
+        Beta
+      </Badge>,
+    );
 
     expect(root.current?.textContent).toBe('Beta');
     expect(root.current?.getAttribute('data-mode')).toBe('standalone');
@@ -35,7 +47,14 @@ describe('Badge', () => {
   it('places an outlined badge over an interactive target without changing its action', () => {
     const onClick = vi.fn();
     render(
-      <Badge appearance="outline" target={<button type="button" aria-label="Inbox, 0 unread" onClick={onClick}>Inbox</button>}>
+      <Badge
+        appearance="outline"
+        target={
+          <button type="button" aria-label="Inbox, 0 unread" onClick={onClick}>
+            Inbox
+          </button>
+        }
+      >
         {0}
       </Badge>,
     );
@@ -46,12 +65,20 @@ describe('Badge', () => {
 
     expect(document.activeElement).toBe(button);
     expect(onClick).toHaveBeenCalledOnce();
-    expect(screen.getByText('0').closest('[data-slot="badge"]')?.getAttribute('aria-hidden')).toBe('true');
-    expect(screen.getByText('0').closest('[data-ui="badge"]')?.getAttribute('data-appearance')).toBe('outline');
+    expect(screen.getByText('0').closest('[data-slot="badge"]')?.getAttribute('aria-hidden')).toBe(
+      'true',
+    );
+    expect(
+      screen.getByText('0').closest('[data-ui="badge"]')?.getAttribute('data-appearance'),
+    ).toBe('outline');
   });
 
   it('keeps icon placement in the styled facade', () => {
-    render(<Badge icon={<svg />} iconPosition="end">New</Badge>);
+    render(
+      <Badge icon={<svg />} iconPosition="end">
+        New
+      </Badge>,
+    );
 
     const badge = screen.getByText('New').closest('[data-ui="badge"]');
     expect(badge?.children[0]?.getAttribute('data-slot')).toBe('label');
@@ -60,15 +87,31 @@ describe('Badge', () => {
 
   it('does not apply Badge icon sizing to an icon inside the overlay target', () => {
     render(
-      <Badge icon={<svg aria-hidden="true" data-testid="badge-icon" />} target={
-        <Button icon={<svg aria-hidden="true" data-testid="button-icon" />} aria-label="Inbox, 3 unread">Inbox</Button>
-      }>3</Badge>,
+      <Badge
+        icon={<svg aria-hidden="true" data-testid="badge-icon" />}
+        target={
+          <Button
+            icon={<svg aria-hidden="true" data-testid="button-icon" />}
+            aria-label="Inbox, 3 unread"
+          >
+            Inbox
+          </Button>
+        }
+      >
+        3
+      </Badge>,
     );
 
-    const css = postcss.parse(readFileSync(resolve(process.cwd(), 'packages/ui/dist/style.css'), 'utf8'));
+    const css = postcss.parse(
+      readFileSync(resolve(process.cwd(), 'packages/ui/dist/style.css'), 'utf8'),
+    );
     const selectors: string[] = [];
     css.walkRules((rule) => {
-      if (rule.nodes.some((node) => node.type === 'decl' && node.value.includes('--dreadnought-badge-icon-size'))) {
+      if (
+        rule.nodes.some(
+          (node) => node.type === 'decl' && node.value.includes('--dreadnought-badge-icon-size'),
+        )
+      ) {
         selectors.push(...rule.selector.split(',').map((selector) => selector.trim()));
       }
     });

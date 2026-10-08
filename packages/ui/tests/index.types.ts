@@ -2,15 +2,26 @@ import { buttonPresentation } from '@dreadnought/ui';
 import { Button } from '@dreadnought/ui/react';
 import { MarkdownEditor, type MarkdownEditorProps } from '@dreadnought/ui/react';
 import { markdownEditorPresentation } from '@dreadnought/ui';
-const markdownEditorProps: MarkdownEditorProps = { value: '', toolbar: false, labels: { bold: 'Bold' } };
+const markdownEditorProps: MarkdownEditorProps = {
+  value: '',
+  toolbar: false,
+  labels: { bold: 'Bold' },
+};
 import { MarkdownPreview, type MarkdownPreviewProps } from '@dreadnought/ui/react';
 import { markdownPreviewPresentation } from '@dreadnought/ui';
 const previewProps: MarkdownPreviewProps = { value: '# Hello' };
-const liveProps: MarkdownEditorProps = { preview: 'live', historyLimit: 20, onPreviewChange: mode => void mode };
-const uploadProps: MarkdownEditorProps = { uploadImage: async (file, {signal}) => {
-  signal.throwIfAborted();
-  return `/images/${encodeURIComponent(file.name)}`;
-}, labels: { cancelUpload: 'Cancel upload', uploadError: 'Upload failed' } };
+const liveProps: MarkdownEditorProps = {
+  preview: 'live',
+  historyLimit: 20,
+  onPreviewChange: (mode) => void mode,
+};
+const uploadProps: MarkdownEditorProps = {
+  uploadImage: async (file, { signal }) => {
+    signal.throwIfAborted();
+    return `/images/${encodeURIComponent(file.name)}`;
+  },
+  labels: { cancelUpload: 'Cancel upload', uploadError: 'Upload failed' },
+};
 void uploadProps;
 void [MarkdownPreview, markdownPreviewPresentation.root, previewProps, liveProps];
 void [MarkdownEditor, markdownEditorPresentation.field, markdownEditorProps];

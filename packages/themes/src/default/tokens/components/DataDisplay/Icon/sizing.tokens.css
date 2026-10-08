@@ -1,1 +1,3 @@
-:root { --dreadnought-icon-size: var(--dreadnought-size-inline-graphic); }
+:root {
+  --dreadnought-icon-size: var(--dreadnought-size-inline-graphic);
+}

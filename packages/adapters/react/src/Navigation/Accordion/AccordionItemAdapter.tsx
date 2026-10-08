@@ -9,7 +9,12 @@ export type AccordionItemAdapterProps = Omit<ComponentPropsWithRef<'div'>, 'chil
   children: ReactNode;
 };
 
-export function AccordionItemAdapter({ value, children, ref, ...itemProps }: AccordionItemAdapterProps) {
+export function AccordionItemAdapter({
+  value,
+  children,
+  ref,
+  ...itemProps
+}: AccordionItemAdapterProps) {
   const root = useAccordionRootContext();
   const itemToken = useRef(Symbol('accordion-item'));
   const registerPart = useAccordionParts(value);
@@ -22,9 +27,14 @@ export function AccordionItemAdapter({ value, children, ref, ...itemProps }: Acc
   useLayoutEffect(() => {
     const panel = panelRef.current;
     let active = panel?.ownerDocument.activeElement;
-    for (let frame = panel?.ownerDocument.defaultView?.frameElement; frame;
-      frame = frame.ownerDocument.defaultView?.frameElement) {
-      if (frame.ownerDocument.activeElement !== frame) active = null;
+    for (
+      let frame = panel?.ownerDocument.defaultView?.frameElement;
+      frame;
+      frame = frame.ownerDocument.defaultView?.frameElement
+    ) {
+      if (frame.ownerDocument.activeElement !== frame) {
+        active = null;
+      }
     }
     if (wasOpen.current && !open && active && panel?.contains(active)) {
       triggerRef.current?.focus();
@@ -33,9 +43,11 @@ export function AccordionItemAdapter({ value, children, ref, ...itemProps }: Acc
   }, [open]);
 
   const encodedValue = encodeURIComponent(value);
-  const disclosure = getDisclosureState({ open,
+  const disclosure = getDisclosureState({
+    open,
     triggerId: `${root.rootId}-trigger-${encodedValue}`,
-    panelId: `${root.rootId}-panel-${encodedValue}` });
+    panelId: `${root.rootId}-panel-${encodedValue}`,
+  });
   const context = {
     value,
     open,
@@ -46,7 +58,11 @@ export function AccordionItemAdapter({ value, children, ref, ...itemProps }: Acc
     registerPart,
   };
 
-  return <AccordionItemContext.Provider value={context}>
-    <div {...itemProps} ref={ref} data-state={open ? 'open' : 'closed'}>{children}</div>
-  </AccordionItemContext.Provider>;
+  return (
+    <AccordionItemContext.Provider value={context}>
+      <div {...itemProps} ref={ref} data-state={open ? 'open' : 'closed'}>
+        {children}
+      </div>
+    </AccordionItemContext.Provider>
+  );
 }

@@ -1,1 +1,3 @@
-:root { --dreadnought-progress-gap: var(--dreadnought-spacing-x2); }
+:root {
+  --dreadnought-progress-gap: var(--dreadnought-spacing-x2);
+}

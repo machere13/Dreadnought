@@ -16,7 +16,11 @@ it('supports custom markup with native keyboard behavior and no implicit submit'
     return <button {...buttonProps}>Custom</button>;
   }
 
-  render(<form onSubmit={submit}><CustomButton /></form>);
+  render(
+    <form onSubmit={submit}>
+      <CustomButton />
+    </form>,
+  );
   screen.getByRole('button', { name: 'Custom' }).focus();
   await user.keyboard('{Enter} ');
 

@@ -20,10 +20,24 @@
     overscroll-behavior: contain;
     overflow-wrap: anywhere;
   }
-  .right { margin: 0 0 0 auto; }
-  .left { margin: 0 auto 0 0; }
-  .top, .bottom { width: 100vw; height: var(--dreadnought-drawer-size); }
-  .top { margin: 0 0 auto; }
-  .bottom { margin: auto 0 0; }
-  .root::backdrop { background: var(--dreadnought-drawer-backdrop); }
+  .right {
+    margin: 0 0 0 auto;
+  }
+  .left {
+    margin: 0 auto 0 0;
+  }
+  .top,
+  .bottom {
+    width: 100vw;
+    height: var(--dreadnought-drawer-size);
+  }
+  .top {
+    margin: 0 0 auto;
+  }
+  .bottom {
+    margin: auto 0 0;
+  }
+  .root::backdrop {
+    background: var(--dreadnought-drawer-backdrop);
+  }
 }

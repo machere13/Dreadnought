@@ -5,7 +5,12 @@ import type { RegisteredTab } from './TabsContext.tsx';
 import type { TabsListAdapterProps } from './TabsListAdapter.tsx';
 import { MenuAdapter } from '../Menu/MenuAdapter.tsx';
 
-export function TabsOverflowMenu({ tabs, revealTab, label, slotProps }: {
+export function TabsOverflowMenu({
+  tabs,
+  revealTab,
+  label,
+  slotProps,
+}: {
   tabs: RegisteredTab[];
   revealTab: (element: HTMLButtonElement) => void;
   label: string;
@@ -19,13 +24,19 @@ export function TabsOverflowMenu({ tabs, revealTab, label, slotProps }: {
   const [open, setOpen] = useState(false);
 
   function close(restoreFocus = false) {
-    if (menuRef.current?.matches(':popover-open')) menuRef.current.hidePopover();
+    if (menuRef.current?.matches(':popover-open')) {
+      menuRef.current.hidePopover();
+    }
     setOpen(false);
-    if (restoreFocus) triggerRef.current?.focus();
+    if (restoreFocus) {
+      triggerRef.current?.focus();
+    }
   }
 
   useLayoutEffect(() => {
-    if (!open) return;
+    if (!open) {
+      return;
+    }
     const menu = menuRef.current!;
     const view = menu.ownerDocument.defaultView;
     Reflect.apply(menu.showPopover, menu, [{ source: triggerRef.current ?? undefined }]);
@@ -48,51 +59,103 @@ export function TabsOverflowMenu({ tabs, revealTab, label, slotProps }: {
       resize?.disconnect();
       view?.removeEventListener('resize', position);
       view?.removeEventListener('scroll', position, true);
-      if (menu.matches(':popover-open')) menu.hidePopover();
+      if (menu.matches(':popover-open')) {
+        menu.hidePopover();
+      }
     };
   }, [open]);
 
   function navigateMenu(event: KeyboardEvent<HTMLDivElement>) {
     slotProps.menu?.onKeyDown?.(event);
-    if (event.defaultPrevented) return;
-    if (event.key === 'Escape') { event.preventDefault(); close(true); return; }
+    if (event.defaultPrevented) {
+      return;
+    }
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      close(true);
+      return;
+    }
   }
 
-  return <>
-    <button {...slotProps.more} ref={triggerRef} type="button" data-slot="more"
-      popoverTarget={menuId}
-      aria-label={label} aria-haspopup="menu" aria-expanded={open} aria-controls={menuId}
-      onClick={(event) => {
-        slotProps.more?.onClick?.(event);
-        if (event.defaultPrevented) return;
-        event.preventDefault();
-        focusLast.current = false;
-        if (open) close(); else setOpen(true);
-      }} onKeyDown={(event) => {
-        slotProps.more?.onKeyDown?.(event);
-        if (event.defaultPrevented || !['ArrowDown', 'ArrowUp'].includes(event.key)) return;
-        event.preventDefault();
-        focusLast.current = event.key === 'ArrowUp';
-        setOpen(true);
-      }}>{slotProps.more?.children ?? '…'}</button>
-    <MenuAdapter {...slotProps.menu} ref={menuRef} id={menuId} popover="auto" hidden={!open}
-      items={tabs.map((tab) => ({ value: tab.value, label: tab.label, disabled: tab.disabled,
-        ariaLabel: tab.element.getAttribute('aria-label') ?? undefined }))}
-      selectedValue={context.value} slotProps={{ item: slotProps.item }} onAction={(value) => {
-        const tab = tabs.find((tab) => tab.value === value)!;
-        close();
-        context.setValue(value);
-        revealTab(tab.element);
-        tab.element.focus({ preventScroll: true });
-      }}
-      role="menu" aria-label={label} data-slot="more-menu" onKeyDown={navigateMenu}
-      onToggle={(event) => {
-        slotProps.menu?.onToggle?.(event);
-        if (event.newState === 'closed') setOpen(false);
-      }} onBlur={(event) => {
-        slotProps.menu?.onBlur?.(event);
-        if (!event.defaultPrevented && event.relatedTarget !== triggerRef.current
-          && !event.currentTarget.contains(event.relatedTarget)) close();
-      }} />
-  </>;
+  return (
+    <>
+      <button
+        {...slotProps.more}
+        ref={triggerRef}
+        type="button"
+        data-slot="more"
+        popoverTarget={menuId}
+        aria-label={label}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={menuId}
+        onClick={(event) => {
+          slotProps.more?.onClick?.(event);
+          if (event.defaultPrevented) {
+            return;
+          }
+          event.preventDefault();
+          focusLast.current = false;
+          if (open) {
+            close();
+          } else {
+            setOpen(true);
+          }
+        }}
+        onKeyDown={(event) => {
+          slotProps.more?.onKeyDown?.(event);
+          if (event.defaultPrevented || !['ArrowDown', 'ArrowUp'].includes(event.key)) {
+            return;
+          }
+          event.preventDefault();
+          focusLast.current = event.key === 'ArrowUp';
+          setOpen(true);
+        }}
+      >
+        {slotProps.more?.children ?? '…'}
+      </button>
+      <MenuAdapter
+        {...slotProps.menu}
+        ref={menuRef}
+        id={menuId}
+        popover="auto"
+        hidden={!open}
+        items={tabs.map((tab) => ({
+          value: tab.value,
+          label: tab.label,
+          disabled: tab.disabled,
+          ariaLabel: tab.element.getAttribute('aria-label') ?? undefined,
+        }))}
+        selectedValue={context.value}
+        slotProps={{ item: slotProps.item }}
+        onAction={(value) => {
+          const tab = tabs.find((tab) => tab.value === value)!;
+          close();
+          context.setValue(value);
+          revealTab(tab.element);
+          tab.element.focus({ preventScroll: true });
+        }}
+        role="menu"
+        aria-label={label}
+        data-slot="more-menu"
+        onKeyDown={navigateMenu}
+        onToggle={(event) => {
+          slotProps.menu?.onToggle?.(event);
+          if (event.newState === 'closed') {
+            setOpen(false);
+          }
+        }}
+        onBlur={(event) => {
+          slotProps.menu?.onBlur?.(event);
+          if (
+            !event.defaultPrevented &&
+            event.relatedTarget !== triggerRef.current &&
+            !event.currentTarget.contains(event.relatedTarget)
+          ) {
+            close();
+          }
+        }}
+      />
+    </>
+  );
 }

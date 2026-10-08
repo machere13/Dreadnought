@@ -8,6 +8,10 @@
     vertical-align: middle;
   }
 
-  .mark[data-shape="circle"] { border-radius: var(--dreadnought-mark-circle-radius); }
-  .mark[data-shape="square"] { border-radius: var(--dreadnought-mark-square-radius); }
+  .mark[data-shape='circle'] {
+    border-radius: var(--dreadnought-mark-circle-radius);
+  }
+  .mark[data-shape='square'] {
+    border-radius: var(--dreadnought-mark-square-radius);
+  }
 }

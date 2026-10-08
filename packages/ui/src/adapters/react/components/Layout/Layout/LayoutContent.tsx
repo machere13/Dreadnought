@@ -5,5 +5,10 @@ import { layoutPresentation } from '#presentation/Layout/Layout/layoutPresentati
 export type LayoutContentProps = LayoutContentAdapterProps;
 
 export function LayoutContent({ className, ...props }: LayoutContentProps) {
-  return <LayoutContentAdapter {...props} className={[layoutPresentation.content, className].filter(Boolean).join(' ')} />;
+  return (
+    <LayoutContentAdapter
+      {...props}
+      className={[layoutPresentation.content, className].filter(Boolean).join(' ')}
+    />
+  );
 }

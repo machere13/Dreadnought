@@ -12,14 +12,17 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--dreadnought-code-block-header-gap);
-    padding: var(--dreadnought-code-block-header-padding-block) var(--dreadnought-code-block-padding-inline);
+    padding: var(--dreadnought-code-block-header-padding-block)
+      var(--dreadnought-code-block-padding-inline);
     color: var(--dreadnought-code-block-muted-text);
-    border-bottom: var(--dreadnought-code-block-border-width) solid var(--dreadnought-code-block-border);
+    border-bottom: var(--dreadnought-code-block-border-width) solid
+      var(--dreadnought-code-block-border);
   }
 
   .pre {
     margin: 0;
-    padding: var(--dreadnought-code-block-padding-block) var(--dreadnought-code-block-padding-inline);
+    padding: var(--dreadnought-code-block-padding-block)
+      var(--dreadnought-code-block-padding-inline);
     overflow-x: auto;
     white-space: pre;
   }

@@ -1,5 +1,11 @@
 import { getNavigationDirection, getNextEnabledValue, getTypeaheadValue } from '@dreadnought/core';
-import type { NavigationDirection, NavigationKeyOptions, NavigationOptions, TypeaheadItem, TypeaheadOptions } from '@dreadnought/core';
+import type {
+  NavigationDirection,
+  NavigationKeyOptions,
+  NavigationOptions,
+  TypeaheadItem,
+  TypeaheadOptions,
+} from '@dreadnought/core';
 
 const options: NavigationOptions = { loop: false };
 const next: string | undefined = getNextEnabledValue([{ value: 'a' }], 'a', 'next', options);
@@ -7,7 +13,9 @@ const next: string | undefined = getNextEnabledValue([{ value: 'a' }], 'a', 'nex
 getNextEnabledValue([], '', 'next', { loop: 'off' });
 void next;
 
-const searchable: readonly TypeaheadItem[] = [{ value: 'settings', text: 'Settings', disabled: false }];
+const searchable: readonly TypeaheadItem[] = [
+  { value: 'settings', text: 'Settings', disabled: false },
+];
 const searchOptions: TypeaheadOptions = { includeCurrent: true };
 const found: string | undefined = getTypeaheadValue(searchable, 'settings', 'set', searchOptions);
 // @ts-expect-error Search items require a plain text label.

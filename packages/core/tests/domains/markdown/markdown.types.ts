@@ -1,4 +1,8 @@
-import { applyMarkdownCommand, type MarkdownCommand, type MarkdownDocument } from '@dreadnought/core';
+import {
+  applyMarkdownCommand,
+  type MarkdownCommand,
+  type MarkdownDocument,
+} from '@dreadnought/core';
 
 const doc: MarkdownDocument = { text: 'a', selection: { start: 0, end: 1 } };
 const command: MarkdownCommand = { type: 'heading', level: 4 };

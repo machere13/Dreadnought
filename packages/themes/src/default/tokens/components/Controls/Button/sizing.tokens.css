@@ -3,7 +3,10 @@
   --dreadnought-button-min-height: var(--dreadnought-size-control-min-height);
   --dreadnought-button-compact-min-height: var(--dreadnought-size-control-compact-min-height);
   --dreadnought-button-focus-width: var(--dreadnought-border-width-x3);
-  --dreadnought-button-primary-focus-halo-width: calc(var(--dreadnought-button-focus-width) + var(--dreadnought-button-focus-offset) + var(--dreadnought-border-width-outline));
+  --dreadnought-button-primary-focus-halo-width: calc(
+    var(--dreadnought-button-focus-width) + var(--dreadnought-button-focus-offset) +
+      var(--dreadnought-border-width-outline)
+  );
   --dreadnought-button-border-width: var(--dreadnought-border-width-outline);
   --dreadnought-button-icon-size: var(--dreadnought-size-inline-graphic);
   --dreadnought-button-spinner-size: var(--dreadnought-size-inline-graphic);

@@ -1,5 +1,7 @@
 @layer dreadnought {
-  .root { color: var(--dreadnought-breadcrumb-current-fg); }
+  .root {
+    color: var(--dreadnought-breadcrumb-current-fg);
+  }
 
   .list {
     display: flex;
@@ -30,7 +32,15 @@
     text-decoration: none;
   }
 
-  .link:hover { color: var(--dreadnought-breadcrumb-link-fg-hover); text-decoration: underline; }
-  .link:focus-visible { outline: var(--dreadnought-breadcrumb-focus-width) solid var(--dreadnought-breadcrumb-focus-ring); }
-  .current { color: var(--dreadnought-breadcrumb-current-fg); }
+  .link:hover {
+    color: var(--dreadnought-breadcrumb-link-fg-hover);
+    text-decoration: underline;
+  }
+  .link:focus-visible {
+    outline: var(--dreadnought-breadcrumb-focus-width) solid
+      var(--dreadnought-breadcrumb-focus-ring);
+  }
+  .current {
+    color: var(--dreadnought-breadcrumb-current-fg);
+  }
 }

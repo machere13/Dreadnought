@@ -11,7 +11,9 @@ describe('getNavigationDirection', () => {
   });
 
   it('maps horizontal arrows without consuming vertical ones', () => {
-    expect(core.getNavigationDirection('ArrowLeft', { orientation: 'horizontal' })).toBe('previous');
+    expect(core.getNavigationDirection('ArrowLeft', { orientation: 'horizontal' })).toBe(
+      'previous',
+    );
     expect(core.getNavigationDirection('ArrowRight', { orientation: 'horizontal' })).toBe('next');
     expect(core.getNavigationDirection('ArrowDown', { orientation: 'horizontal' })).toBeUndefined();
     expect(core.getNavigationDirection('ArrowUp', { orientation: 'horizontal' })).toBeUndefined();

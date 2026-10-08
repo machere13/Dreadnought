@@ -28,7 +28,16 @@ export function useTextArea({
   textAreaRef: RefCallback<HTMLTextAreaElement>;
   state: TextAreaCore;
 } {
-  const state = getTextAreaState({ disabled, readOnly, required, invalid, rows, minRows, maxRows, autoSize });
+  const state = getTextAreaState({
+    disabled,
+    readOnly,
+    required,
+    invalid,
+    rows,
+    minRows,
+    maxRows,
+    autoSize,
+  });
   const [element, setElement] = useState<HTMLTextAreaElement | null>(null);
   const currentState = useRef(state);
   const wasAutoSized = useRef(false);
@@ -38,10 +47,13 @@ export function useTextArea({
 
   useLayoutEffect(() => {
     currentState.current = state;
-    if (!element) return;
+    if (!element) {
+      return;
+    }
     if (!state.autoSize) {
       if (wasAutoSized.current) {
-        element.style.height = typeof style?.height === 'number' ? `${style.height}px` : style?.height ?? '';
+        element.style.height =
+          typeof style?.height === 'number' ? `${style.height}px` : (style?.height ?? '');
         element.style.overflowY = style?.overflowY ?? '';
       }
       wasAutoSized.current = false;
@@ -53,7 +65,9 @@ export function useTextArea({
   });
 
   useLayoutEffect(() => {
-    if (!state.autoSize || !element) return;
+    if (!state.autoSize || !element) {
+      return;
+    }
 
     const update = () => resizeTextArea(element, currentState.current);
     const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(update);
@@ -67,12 +81,15 @@ export function useTextArea({
 
   function handleInput(event: InputEvent<HTMLTextAreaElement>) {
     onInput?.(event);
-    if (state.autoSize) resizeTextArea(event.currentTarget, state);
+    if (state.autoSize) {
+      resizeTextArea(event.currentTarget, state);
+    }
   }
 
-  const minimumRows = !state.autoSize && (state.minRows !== undefined || state.maxRows !== undefined)
-    ? Math.min(state.minRows ?? 1, state.maxRows ?? Infinity)
-    : undefined;
+  const minimumRows =
+    !state.autoSize && (state.minRows !== undefined || state.maxRows !== undefined)
+      ? Math.min(state.minRows ?? 1, state.maxRows ?? Infinity)
+      : undefined;
   const textAreaProps = {
     ...rest,
     rows: state.autoSize ? 1 : state.rows,

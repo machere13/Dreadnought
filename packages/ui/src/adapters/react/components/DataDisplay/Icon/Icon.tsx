@@ -1,5 +1,32 @@
-import { CheckCircleOutlined, CheckOutlined, CloseCircleOutlined, CloseOutlined, CopyOutlined, DownOutlined, EllipsisOutlined, EyeInvisibleOutlined, EyeOutlined, InfoCircleOutlined, MenuOutlined, SearchOutlined, WarningOutlined } from '@ant-design/icons';
-import { BoldOutlined, ItalicOutlined, StrikethroughOutlined, FontSizeOutlined, DoubleRightOutlined, UnorderedListOutlined, OrderedListOutlined, CodeOutlined, FileTextOutlined, LinkOutlined, PictureOutlined, TableOutlined } from '@ant-design/icons';
+import {
+  CheckCircleOutlined,
+  CheckOutlined,
+  CloseCircleOutlined,
+  CloseOutlined,
+  CopyOutlined,
+  DownOutlined,
+  EllipsisOutlined,
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  InfoCircleOutlined,
+  MenuOutlined,
+  SearchOutlined,
+  WarningOutlined,
+} from '@ant-design/icons';
+import {
+  BoldOutlined,
+  ItalicOutlined,
+  StrikethroughOutlined,
+  FontSizeOutlined,
+  DoubleRightOutlined,
+  UnorderedListOutlined,
+  OrderedListOutlined,
+  CodeOutlined,
+  FileTextOutlined,
+  LinkOutlined,
+  PictureOutlined,
+  TableOutlined,
+} from '@ant-design/icons';
 import { UndoOutlined, RedoOutlined, LayoutOutlined } from '@ant-design/icons';
 import { FilterOutlined } from '@ant-design/icons';
 import { IconAdapter } from '@dreadnought/react/unstyled';
@@ -44,5 +71,12 @@ export type IconProps = Omit<IconAdapterProps, 'children'> & { name: IconName };
 
 export function Icon({ name, className, ...props }: IconProps) {
   const Graphic = icons[name];
-  return <IconAdapter {...props} className={[iconPresentation.root, className].filter(Boolean).join(' ')}><Graphic /></IconAdapter>;
+  return (
+    <IconAdapter
+      {...props}
+      className={[iconPresentation.root, className].filter(Boolean).join(' ')}
+    >
+      <Graphic />
+    </IconAdapter>
+  );
 }

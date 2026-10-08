@@ -1,4 +1,9 @@
-import { getPaginationState, type PaginationItem, type PaginationState, type PaginationStateOptions } from '@dreadnought/core';
+import {
+  getPaginationState,
+  type PaginationItem,
+  type PaginationState,
+  type PaginationStateOptions,
+} from '@dreadnought/core';
 
 const options: PaginationStateOptions = { total: 30 };
 const state: PaginationState = getPaginationState(options);

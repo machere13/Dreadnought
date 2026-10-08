@@ -13,7 +13,20 @@ it('preserves label, native attributes, ref, and controlled onChange', async () 
   const user = userEvent.setup();
   const ref = createRef<HTMLTextAreaElement>();
   const onChange = vi.fn();
-  render(<><label htmlFor="notes">Notes</label><TextAreaAdapter id="notes" ref={ref} name="notes" rows={4} value="a" onChange={onChange} required /></>);
+  render(
+    <>
+      <label htmlFor="notes">Notes</label>
+      <TextAreaAdapter
+        id="notes"
+        ref={ref}
+        name="notes"
+        rows={4}
+        value="a"
+        onChange={onChange}
+        required
+      />
+    </>,
+  );
   const area = screen.getByRole('textbox', { name: 'Notes' });
   expect(ref.current).toBe(area);
   expect(area.getAttribute('rows')).toBe('4');
@@ -25,7 +38,13 @@ it('preserves label, native attributes, ref, and controlled onChange', async () 
 
 it('preserves uncontrolled, disabled, and read-only behavior', async () => {
   const user = userEvent.setup();
-  render(<><TextAreaAdapter aria-label="Editable" defaultValue="a" /><TextAreaAdapter aria-label="Disabled" disabled /><TextAreaAdapter aria-label="Read only" readOnly defaultValue="x" /></>);
+  render(
+    <>
+      <TextAreaAdapter aria-label="Editable" defaultValue="a" />
+      <TextAreaAdapter aria-label="Disabled" disabled />
+      <TextAreaAdapter aria-label="Read only" readOnly defaultValue="x" />
+    </>,
+  );
   const editable = screen.getByRole('textbox', { name: 'Editable' }) as HTMLTextAreaElement;
   await user.type(editable, 'b');
   expect(editable.value).toBe('ab');
@@ -43,10 +62,27 @@ it('maps invalid state to aria and data attributes', () => {
 
 it('auto-sizes to content within row limits and disables mouse resizing', () => {
   const ref = (node: HTMLTextAreaElement | null) => {
-    if (node) Object.defineProperty(node, 'scrollHeight', { configurable: true, get: () => 100 });
+    if (node) {
+      Object.defineProperty(node, 'scrollHeight', { configurable: true, get: () => 100 });
+    }
   };
-  render(<TextAreaAdapter aria-label="Notes" ref={ref} rows={4} minRows={2} maxRows={3} autoSize
-    style={{ boxSizing: 'content-box', lineHeight: '20px', padding: 0, border: 0, resize: 'vertical' }} />);
+  render(
+    <TextAreaAdapter
+      aria-label="Notes"
+      ref={ref}
+      rows={4}
+      minRows={2}
+      maxRows={3}
+      autoSize
+      style={{
+        boxSizing: 'content-box',
+        lineHeight: '20px',
+        padding: 0,
+        border: 0,
+        resize: 'vertical',
+      }}
+    />,
+  );
   const area = screen.getByRole('textbox', { name: 'Notes' }) as HTMLTextAreaElement;
   expect(area.style.height).toBe('60px');
   expect(area.style.resize).toBe('none');
@@ -63,18 +99,58 @@ it('auto-sizes to content within row limits and disables mouse resizing', () => 
 it('remeasures controlled content and restores manual mode', () => {
   let contentHeight = 20;
   const ref = (node: HTMLTextAreaElement | null) => {
-    if (node) Object.defineProperty(node, 'scrollHeight', { configurable: true, get: () => contentHeight });
+    if (node) {
+      Object.defineProperty(node, 'scrollHeight', { configurable: true, get: () => contentHeight });
+    }
   };
-  const style = { boxSizing: 'content-box' as const, lineHeight: '20px', padding: 0, border: 0, resize: 'vertical' as const };
-  const { rerender } = render(<TextAreaAdapter aria-label="Notes" ref={ref} autoSize rows={2} maxRows={3} value="short" onChange={() => {}} style={style} />);
+  const style = {
+    boxSizing: 'content-box' as const,
+    lineHeight: '20px',
+    padding: 0,
+    border: 0,
+    resize: 'vertical' as const,
+  };
+  const { rerender } = render(
+    <TextAreaAdapter
+      aria-label="Notes"
+      ref={ref}
+      autoSize
+      rows={2}
+      maxRows={3}
+      value="short"
+      onChange={() => {}}
+      style={style}
+    />,
+  );
   const area = screen.getByRole('textbox', { name: 'Notes' }) as HTMLTextAreaElement;
   expect(area.style.height).toBe('40px');
 
   contentHeight = 100;
-  rerender(<TextAreaAdapter aria-label="Notes" ref={ref} autoSize rows={2} maxRows={3} value="long" onChange={() => {}} style={style} />);
+  rerender(
+    <TextAreaAdapter
+      aria-label="Notes"
+      ref={ref}
+      autoSize
+      rows={2}
+      maxRows={3}
+      value="long"
+      onChange={() => {}}
+      style={style}
+    />,
+  );
   expect(area.style.height).toBe('60px');
 
-  rerender(<TextAreaAdapter aria-label="Notes" ref={ref} rows={2} maxRows={3} value="long" onChange={() => {}} style={style} />);
+  rerender(
+    <TextAreaAdapter
+      aria-label="Notes"
+      ref={ref}
+      rows={2}
+      maxRows={3}
+      value="long"
+      onChange={() => {}}
+      style={style}
+    />,
+  );
   expect(area.style.height).toBe('');
   expect(area.style.resize).toBe('vertical');
   expect(area.getAttribute('rows')).toBe('2');
@@ -85,15 +161,39 @@ it('keeps one resize subscription while controlled content changes', () => {
   const removeListener = vi.spyOn(window, 'removeEventListener');
   let contentHeight = 100;
   const ref = (node: HTMLTextAreaElement | null) => {
-    if (node) Object.defineProperty(node, 'scrollHeight', { configurable: true, get: () => contentHeight });
+    if (node) {
+      Object.defineProperty(node, 'scrollHeight', { configurable: true, get: () => contentHeight });
+    }
   };
   const style = { boxSizing: 'content-box' as const, lineHeight: '20px', padding: 0, border: 0 };
-  const { rerender, unmount } = render(<TextAreaAdapter aria-label="Notes" ref={ref} autoSize rows={1} maxRows={2} value="a" onChange={() => {}} style={style} />);
+  const { rerender, unmount } = render(
+    <TextAreaAdapter
+      aria-label="Notes"
+      ref={ref}
+      autoSize
+      rows={1}
+      maxRows={2}
+      value="a"
+      onChange={() => {}}
+      style={style}
+    />,
+  );
   const area = screen.getByRole('textbox', { name: 'Notes' }) as HTMLTextAreaElement;
   expect(area.style.height).toBe('40px');
 
   contentHeight = 120;
-  rerender(<TextAreaAdapter aria-label="Notes" ref={ref} autoSize rows={1} maxRows={3} value="b" onChange={() => {}} style={style} />);
+  rerender(
+    <TextAreaAdapter
+      aria-label="Notes"
+      ref={ref}
+      autoSize
+      rows={1}
+      maxRows={3}
+      value="b"
+      onChange={() => {}}
+      style={style}
+    />,
+  );
   expect(area.style.height).toBe('60px');
   expect(addListener.mock.calls.filter(([type]) => type === 'resize')).toHaveLength(1);
   expect(removeListener.mock.calls.filter(([type]) => type === 'resize')).toHaveLength(0);
@@ -104,10 +204,19 @@ it('keeps one resize subscription while controlled content changes', () => {
 
 it('calculates row height from unitless line-height and font size', () => {
   const ref = (node: HTMLTextAreaElement | null) => {
-    if (node) Object.defineProperty(node, 'scrollHeight', { configurable: true, get: () => 20 });
+    if (node) {
+      Object.defineProperty(node, 'scrollHeight', { configurable: true, get: () => 20 });
+    }
   };
-  render(<TextAreaAdapter aria-label="Notes" ref={ref} autoSize rows={2}
-    style={{ boxSizing: 'content-box', fontSize: '20px', lineHeight: 1.5, padding: 0, border: 0 }} />);
+  render(
+    <TextAreaAdapter
+      aria-label="Notes"
+      ref={ref}
+      autoSize
+      rows={2}
+      style={{ boxSizing: 'content-box', fontSize: '20px', lineHeight: 1.5, padding: 0, border: 0 }}
+    />,
+  );
   const area = screen.getByRole('textbox', { name: 'Notes' }) as HTMLTextAreaElement;
   expect(area.style.height).toBe('60px');
 });
@@ -117,10 +226,20 @@ it('grows after uncontrolled input without swallowing the consumer handler', asy
   const onInput = vi.fn();
   let contentHeight = 20;
   const ref = (node: HTMLTextAreaElement | null) => {
-    if (node) Object.defineProperty(node, 'scrollHeight', { configurable: true, get: () => contentHeight });
+    if (node) {
+      Object.defineProperty(node, 'scrollHeight', { configurable: true, get: () => contentHeight });
+    }
   };
-  render(<TextAreaAdapter aria-label="Notes" ref={ref} autoSize rows={1} onInput={onInput}
-    style={{ boxSizing: 'content-box', lineHeight: '20px', padding: 0, border: 0 }} />);
+  render(
+    <TextAreaAdapter
+      aria-label="Notes"
+      ref={ref}
+      autoSize
+      rows={1}
+      onInput={onInput}
+      style={{ boxSizing: 'content-box', lineHeight: '20px', padding: 0, border: 0 }}
+    />,
+  );
   const area = screen.getByRole('textbox', { name: 'Notes' }) as HTMLTextAreaElement;
   expect(area.style.height).toBe('20px');
 

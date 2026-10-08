@@ -10,8 +10,21 @@ afterEach(cleanup);
 it('steps within the native decimal grid and emits change only when the value changes', async () => {
   const changes: string[] = [];
   const ref = createRef<HTMLInputElement>();
-  render(<form><InputAdapter type="number" aria-label="Quantity" ref={ref} name="quantity" defaultValue="0.2" min={0} max={0.4} step={0.1}
-    onChange={event => changes.push(event.currentTarget.value)} /></form>);
+  render(
+    <form>
+      <InputAdapter
+        type="number"
+        aria-label="Quantity"
+        ref={ref}
+        name="quantity"
+        defaultValue="0.2"
+        min={0}
+        max={0.4}
+        step={0.1}
+        onChange={(event) => changes.push(event.currentTarget.value)}
+      />
+    </form>,
+  );
   await userEvent.click(screen.getByRole('button', { name: 'Increase value' }));
   expect(ref.current?.value).toBe('0.3');
   expect(document.activeElement).toBe(ref.current);
@@ -27,7 +40,14 @@ it('steps within the native decimal grid and emits change only when the value ch
 it('updates controlled values through the ordinary input onChange', async () => {
   function Demo() {
     const [value, setValue] = useState('1');
-    return <InputAdapter type="number" aria-label="Quantity" value={value} onChange={event => setValue(event.currentTarget.value)} />;
+    return (
+      <InputAdapter
+        type="number"
+        aria-label="Quantity"
+        value={value}
+        onChange={(event) => setValue(event.currentTarget.value)}
+      />
+    );
   }
   render(<Demo />);
   await userEvent.click(screen.getByRole('button', { name: 'Increase value' }));
@@ -36,7 +56,14 @@ it('updates controlled values through the ordinary input onChange', async () => 
 
 it('does not change a controlled value when the consumer refuses the update', async () => {
   const changes: string[] = [];
-  render(<InputAdapter type="number" aria-label="Quantity" value="1" onChange={event => changes.push(event.currentTarget.value)} />);
+  render(
+    <InputAdapter
+      type="number"
+      aria-label="Quantity"
+      value="1"
+      onChange={(event) => changes.push(event.currentTarget.value)}
+    />,
+  );
   await userEvent.click(screen.getByRole('button', { name: 'Increase value' }));
   expect(changes).toEqual(['2']);
   expect((screen.getByRole('spinbutton') as HTMLInputElement).value).toBe('1');
@@ -52,24 +79,35 @@ it('steps an empty field without treating an empty required value as zero before
   expect(input.checkValidity()).toBe(true);
 });
 
-it.each([{ disabled: true }, { readOnly: true }])('keeps step controls inert for %j', async props => {
-  render(<InputAdapter type="number" aria-label="Quantity" defaultValue="1" {...props} />);
-  const input = screen.getByRole('spinbutton') as HTMLInputElement;
-  expect(screen.getByRole('button', { name: 'Increase value' }).hasAttribute('disabled')).toBe(true);
-  await userEvent.click(screen.getByRole('button', { name: 'Increase value' }));
-  fireEvent.keyDown(input, { key: 'ArrowUp' });
-  expect(input.value).toBe('1');
-});
+it.each([{ disabled: true }, { readOnly: true }])(
+  'keeps step controls inert for %j',
+  async (props) => {
+    render(<InputAdapter type="number" aria-label="Quantity" defaultValue="1" {...props} />);
+    const input = screen.getByRole('spinbutton') as HTMLInputElement;
+    expect(screen.getByRole('button', { name: 'Increase value' }).hasAttribute('disabled')).toBe(
+      true,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Increase value' }));
+    fireEvent.keyDown(input, { key: 'ArrowUp' });
+    expect(input.value).toBe('1');
+  },
+);
 
 it('does not bypass a disabled fieldset through keyboard handlers', () => {
-  render(<fieldset disabled><InputAdapter type="number" aria-label="Quantity" defaultValue="1" /></fieldset>);
+  render(
+    <fieldset disabled>
+      <InputAdapter type="number" aria-label="Quantity" defaultValue="1" />
+    </fieldset>,
+  );
   const input = screen.getByRole('spinbutton') as HTMLInputElement;
   fireEvent.keyDown(input, { key: 'ArrowUp' });
   expect(input.value).toBe('1');
 });
 
 it('handles vertical arrows but respects cancellation, modifiers and composition', () => {
-  const { rerender } = render(<InputAdapter type="number" aria-label="Quantity" defaultValue="1" />);
+  const { rerender } = render(
+    <InputAdapter type="number" aria-label="Quantity" defaultValue="1" />,
+  );
   const input = screen.getByRole('spinbutton') as HTMLInputElement;
   fireEvent.keyDown(input, { key: 'ArrowUp' });
   expect(input.value).toBe('2');
@@ -79,7 +117,14 @@ it('handles vertical arrows but respects cancellation, modifiers and composition
   fireEvent.keyDown(input, { key: 'ArrowUp', isComposing: true });
   fireEvent.keyDown(input, { key: 'ArrowLeft' });
   expect(input.value).toBe('1');
-  rerender(<InputAdapter type="number" aria-label="Quantity" defaultValue="1" onKeyDown={event => event.preventDefault()} />);
+  rerender(
+    <InputAdapter
+      type="number"
+      aria-label="Quantity"
+      defaultValue="1"
+      onKeyDown={(event) => event.preventDefault()}
+    />,
+  );
   fireEvent.keyDown(input, { key: 'ArrowUp' });
   expect(input.value).toBe('1');
 });
@@ -93,8 +138,18 @@ it('keeps arbitrary steps editable without unsupported native step commands', ()
 
 it('exposes numerical stepping through useInput without styles', async () => {
   function Demo() {
-    const { inputProps, stepButtonProps } = useInput({ type: 'number', defaultValue: '3', 'aria-label': 'Quantity' });
-    return <><input {...inputProps} /><button {...stepButtonProps?.decrease} /><button {...stepButtonProps?.increase} /></>;
+    const { inputProps, stepButtonProps } = useInput({
+      type: 'number',
+      defaultValue: '3',
+      'aria-label': 'Quantity',
+    });
+    return (
+      <>
+        <input {...inputProps} />
+        <button {...stepButtonProps?.decrease} />
+        <button {...stepButtonProps?.increase} />
+      </>
+    );
   }
   render(<Demo />);
   await userEvent.click(screen.getByRole('button', { name: 'Decrease value' }));

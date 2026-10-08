@@ -14,7 +14,9 @@ export type TableFilterDropdownProps = {
   close: () => void;
 };
 export type TableFilterSlots = {
-  renderSearch?: (props: Omit<ComponentPropsWithRef<'input'>, 'type'> & { type: 'search' }) => ReactNode;
+  renderSearch?: (
+    props: Omit<ComponentPropsWithRef<'input'>, 'type'> & { type: 'search' },
+  ) => ReactNode;
   renderButton?: (props: ComponentPropsWithRef<'button'>) => ReactNode;
   icon?: ReactNode;
 };
@@ -28,11 +30,20 @@ export type TableColumn<RecordType extends object> = {
   ellipsis?: boolean;
   dataIndex?: keyof RecordType | readonly (string | number)[];
   render?: (value: unknown, record: RecordType, index: number) => ReactNode;
-  onCell?: (record: RecordType, index: number) => Omit<ComponentPropsWithRef<'td'>, 'children' | 'dangerouslySetInnerHTML'>;
-  onHeaderCell?: (column: TableColumn<RecordType>, index: number) => Omit<ComponentPropsWithRef<'th'>, 'children' | 'dangerouslySetInnerHTML'>;
+  onCell?: (
+    record: RecordType,
+    index: number,
+  ) => Omit<ComponentPropsWithRef<'td'>, 'children' | 'dangerouslySetInnerHTML'>;
+  onHeaderCell?: (
+    column: TableColumn<RecordType>,
+    index: number,
+  ) => Omit<ComponentPropsWithRef<'th'>, 'children' | 'dangerouslySetInnerHTML'>;
   width?: number;
   fixed?: 'left' | 'right';
-  sorter?: true | ((a: RecordType, b: RecordType) => number) | { compare?: (a: RecordType, b: RecordType) => number; multiple: number };
+  sorter?:
+    | true
+    | ((a: RecordType, b: RecordType) => number)
+    | { compare?: (a: RecordType, b: RecordType) => number; multiple: number };
   sortOrder?: TableSortOrder;
   defaultSortOrder?: Exclude<TableSortOrder, null>;
   sortLabel?: string;
@@ -76,7 +87,10 @@ export type TableExpandable<RecordType extends object> = {
   columnTitle?: ReactNode;
 };
 
-export type TableDataAdapterProps<RecordType extends object> = Omit<ComponentPropsWithRef<'table'>, 'children' | 'onChange' | 'summary'> & {
+export type TableDataAdapterProps<RecordType extends object> = Omit<
+  ComponentPropsWithRef<'table'>,
+  'children' | 'onChange' | 'summary'
+> & {
   columns: readonly TableColumn<RecordType>[];
   dataSource: readonly RecordType[];
   processing?: 'local' | 'manual';
@@ -86,8 +100,14 @@ export type TableDataAdapterProps<RecordType extends object> = Omit<ComponentPro
   rowSelection?: TableRowSelection<RecordType>;
   expandable?: TableExpandable<RecordType>;
   summary?: (rows: readonly RecordType[]) => ReactNode;
-  onRow?: (record: RecordType, index: number) => Omit<ComponentPropsWithRef<'tr'>, 'children' | 'dangerouslySetInnerHTML'>;
-  onHeaderRow?: (columns: readonly TableColumn<RecordType>[], index: number) => Omit<ComponentPropsWithRef<'tr'>, 'children' | 'dangerouslySetInnerHTML'>;
+  onRow?: (
+    record: RecordType,
+    index: number,
+  ) => Omit<ComponentPropsWithRef<'tr'>, 'children' | 'dangerouslySetInnerHTML'>;
+  onHeaderRow?: (
+    columns: readonly TableColumn<RecordType>[],
+    index: number,
+  ) => Omit<ComponentPropsWithRef<'tr'>, 'children' | 'dangerouslySetInnerHTML'>;
   sticky?: boolean | { offsetHeader?: number };
   scroll?: { x?: number | string; y?: number | string };
   locale?: { emptyText?: ReactNode };
@@ -100,6 +120,10 @@ export type TableDataAdapterProps<RecordType extends object> = Omit<ComponentPro
     pagination: { current: number; pageSize: number },
     filters: TableChangeFilters,
     sorter: TableChangeSorter,
-    extra: { action: 'sort' | 'filter' | 'paginate'; currentDataSource: readonly RecordType[]; sorters: readonly TableChangeSorter[] },
+    extra: {
+      action: 'sort' | 'filter' | 'paginate';
+      currentDataSource: readonly RecordType[];
+      sorters: readonly TableChangeSorter[];
+    },
   ) => void;
 };

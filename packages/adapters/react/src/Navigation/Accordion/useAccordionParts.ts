@@ -9,16 +9,22 @@ export function useAccordionParts(value: string) {
   const registerPart = useCallback((part: 'trigger' | 'panel', token: symbol) => {
     const tokens = part === 'trigger' ? triggers.current : panels.current;
     tokens.add(token);
-    if (mounted.current) revalidate((revision) => revision + 1);
+    if (mounted.current) {
+      revalidate((revision) => revision + 1);
+    }
     return () => {
       tokens.delete(token);
-      if (mounted.current) revalidate((revision) => revision + 1);
+      if (mounted.current) {
+        revalidate((revision) => revision + 1);
+      }
     };
   }, []);
 
   useLayoutEffect(() => {
     mounted.current = true;
-    return () => { mounted.current = false; };
+    return () => {
+      mounted.current = false;
+    };
   }, []);
 
   useLayoutEffect(() => {

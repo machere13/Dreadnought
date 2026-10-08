@@ -6,17 +6,26 @@
     color: var(--dreadnought-markdown-preview-text);
   }
 
-  .root > :first-child { margin-top: 0; }
-  .root > :last-child { margin-bottom: 0; }
+  .root > :first-child {
+    margin-top: 0;
+  }
+  .root > :last-child {
+    margin-bottom: 0;
+  }
   .root :where(p, ul, ol, blockquote, pre, [data-ui='markdown-preview-table']) {
     margin-block: var(--dreadnought-markdown-preview-block-gap);
   }
-  .root :where(ul, ol) { padding-inline-start: var(--dreadnought-markdown-preview-list-indent); }
-  .root a { color: var(--dreadnought-markdown-preview-link); }
+  .root :where(ul, ol) {
+    padding-inline-start: var(--dreadnought-markdown-preview-list-indent);
+  }
+  .root a {
+    color: var(--dreadnought-markdown-preview-link);
+  }
   .root blockquote {
     margin-inline: 0;
     padding-inline-start: var(--dreadnought-markdown-preview-padding);
-    border-inline-start: var(--dreadnought-markdown-preview-quote-width) solid var(--dreadnought-markdown-preview-border);
+    border-inline-start: var(--dreadnought-markdown-preview-quote-width) solid
+      var(--dreadnought-markdown-preview-border);
     color: var(--dreadnought-markdown-preview-muted-text);
   }
   .root pre {
@@ -28,15 +37,33 @@
     white-space: pre;
     overflow-wrap: normal;
   }
-  .root code { font-family: var(--dreadnought-markdown-preview-code-font-family); }
-  .root img { max-width: 100%; height: auto; }
-  .root [data-ui='markdown-preview-table'] { max-width: 100%; overflow-x: auto; }
-  .root table { border-collapse: collapse; width: 100%; }
+  .root code {
+    font-family: var(--dreadnought-markdown-preview-code-font-family);
+  }
+  .root img {
+    max-width: 100%;
+    height: auto;
+  }
+  .root [data-ui='markdown-preview-table'] {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .root table {
+    border-collapse: collapse;
+    width: 100%;
+  }
   .root :where(th, td) {
     padding: var(--dreadnought-markdown-preview-table-padding);
-    border: var(--dreadnought-markdown-preview-border-width) solid var(--dreadnought-markdown-preview-border);
+    border: var(--dreadnought-markdown-preview-border-width) solid
+      var(--dreadnought-markdown-preview-border);
     text-align: start;
   }
-  .root th { background: var(--dreadnought-markdown-preview-code-bg); }
-  .root hr { border: 0; border-top: var(--dreadnought-markdown-preview-border-width) solid var(--dreadnought-markdown-preview-border); }
+  .root th {
+    background: var(--dreadnought-markdown-preview-code-bg);
+  }
+  .root hr {
+    border: 0;
+    border-top: var(--dreadnought-markdown-preview-border-width) solid
+      var(--dreadnought-markdown-preview-border);
+  }
 }

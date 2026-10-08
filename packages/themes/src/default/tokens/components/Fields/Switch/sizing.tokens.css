@@ -1,7 +1,13 @@
 :root {
   --dreadnought-switch-thumb-size: var(--dreadnought-size-choice-control);
-  --dreadnought-switch-height: calc(var(--dreadnought-switch-thumb-size) + 2 * (var(--dreadnought-switch-padding) + var(--dreadnought-switch-border-width)));
-  --dreadnought-switch-width: calc(2 * var(--dreadnought-switch-thumb-size) + 2 * (var(--dreadnought-switch-padding) + var(--dreadnought-switch-border-width)));
+  --dreadnought-switch-height: calc(
+    var(--dreadnought-switch-thumb-size) + 2 *
+      (var(--dreadnought-switch-padding) + var(--dreadnought-switch-border-width))
+  );
+  --dreadnought-switch-width: calc(
+    2 * var(--dreadnought-switch-thumb-size) + 2 *
+      (var(--dreadnought-switch-padding) + var(--dreadnought-switch-border-width))
+  );
   --dreadnought-switch-radius: var(--dreadnought-border-radius-pill);
   --dreadnought-switch-border-width: var(--dreadnought-border-width-outline);
   --dreadnought-switch-focus-width: var(--dreadnought-border-width-x2);

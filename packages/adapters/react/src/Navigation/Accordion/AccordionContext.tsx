@@ -24,12 +24,16 @@ export const AccordionItemContext = createContext<AccordionItemContextValue | nu
 
 export function useAccordionRootContext(): AccordionRootContextValue {
   const context = useContext(AccordionRootContext);
-  if (!context) throw new Error('Accordion.Item must be inside Accordion.');
+  if (!context) {
+    throw new Error('Accordion.Item must be inside Accordion.');
+  }
   return context;
 }
 
 export function useAccordionItemContext(): AccordionItemContextValue {
   const context = useContext(AccordionItemContext);
-  if (!context) throw new Error('Accordion.Trigger and Accordion.Panel must be inside Accordion.Item.');
+  if (!context) {
+    throw new Error('Accordion.Trigger and Accordion.Panel must be inside Accordion.Item.');
+  }
   return context;
 }

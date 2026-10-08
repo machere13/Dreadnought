@@ -2,18 +2,33 @@ import { useState } from 'react';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import { useMarkdownEditor } from '../../../src/Fields/MarkdownEditor/index.ts';
-import type { UseMarkdownEditorOptions, UseMarkdownEditorResult } from '../../../src/Fields/MarkdownEditor/index.ts';
+import type {
+  UseMarkdownEditorOptions,
+  UseMarkdownEditorResult,
+} from '../../../src/Fields/MarkdownEditor/index.ts';
 
 afterEach(cleanup);
 let editor: UseMarkdownEditorResult;
 function Editor(options: UseMarkdownEditorOptions & { fieldKey?: string }) {
   const { fieldKey, ...props } = options;
   editor = useMarkdownEditor(props);
-  return <><textarea key={fieldKey} aria-label="Editor" {...editor.textAreaProps} ref={editor.textAreaRef} />
-    <button onClick={() => editor.execute({ type: 'bold' })}>Bold</button></>;
+  return (
+    <>
+      <textarea
+        key={fieldKey}
+        aria-label="Editor"
+        {...editor.textAreaProps}
+        ref={editor.textAreaRef}
+      />
+      <button onClick={() => editor.execute({ type: 'bold' })}>Bold</button>
+    </>
+  );
 }
 const field = () => screen.getByLabelText('Editor') as HTMLTextAreaElement;
-function select(start: number, end: number) { field().setSelectionRange(start, end); fireEvent.select(field()); }
+function select(start: number, end: number) {
+  field().setSelectionRange(start, end);
+  fireEvent.select(field());
+}
 
 it('formats selected text and restores selection and focus after commit', () => {
   render(<Editor defaultValue="hello" />);
@@ -27,7 +42,10 @@ it('formats selected text and restores selection and focus after commit', () => 
 it('uses the latest uncontrolled result for batched commands', () => {
   render(<Editor defaultValue="hello" />);
   select(0, 5);
-  act(() => { editor.execute({ type: 'bold' }); editor.execute({ type: 'italic' }); });
+  act(() => {
+    editor.execute({ type: 'bold' });
+    editor.execute({ type: 'italic' });
+  });
   expect(field().value).toBe('***hello***');
   expect([field().selectionStart, field().selectionEnd]).toEqual([3, 8]);
 });
@@ -39,7 +57,10 @@ it('does not speculate on controlled acceptance inside one batch', () => {
   }
   render(<Controlled />);
   select(0, 5);
-  act(() => { editor.execute({ type: 'bold' }); editor.execute({ type: 'italic' }); });
+  act(() => {
+    editor.execute({ type: 'bold' });
+    editor.execute({ type: 'italic' });
+  });
   expect(field().value).toBe('*hello*');
   expect([field().selectionStart, field().selectionEnd]).toEqual([1, 6]);
 });
@@ -81,7 +102,7 @@ it('does not restore stale selection or focus after controlled refusal', () => {
 it('does not steal focus when the owner transforms or externally changes value', () => {
   function Controlled() {
     const [value, setValue] = useState('hello');
-    return <Editor value={value} onValueChange={next => setValue(next.toUpperCase())} />;
+    return <Editor value={value} onValueChange={(next) => setValue(next.toUpperCase())} />;
   }
   render(<Controlled />);
   select(0, 5);
@@ -107,8 +128,10 @@ it('notifies actual input but not selection or external normalization', () => {
 
 it('honors cancelled input and ignores changed defaultValue after mount', () => {
   const onValueChange = vi.fn();
-  const onChange: UseMarkdownEditorOptions['onChange'] = event => event.preventDefault();
-  const view = render(<Editor defaultValue="hello" onChange={onChange} onValueChange={onValueChange} />);
+  const onChange: UseMarkdownEditorOptions['onChange'] = (event) => event.preventDefault();
+  const view = render(
+    <Editor defaultValue="hello" onChange={onChange} onValueChange={onValueChange} />,
+  );
   fireEvent.change(field(), { target: { value: 'world' } });
   expect(field().value).toBe('hello');
   expect(onValueChange).not.toHaveBeenCalled();
@@ -116,7 +139,7 @@ it('honors cancelled input and ignores changed defaultValue after mount', () => 
   expect(field().value).toBe('hello');
 });
 
-it.each(['disabled', 'readOnly'] as const)('blocks commands when %s', mode => {
+it.each(['disabled', 'readOnly'] as const)('blocks commands when %s', (mode) => {
   const onValueChange = vi.fn();
   render(<Editor defaultValue="hello" {...{ [mode]: true }} onValueChange={onValueChange} />);
   select(0, 5);
@@ -146,7 +169,12 @@ it('continues lists on Enter but keeps Tab and modified keys native', () => {
   expect(fireEvent.keyDown(field(), { key: 'Enter' })).toBe(false);
   expect(field().value).toBe('1. a\n2. ');
   expect(field().selectionStart).toBe(8);
-  for (const keys of [{ key: 'Tab' }, { key: 'Enter', shiftKey: true }, { key: 'b', altKey: true, ctrlKey: true }, { key: 'b', ctrlKey: true, metaKey: true }]) {
+  for (const keys of [
+    { key: 'Tab' },
+    { key: 'Enter', shiftKey: true },
+    { key: 'b', altKey: true, ctrlKey: true },
+    { key: 'b', ctrlKey: true, metaKey: true },
+  ]) {
     expect(fireEvent.keyDown(field(), keys)).toBe(true);
   }
 });
@@ -181,7 +209,16 @@ it('keeps controlled undo stacks until the owner accepts', () => {
   let reject = false;
   function Controlled() {
     const [value, setValue] = useState('hello');
-    return <Editor value={value} onValueChange={next => { if (!reject) setValue(next); }} />;
+    return (
+      <Editor
+        value={value}
+        onValueChange={(next) => {
+          if (!reject) {
+            setValue(next);
+          }
+        }}
+      />
+    );
   }
   render(<Controlled />);
   select(0, 5);
@@ -199,16 +236,28 @@ it('keeps controlled undo stacks until the owner accepts', () => {
 
 it('coalesces continuous typing and breaks the group on paste or cursor movement', () => {
   render(<Editor />);
-  fireEvent.input(field(), { target: { value: 'a', selectionStart: 1, selectionEnd: 1 }, inputType: 'insertText' });
-  fireEvent.input(field(), { target: { value: 'ab', selectionStart: 2, selectionEnd: 2 }, inputType: 'insertText' });
+  fireEvent.input(field(), {
+    target: { value: 'a', selectionStart: 1, selectionEnd: 1 },
+    inputType: 'insertText',
+  });
+  fireEvent.input(field(), {
+    target: { value: 'ab', selectionStart: 2, selectionEnd: 2 },
+    inputType: 'insertText',
+  });
   act(() => editor.undo());
   expect(field().value).toBe('');
   act(() => editor.redo());
-  fireEvent.input(field(), { target: { value: 'abc', selectionStart: 3, selectionEnd: 3 }, inputType: 'insertFromPaste' });
+  fireEvent.input(field(), {
+    target: { value: 'abc', selectionStart: 3, selectionEnd: 3 },
+    inputType: 'insertFromPaste',
+  });
   act(() => editor.undo());
   expect(field().value).toBe('ab');
   select(0, 0);
-  fireEvent.input(field(), { target: { value: 'xab', selectionStart: 1, selectionEnd: 1 }, inputType: 'insertText' });
+  fireEvent.input(field(), {
+    target: { value: 'xab', selectionStart: 1, selectionEnd: 1 },
+    inputType: 'insertText',
+  });
   act(() => editor.undo());
   expect(field().value).toBe('ab');
 });
@@ -224,7 +273,10 @@ it('records IME as one step and clears redo after batched new commands', () => {
   fireEvent.input(field(), { target: { value: '日本' }, inputType: 'insertText' });
   act(() => editor.undo());
   expect(field().value).toBe('');
-  act(() => { editor.execute({ type: 'bold' }); editor.execute({ type: 'italic' }); });
+  act(() => {
+    editor.execute({ type: 'bold' });
+    editor.execute({ type: 'italic' });
+  });
   expect(editor.canRedo).toBe(false);
   act(() => editor.undo());
   expect(field().value).toBe('****');
@@ -249,7 +301,9 @@ it('starts a separate typing step after the final composition input', async () =
   fireEvent.input(field(), { target: { value: 'a' }, inputType: 'insertCompositionText' });
   fireEvent.compositionEnd(field(), { data: 'ab' });
   fireEvent.input(field(), { target: { value: 'ab' }, inputType: 'insertText' });
-  await act(async () => { await Promise.resolve(); });
+  await act(async () => {
+    await Promise.resolve();
+  });
   fireEvent.input(field(), { target: { value: 'abc' }, inputType: 'insertText' });
   act(() => editor.undo());
   expect(field().value).toBe('ab');
@@ -260,7 +314,16 @@ it('starts a separate typing step after the final composition input', async () =
 it('creates an IME step only after the controlled owner accepts a proposal', () => {
   function Controlled() {
     const [value, setValue] = useState('');
-    return <Editor value={value} onValueChange={next => { if (next !== 'に') setValue(next); }} />;
+    return (
+      <Editor
+        value={value}
+        onValueChange={(next) => {
+          if (next !== 'に') {
+            setValue(next);
+          }
+        }}
+      />
+    );
   }
   render(<Controlled />);
   fireEvent.compositionStart(field());
@@ -275,16 +338,27 @@ it('creates an IME step only after the controlled owner accepts a proposal', () 
 
 it('routes native beforeinput history and respects consumer cancellation', () => {
   let cancel = false;
-  const handler = vi.fn<NonNullable<UseMarkdownEditorOptions['onBeforeInput']>>(event => { if (cancel) event.preventDefault(); });
+  const handler = vi.fn<NonNullable<UseMarkdownEditorOptions['onBeforeInput']>>((event) => {
+    if (cancel) {
+      event.preventDefault();
+    }
+  });
   render(<Editor defaultValue="hello" onBeforeInput={handler} />);
   select(0, 5);
   act(() => editor.execute({ type: 'bold' }));
-  const undo = new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'historyUndo' });
+  const undo = new InputEvent('beforeinput', {
+    bubbles: true,
+    cancelable: true,
+    inputType: 'historyUndo',
+  });
   fireEvent(field(), undo);
   expect(undo.defaultPrevented).toBe(true);
   expect(field().value).toBe('hello');
   cancel = true;
-  fireEvent(field(), new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'historyRedo' }));
+  fireEvent(
+    field(),
+    new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'historyRedo' }),
+  );
   expect(field().value).toBe('hello');
   expect(handler).toHaveBeenCalledTimes(2);
 });
@@ -304,7 +378,9 @@ it('splits typing after 500 milliseconds and limits history', () => {
 });
 
 it('honors keyboard cancellation and active IME composition', () => {
-  const view = render(<Editor defaultValue="hello" onKeyDown={event => event.preventDefault()} />);
+  const view = render(
+    <Editor defaultValue="hello" onKeyDown={(event) => event.preventDefault()} />,
+  );
   select(0, 5);
   fireEvent.keyDown(field(), { key: 'b', ctrlKey: true });
   expect(field().value).toBe('hello');
@@ -331,7 +407,11 @@ it('preserves UTF-16 offsets', () => {
 
 it('resets uncontrolled to the initial default without notification', async () => {
   const onValueChange = vi.fn();
-  render(<form aria-label="Form"><Editor defaultValue="hello" onValueChange={onValueChange} /></form>);
+  render(
+    <form aria-label="Form">
+      <Editor defaultValue="hello" onValueChange={onValueChange} />
+    </form>,
+  );
   fireEvent.change(field(), { target: { value: 'world' } });
   onValueChange.mockClear();
   await act(async () => (screen.getByLabelText('Form') as HTMLFormElement).reset());
@@ -340,11 +420,19 @@ it('resets uncontrolled to the initial default without notification', async () =
 });
 
 it('honors cancelled reset and leaves controlled reset to its owner', async () => {
-  const view = render(<form aria-label="Form" onReset={event => event.preventDefault()}><Editor defaultValue="hello" /></form>);
+  const view = render(
+    <form aria-label="Form" onReset={(event) => event.preventDefault()}>
+      <Editor defaultValue="hello" />
+    </form>,
+  );
   fireEvent.change(field(), { target: { value: 'world' } });
   await act(async () => (screen.getByLabelText('Form') as HTMLFormElement).reset());
   expect(field().value).toBe('world');
-  view.rerender(<form aria-label="Form"><Editor value="owned" /></form>);
+  view.rerender(
+    <form aria-label="Form">
+      <Editor value="owned" />
+    </form>,
+  );
   await act(async () => (screen.getByLabelText('Form') as HTMLFormElement).reset());
   expect(field().value).toBe('owned');
 });
@@ -353,7 +441,10 @@ it('does not apply a pending result to a replaced or unmounted field', () => {
   const view = render(<Editor defaultValue="hello" fieldKey="one" />);
   select(0, 5);
   const oldField = field();
-  act(() => { editor.execute({ type: 'bold' }); view.rerender(<Editor defaultValue="hello" fieldKey="two" />); });
+  act(() => {
+    editor.execute({ type: 'bold' });
+    view.rerender(<Editor defaultValue="hello" fieldKey="two" />);
+  });
   expect(document.activeElement).not.toBe(field());
   expect(oldField.isConnected).toBe(false);
   view.unmount();

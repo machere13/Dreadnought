@@ -4,5 +4,10 @@ import { popoverPresentation } from '#presentation/Overlays/Popover/popoverPrese
 
 export type PopoverProps = PopoverAdapterProps;
 export function Popover({ className, ...props }: PopoverProps) {
-  return <PopoverAdapter {...props} className={[popoverPresentation.root, className].filter(Boolean).join(' ')} />;
+  return (
+    <PopoverAdapter
+      {...props}
+      className={[popoverPresentation.root, className].filter(Boolean).join(' ')}
+    />
+  );
 }

@@ -9,6 +9,11 @@ export function Pagination({ className, slotClassNames, ...props }: PaginationPr
     summary: [paginationPresentation.summary, slotClassNames?.summary].filter(Boolean).join(' '),
     ellipsis: [paginationPresentation.ellipsis, slotClassNames?.ellipsis].filter(Boolean).join(' '),
   };
-  return <PaginationAdapter {...props} slotClassNames={slots}
-    className={[paginationPresentation.root, className].filter(Boolean).join(' ')} />;
+  return (
+    <PaginationAdapter
+      {...props}
+      slotClassNames={slots}
+      className={[paginationPresentation.root, className].filter(Boolean).join(' ')}
+    />
+  );
 }

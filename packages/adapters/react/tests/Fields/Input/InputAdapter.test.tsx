@@ -8,8 +8,12 @@ afterEach(cleanup);
 
 it('keeps a stable callback ref attached across rerenders and password visibility changes', async () => {
   const attached: Array<HTMLInputElement | null> = [];
-  const ref = (node: HTMLInputElement | null) => { attached.push(node); };
-  const { rerender, unmount } = render(<InputAdapter ref={ref} type="password" aria-label="Password" />);
+  const ref = (node: HTMLInputElement | null) => {
+    attached.push(node);
+  };
+  const { rerender, unmount } = render(
+    <InputAdapter ref={ref} type="password" aria-label="Password" />,
+  );
   const input = screen.getByLabelText('Password');
   rerender(<InputAdapter ref={ref} type="password" aria-label="Password" placeholder="Updated" />);
   await userEvent.setup().click(screen.getByRole('button', { name: 'Show password' }));
@@ -22,7 +26,20 @@ it('keeps native controlled input, label, attributes and ref', async () => {
   const user = userEvent.setup();
   const onChange = vi.fn();
   const ref = createRef<HTMLInputElement>();
-  render(<><label htmlFor="email">Email</label><InputAdapter id="email" type="email" value="a" onChange={onChange} ref={ref} name="email" required /></>);
+  render(
+    <>
+      <label htmlFor="email">Email</label>
+      <InputAdapter
+        id="email"
+        type="email"
+        value="a"
+        onChange={onChange}
+        ref={ref}
+        name="email"
+        required
+      />
+    </>,
+  );
   const input = screen.getByRole('textbox', { name: 'Email' });
   expect(ref.current).toBe(input);
   expect(input.getAttribute('type')).toBe('email');
@@ -34,7 +51,13 @@ it('keeps native controlled input, label, attributes and ref', async () => {
 
 it('supports uncontrolled values and native disabled and read-only states', async () => {
   const user = userEvent.setup();
-  render(<><InputAdapter aria-label="Editable" defaultValue="a" /><InputAdapter aria-label="Disabled" disabled /><InputAdapter aria-label="Read only" readOnly defaultValue="x" /></>);
+  render(
+    <>
+      <InputAdapter aria-label="Editable" defaultValue="a" />
+      <InputAdapter aria-label="Disabled" disabled />
+      <InputAdapter aria-label="Read only" readOnly defaultValue="x" />
+    </>,
+  );
   const editable = screen.getByRole('textbox', { name: 'Editable' }) as HTMLInputElement;
   await user.type(editable, 'b');
   expect(editable.value).toBe('ab');
@@ -60,7 +83,15 @@ it('marks the wrapper invalid when aria-invalid is supplied natively', () => {
 
 it('puts class and style on the wrapper while keeping native props and ref on the input', () => {
   const ref = createRef<HTMLInputElement>();
-  render(<InputAdapter id="search" aria-label="Search" className="custom" style={{ color: 'red' }} ref={ref} />);
+  render(
+    <InputAdapter
+      id="search"
+      aria-label="Search"
+      className="custom"
+      style={{ color: 'red' }}
+      ref={ref}
+    />,
+  );
   const input = screen.getByRole('textbox', { name: 'Search' });
   expect(ref.current).toBe(input);
   expect(input.id).toBe('search');
@@ -75,7 +106,13 @@ it('reveals a password without changing its value or submitting the form', async
   render(
     <form onSubmit={onSubmit}>
       <label htmlFor="password">Password</label>
-      <InputAdapter id="password" name="password" type="password" defaultValue="secret" passwordVisibilityLabels={{ show: 'Show password', hide: 'Hide password' }} />
+      <InputAdapter
+        id="password"
+        name="password"
+        type="password"
+        defaultValue="secret"
+        passwordVisibilityLabels={{ show: 'Show password', hide: 'Hide password' }}
+      />
     </form>,
   );
   const input = screen.getByLabelText('Password') as HTMLInputElement;
@@ -96,10 +133,21 @@ it('disables password visibility control with a disabled input', () => {
 
 it('accepts custom password visibility content while retaining accessible labels', async () => {
   const user = userEvent.setup();
-  render(<InputAdapter type="password" aria-label="Password" passwordVisibilityContent={{ show: <svg data-test-id="eye" />, hide: <svg data-test-id="eye-off" /> }} />);
+  render(
+    <InputAdapter
+      type="password"
+      aria-label="Password"
+      passwordVisibilityContent={{
+        show: <svg data-test-id="eye" />,
+        hide: <svg data-test-id="eye-off" />,
+      }}
+    />,
+  );
   const toggle = screen.getByRole('button', { name: 'Show password' });
   expect(toggle.querySelector('[data-test-id="eye"]')).not.toBeNull();
   await user.click(toggle);
-  expect(screen.getByRole('button', { name: 'Hide password' }).querySelector('[data-test-id="eye-off"]')).not.toBeNull();
+  expect(
+    screen.getByRole('button', { name: 'Hide password' }).querySelector('[data-test-id="eye-off"]'),
+  ).not.toBeNull();
   expect(toggle.textContent).toBe('');
 });

@@ -1,11 +1,44 @@
 @layer dreadnought {
-  .root { display: flex; flex-wrap: wrap; align-items: center; gap: var(--dreadnought-pagination-gap); color: var(--dreadnought-pagination-fg); }
-  .button { min-width: var(--dreadnought-pagination-size); height: var(--dreadnought-pagination-size); padding-inline: var(--dreadnought-pagination-padding); border: 0; border-radius: var(--dreadnought-pagination-radius); background: var(--dreadnought-pagination-bg); color: var(--dreadnought-pagination-fg); font: inherit; cursor: pointer; }
-  .button:hover:not(:disabled) { background: var(--dreadnought-pagination-hover-bg); }
-  .button[aria-current='page'] { background: var(--dreadnought-pagination-selected-bg); color: var(--dreadnought-pagination-selected-fg); }
-  .button[aria-current='page']:hover { background: var(--dreadnought-pagination-selected-hover-bg); }
-  .button:focus-visible { outline: var(--dreadnought-pagination-focus-width) solid var(--dreadnought-pagination-focus); outline-offset: var(--dreadnought-pagination-focus-offset); }
-  .button:disabled { color: var(--dreadnought-pagination-disabled-fg); cursor: not-allowed; }
-  .summary { font-variant-numeric: tabular-nums; }
-  .ellipsis { padding-inline: var(--dreadnought-pagination-padding); }
+  .root {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--dreadnought-pagination-gap);
+    color: var(--dreadnought-pagination-fg);
+  }
+  .button {
+    min-width: var(--dreadnought-pagination-size);
+    height: var(--dreadnought-pagination-size);
+    padding-inline: var(--dreadnought-pagination-padding);
+    border: 0;
+    border-radius: var(--dreadnought-pagination-radius);
+    background: var(--dreadnought-pagination-bg);
+    color: var(--dreadnought-pagination-fg);
+    font: inherit;
+    cursor: pointer;
+  }
+  .button:hover:not(:disabled) {
+    background: var(--dreadnought-pagination-hover-bg);
+  }
+  .button[aria-current='page'] {
+    background: var(--dreadnought-pagination-selected-bg);
+    color: var(--dreadnought-pagination-selected-fg);
+  }
+  .button[aria-current='page']:hover {
+    background: var(--dreadnought-pagination-selected-hover-bg);
+  }
+  .button:focus-visible {
+    outline: var(--dreadnought-pagination-focus-width) solid var(--dreadnought-pagination-focus);
+    outline-offset: var(--dreadnought-pagination-focus-offset);
+  }
+  .button:disabled {
+    color: var(--dreadnought-pagination-disabled-fg);
+    cursor: not-allowed;
+  }
+  .summary {
+    font-variant-numeric: tabular-nums;
+  }
+  .ellipsis {
+    padding-inline: var(--dreadnought-pagination-padding);
+  }
 }

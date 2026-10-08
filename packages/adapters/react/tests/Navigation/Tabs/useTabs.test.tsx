@@ -16,10 +16,9 @@ describe('useTabs', () => {
 
   it('does not change a controlled value until its owner updates it', () => {
     const onValueChange = vi.fn();
-    const { result, rerender } = renderHook(
-      ({ value }) => useTabs({ value, onValueChange }),
-      { initialProps: { value: 'a' } },
-    );
+    const { result, rerender } = renderHook(({ value }) => useTabs({ value, onValueChange }), {
+      initialProps: { value: 'a' },
+    });
     act(() => result.current.setValue('b'));
     expect(result.current.value).toBe('a');
     expect(onValueChange).toHaveBeenCalledExactlyOnceWith('b');

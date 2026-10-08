@@ -2,20 +2,53 @@ import { createRef } from 'react';
 import { SliderAdapter } from '@dreadnought/react/unstyled';
 import { useSlider } from '@dreadnought/react/logic';
 
-const valid = <SliderAdapter ref={createRef<HTMLDivElement>()} value={2} step={0.1} onValueChange={value => value.toFixed(1)}
-  renderThumb={props => <div {...props} />} />;
-const discrete = <SliderAdapter step={null} marks={{ 0: 'Low', 30: <span>Medium</span>, 100: 'High' }} />;
+const valid = (
+  <SliderAdapter
+    ref={createRef<HTMLDivElement>()}
+    value={2}
+    step={0.1}
+    onValueChange={(value) => value.toFixed(1)}
+    renderThumb={(props) => <div {...props} />}
+  />
+);
+const discrete = (
+  <SliderAdapter step={null} marks={{ 0: 'Low', 30: <span>Medium</span>, 100: 'High' }} />
+);
 const vertical = <SliderAdapter orientation="vertical" />;
 // @ts-expect-error Only horizontal and vertical orientations are supported.
 const diagonal = <SliderAdapter orientation="diagonal" />;
-const validRange = <SliderAdapter range value={[1, 2]} onValueChange={value => value[0].toFixed(1)}
-  slotProps={{ thumb: [{ 'aria-label': 'From' }, { 'aria-label': 'To' }] }}
-  renderThumb={(props, value, index) => <div {...props} data-index={index}>{value}</div>} />;
-function Logic() { const slider = useSlider({ min: -2, max: 2 }); return <div {...slider.thumbProps} />; }
+const validRange = (
+  <SliderAdapter
+    range
+    value={[1, 2]}
+    onValueChange={(value) => value[0].toFixed(1)}
+    slotProps={{ thumb: [{ 'aria-label': 'From' }, { 'aria-label': 'To' }] }}
+    renderThumb={(props, value, index) => (
+      <div {...props} data-index={index}>
+        {value}
+      </div>
+    )}
+  />
+);
+function Logic() {
+  const slider = useSlider({ min: -2, max: 2 });
+  return <div {...slider.thumbProps} />;
+}
 function RangeLogic() {
-  const slider = useSlider({ range: true, value: [1, 2], onValueChange: value => value[1].toFixed(1) });
+  const slider = useSlider({
+    range: true,
+    value: [1, 2],
+    onValueChange: (value) => value[1].toFixed(1),
+  });
   const pair: [number, number] = slider.value;
-  return <>{pair[0]}{slider.thumbs.map((thumb, index) => <div key={index} {...thumb.thumbProps} />)}</>;
+  return (
+    <>
+      {pair[0]}
+      {slider.thumbs.map((thumb, index) => (
+        <div key={index} {...thumb.thumbProps} />
+      ))}
+    </>
+  );
 }
 // @ts-expect-error A single thumb takes one number.
 const range = <SliderAdapter value={[1, 2]} />;
@@ -29,4 +62,18 @@ const scalarCallback = <SliderAdapter range onValueChange={(value: number) => va
 const anyStep = <SliderAdapter step="any" />;
 // @ts-expect-error A div ref is incompatible with an SVG element ref.
 const svgRef = <SliderAdapter ref={createRef<SVGSVGElement>()} />;
-void [valid, discrete, vertical, diagonal, validRange, Logic, RangeLogic, range, scalarRange, tripleRange, scalarCallback, anyStep, svgRef];
+void [
+  valid,
+  discrete,
+  vertical,
+  diagonal,
+  validRange,
+  Logic,
+  RangeLogic,
+  range,
+  scalarRange,
+  tripleRange,
+  scalarCallback,
+  anyStep,
+  svgRef,
+];

@@ -7,10 +7,12 @@ afterEach(cleanup);
 
 describe('Card', () => {
   it('styles only the ready card while preserving its consumer class', () => {
-    render(<>
-      <Card className="consumer-card">Готовая карточка</Card>
-      <CardAdapter>Карточка без оформления</CardAdapter>
-    </>);
+    render(
+      <>
+        <Card className="consumer-card">Готовая карточка</Card>
+        <CardAdapter>Карточка без оформления</CardAdapter>
+      </>,
+    );
 
     const styled = screen.getByText('Готовая карточка');
     const plain = screen.getByText('Карточка без оформления');

@@ -19,10 +19,9 @@ describe('useAccordion', () => {
 
   it('does not change a controlled value until its owner updates it', () => {
     const onValueChange = vi.fn();
-    const { result, rerender } = renderHook(
-      ({ value }) => useAccordion({ value, onValueChange }),
-      { initialProps: { value: 'first' as string | null } },
-    );
+    const { result, rerender } = renderHook(({ value }) => useAccordion({ value, onValueChange }), {
+      initialProps: { value: 'first' as string | null },
+    });
     act(() => result.current.toggle('second'));
     expect(result.current.value).toBe('first');
     expect(onValueChange).toHaveBeenCalledExactlyOnceWith('second');

@@ -6,11 +6,26 @@ import type { MarkdownEditorControls } from '../../../src/Fields/MarkdownEditor/
 
 afterEach(cleanup);
 let controls: MarkdownEditorControls;
-const toolbar = (value: MarkdownEditorControls) => { controls = value; return <button type="button" onClick={() => value.setPreview('preview')}>Preview</button>; };
+const toolbar = (value: MarkdownEditorControls) => {
+  controls = value;
+  return (
+    <button type="button" onClick={() => value.setPreview('preview')}>
+      Preview
+    </button>
+  );
+};
 
 it('keeps the textarea mounted and history alive across all modes without focusing hidden input', () => {
   const notify = vi.fn();
-  const view = render(<MarkdownEditorAdapter defaultValue="hello" aria-label="Editor" renderToolbar={toolbar} renderPreview={value => <article>{value}</article>} onValueChange={notify} />);
+  const view = render(
+    <MarkdownEditorAdapter
+      defaultValue="hello"
+      aria-label="Editor"
+      renderToolbar={toolbar}
+      renderPreview={(value) => <article>{value}</article>}
+      onValueChange={notify}
+    />,
+  );
   const field = screen.getByRole('textbox') as HTMLTextAreaElement;
   field.setSelectionRange(0, 5);
   act(() => controls.execute({ type: 'bold' }));
@@ -33,7 +48,13 @@ it('keeps the textarea mounted and history alive across all modes without focusi
   act(() => controls.redo());
   act(() => controls.setPreview('edit'));
   expect([field.selectionStart, field.selectionEnd]).toEqual([2, 7]);
-  expect(notify.mock.calls.map(call => call[0])).toEqual(['**hello**', 'hello', '**hello**', 'hello', '**hello**']);
+  expect(notify.mock.calls.map((call) => call[0])).toEqual([
+    '**hello**',
+    'hello',
+    '**hello**',
+    'hello',
+    '**hello**',
+  ]);
 });
 
 it('blurs input inside an iframe when its mode becomes preview', () => {
@@ -47,17 +68,35 @@ it('blurs input inside an iframe when its mode becomes preview', () => {
     expect(owner.activeElement === field).toBe(true);
     view.rerender(<MarkdownEditorAdapter preview="preview" />);
     expect(owner.activeElement === field).toBe(false);
-  } finally { view.unmount(); frame.remove(); }
+  } finally {
+    view.unmount();
+    frame.remove();
+  }
 });
 
 it('preserves a controlled mode when its owner refuses and renders only accepted text', () => {
   const onPreviewChange = vi.fn();
-  const view = render(<MarkdownEditorAdapter value="hello" preview="edit" onPreviewChange={onPreviewChange} renderToolbar={toolbar} renderPreview={value => <article>{value}</article>} />);
+  const view = render(
+    <MarkdownEditorAdapter
+      value="hello"
+      preview="edit"
+      onPreviewChange={onPreviewChange}
+      renderToolbar={toolbar}
+      renderPreview={(value) => <article>{value}</article>}
+    />,
+  );
   act(() => controls.setPreview('live'));
   expect(controls.preview).toBe('edit');
   expect(onPreviewChange).toHaveBeenCalledWith('live');
   act(() => controls.execute({ type: 'bold' }));
-  view.rerender(<MarkdownEditorAdapter value="hello" preview="preview" renderToolbar={toolbar} renderPreview={value => <article>{value}</article>} />);
+  view.rerender(
+    <MarkdownEditorAdapter
+      value="hello"
+      preview="preview"
+      renderToolbar={toolbar}
+      renderPreview={(value) => <article>{value}</article>}
+    />,
+  );
   expect(view.container.querySelector('article')?.textContent).toBe('hello');
 });
 
@@ -73,7 +112,14 @@ it('supports a controlled preview owner without text callbacks', () => {
   const notify = vi.fn();
   function Controlled() {
     const [preview, setPreview] = useState<'edit' | 'preview' | 'live'>('edit');
-    return <MarkdownEditorAdapter preview={preview} onPreviewChange={setPreview} onValueChange={notify} renderToolbar={toolbar} />;
+    return (
+      <MarkdownEditorAdapter
+        preview={preview}
+        onPreviewChange={setPreview}
+        onValueChange={notify}
+        renderToolbar={toolbar}
+      />
+    );
   }
   render(<Controlled />);
   fireEvent.click(screen.getByText('Preview'));

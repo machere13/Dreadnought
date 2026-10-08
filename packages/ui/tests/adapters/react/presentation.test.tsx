@@ -13,7 +13,12 @@ it('publishes the ready React entrypoint from the visual layer', () => {
 });
 
 it('styles the ready button without styling its adapter on the same page', () => {
-  render(<><Button>Ready</Button><ButtonAdapter>Base</ButtonAdapter></>);
+  render(
+    <>
+      <Button>Ready</Button>
+      <ButtonAdapter>Base</ButtonAdapter>
+    </>,
+  );
 
   const ready = screen.getByRole('button', { name: 'Ready' });
   const base = screen.getByRole('button', { name: 'Base' });
@@ -23,7 +28,12 @@ it('styles the ready button without styling its adapter on the same page', () =>
 });
 
 it('styles the ready input without styling its adapter on the same page', () => {
-  render(<><Input aria-label="Ready input" /><InputAdapter aria-label="Base input" /></>);
+  render(
+    <>
+      <Input aria-label="Ready input" />
+      <InputAdapter aria-label="Base input" />
+    </>,
+  );
 
   const ready = screen.getByRole('textbox', { name: 'Ready input' });
   const base = screen.getByRole('textbox', { name: 'Base input' });
@@ -32,7 +42,12 @@ it('styles the ready input without styling its adapter on the same page', () => 
 });
 
 it('styles the ready textarea without styling its adapter on the same page', () => {
-  render(<><TextArea aria-label="Ready area" /><TextAreaAdapter aria-label="Base area" /></>);
+  render(
+    <>
+      <TextArea aria-label="Ready area" />
+      <TextAreaAdapter aria-label="Base area" />
+    </>,
+  );
 
   const ready = screen.getByRole('textbox', { name: 'Ready area' });
   const base = screen.getByRole('textbox', { name: 'Base area' });

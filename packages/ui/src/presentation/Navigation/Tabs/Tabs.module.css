@@ -29,15 +29,15 @@
     display: none;
   }
 
-  .tab, .more {
+  .tab,
+  .more {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex: none;
     white-space: nowrap;
     min-height: var(--dreadnought-tabs-tab-min-height);
-    padding: var(--dreadnought-tabs-tab-padding-y)
-      var(--dreadnought-tabs-tab-padding-x);
+    padding: var(--dreadnought-tabs-tab-padding-y) var(--dreadnought-tabs-tab-padding-x);
     border: 0;
     border-radius: var(--dreadnought-tabs-tab-radius);
     background: var(--dreadnought-tabs-tab-bg);
@@ -45,26 +45,28 @@
     cursor: pointer;
   }
 
-  .tab:hover:not(:disabled), .more:hover:not(:disabled) {
+  .tab:hover:not(:disabled),
+  .more:hover:not(:disabled) {
     background: var(--dreadnought-tabs-tab-bg-hover);
   }
 
-  .tab[aria-selected="true"] {
+  .tab[aria-selected='true'] {
     background: var(--dreadnought-tabs-tab-bg-selected);
     color: var(--dreadnought-tabs-tab-fg-selected);
   }
 
-  .tab[aria-selected="true"]:hover:not(:disabled) {
+  .tab[aria-selected='true']:hover:not(:disabled) {
     background: var(--dreadnought-tabs-tab-bg-selected-hover);
   }
 
-  .tab:focus-visible, .more:focus-visible {
-    outline: var(--dreadnought-tabs-focus-width) solid
-      var(--dreadnought-tabs-focus-ring);
+  .tab:focus-visible,
+  .more:focus-visible {
+    outline: var(--dreadnought-tabs-focus-width) solid var(--dreadnought-tabs-focus-ring);
     outline-offset: calc(-1 * var(--dreadnought-tabs-focus-width));
   }
 
-  .tab:disabled, .more:disabled {
+  .tab:disabled,
+  .more:disabled {
     opacity: var(--dreadnought-tabs-disabled-opacity);
     cursor: not-allowed;
   }

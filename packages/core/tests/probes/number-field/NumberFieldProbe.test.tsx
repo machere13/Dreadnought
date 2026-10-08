@@ -10,8 +10,12 @@ const decrease = () => screen.getByRole('button', { name: 'Decrease' });
 const displayed = () => screen.getByRole('status').textContent;
 
 it('synchronizes custom step buttons with the field and form without submitting', async () => {
-  const submit = vi.fn(event => event.preventDefault());
-  render(<form onSubmit={submit}><NumberFieldProbe defaultValue={2} min={0} max={6} step={2} /></form>);
+  const submit = vi.fn((event) => event.preventDefault());
+  render(
+    <form onSubmit={submit}>
+      <NumberFieldProbe defaultValue={2} min={0} max={6} step={2} />
+    </form>,
+  );
   await userEvent.click(increase());
   expect(input().value).toBe('4');
   expect(displayed()).toBe('4');
@@ -81,8 +85,19 @@ it('keeps an empty required value distinct from zero and starts at the minimum',
 });
 
 it('maps vertical arrows to a single step while preserving cursor keys, IME and cancellation', async () => {
-  const view = (cancel: boolean) => <NumberFieldProbe defaultValue={2} min={0} max={6} step={2}
-    onKeyDown={cancel ? (event: React.KeyboardEvent<HTMLInputElement>) => event.preventDefault() : undefined} />;
+  const view = (cancel: boolean) => (
+    <NumberFieldProbe
+      defaultValue={2}
+      min={0}
+      max={6}
+      step={2}
+      onKeyDown={
+        cancel
+          ? (event: React.KeyboardEvent<HTMLInputElement>) => event.preventDefault()
+          : undefined
+      }
+    />
+  );
   const { rerender } = render(view(false));
   await userEvent.click(input());
   await userEvent.keyboard('{ArrowUp}');
@@ -105,7 +120,7 @@ it('maps vertical arrows to a single step while preserving cursor keys, IME and 
   expect(displayed()).toBe('2');
 });
 
-it.each(['disabled', 'readOnly'] as const)('does not let step buttons bypass %s', async flag => {
+it.each(['disabled', 'readOnly'] as const)('does not let step buttons bypass %s', async (flag) => {
   render(<NumberFieldProbe defaultValue={2} {...{ [flag]: true }} />);
   await userEvent.click(increase());
   await userEvent.click(decrease());
@@ -116,7 +131,11 @@ it.each(['disabled', 'readOnly'] as const)('does not let step buttons bypass %s'
 });
 
 it('does not bypass a disabled fieldset even through direct keyboard dispatch', () => {
-  render(<fieldset disabled><NumberFieldProbe defaultValue={2} /></fieldset>);
+  render(
+    <fieldset disabled>
+      <NumberFieldProbe defaultValue={2} />
+    </fieldset>,
+  );
   fireEvent.keyDown(input(), { key: 'ArrowUp' });
   fireEvent.click(increase());
   expect(input().value).toBe('2');
@@ -125,10 +144,18 @@ it('does not bypass a disabled fieldset even through direct keyboard dispatch', 
 
 it('synchronizes native form reset and respects a cancelled reset', async () => {
   let cancel = false;
-  render(<form onReset={event => { if (cancel) event.preventDefault(); }}>
-    <NumberFieldProbe defaultValue={2} min={0} max={6} step={2} />
-    <button type="reset">Reset</button>
-  </form>);
+  render(
+    <form
+      onReset={(event) => {
+        if (cancel) {
+          event.preventDefault();
+        }
+      }}
+    >
+      <NumberFieldProbe defaultValue={2} min={0} max={6} step={2} />
+      <button type="reset">Reset</button>
+    </form>,
+  );
   await userEvent.click(increase());
   await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
   expect(input().value).toBe('2');

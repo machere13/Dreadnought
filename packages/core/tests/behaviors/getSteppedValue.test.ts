@@ -40,6 +40,6 @@ it.each([
   { min: 0, max: 10, step: 0 },
   { min: 0, max: 10, step: -1 },
   { min: 10, max: 0 },
-])('rejects an invalid grid %j', options => {
+])('rejects an invalid grid %j', (options) => {
   expect(() => getSteppedValue(1, options)).toThrow(RangeError);
 });

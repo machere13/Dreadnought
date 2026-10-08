@@ -9,11 +9,16 @@ function classes(library: string, consumer?: string) {
 }
 
 export function Breadcrumb({ className, slotClassNames, ...props }: BreadcrumbProps) {
-  return <BreadcrumbAdapter {...props} className={classes(breadcrumbPresentation.root, className)}
-    slotClassNames={{
-      list: classes(breadcrumbPresentation.list, slotClassNames?.list),
-      item: classes(breadcrumbPresentation.item, slotClassNames?.item),
-      link: classes(breadcrumbPresentation.link, slotClassNames?.link),
-      current: classes(breadcrumbPresentation.current, slotClassNames?.current),
-    }} />;
+  return (
+    <BreadcrumbAdapter
+      {...props}
+      className={classes(breadcrumbPresentation.root, className)}
+      slotClassNames={{
+        list: classes(breadcrumbPresentation.list, slotClassNames?.list),
+        item: classes(breadcrumbPresentation.item, slotClassNames?.item),
+        link: classes(breadcrumbPresentation.link, slotClassNames?.link),
+        current: classes(breadcrumbPresentation.current, slotClassNames?.current),
+      }}
+    />
+  );
 }

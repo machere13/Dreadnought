@@ -3,15 +3,27 @@ import { getTextAreaState } from '../../../../src/components/Fields/TextArea/get
 
 it('provides the shared native text-field state', () => {
   expect(getTextAreaState({ readOnly: true, required: true })).toEqual({
-    disabled: false, readOnly: true, required: true, invalid: false,
-    rows: 2, minRows: undefined, maxRows: undefined, autoSize: false,
+    disabled: false,
+    readOnly: true,
+    required: true,
+    invalid: false,
+    rows: 2,
+    minRows: undefined,
+    maxRows: undefined,
+    autoSize: false,
   });
 });
 
 it('keeps initial rows and optional resize limits separate', () => {
   expect(getTextAreaState({ rows: 4, minRows: 2, maxRows: 8, autoSize: true })).toEqual({
-    disabled: false, readOnly: false, required: false, invalid: false,
-    rows: 4, minRows: 2, maxRows: 8, autoSize: true,
+    disabled: false,
+    readOnly: false,
+    required: false,
+    invalid: false,
+    rows: 4,
+    minRows: 2,
+    maxRows: 8,
+    autoSize: true,
   });
 });
 

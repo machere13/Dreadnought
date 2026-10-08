@@ -4,8 +4,19 @@ import * as ui from '../src/adapters/react/index.ts';
 
 beforeEach(() => {
   Object.defineProperties(HTMLDialogElement.prototype, {
-    showModal: { configurable: true, value() { this.open = true; } },
-    close: { configurable: true, value() { this.open = false; this.dispatchEvent(new Event('close')); } },
+    showModal: {
+      configurable: true,
+      value() {
+        this.open = true;
+      },
+    },
+    close: {
+      configurable: true,
+      value() {
+        this.open = false;
+        this.dispatchEvent(new Event('close'));
+      },
+    },
   });
 });
 afterEach(() => {
@@ -16,9 +27,21 @@ afterEach(() => {
 
 it('provides themed modal composition without losing native attributes or closing behavior', () => {
   expect(ui).toHaveProperty('Modal');
-  render(<ui.Modal aria-label="Profile" className="custom" data-testid="profile" content={({ close }) => <>
-    <ui.Input aria-label="Name" /><ui.Button onClick={close}>Done</ui.Button>
-  </>}>{trigger => <ui.Button {...trigger}>Edit</ui.Button>}</ui.Modal>);
+  render(
+    <ui.Modal
+      aria-label="Profile"
+      className="custom"
+      data-testid="profile"
+      content={({ close }) => (
+        <>
+          <ui.Input aria-label="Name" />
+          <ui.Button onClick={close}>Done</ui.Button>
+        </>
+      )}
+    >
+      {(trigger) => <ui.Button {...trigger}>Edit</ui.Button>}
+    </ui.Modal>,
+  );
   fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
   const node = screen.getByRole('dialog', { name: 'Profile' });
   expect(node.className.split(' ')).toHaveLength(2);

@@ -10,8 +10,10 @@ export const ButtonActionAdapter = forwardRef<HTMLButtonElement, ButtonActionAda
   function ButtonActionAdapter({ children, icon, iconPosition, ...options }, ref) {
     const { buttonProps } = useButton(options);
 
-    return <button {...buttonProps} data-ui="button" ref={ref}>
-      {renderButtonContent({ children, icon, iconPosition })}
-    </button>;
+    return (
+      <button {...buttonProps} data-ui="button" ref={ref}>
+        {renderButtonContent({ children, icon, iconPosition })}
+      </button>
+    );
   },
 );

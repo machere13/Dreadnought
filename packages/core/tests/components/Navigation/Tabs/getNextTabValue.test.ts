@@ -1,11 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getNextTabValue } from '../../../../src/components/Navigation/Tabs/getNextTabValue.ts';
 
-const tabs = [
-  { value: 'a' },
-  { value: 'b', disabled: true },
-  { value: 'c' },
-];
+const tabs = [{ value: 'a' }, { value: 'b', disabled: true }, { value: 'c' }];
 
 describe('getNextTabValue', () => {
   it('moves forward and backward across enabled tabs with wraparound', () => {

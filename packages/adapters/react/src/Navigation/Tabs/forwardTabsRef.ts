@@ -7,8 +7,11 @@ export function forwardTabsRef<T>(
   unregister: () => void,
 ): void | (() => void) {
   if (element === null) {
-    if (typeof consumerRef === 'function') consumerRef(null);
-    else if (consumerRef) consumerRef.current = null;
+    if (typeof consumerRef === 'function') {
+      consumerRef(null);
+    } else if (consumerRef) {
+      consumerRef.current = null;
+    }
     return;
   }
 

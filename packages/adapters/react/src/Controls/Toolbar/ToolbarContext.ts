@@ -21,6 +21,8 @@ export const ToolbarContext = createContext<ToolbarContextValue | null>(null);
 
 export function useToolbarContext(): ToolbarContextValue {
   const context = useContext(ToolbarContext);
-  if (!context) throw new Error('useToolbarItem must be inside ToolbarAdapter or Toolbar.');
+  if (!context) {
+    throw new Error('useToolbarItem must be inside ToolbarAdapter or Toolbar.');
+  }
   return context;
 }

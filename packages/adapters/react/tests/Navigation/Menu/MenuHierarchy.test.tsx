@@ -4,9 +4,19 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, expect, it, vi } from 'vitest';
 import { MenuAdapter } from '../../../src/Navigation/Menu/MenuAdapter.tsx';
 afterEach(cleanup);
-const items = [{ value: 'group', type: 'group' as const, label: 'Files', children: [
-  { value: 'copy', label: 'Copy' }, { value: 'more', label: 'More', children: [{ value: 'save', label: 'Save' }] },
-] }, { value: 'divider', type: 'divider' as const }, { value: 'end', label: 'End' }];
+const items = [
+  {
+    value: 'group',
+    type: 'group' as const,
+    label: 'Files',
+    children: [
+      { value: 'copy', label: 'Copy' },
+      { value: 'more', label: 'More', children: [{ value: 'save', label: 'Save' }] },
+    ],
+  },
+  { value: 'divider', type: 'divider' as const },
+  { value: 'end', label: 'End' },
+];
 
 it('opens submenus without actions, enters with Right and returns with Left', () => {
   const action = vi.fn();
@@ -41,9 +51,18 @@ it('uses controlled open keys and restores focus when a branch closes', () => {
 
 it('renders navigation as links, marks the current page and disables native navigation', () => {
   const action = vi.fn();
-  render(<MenuAdapter mode="navigation" aria-label="Pages" selectedValue="docs" onAction={action}
-    items={[{ value: 'docs', label: 'Docs', href: '/docs', target: '_blank' },
-      { value: 'locked', label: 'Locked', href: '/locked', disabled: true }]} />);
+  render(
+    <MenuAdapter
+      mode="navigation"
+      aria-label="Pages"
+      selectedValue="docs"
+      onAction={action}
+      items={[
+        { value: 'docs', label: 'Docs', href: '/docs', target: '_blank' },
+        { value: 'locked', label: 'Locked', href: '/locked', disabled: true },
+      ]}
+    />,
+  );
   expect(screen.getByRole('navigation', { name: 'Pages' })).toBeTruthy();
   expect(screen.getByRole('link', { name: 'Docs' }).getAttribute('aria-current')).toBe('page');
   const disabled = screen.getByText('Locked').closest('a')!;
@@ -54,7 +73,14 @@ it('renders navigation as links, marks the current page and disables native navi
 });
 
 it('does not intercept modified shortcuts or nested interactive content', () => {
-  render(<MenuAdapter items={[{ value: 'copy', label: <input aria-label="Search" /> }, { value: 'end', label: 'End' }]} />);
+  render(
+    <MenuAdapter
+      items={[
+        { value: 'copy', label: <input aria-label="Search" /> },
+        { value: 'end', label: 'End' },
+      ]}
+    />,
+  );
   const input = screen.getByRole('textbox');
   act(() => input.focus());
   fireEvent.keyDown(input, { key: 'ArrowDown' });
@@ -69,8 +95,13 @@ it('does not run an action disabled synchronously by consumer focus', () => {
   const action = vi.fn();
   function Example() {
     const [disabled, setDisabled] = useState(false);
-    return <MenuAdapter items={[{ value: 'save', label: 'Save', disabled }]} onAction={action}
-      onFocus={() => flushSync(() => setDisabled(true))} />;
+    return (
+      <MenuAdapter
+        items={[{ value: 'save', label: 'Save', disabled }]}
+        onAction={action}
+        onFocus={() => flushSync(() => setDisabled(true))}
+      />
+    );
   }
   render(<Example />);
   fireEvent.click(screen.getByRole('menuitem', { name: 'Save' }));

@@ -4,5 +4,10 @@ import { modalPresentation } from '#presentation/Overlays/Modal/modalPresentatio
 
 export type ModalProps = ModalAdapterProps;
 export function Modal({ className, ...props }: ModalProps) {
-  return <ModalAdapter {...props} className={[modalPresentation.root, className].filter(Boolean).join(' ')} />;
+  return (
+    <ModalAdapter
+      {...props}
+      className={[modalPresentation.root, className].filter(Boolean).join(' ')}
+    />
+  );
 }

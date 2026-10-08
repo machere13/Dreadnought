@@ -6,6 +6,14 @@ import { markPresentation } from '#presentation/DataDisplay/Mark/markPresentatio
 export type MarkProps = MarkAdapterProps & { color?: string };
 
 export function Mark({ color, className, style, ...props }: MarkProps) {
-  const markStyle = color ? { ...style, '--dreadnought-mark-color': color } as CSSProperties : style;
-  return <MarkAdapter {...props} className={[markPresentation.root, className].filter(Boolean).join(' ')} style={markStyle} />;
+  const markStyle = color
+    ? ({ ...style, '--dreadnought-mark-color': color } as CSSProperties)
+    : style;
+  return (
+    <MarkAdapter
+      {...props}
+      className={[markPresentation.root, className].filter(Boolean).join(' ')}
+      style={markStyle}
+    />
+  );
 }

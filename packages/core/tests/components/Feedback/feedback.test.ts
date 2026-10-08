@@ -3,7 +3,10 @@ import * as core from '../../../src/index.ts';
 
 it('derives toast semantics without announcing a closed notification', () => {
   expect(core).toHaveProperty('getToastState');
-  expect(core.getToastState({ open: true, type: 'error' })).toEqual({ open: true, rootProps: { role: 'alert', 'aria-atomic': true } });
+  expect(core.getToastState({ open: true, type: 'error' })).toEqual({
+    open: true,
+    rootProps: { role: 'alert', 'aria-atomic': true },
+  });
   expect(core.getToastState({ open: false }).rootProps.role).toBeUndefined();
   expect(core.getToastState({ open: true }).rootProps.role).toBe('status');
 });
@@ -20,6 +23,10 @@ it('subtracts elapsed time and rejects invalid countdown values', () => {
 
 it('exposes loading status only while loading', () => {
   expect(core).toHaveProperty('getLoaderState');
-  expect(core.getLoaderState({ loading: true })).toEqual({ loading: true, rootProps: { 'aria-busy': true }, indicatorProps: { role: 'status', 'aria-live': 'polite' } });
+  expect(core.getLoaderState({ loading: true })).toEqual({
+    loading: true,
+    rootProps: { 'aria-busy': true },
+    indicatorProps: { role: 'status', 'aria-live': 'polite' },
+  });
   expect(core.getLoaderState({ loading: false }).indicatorProps.role).toBeUndefined();
 });

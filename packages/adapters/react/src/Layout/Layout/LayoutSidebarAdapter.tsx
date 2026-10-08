@@ -31,18 +31,28 @@ export function LayoutSidebarAdapter({
 
   function toggle() {
     const next = !isCollapsed;
-    if (collapsed === undefined) setInternalCollapsed(next);
+    if (collapsed === undefined) {
+      setInternalCollapsed(next);
+    }
     onCollapsedChange?.(next);
   }
 
-  return <aside {...asideProps} ref={ref} data-ui="layout-sidebar" data-collapsed={isCollapsed}>
-    <button type="button" data-slot="trigger" className={slotClassNames?.trigger}
-      aria-controls={bodyId} aria-expanded={!isCollapsed}
-      aria-label={triggerIcon != null ? triggerLabel : undefined} onClick={toggle}>
-      {triggerIcon != null ? <span aria-hidden="true">{triggerIcon}</span> : triggerLabel}
-    </button>
-    <div id={bodyId} data-slot="body" className={slotClassNames?.body} hidden={isCollapsed}>
-      {children}
-    </div>
-  </aside>;
+  return (
+    <aside {...asideProps} ref={ref} data-ui="layout-sidebar" data-collapsed={isCollapsed}>
+      <button
+        type="button"
+        data-slot="trigger"
+        className={slotClassNames?.trigger}
+        aria-controls={bodyId}
+        aria-expanded={!isCollapsed}
+        aria-label={triggerIcon != null ? triggerLabel : undefined}
+        onClick={toggle}
+      >
+        {triggerIcon != null ? <span aria-hidden="true">{triggerIcon}</span> : triggerLabel}
+      </button>
+      <div id={bodyId} data-slot="body" className={slotClassNames?.body} hidden={isCollapsed}>
+        {children}
+      </div>
+    </aside>
+  );
 }

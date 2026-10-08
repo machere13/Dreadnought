@@ -5,6 +5,11 @@ export interface CheckableStateOptions {
   invalid?: boolean;
 }
 
-export function getCheckableState({ checked = false, disabled = false, required = false, invalid = false }: CheckableStateOptions) {
+export function getCheckableState({
+  checked = false,
+  disabled = false,
+  required = false,
+  invalid = false,
+}: CheckableStateOptions) {
   return { checked, disabled, required, invalid };
 }

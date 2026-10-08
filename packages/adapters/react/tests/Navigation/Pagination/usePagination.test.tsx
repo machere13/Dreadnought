@@ -7,8 +7,11 @@ afterEach(cleanup);
 
 it('keeps a normalized uncontrolled page without resurrecting it or emitting rerender events', () => {
   const changed = vi.fn();
-  const view = renderHook(({ total, pageSize }) => usePagination({ total, pageSize, defaultCurrent: 9, onChange: changed }),
-    { initialProps: { total: 100, pageSize: 10 }, wrapper: StrictMode });
+  const view = renderHook(
+    ({ total, pageSize }) =>
+      usePagination({ total, pageSize, defaultCurrent: 9, onChange: changed }),
+    { initialProps: { total: 100, pageSize: 10 }, wrapper: StrictMode },
+  );
   view.rerender({ total: 20, pageSize: 10 });
   expect(view.result.current.current).toBe(2);
   view.rerender({ total: 100, pageSize: 10 });
@@ -26,8 +29,10 @@ it('keeps a normalized uncontrolled page without resurrecting it or emitting rer
 
 it('waits for controlled acceptance and preserves the owner value through shrinking data', () => {
   const changed = vi.fn();
-  const view = renderHook(({ current, total }) => usePagination({ total, current, onChange: changed }),
-    { initialProps: { current: 9, total: 100 } });
+  const view = renderHook(
+    ({ current, total }) => usePagination({ total, current, onChange: changed }),
+    { initialProps: { current: 9, total: 100 } },
+  );
   act(() => view.result.current.changePage(3));
   expect(changed).toHaveBeenCalledExactlyOnceWith(3, 10);
   expect(view.result.current.current).toBe(9);
@@ -42,8 +47,11 @@ it('waits for controlled acceptance and preserves the owner value through shrink
 
 it('clamps pageSize changes silently and initializes defaultCurrent only once', () => {
   const changed = vi.fn();
-  const view = renderHook(({ pageSize, defaultCurrent }) => usePagination({ total: 100, pageSize, defaultCurrent, onChange: changed }),
-    { initialProps: { pageSize: 10, defaultCurrent: 9 } });
+  const view = renderHook(
+    ({ pageSize, defaultCurrent }) =>
+      usePagination({ total: 100, pageSize, defaultCurrent, onChange: changed }),
+    { initialProps: { pageSize: 10, defaultCurrent: 9 } },
+  );
   view.rerender({ pageSize: 20, defaultCurrent: 1 });
   expect(view.result.current.current).toBe(5);
   view.rerender({ pageSize: 10, defaultCurrent: 1 });

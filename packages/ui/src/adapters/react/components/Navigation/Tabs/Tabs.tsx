@@ -22,13 +22,31 @@ function TabsRoot({ className, ...props }: TabsAdapterProps) {
 }
 
 function List({ className, slotProps = {}, ...props }: TabsListAdapterProps) {
-  return <TabsListAdapter {...props} className={classes(tabsPresentation.list, className)} slotProps={{
-    container: { ...slotProps.container, className: classes(tabsPresentation.listContainer, slotProps.container?.className) },
-    more: { ...slotProps.more, children: slotProps.more?.children ?? <Icon name="ellipsis" />,
-      className: classes(tabsPresentation.more, slotProps.more?.className) },
-    menu: { ...slotProps.menu, className: classes(tabsPresentation.menu, slotProps.menu?.className) },
-    item: { ...slotProps.item, className: classes(tabsPresentation.menuItem, slotProps.item?.className) },
-  }} />;
+  return (
+    <TabsListAdapter
+      {...props}
+      className={classes(tabsPresentation.list, className)}
+      slotProps={{
+        container: {
+          ...slotProps.container,
+          className: classes(tabsPresentation.listContainer, slotProps.container?.className),
+        },
+        more: {
+          ...slotProps.more,
+          children: slotProps.more?.children ?? <Icon name="ellipsis" />,
+          className: classes(tabsPresentation.more, slotProps.more?.className),
+        },
+        menu: {
+          ...slotProps.menu,
+          className: classes(tabsPresentation.menu, slotProps.menu?.className),
+        },
+        item: {
+          ...slotProps.item,
+          className: classes(tabsPresentation.menuItem, slotProps.item?.className),
+        },
+      }}
+    />
+  );
 }
 
 function Tab({ className, ...props }: TabsTabAdapterProps) {

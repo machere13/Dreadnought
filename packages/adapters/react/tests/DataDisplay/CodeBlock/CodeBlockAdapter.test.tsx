@@ -17,8 +17,14 @@ describe('CodeBlockAdapter', () => {
   it('renders code as text, forwards root props/ref, and accepts slot classes', () => {
     const ref = createRef<HTMLDivElement>();
     const { container } = render(
-      <CodeBlockAdapter code={'<b>one</b>\n'} language="tsx" ref={ref} className="custom" title="Example"
-        slotClassNames={{ header: 'h', pre: 'p', code: 'c', copyButton: 'b' }} />,
+      <CodeBlockAdapter
+        code={'<b>one</b>\n'}
+        language="tsx"
+        ref={ref}
+        className="custom"
+        title="Example"
+        slotClassNames={{ header: 'h', pre: 'p', code: 'c', copyButton: 'b' }}
+      />,
     );
     expect(ref.current?.getAttribute('data-ui')).toBe('code-block');
     expect(ref.current?.getAttribute('title')).toBe('Example');
@@ -49,7 +55,15 @@ describe('CodeBlockAdapter', () => {
     clipboard(writeText);
     const onCopy = vi.fn();
     const submit = vi.fn((event: Event) => event.preventDefault());
-    render(<form onSubmit={submit}><CodeBlockAdapter code={'a\n'} onCopy={onCopy} copyLabels={{ copy: 'Копировать', copied: 'Готово', error: 'Ошибка' }} /></form>);
+    render(
+      <form onSubmit={submit}>
+        <CodeBlockAdapter
+          code={'a\n'}
+          onCopy={onCopy}
+          copyLabels={{ copy: 'Копировать', copied: 'Готово', error: 'Ошибка' }}
+        />
+      </form>,
+    );
     const button = screen.getByRole('button', { name: 'Копировать' });
     expect(button.getAttribute('type')).toBe('button');
     fireEvent.click(button);
@@ -70,7 +84,9 @@ describe('CodeBlockAdapter', () => {
     });
     expect(screen.getByRole('button', { name: 'Copied' })).toBeTruthy();
 
-    act(() => { vi.advanceTimersByTime(2000); });
+    act(() => {
+      vi.advanceTimersByTime(2000);
+    });
     expect(screen.getByRole('button', { name: 'Copy' })).toBeTruthy();
   });
 
@@ -99,7 +115,12 @@ describe('CodeBlockAdapter', () => {
 
   it('ignores repeated clicks while a write is pending', async () => {
     let resolveWrite!: () => void;
-    const writeText = vi.fn(() => new Promise<void>((resolve) => { resolveWrite = resolve; }));
+    const writeText = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveWrite = resolve;
+        }),
+    );
     clipboard(writeText);
     render(<CodeBlockAdapter code="once" />);
     const button = screen.getByRole('button', { name: 'Copy' });
@@ -112,7 +133,12 @@ describe('CodeBlockAdapter', () => {
 
   it('does not apply a stale result after the code changes', async () => {
     let resolveWrite!: () => void;
-    const writeText = vi.fn(() => new Promise<void>((resolve) => { resolveWrite = resolve; }));
+    const writeText = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveWrite = resolve;
+        }),
+    );
     clipboard(writeText);
     const onCopy = vi.fn();
     const { rerender } = render(<CodeBlockAdapter code="old" onCopy={onCopy} />);
@@ -125,7 +151,12 @@ describe('CodeBlockAdapter', () => {
 
   it('does not resurrect pending copy state when code changes A to B to A', async () => {
     let resolveWrite!: () => void;
-    const writeText = vi.fn(() => new Promise<void>((resolve) => { resolveWrite = resolve; }));
+    const writeText = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveWrite = resolve;
+        }),
+    );
     clipboard(writeText);
     const { rerender } = render(<CodeBlockAdapter code="A" />);
     fireEvent.click(screen.getByRole('button', { name: 'Copy' }));
@@ -133,7 +164,9 @@ describe('CodeBlockAdapter', () => {
     rerender(<CodeBlockAdapter code="B" />);
     rerender(<CodeBlockAdapter code="A" />);
     resolveWrite();
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Copy' }).getAttribute('aria-busy')).toBeNull());
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Copy' }).getAttribute('aria-busy')).toBeNull(),
+    );
     expect(screen.getByRole('button', { name: 'Copy' }).getAttribute('aria-disabled')).toBeNull();
   });
 

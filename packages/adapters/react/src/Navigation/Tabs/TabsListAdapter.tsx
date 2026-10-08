@@ -14,20 +14,49 @@ export type TabsListAdapterProps = ComponentPropsWithRef<'div'> & {
   };
 };
 
-export function TabsListAdapter({ ref, children, onScroll, moreLabel = 'Ещё вкладки', slotProps = {}, ...props }: TabsListAdapterProps) {
+export function TabsListAdapter({
+  ref,
+  children,
+  onScroll,
+  moreLabel = 'Ещё вкладки',
+  slotProps = {},
+  ...props
+}: TabsListAdapterProps) {
   const listRef = useRef<HTMLDivElement>(null);
-  const setRef = useCallback((element: HTMLDivElement | null) => {
-    listRef.current = element;
-    return forwardTabsRef(element, ref, () => { listRef.current = null; });
-  }, [ref]);
+  const setRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      listRef.current = element;
+      return forwardTabsRef(element, ref, () => {
+        listRef.current = null;
+      });
+    },
+    [ref],
+  );
   const { hiddenTabs, revealTab, measure } = useTabsOverflow(listRef);
 
-  return <div {...slotProps.container} data-slot="list-container">
-    <div {...props} ref={setRef} role="tablist" aria-orientation="horizontal" data-slot="list"
-      onScroll={(event) => { onScroll?.(event); measure(); }}>
-      {children}
+  return (
+    <div {...slotProps.container} data-slot="list-container">
+      <div
+        {...props}
+        ref={setRef}
+        role="tablist"
+        aria-orientation="horizontal"
+        data-slot="list"
+        onScroll={(event) => {
+          onScroll?.(event);
+          measure();
+        }}
+      >
+        {children}
+      </div>
+      {hiddenTabs.length > 0 && (
+        <TabsOverflowMenu
+          tabs={hiddenTabs}
+          revealTab={revealTab}
+          label={moreLabel}
+          slotProps={slotProps}
+        />
+      )}
     </div>
-    {hiddenTabs.length > 0 && <TabsOverflowMenu tabs={hiddenTabs} revealTab={revealTab}
-      label={moreLabel} slotProps={slotProps} />}
-  </div>;
+  );
 }

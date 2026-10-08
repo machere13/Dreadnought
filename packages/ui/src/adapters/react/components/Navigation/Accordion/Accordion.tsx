@@ -22,17 +22,27 @@ function AccordionRoot({ className, ...props }: AccordionAdapterProps) {
 }
 
 function Item({ className, ...props }: AccordionItemAdapterProps) {
-  return <AccordionItemAdapter {...props} className={classes(accordionPresentation.item, className)} />;
+  return (
+    <AccordionItemAdapter {...props} className={classes(accordionPresentation.item, className)} />
+  );
 }
 
 function Trigger({ className, children, ...props }: AccordionTriggerAdapterProps) {
-  return <AccordionTriggerAdapter {...props} className={classes(accordionPresentation.trigger, className)}>
-    {children}<Icon name="down" className={accordionPresentation.indicator} aria-hidden="true" />
-  </AccordionTriggerAdapter>;
+  return (
+    <AccordionTriggerAdapter
+      {...props}
+      className={classes(accordionPresentation.trigger, className)}
+    >
+      {children}
+      <Icon name="down" className={accordionPresentation.indicator} aria-hidden="true" />
+    </AccordionTriggerAdapter>
+  );
 }
 
 function Panel({ className, ...props }: AccordionPanelAdapterProps) {
-  return <AccordionPanelAdapter {...props} className={classes(accordionPresentation.panel, className)} />;
+  return (
+    <AccordionPanelAdapter {...props} className={classes(accordionPresentation.panel, className)} />
+  );
 }
 
 export const Accordion = Object.assign(AccordionRoot, { Item, Trigger, Panel });

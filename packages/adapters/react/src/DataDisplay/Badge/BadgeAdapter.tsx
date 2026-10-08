@@ -16,11 +16,21 @@ export function BadgeAdapter({
   className,
   ...rootProps
 }: BadgeAdapterProps) {
-  const badgeContent = <>
-    {iconPosition === 'start' && icon != null && <span data-slot="icon" aria-hidden="true">{icon}</span>}
-    <span data-slot="label">{children}</span>
-    {iconPosition === 'end' && icon != null && <span data-slot="icon" aria-hidden="true">{icon}</span>}
-  </>;
+  const badgeContent = (
+    <>
+      {iconPosition === 'start' && icon != null && (
+        <span data-slot="icon" aria-hidden="true">
+          {icon}
+        </span>
+      )}
+      <span data-slot="label">{children}</span>
+      {iconPosition === 'end' && icon != null && (
+        <span data-slot="icon" aria-hidden="true">
+          {icon}
+        </span>
+      )}
+    </>
+  );
   const hasTarget = target !== undefined;
 
   return (
@@ -32,10 +42,16 @@ export function BadgeAdapter({
       data-mode={hasTarget ? 'overlay' : 'standalone'}
       data-slot={hasTarget ? undefined : 'badge'}
     >
-      {hasTarget ? <>
-        <span data-slot="target">{target}</span>
-        <span data-slot="badge" aria-hidden="true">{badgeContent}</span>
-      </> : badgeContent}
+      {hasTarget ? (
+        <>
+          <span data-slot="target">{target}</span>
+          <span data-slot="badge" aria-hidden="true">
+            {badgeContent}
+          </span>
+        </>
+      ) : (
+        badgeContent
+      )}
     </span>
   );
 }

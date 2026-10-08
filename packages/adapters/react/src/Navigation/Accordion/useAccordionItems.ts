@@ -11,23 +11,36 @@ export function useAccordionItems(selectedValue: AccordionValue) {
       throw new Error(`Duplicate or empty Accordion.Item value: ${value}`);
     }
     items.current.set(value, token);
-    if (mounted.current) revalidate((revision) => revision + 1);
+    if (mounted.current) {
+      revalidate((revision) => revision + 1);
+    }
     return () => {
       if (items.current.get(value) === token) {
         items.current.delete(value);
-        if (mounted.current) revalidate((revision) => revision + 1);
+        if (mounted.current) {
+          revalidate((revision) => revision + 1);
+        }
       }
     };
   }, []);
 
   useLayoutEffect(() => {
     mounted.current = true;
-    return () => { mounted.current = false; };
+    return () => {
+      mounted.current = false;
+    };
   }, []);
 
   useLayoutEffect(() => {
-    const selected = Array.isArray(selectedValue) ? selectedValue : selectedValue === null ? [] : [selectedValue];
-    if (new Set(selected).size !== selected.length || selected.some((value) => !value || !items.current.has(value))) {
+    const selected = Array.isArray(selectedValue)
+      ? selectedValue
+      : selectedValue === null
+        ? []
+        : [selectedValue];
+    if (
+      new Set(selected).size !== selected.length ||
+      selected.some((value) => !value || !items.current.has(value))
+    ) {
       throw new Error('Accordion value must reference unique existing items.');
     }
   });

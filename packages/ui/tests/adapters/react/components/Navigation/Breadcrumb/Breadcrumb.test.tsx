@@ -7,12 +7,20 @@ afterEach(cleanup);
 
 describe('Breadcrumb', () => {
   it('styles the ready component without styling the unstyled adapter', () => {
-    render(<>
-      <Breadcrumb aria-label="Готовый путь" className="own-root" items={[
-        { label: 'Главная', href: '/' }, { label: 'Компоненты' },
-      ]} slotClassNames={{ link: 'own-link', current: 'own-current' }} />
-      <BreadcrumbAdapter aria-label="Свой путь" items={[{ label: 'Главная', href: '/' }, { label: 'Страница' }]} />
-    </>);
+    render(
+      <>
+        <Breadcrumb
+          aria-label="Готовый путь"
+          className="own-root"
+          items={[{ label: 'Главная', href: '/' }, { label: 'Компоненты' }]}
+          slotClassNames={{ link: 'own-link', current: 'own-current' }}
+        />
+        <BreadcrumbAdapter
+          aria-label="Свой путь"
+          items={[{ label: 'Главная', href: '/' }, { label: 'Страница' }]}
+        />
+      </>,
+    );
 
     const ready = screen.getByRole('navigation', { name: 'Готовый путь' });
     const plain = screen.getByRole('navigation', { name: 'Свой путь' });
@@ -27,8 +35,13 @@ describe('Breadcrumb', () => {
   });
 
   it('preserves adapter semantics and does not create empty navigation', () => {
-    const { rerender } = render(<Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Current' }]} />);
-    expect(screen.getByRole('navigation', { name: 'Breadcrumb' }).querySelector('[aria-current="page"]')?.textContent).toBe('Current');
+    const { rerender } = render(
+      <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Current' }]} />,
+    );
+    expect(
+      screen.getByRole('navigation', { name: 'Breadcrumb' }).querySelector('[aria-current="page"]')
+        ?.textContent,
+    ).toBe('Current');
     rerender(<Breadcrumb items={[]} />);
     expect(screen.queryByRole('navigation')).toBeNull();
   });

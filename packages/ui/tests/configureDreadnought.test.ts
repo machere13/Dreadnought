@@ -19,5 +19,7 @@ it('switches the page-wide setting and leaves it unchanged for omitted settings'
 it('does not require a DOM on the server and rejects invalid values', () => {
   vi.stubGlobal('document', undefined);
   expect(() => configureDreadnought({ wideTypography: false })).not.toThrow();
-  expect(() => configureDreadnought({ wideTypography: 'false' as unknown as boolean })).toThrow(TypeError);
+  expect(() => configureDreadnought({ wideTypography: 'false' as unknown as boolean })).toThrow(
+    TypeError,
+  );
 });

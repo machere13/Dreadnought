@@ -4,6 +4,8 @@
   "packageManager": "pnpm@9.6.0",
   "type": "module",
   "scripts": {
+    "format": "prettier --write \"packages/**/*.{ts,tsx,css}\"",
+    "format:check": "prettier --check \"packages/**/*.{ts,tsx,css}\"",
     "build": "pnpm -r build",
     "catalog": "node tools/catalog/src/cli.mjs",
     "catalog:query": "node tools/catalog/src/query.mjs",
@@ -26,6 +28,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "jsdom": "^26.0.0",
+    "prettier": "3.9.9",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "typescript": "^5.7.0",

@@ -5,10 +5,18 @@ import * as adapter from '../../../src/unstyled.ts';
 afterEach(cleanup);
 it('keeps content mounted but inert until loading completes', () => {
   expect(adapter).toHaveProperty('LoaderAdapter');
-  const { rerender } = render(<adapter.LoaderAdapter label="Загрузка данных"><button>Сохранить</button></adapter.LoaderAdapter>);
+  const { rerender } = render(
+    <adapter.LoaderAdapter label="Загрузка данных">
+      <button>Сохранить</button>
+    </adapter.LoaderAdapter>,
+  );
   expect(screen.getByRole('status').getAttribute('aria-label')).toBe('Загрузка данных');
   expect(screen.getByText('Сохранить').parentElement?.hasAttribute('inert')).toBe(true);
-  rerender(<adapter.LoaderAdapter loading={false}><button>Сохранить</button></adapter.LoaderAdapter>);
+  rerender(
+    <adapter.LoaderAdapter loading={false}>
+      <button>Сохранить</button>
+    </adapter.LoaderAdapter>,
+  );
   expect(screen.queryByRole('status')).toBeNull();
   expect(screen.getByRole('button').parentElement?.hasAttribute('inert')).toBe(false);
 });

@@ -7,14 +7,24 @@ afterEach(cleanup);
 it('exports the ready progress', () => expect(ui).toHaveProperty('Progress'));
 it('keeps status explicit and merges consumer classes and token overrides', () => {
   expect(ui).toHaveProperty('Progress');
-  const { rerender } = render(<ui.Progress value={100} aria-label="Upload" className="local"
-    slotClassNames={{ track: 't', fill: 'f', label: 'l' }}
-    style={{ '--dreadnought-progress-fill': 'purple' } as CSSProperties} />);
+  const { rerender } = render(
+    <ui.Progress
+      value={100}
+      aria-label="Upload"
+      className="local"
+      slotClassNames={{ track: 't', fill: 'f', label: 'l' }}
+      style={{ '--dreadnought-progress-fill': 'purple' } as CSSProperties}
+    />,
+  );
   const root = screen.getByRole('progressbar', { name: 'Upload' });
   expect(root.dataset.status).toBe('normal');
   expect(root.classList.contains('local')).toBe(true);
   expect(root.classList.length).toBeGreaterThan(1);
-  for (const [slot, name] of [['track', 't'], ['fill', 'f'], ['label', 'l']]) {
+  for (const [slot, name] of [
+    ['track', 't'],
+    ['fill', 'f'],
+    ['label', 'l'],
+  ]) {
     expect(root.querySelector(`[data-slot="${slot}"]`)!.classList.contains(name)).toBe(true);
     expect(root.querySelector(`[data-slot="${slot}"]`)!.classList.length).toBeGreaterThan(1);
   }

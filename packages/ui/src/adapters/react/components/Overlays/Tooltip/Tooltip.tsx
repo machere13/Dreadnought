@@ -4,5 +4,10 @@ import { tooltipPresentation } from '#presentation/Overlays/Tooltip/tooltipPrese
 
 export type TooltipProps = TooltipAdapterProps;
 export function Tooltip({ className, ...props }: TooltipProps) {
-  return <TooltipAdapter {...props} className={[tooltipPresentation.root, className].filter(Boolean).join(' ')} />;
+  return (
+    <TooltipAdapter
+      {...props}
+      className={[tooltipPresentation.root, className].filter(Boolean).join(' ')}
+    />
+  );
 }

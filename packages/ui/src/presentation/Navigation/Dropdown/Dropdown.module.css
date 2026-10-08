@@ -1,5 +1,7 @@
 @layer dreadnought {
-  .root[data-ui='dropdown'] { padding: 0; }
+  .root[data-ui='dropdown'] {
+    padding: 0;
+  }
   .menu[data-ui='menu'] {
     max-height: var(--dreadnought-dropdown-max-height);
     border: 0;

@@ -6,8 +6,19 @@ import { DialogProbe } from './DialogProbe.tsx';
 
 beforeEach(() => {
   Object.defineProperties(HTMLDialogElement.prototype, {
-    showModal: { configurable: true, value() { this.open = true; } },
-    close: { configurable: true, value() { this.open = false; this.dispatchEvent(new Event('close')); } },
+    showModal: {
+      configurable: true,
+      value() {
+        this.open = true;
+      },
+    },
+    close: {
+      configurable: true,
+      value() {
+        this.open = false;
+        this.dispatchEvent(new Event('close'));
+      },
+    },
   });
 });
 afterEach(() => {
@@ -51,13 +62,26 @@ it('skips a disabled action in the focus sequence', async () => {
 });
 
 it('does not intercept cancelled, composing or modified Tab events', async () => {
-  const { rerender } = render(<div onKeyDownCapture={event => event.preventDefault()}><DialogProbe /></div>);
+  const { rerender } = render(
+    <div onKeyDownCapture={(event) => event.preventDefault()}>
+      <DialogProbe />
+    </div>,
+  );
   await userEvent.click(trigger());
   close().focus();
   fireEvent.keyDown(close(), { key: 'Tab' });
   expect(document.activeElement).toBe(close());
-  rerender(<div><DialogProbe /></div>);
-  for (const flags of [{ isComposing: true }, { ctrlKey: true }, { altKey: true }, { metaKey: true }]) {
+  rerender(
+    <div>
+      <DialogProbe />
+    </div>,
+  );
+  for (const flags of [
+    { isComposing: true },
+    { ctrlKey: true },
+    { altKey: true },
+    { metaKey: true },
+  ]) {
     expect(fireEvent.keyDown(close(), { key: 'Tab', ...flags })).toBe(true);
     expect(document.activeElement).toBe(close());
   }
@@ -65,7 +89,16 @@ it('does not intercept cancelled, composing or modified Tab events', async () =>
 
 it('closes via Save without submitting a surrounding form', async () => {
   let submissions = 0;
-  render(<form onSubmit={event => { event.preventDefault(); submissions++; }}><DialogProbe /></form>);
+  render(
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        submissions++;
+      }}
+    >
+      <DialogProbe />
+    </form>,
+  );
   await userEvent.click(trigger());
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));
   expect(screen.queryByRole('dialog')).toBeNull();
@@ -90,7 +123,11 @@ it('honors cancellation of a close request', async () => {
 });
 
 it('supports repeated open/close and ignores a stale close event while open', async () => {
-  render(<StrictMode><DialogProbe /></StrictMode>);
+  render(
+    <StrictMode>
+      <DialogProbe />
+    </StrictMode>,
+  );
   for (let cycle = 0; cycle < 2; cycle++) {
     await userEvent.click(trigger());
     fireEvent(dialog(), new Event('close'));

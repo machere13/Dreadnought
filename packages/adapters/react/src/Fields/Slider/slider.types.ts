@@ -34,11 +34,18 @@ export interface SliderSlotProps {
   rail?: ComponentPropsWithoutRef<'div'>;
   track?: ComponentPropsWithoutRef<'div'>;
   mark?: ComponentPropsWithoutRef<'button'>;
-  thumb?: ComponentPropsWithoutRef<'div'> | readonly [ComponentPropsWithoutRef<'div'>, ComponentPropsWithoutRef<'div'>];
-  field?: ComponentPropsWithoutRef<'input'> | readonly [ComponentPropsWithoutRef<'input'>, ComponentPropsWithoutRef<'input'>];
+  thumb?:
+    | ComponentPropsWithoutRef<'div'>
+    | readonly [ComponentPropsWithoutRef<'div'>, ComponentPropsWithoutRef<'div'>];
+  field?:
+    | ComponentPropsWithoutRef<'input'>
+    | readonly [ComponentPropsWithoutRef<'input'>, ComponentPropsWithoutRef<'input'>];
 }
 
-type SliderDOMOptions = Omit<ComponentPropsWithoutRef<'div'>, 'children' | 'defaultValue' | 'onChange'> & {
+type SliderDOMOptions = Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'children' | 'defaultValue' | 'onChange'
+> & {
   slotProps?: SliderSlotProps;
 };
 

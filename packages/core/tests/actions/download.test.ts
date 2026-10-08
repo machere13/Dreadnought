@@ -27,7 +27,9 @@ describe('download', () => {
 
     let clicked: HTMLAnchorElement | undefined;
     let connectedAtClick = false;
-    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) {
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (
+      this: HTMLAnchorElement,
+    ) {
       clicked = this;
       connectedAtClick = this.isConnected;
     });
@@ -60,7 +62,9 @@ describe('download', () => {
     vi.stubGlobal('URL', DownloadURL);
 
     let clicked: HTMLAnchorElement | undefined;
-    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) {
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (
+      this: HTMLAnchorElement,
+    ) {
       clicked = this;
       throw new Error('blocked');
     });

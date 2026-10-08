@@ -5,7 +5,10 @@ import type { UseTextAreaOptions } from '../TextArea/index.ts';
 export type MarkdownEditorPreview = 'edit' | 'preview' | 'live';
 export type MarkdownImageUploadState = 'idle' | 'selecting' | 'uploading' | 'error';
 
-export interface UseMarkdownEditorOptions extends Omit<UseTextAreaOptions, 'value' | 'defaultValue'> {
+export interface UseMarkdownEditorOptions extends Omit<
+  UseTextAreaOptions,
+  'value' | 'defaultValue'
+> {
   value?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;

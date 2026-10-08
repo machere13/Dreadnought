@@ -9,35 +9,58 @@ export type LayoutSidebarProps = LayoutSidebarAdapterProps;
 const mobileQuery = '(max-width: 40rem)';
 
 function isMobile() {
-  return typeof window !== 'undefined' && typeof window.matchMedia === 'function'
-    && window.matchMedia(mobileQuery).matches;
+  return (
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia(mobileQuery).matches
+  );
 }
 
 function subscribeToViewportChange(onChange: () => void) {
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return () => {};
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+    return () => {};
+  }
   const media = window.matchMedia(mobileQuery);
   media.addEventListener('change', onChange);
   return () => media.removeEventListener('change', onChange);
 }
 
-export function LayoutSidebar({ className, slotClassNames, triggerIcon, collapsed, defaultCollapsed, onCollapsedChange, ...props }: LayoutSidebarProps) {
+export function LayoutSidebar({
+  className,
+  slotClassNames,
+  triggerIcon,
+  collapsed,
+  defaultCollapsed,
+  onCollapsedChange,
+  ...props
+}: LayoutSidebarProps) {
   const mobile = useSyncExternalStore(subscribeToViewportChange, isMobile, () => false);
-  const [manualState, setManualState] = useState<{ mobile: boolean; collapsed: boolean } | null>(null);
-  const isCollapsed = collapsed ?? (manualState?.mobile === mobile ? manualState.collapsed : defaultCollapsed ?? mobile);
+  const [manualState, setManualState] = useState<{ mobile: boolean; collapsed: boolean } | null>(
+    null,
+  );
+  const isCollapsed =
+    collapsed ??
+    (manualState?.mobile === mobile ? manualState.collapsed : (defaultCollapsed ?? mobile));
 
   function handleCollapsedChange(next: boolean) {
-    if (collapsed === undefined) setManualState({ mobile, collapsed: next });
+    if (collapsed === undefined) {
+      setManualState({ mobile, collapsed: next });
+    }
     onCollapsedChange?.(next);
   }
 
-  return <LayoutSidebarAdapter {...props}
-    collapsed={isCollapsed}
-    onCollapsedChange={handleCollapsedChange}
-    data-mobile={mobile}
-    triggerIcon={triggerIcon ?? <Icon name="menu" />}
-    className={[layoutPresentation.sidebar, className].filter(Boolean).join(' ')}
-    slotClassNames={{
-      body: [layoutPresentation.body, slotClassNames?.body].filter(Boolean).join(' '),
-      trigger: [layoutPresentation.trigger, slotClassNames?.trigger].filter(Boolean).join(' '),
-    }} />;
+  return (
+    <LayoutSidebarAdapter
+      {...props}
+      collapsed={isCollapsed}
+      onCollapsedChange={handleCollapsedChange}
+      data-mobile={mobile}
+      triggerIcon={triggerIcon ?? <Icon name="menu" />}
+      className={[layoutPresentation.sidebar, className].filter(Boolean).join(' ')}
+      slotClassNames={{
+        body: [layoutPresentation.body, slotClassNames?.body].filter(Boolean).join(' '),
+        trigger: [layoutPresentation.trigger, slotClassNames?.trigger].filter(Boolean).join(' '),
+      }}
+    />
+  );
 }

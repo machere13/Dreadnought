@@ -9,11 +9,29 @@ import { Toolbar, Button } from '@dreadnought/ui/react';
 afterEach(cleanup);
 function Command({ value }: { value: string }) {
   const { itemProps } = useToolbarItem<HTMLButtonElement>({ value });
-  return <Button {...itemProps} size="compact">{value}</Button>;
+  return (
+    <Button {...itemProps} size="compact">
+      {value}
+    </Button>
+  );
 }
 it('styles the root without changing native children and forwards consumer properties', () => {
   const ref = createRef<HTMLDivElement>();
-  render(<><Toolbar ref={ref} navigation="native" orientation="vertical" aria-label="Filters" className="custom" data-purpose="filters"><input aria-label="Search" /></Toolbar><ToolbarAdapter navigation="native" aria-label="Plain" /></>);
+  render(
+    <>
+      <Toolbar
+        ref={ref}
+        navigation="native"
+        orientation="vertical"
+        aria-label="Filters"
+        className="custom"
+        data-purpose="filters"
+      >
+        <input aria-label="Search" />
+      </Toolbar>
+      <ToolbarAdapter navigation="native" aria-label="Plain" />
+    </>,
+  );
   const root = screen.getByRole('group', { name: 'Filters' });
   expect(root).toBe(ref.current);
   expect(root.className).toContain('custom');
@@ -24,7 +42,15 @@ it('styles the root without changing native children and forwards consumer prope
   expect(screen.getByRole('group', { name: 'Plain' }).className).toBe('');
 });
 it('shares the logic hook with styled and custom buttons without affecting an outside button', async () => {
-  render(<><Toolbar aria-label="Commands"><Command value="save" /><Command value="copy" /></Toolbar><Button>Outside</Button></>);
+  render(
+    <>
+      <Toolbar aria-label="Commands">
+        <Command value="save" />
+        <Command value="copy" />
+      </Toolbar>
+      <Button>Outside</Button>
+    </>,
+  );
   await userEvent.tab();
   await userEvent.keyboard('{ArrowRight}');
   expect(document.activeElement).toBe(screen.getByRole('button', { name: 'copy' }));

@@ -5,7 +5,9 @@ import type { CodeBlockProps } from '@dreadnought/ui/react';
 
 const ref = createRef<HTMLDivElement>();
 const props: CodeBlockProps = {
-  code: 'const x = 1;', language: 'ts', copyable: true,
+  code: 'const x = 1;',
+  language: 'ts',
+  copyable: true,
   copyLabels: { copy: 'Copy', copied: 'Copied', error: 'Failed' },
   slotClassNames: { pre: 'custom' },
 };

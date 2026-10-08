@@ -8,10 +8,12 @@ import { AccordionAdapter } from '../../../src/Navigation/Accordion/AccordionAda
 afterEach(cleanup);
 
 function pair(value: string, label = value, content = `${value} content`) {
-  return <AccordionAdapter.Item value={value}>
-    <AccordionAdapter.Trigger>{label}</AccordionAdapter.Trigger>
-    <AccordionAdapter.Panel>{content}</AccordionAdapter.Panel>
-  </AccordionAdapter.Item>;
+  return (
+    <AccordionAdapter.Item value={value}>
+      <AccordionAdapter.Trigger>{label}</AccordionAdapter.Trigger>
+      <AccordionAdapter.Panel>{content}</AccordionAdapter.Panel>
+    </AccordionAdapter.Item>
+  );
 }
 
 describe('AccordionAdapter', () => {
@@ -19,12 +21,22 @@ describe('AccordionAdapter', () => {
     const frame = document.createElement('iframe');
     document.body.append(frame);
     const frameDocument = frame.contentDocument!;
-    const view = (value: string | null) => <>{createPortal(<AccordionAdapter value={value}>
-      <AccordionAdapter.Item value="a">
-        <AccordionAdapter.Trigger>Frame question</AccordionAdapter.Trigger>
-        <AccordionAdapter.Panel><input aria-label="Frame input" /></AccordionAdapter.Panel>
-      </AccordionAdapter.Item>
-    </AccordionAdapter>, frameDocument.body)}<button>Parent outside</button></>;
+    const view = (value: string | null) => (
+      <>
+        {createPortal(
+          <AccordionAdapter value={value}>
+            <AccordionAdapter.Item value="a">
+              <AccordionAdapter.Trigger>Frame question</AccordionAdapter.Trigger>
+              <AccordionAdapter.Panel>
+                <input aria-label="Frame input" />
+              </AccordionAdapter.Panel>
+            </AccordionAdapter.Item>
+          </AccordionAdapter>,
+          frameDocument.body,
+        )}
+        <button>Parent outside</button>
+      </>
+    );
     const { rerender, unmount } = render(view('a'));
     try {
       const input = within(frameDocument.body).getByRole('textbox');
@@ -46,15 +58,25 @@ describe('AccordionAdapter', () => {
     }
   });
   it('protects button type and ARIA from consumer spreads while preserving disabled', async () => {
-    const submit = vi.fn(event => event.preventDefault());
-    const consumer = { id: 'consumer', type: 'submit' as const,
-      'aria-expanded': true, 'aria-controls': 'missing' };
-    const view = (disabled: boolean) => <form onSubmit={submit}><AccordionAdapter>
-      <AccordionAdapter.Item value="a">
-        <AccordionAdapter.Trigger {...consumer} disabled={disabled}>a</AccordionAdapter.Trigger>
-        <AccordionAdapter.Panel>Answer</AccordionAdapter.Panel>
-      </AccordionAdapter.Item>
-    </AccordionAdapter></form>;
+    const submit = vi.fn((event) => event.preventDefault());
+    const consumer = {
+      id: 'consumer',
+      type: 'submit' as const,
+      'aria-expanded': true,
+      'aria-controls': 'missing',
+    };
+    const view = (disabled: boolean) => (
+      <form onSubmit={submit}>
+        <AccordionAdapter>
+          <AccordionAdapter.Item value="a">
+            <AccordionAdapter.Trigger {...consumer} disabled={disabled}>
+              a
+            </AccordionAdapter.Trigger>
+            <AccordionAdapter.Panel>Answer</AccordionAdapter.Panel>
+          </AccordionAdapter.Item>
+        </AccordionAdapter>
+      </form>
+    );
     const { rerender } = render(view(false));
     const button = screen.getByRole('button', { name: 'a' });
     const panel = screen.getByText('Answer');
@@ -75,8 +97,12 @@ describe('AccordionAdapter', () => {
   });
   it('toggles exactly once with native Enter and Space, without submitting', async () => {
     const change = vi.fn();
-    const submit = vi.fn(event => event.preventDefault());
-    render(<form onSubmit={submit}><AccordionAdapter onValueChange={change}>{pair('a')}</AccordionAdapter></form>);
+    const submit = vi.fn((event) => event.preventDefault());
+    render(
+      <form onSubmit={submit}>
+        <AccordionAdapter onValueChange={change}>{pair('a')}</AccordionAdapter>
+      </form>,
+    );
     screen.getByRole('button', { name: 'a' }).focus();
     await userEvent.keyboard('{Enter}');
     expect(screen.getByText('a content').hidden).toBe(false);
@@ -88,12 +114,16 @@ describe('AccordionAdapter', () => {
 
   it('honors canceled clicks and leaves a disabled controlled panel open', () => {
     const change = vi.fn();
-    const view = (value: string | null, disabled = false) => <AccordionAdapter value={value} onValueChange={change}>
-      <AccordionAdapter.Item value="a">
-        <AccordionAdapter.Trigger disabled={disabled} onClick={event => event.preventDefault()}>a</AccordionAdapter.Trigger>
-        <AccordionAdapter.Panel>Answer</AccordionAdapter.Panel>
-      </AccordionAdapter.Item>
-    </AccordionAdapter>;
+    const view = (value: string | null, disabled = false) => (
+      <AccordionAdapter value={value} onValueChange={change}>
+        <AccordionAdapter.Item value="a">
+          <AccordionAdapter.Trigger disabled={disabled} onClick={(event) => event.preventDefault()}>
+            a
+          </AccordionAdapter.Trigger>
+          <AccordionAdapter.Panel>Answer</AccordionAdapter.Panel>
+        </AccordionAdapter.Item>
+      </AccordionAdapter>
+    );
     const { rerender } = render(view(null));
     fireEvent.click(screen.getByRole('button', { name: 'a' }));
     expect(change).not.toHaveBeenCalled();
@@ -104,7 +134,12 @@ describe('AccordionAdapter', () => {
   });
 
   it('does not steal outside focus on controlled close', () => {
-    const view = (value: string | null) => <><AccordionAdapter value={value}>{pair('a')}</AccordionAdapter><button>Outside</button></>;
+    const view = (value: string | null) => (
+      <>
+        <AccordionAdapter value={value}>{pair('a')}</AccordionAdapter>
+        <button>Outside</button>
+      </>
+    );
     const { rerender } = render(view('a'));
     const outside = screen.getByRole('button', { name: 'Outside' });
     outside.focus();
@@ -143,10 +178,17 @@ describe('AccordionAdapter', () => {
       const [count, setCount] = useState(0);
       return <button onClick={() => setCount(count + 1)}>count {count}</button>;
     }
-    render(<AccordionAdapter multiple>{pair('a')}<AccordionAdapter.Item value="b">
-      <AccordionAdapter.Trigger>b</AccordionAdapter.Trigger>
-      <AccordionAdapter.Panel><Counter /></AccordionAdapter.Panel>
-    </AccordionAdapter.Item></AccordionAdapter>);
+    render(
+      <AccordionAdapter multiple>
+        {pair('a')}
+        <AccordionAdapter.Item value="b">
+          <AccordionAdapter.Trigger>b</AccordionAdapter.Trigger>
+          <AccordionAdapter.Panel>
+            <Counter />
+          </AccordionAdapter.Panel>
+        </AccordionAdapter.Item>
+      </AccordionAdapter>,
+    );
     fireEvent.click(screen.getByRole('button', { name: 'a' }));
     fireEvent.click(screen.getByRole('button', { name: 'b' }));
     fireEvent.click(screen.getByRole('button', { name: 'count 0' }));
@@ -158,13 +200,15 @@ describe('AccordionAdapter', () => {
 
   it('keeps controlled state external and disabled triggers inert', () => {
     const change = vi.fn();
-    const view = (value: string | null) => <AccordionAdapter value={value} onValueChange={change}>
-      {pair('a')}
-      <AccordionAdapter.Item value="b">
-        <AccordionAdapter.Trigger disabled>b</AccordionAdapter.Trigger>
-        <AccordionAdapter.Panel>b content</AccordionAdapter.Panel>
-      </AccordionAdapter.Item>
-    </AccordionAdapter>;
+    const view = (value: string | null) => (
+      <AccordionAdapter value={value} onValueChange={change}>
+        {pair('a')}
+        <AccordionAdapter.Item value="b">
+          <AccordionAdapter.Trigger disabled>b</AccordionAdapter.Trigger>
+          <AccordionAdapter.Panel>b content</AccordionAdapter.Panel>
+        </AccordionAdapter.Item>
+      </AccordionAdapter>
+    );
     const { rerender } = render(view(null));
     expect(change).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: 'a' }));
@@ -181,12 +225,18 @@ describe('AccordionAdapter', () => {
     const item = createRef<HTMLDivElement>();
     const trigger = createRef<HTMLButtonElement>();
     const panel = createRef<HTMLDivElement>();
-    render(<AccordionAdapter ref={root} className="root">
-      <AccordionAdapter.Item value="a" ref={item} className="item">
-        <AccordionAdapter.Trigger ref={trigger} className="trigger" headingLevel={2}>a</AccordionAdapter.Trigger>
-        <AccordionAdapter.Panel ref={panel} className="panel" role="region">content</AccordionAdapter.Panel>
-      </AccordionAdapter.Item>
-    </AccordionAdapter>);
+    render(
+      <AccordionAdapter ref={root} className="root">
+        <AccordionAdapter.Item value="a" ref={item} className="item">
+          <AccordionAdapter.Trigger ref={trigger} className="trigger" headingLevel={2}>
+            a
+          </AccordionAdapter.Trigger>
+          <AccordionAdapter.Panel ref={panel} className="panel" role="region">
+            content
+          </AccordionAdapter.Panel>
+        </AccordionAdapter.Item>
+      </AccordionAdapter>,
+    );
     expect(root.current?.className).toBe('root');
     expect(item.current?.className).toBe('item');
     expect(trigger.current?.className).toBe('trigger');
@@ -197,27 +247,66 @@ describe('AccordionAdapter', () => {
 
   it('rejects empty or repeated item values and incomplete pairs', () => {
     expect(() => render(<AccordionAdapter>{pair('')}</AccordionAdapter>)).toThrow();
-    expect(() => render(<AccordionAdapter>{pair('a')}{pair('a')}</AccordionAdapter>)).toThrow();
-    expect(() => render(<AccordionAdapter><AccordionAdapter.Item value="a">
-      <AccordionAdapter.Trigger>a</AccordionAdapter.Trigger>
-    </AccordionAdapter.Item></AccordionAdapter>)).toThrow();
-    expect(() => render(<AccordionAdapter><AccordionAdapter.Item value="a">
-      <AccordionAdapter.Panel>a</AccordionAdapter.Panel>
-    </AccordionAdapter.Item></AccordionAdapter>)).toThrow();
+    expect(() =>
+      render(
+        <AccordionAdapter>
+          {pair('a')}
+          {pair('a')}
+        </AccordionAdapter>,
+      ),
+    ).toThrow();
+    expect(() =>
+      render(
+        <AccordionAdapter>
+          <AccordionAdapter.Item value="a">
+            <AccordionAdapter.Trigger>a</AccordionAdapter.Trigger>
+          </AccordionAdapter.Item>
+        </AccordionAdapter>,
+      ),
+    ).toThrow();
+    expect(() =>
+      render(
+        <AccordionAdapter>
+          <AccordionAdapter.Item value="a">
+            <AccordionAdapter.Panel>a</AccordionAdapter.Panel>
+          </AccordionAdapter.Item>
+        </AccordionAdapter>,
+      ),
+    ).toThrow();
   });
 
   it('rejects unknown and duplicate selected values', () => {
-    expect(() => render(<AccordionAdapter value="missing">{pair('a')}</AccordionAdapter>)).toThrow();
-    expect(() => render(<AccordionAdapter multiple value={['a', 'a']}>{pair('a')}</AccordionAdapter>)).toThrow();
-    expect(() => render(<AccordionAdapter multiple defaultValue={['missing']}>{pair('a')}</AccordionAdapter>)).toThrow();
+    expect(() =>
+      render(<AccordionAdapter value="missing">{pair('a')}</AccordionAdapter>),
+    ).toThrow();
+    expect(() =>
+      render(
+        <AccordionAdapter multiple value={['a', 'a']}>
+          {pair('a')}
+        </AccordionAdapter>,
+      ),
+    ).toThrow();
+    expect(() =>
+      render(
+        <AccordionAdapter multiple defaultValue={['missing']}>
+          {pair('a')}
+        </AccordionAdapter>,
+      ),
+    ).toThrow();
   });
 
   it('isolates nested roots and creates stable IDs for special values', () => {
     const value = 'а %?';
-    render(<AccordionAdapter><AccordionAdapter.Item value={value}>
-      <AccordionAdapter.Trigger>outer</AccordionAdapter.Trigger>
-      <AccordionAdapter.Panel><AccordionAdapter>{pair(value, 'inner')}</AccordionAdapter></AccordionAdapter.Panel>
-    </AccordionAdapter.Item></AccordionAdapter>);
+    render(
+      <AccordionAdapter>
+        <AccordionAdapter.Item value={value}>
+          <AccordionAdapter.Trigger>outer</AccordionAdapter.Trigger>
+          <AccordionAdapter.Panel>
+            <AccordionAdapter>{pair(value, 'inner')}</AccordionAdapter>
+          </AccordionAdapter.Panel>
+        </AccordionAdapter.Item>
+      </AccordionAdapter>,
+    );
     const outer = screen.getByRole('button', { name: 'outer' });
     fireEvent.click(outer);
     const inner = screen.getByRole('button', { name: 'inner' });
@@ -228,10 +317,16 @@ describe('AccordionAdapter', () => {
   });
 
   it('moves focus from a panel closed by a controlled parent to its trigger', () => {
-    const view = (value: string | null) => <AccordionAdapter value={value}><AccordionAdapter.Item value="a">
-      <AccordionAdapter.Trigger>a</AccordionAdapter.Trigger>
-      <AccordionAdapter.Panel><button>inside</button></AccordionAdapter.Panel>
-    </AccordionAdapter.Item></AccordionAdapter>;
+    const view = (value: string | null) => (
+      <AccordionAdapter value={value}>
+        <AccordionAdapter.Item value="a">
+          <AccordionAdapter.Trigger>a</AccordionAdapter.Trigger>
+          <AccordionAdapter.Panel>
+            <button>inside</button>
+          </AccordionAdapter.Panel>
+        </AccordionAdapter.Item>
+      </AccordionAdapter>
+    );
     const { rerender } = render(view('a'));
     const inside = screen.getByRole('button', { name: 'inside' });
     act(() => inside.focus());
@@ -242,38 +337,70 @@ describe('AccordionAdapter', () => {
   it('rejects a Trigger removed by state below Item', () => {
     function DynamicTrigger() {
       const [visible, setVisible] = useState(true);
-      return <><button onClick={() => setVisible(false)}>remove trigger</button>
-        {visible && <AccordionAdapter.Trigger>answer</AccordionAdapter.Trigger>}</>;
+      return (
+        <>
+          <button onClick={() => setVisible(false)}>remove trigger</button>
+          {visible && <AccordionAdapter.Trigger>answer</AccordionAdapter.Trigger>}
+        </>
+      );
     }
-    render(<AccordionAdapter><AccordionAdapter.Item value="a">
-      <DynamicTrigger /><AccordionAdapter.Panel>content</AccordionAdapter.Panel>
-    </AccordionAdapter.Item></AccordionAdapter>);
+    render(
+      <AccordionAdapter>
+        <AccordionAdapter.Item value="a">
+          <DynamicTrigger />
+          <AccordionAdapter.Panel>content</AccordionAdapter.Panel>
+        </AccordionAdapter.Item>
+      </AccordionAdapter>,
+    );
     expect(() => fireEvent.click(screen.getByRole('button', { name: 'remove trigger' }))).toThrow();
   });
 
   it('rejects a selected Item removed by state below the root', () => {
     function DynamicItem() {
       const [visible, setVisible] = useState(true);
-      return <><button onClick={() => setVisible(false)}>remove item</button>{visible && pair('a')}</>;
+      return (
+        <>
+          <button onClick={() => setVisible(false)}>remove item</button>
+          {visible && pair('a')}
+        </>
+      );
     }
-    render(<AccordionAdapter value="a"><DynamicItem /></AccordionAdapter>);
+    render(
+      <AccordionAdapter value="a">
+        <DynamicItem />
+      </AccordionAdapter>,
+    );
     expect(() => fireEvent.click(screen.getByRole('button', { name: 'remove item' }))).toThrow();
   });
 
   it('does not let a nested root borrow its outer Item context', () => {
-    expect(() => render(<AccordionAdapter><AccordionAdapter.Item value="a">
-      <AccordionAdapter.Trigger>outer</AccordionAdapter.Trigger>
-      <AccordionAdapter><AccordionAdapter.Panel>orphan</AccordionAdapter.Panel></AccordionAdapter>
-    </AccordionAdapter.Item></AccordionAdapter>)).toThrow();
+    expect(() =>
+      render(
+        <AccordionAdapter>
+          <AccordionAdapter.Item value="a">
+            <AccordionAdapter.Trigger>outer</AccordionAdapter.Trigger>
+            <AccordionAdapter>
+              <AccordionAdapter.Panel>orphan</AccordionAdapter.Panel>
+            </AccordionAdapter>
+          </AccordionAdapter.Item>
+        </AccordionAdapter>,
+      ),
+    ).toThrow();
   });
 
   it('runs callback-ref cleanup for Trigger and Panel on unmount', () => {
     const triggerCleanup = vi.fn();
     const panelCleanup = vi.fn();
-    const { unmount } = render(<AccordionAdapter>{<AccordionAdapter.Item value="a">
-      <AccordionAdapter.Trigger ref={() => triggerCleanup}>a</AccordionAdapter.Trigger>
-      <AccordionAdapter.Panel ref={() => panelCleanup}>content</AccordionAdapter.Panel>
-    </AccordionAdapter.Item>}</AccordionAdapter>);
+    const { unmount } = render(
+      <AccordionAdapter>
+        {
+          <AccordionAdapter.Item value="a">
+            <AccordionAdapter.Trigger ref={() => triggerCleanup}>a</AccordionAdapter.Trigger>
+            <AccordionAdapter.Panel ref={() => panelCleanup}>content</AccordionAdapter.Panel>
+          </AccordionAdapter.Item>
+        }
+      </AccordionAdapter>,
+    );
     unmount();
     expect(triggerCleanup).toHaveBeenCalledTimes(1);
     expect(panelCleanup).toHaveBeenCalledTimes(1);
@@ -284,10 +411,14 @@ describe('AccordionAdapter', () => {
     const nextCleanup = vi.fn();
     const oldRef = () => oldCleanup;
     const nextRef = () => nextCleanup;
-    const view = (ref: typeof oldRef) => <AccordionAdapter><AccordionAdapter.Item value="a">
-      <AccordionAdapter.Trigger ref={ref}>a</AccordionAdapter.Trigger>
-      <AccordionAdapter.Panel>content</AccordionAdapter.Panel>
-    </AccordionAdapter.Item></AccordionAdapter>;
+    const view = (ref: typeof oldRef) => (
+      <AccordionAdapter>
+        <AccordionAdapter.Item value="a">
+          <AccordionAdapter.Trigger ref={ref}>a</AccordionAdapter.Trigger>
+          <AccordionAdapter.Panel>content</AccordionAdapter.Panel>
+        </AccordionAdapter.Item>
+      </AccordionAdapter>
+    );
     const { rerender, unmount } = render(view(oldRef));
     rerender(view(nextRef));
     expect(oldCleanup).toHaveBeenCalledTimes(1);

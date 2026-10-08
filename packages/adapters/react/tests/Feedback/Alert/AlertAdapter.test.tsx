@@ -29,8 +29,9 @@ describe('AlertAdapter', () => {
     expect(alert.querySelector('[data-slot="icon"]')?.getAttribute('aria-hidden')).toBe('true');
     expect(alert.querySelector('[data-slot="actions"]')?.className).toContain('own-actions');
     expect(screen.getByRole('button', { name: 'Fix' })).not.toBeNull();
-    expect([...alert.querySelectorAll('[data-slot]')].map((node) => node.getAttribute('data-slot')))
-      .toEqual(['icon', 'title', 'description', 'actions']);
+    expect(
+      [...alert.querySelectorAll('[data-slot]')].map((node) => node.getAttribute('data-slot')),
+    ).toEqual(['icon', 'title', 'description', 'actions']);
   });
 
   it('defaults to status and omits absent parts and hidden icons', () => {
@@ -46,7 +47,16 @@ describe('AlertAdapter', () => {
 
   it('preserves an explicit role, native attributes, className and ref', () => {
     const ref = createRef<HTMLDivElement>();
-    render(<AlertAdapter title="Notice" role="note" aria-label="Custom note" data-test="own" className="consumer" ref={ref} />);
+    render(
+      <AlertAdapter
+        title="Notice"
+        role="note"
+        aria-label="Custom note"
+        data-test="own"
+        className="consumer"
+        ref={ref}
+      />,
+    );
 
     const alert = screen.getByRole('note', { name: 'Custom note' });
     expect(alert.getAttribute('data-test')).toBe('own');
@@ -59,10 +69,16 @@ describe('AlertAdapter', () => {
     const user = userEvent.setup();
     const submit = vi.fn((event: FormEvent<HTMLFormElement>) => event.preventDefault());
     const onClose = vi.fn();
-    render(<form onSubmit={submit}>
-      <AlertAdapter title="First" closable={{ onClose, 'aria-label': 'Close first', closeIcon: <svg /> }} slotClassNames={{ close: 'own-close' }} />
-      <AlertAdapter title="Second" closable />
-    </form>);
+    render(
+      <form onSubmit={submit}>
+        <AlertAdapter
+          title="First"
+          closable={{ onClose, 'aria-label': 'Close first', closeIcon: <svg /> }}
+          slotClassNames={{ close: 'own-close' }}
+        />
+        <AlertAdapter title="Second" closable />
+      </form>,
+    );
 
     const close = screen.getByRole('button', { name: 'Close first' });
     expect(close.className).toContain('own-close');
@@ -75,7 +91,12 @@ describe('AlertAdapter', () => {
   });
 
   it('does not show a close button unless requested and names the default button', () => {
-    render(<><AlertAdapter title="Fixed" /><AlertAdapter title="Dismissible" closable /></>);
+    render(
+      <>
+        <AlertAdapter title="Fixed" />
+        <AlertAdapter title="Dismissible" closable />
+      </>,
+    );
 
     expect(screen.getAllByRole('button')).toHaveLength(1);
     expect(screen.getByRole('button', { name: 'Close alert' })).not.toBeNull();
@@ -84,7 +105,17 @@ describe('AlertAdapter', () => {
   it('closes with keyboard activation without invoking the content action or reopening on rerender', async () => {
     const user = userEvent.setup();
     const action = vi.fn();
-    const { rerender } = render(<AlertAdapter title="Before" closable action={<button type="button" onClick={action}>Retry</button>} />);
+    const { rerender } = render(
+      <AlertAdapter
+        title="Before"
+        closable
+        action={
+          <button type="button" onClick={action}>
+            Retry
+          </button>
+        }
+      />,
+    );
 
     screen.getByRole('button', { name: 'Close alert' }).focus();
     await user.keyboard('{Enter}');

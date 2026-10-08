@@ -11,7 +11,11 @@ describe('ButtonAdapter', () => {
   it('defaults to a non-submitting native button', () => {
     const submit = vi.fn((event: FormEvent<HTMLFormElement>) => event.preventDefault());
     const click = vi.fn();
-    render(<form onSubmit={submit}><ButtonAdapter onClick={click}>Save</ButtonAdapter></form>);
+    render(
+      <form onSubmit={submit}>
+        <ButtonAdapter onClick={click}>Save</ButtonAdapter>
+      </form>,
+    );
 
     fireEvent.click(screen.getByRole('button', { name: 'Save' }));
     expect(click).toHaveBeenCalledOnce();
@@ -22,7 +26,13 @@ describe('ButtonAdapter', () => {
     const user = userEvent.setup();
     const submit = vi.fn((event: FormEvent<HTMLFormElement>) => event.preventDefault());
     const click = vi.fn();
-    render(<form onSubmit={submit}><ButtonAdapter loading type="submit" onClick={click}>Save</ButtonAdapter></form>);
+    render(
+      <form onSubmit={submit}>
+        <ButtonAdapter loading type="submit" onClick={click}>
+          Save
+        </ButtonAdapter>
+      </form>,
+    );
 
     const button = screen.getByRole('button', { name: 'Save' });
     button.focus();
@@ -39,7 +49,11 @@ describe('ButtonAdapter', () => {
   it('submits a form when explicitly asked to', async () => {
     const user = userEvent.setup();
     const submit = vi.fn((event: FormEvent<HTMLFormElement>) => event.preventDefault());
-    render(<form onSubmit={submit}><ButtonAdapter type="submit">Send</ButtonAdapter></form>);
+    render(
+      <form onSubmit={submit}>
+        <ButtonAdapter type="submit">Send</ButtonAdapter>
+      </form>,
+    );
 
     screen.getByRole('button', { name: 'Send' }).focus();
     await user.keyboard('{Enter}');
@@ -48,7 +62,11 @@ describe('ButtonAdapter', () => {
 
   it('forwards native attributes and the ref', () => {
     const ref = createRef<HTMLButtonElement>();
-    render(<ButtonAdapter ref={ref} aria-label="Close" className="custom" disabled>×</ButtonAdapter>);
+    render(
+      <ButtonAdapter ref={ref} aria-label="Close" className="custom" disabled>
+        ×
+      </ButtonAdapter>,
+    );
 
     const button = screen.getByRole('button', { name: 'Close' });
     expect(ref.current).toBe(button);
@@ -60,7 +78,11 @@ describe('ButtonAdapter', () => {
   it('uses native disabled semantics and never calls the action', async () => {
     const user = userEvent.setup();
     const click = vi.fn();
-    render(<ButtonAdapter disabled onClick={click}>Save</ButtonAdapter>);
+    render(
+      <ButtonAdapter disabled onClick={click}>
+        Save
+      </ButtonAdapter>,
+    );
 
     const button = screen.getByRole('button', { name: 'Save' });
     await user.click(button);
@@ -73,7 +95,11 @@ describe('ButtonAdapter', () => {
 
   it('restores its action when loading ends', () => {
     const click = vi.fn();
-    const { rerender } = render(<ButtonAdapter loading onClick={click}>Save</ButtonAdapter>);
+    const { rerender } = render(
+      <ButtonAdapter loading onClick={click}>
+        Save
+      </ButtonAdapter>,
+    );
     const button = screen.getByRole('button', { name: 'Save' });
 
     fireEvent.click(button);
@@ -94,7 +120,11 @@ describe('ButtonAdapter', () => {
   });
 
   it('places the icon after the label when requested', () => {
-    render(<ButtonAdapter icon={<svg />} iconPosition="end">Search</ButtonAdapter>);
+    render(
+      <ButtonAdapter icon={<svg />} iconPosition="end">
+        Search
+      </ButtonAdapter>,
+    );
 
     const button = screen.getByRole('button', { name: 'Search' });
     expect(button.children[0]?.getAttribute('data-slot')).toBe('label');
@@ -112,7 +142,11 @@ describe('ButtonAdapter', () => {
   it('renders href as a native link and forwards link attributes', () => {
     const click = vi.fn((event: MouseEvent<HTMLAnchorElement>) => event.preventDefault());
     const ref = createRef<HTMLAnchorElement>();
-    render(<ButtonAdapter href="/docs" target="_blank" ref={ref} onClick={click}>Docs</ButtonAdapter>);
+    render(
+      <ButtonAdapter href="/docs" target="_blank" ref={ref} onClick={click}>
+        Docs
+      </ButtonAdapter>,
+    );
 
     const link = screen.getByRole('link', { name: 'Docs' });
     expect(link.tagName).toBe('A');
@@ -125,7 +159,11 @@ describe('ButtonAdapter', () => {
 
   it('removes navigation when a link is disabled', () => {
     const click = vi.fn();
-    render(<ButtonAdapter href="/docs" disabled onClick={click}>Docs</ButtonAdapter>);
+    render(
+      <ButtonAdapter href="/docs" disabled onClick={click}>
+        Docs
+      </ButtonAdapter>,
+    );
 
     const link = screen.getByRole('link', { name: 'Docs' });
     expect(link.getAttribute('href')).toBeNull();
@@ -137,7 +175,11 @@ describe('ButtonAdapter', () => {
 
   it('keeps a loading link focusable without allowing navigation', () => {
     const click = vi.fn();
-    render(<ButtonAdapter href="/docs" loading onClick={click}>Docs</ButtonAdapter>);
+    render(
+      <ButtonAdapter href="/docs" loading onClick={click}>
+        Docs
+      </ButtonAdapter>,
+    );
 
     const link = screen.getByRole('link', { name: 'Docs' });
     link.focus();

@@ -23,7 +23,11 @@ describe('readClipboard', () => {
   it('propagates clipboard permission errors', async () => {
     const denied = new DOMException('Denied', 'NotAllowedError');
     vi.stubGlobal('navigator', {
-      clipboard: { readText: async () => { throw denied; } },
+      clipboard: {
+        readText: async () => {
+          throw denied;
+        },
+      },
     });
 
     await expect(readClipboard()).rejects.toBe(denied);

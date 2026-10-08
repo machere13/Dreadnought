@@ -6,7 +6,8 @@
 
   .item {
     overflow: hidden;
-    border: var(--dreadnought-accordion-border-width) solid var(--dreadnought-accordion-border-color);
+    border: var(--dreadnought-accordion-border-width) solid
+      var(--dreadnought-accordion-border-color);
     border-radius: var(--dreadnought-accordion-radius);
     background: var(--dreadnought-accordion-bg);
   }
@@ -22,7 +23,8 @@
     width: 100%;
     min-height: var(--dreadnought-accordion-trigger-min-height);
     gap: var(--dreadnought-accordion-trigger-gap);
-    padding: var(--dreadnought-accordion-trigger-padding-y) var(--dreadnought-accordion-trigger-padding-x);
+    padding: var(--dreadnought-accordion-trigger-padding-y)
+      var(--dreadnought-accordion-trigger-padding-x);
     border: 0;
     background: transparent;
     color: var(--dreadnought-accordion-trigger-fg);
@@ -49,14 +51,16 @@
     transform: rotate(var(--dreadnought-accordion-indicator-rotation-closed));
   }
 
-  .trigger[data-state="open"] .indicator {
+  .trigger[data-state='open'] .indicator {
     transform: rotate(var(--dreadnought-accordion-indicator-rotation-open));
   }
 
   .panel {
     display: block;
-    padding: var(--dreadnought-accordion-panel-padding-y) var(--dreadnought-accordion-panel-padding-x);
-    border-top: var(--dreadnought-accordion-border-width) solid var(--dreadnought-accordion-border-color);
+    padding: var(--dreadnought-accordion-panel-padding-y)
+      var(--dreadnought-accordion-panel-padding-x);
+    border-top: var(--dreadnought-accordion-border-width) solid
+      var(--dreadnought-accordion-border-color);
     color: var(--dreadnought-accordion-panel-fg);
   }
 

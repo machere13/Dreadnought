@@ -1,11 +1,59 @@
 @layer dreadnought {
-  .root { position: relative; display: inline-flex; align-items: center; gap: var(--dreadnought-switch-gap); color: var(--dreadnought-switch-text); cursor: pointer; }
-  .root [data-slot='control'] { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit; }
-  .root [data-slot='indicator'] { display: flex; align-items: center; flex: none; box-sizing: border-box; width: var(--dreadnought-switch-width); height: var(--dreadnought-switch-height); padding: var(--dreadnought-switch-padding); border: var(--dreadnought-switch-border-width) solid var(--dreadnought-switch-border); border-radius: var(--dreadnought-switch-radius); background: var(--dreadnought-switch-bg); }
-  .root [data-slot='indicator']::before { content: ''; display: block; flex: none; width: var(--dreadnought-switch-thumb-size); height: var(--dreadnought-switch-thumb-size); border-radius: var(--dreadnought-switch-radius); background: var(--dreadnought-switch-thumb-bg); }
-  .root:has(input:checked) [data-slot='indicator'] { justify-content: flex-end; background: var(--dreadnought-switch-checked-bg); border-color: var(--dreadnought-switch-checked-bg); }
-  .root:has(input:checked) [data-slot='indicator']::before { background: var(--dreadnought-switch-checked-thumb-bg); }
-  .root:has(input:focus-visible) [data-slot='indicator'] { outline: var(--dreadnought-switch-focus-width) solid var(--dreadnought-switch-focus); outline-offset: var(--dreadnought-switch-focus-offset); }
-  .root[data-invalid] [data-slot='indicator'] { border-color: var(--dreadnought-switch-invalid); }
-  .root[data-disabled] { opacity: var(--dreadnought-switch-disabled-opacity); cursor: not-allowed; }
+  .root {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--dreadnought-switch-gap);
+    color: var(--dreadnought-switch-text);
+    cursor: pointer;
+  }
+  .root [data-slot='control'] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: inherit;
+  }
+  .root [data-slot='indicator'] {
+    display: flex;
+    align-items: center;
+    flex: none;
+    box-sizing: border-box;
+    width: var(--dreadnought-switch-width);
+    height: var(--dreadnought-switch-height);
+    padding: var(--dreadnought-switch-padding);
+    border: var(--dreadnought-switch-border-width) solid var(--dreadnought-switch-border);
+    border-radius: var(--dreadnought-switch-radius);
+    background: var(--dreadnought-switch-bg);
+  }
+  .root [data-slot='indicator']::before {
+    content: '';
+    display: block;
+    flex: none;
+    width: var(--dreadnought-switch-thumb-size);
+    height: var(--dreadnought-switch-thumb-size);
+    border-radius: var(--dreadnought-switch-radius);
+    background: var(--dreadnought-switch-thumb-bg);
+  }
+  .root:has(input:checked) [data-slot='indicator'] {
+    justify-content: flex-end;
+    background: var(--dreadnought-switch-checked-bg);
+    border-color: var(--dreadnought-switch-checked-bg);
+  }
+  .root:has(input:checked) [data-slot='indicator']::before {
+    background: var(--dreadnought-switch-checked-thumb-bg);
+  }
+  .root:has(input:focus-visible) [data-slot='indicator'] {
+    outline: var(--dreadnought-switch-focus-width) solid var(--dreadnought-switch-focus);
+    outline-offset: var(--dreadnought-switch-focus-offset);
+  }
+  .root[data-invalid] [data-slot='indicator'] {
+    border-color: var(--dreadnought-switch-invalid);
+  }
+  .root[data-disabled] {
+    opacity: var(--dreadnought-switch-disabled-opacity);
+    cursor: not-allowed;
+  }
 }

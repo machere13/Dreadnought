@@ -12,8 +12,9 @@ describe('Markdown line commands', () => {
     ['  a', 3, { type: 'newLine' }, '  a\n  ', 6],
     ['a\r\nb', 4, { type: 'newLine' }, 'a\r\nb\r\n', 6],
   ] as const)('continues %s', (text, offset, command, expected, cursor) => {
-    expect(applyMarkdownCommand({ text, selection: { start: offset, end: offset } }, command))
-      .toEqual({ text: expected, selection: { start: cursor, end: cursor } });
+    expect(
+      applyMarkdownCommand({ text, selection: { start: offset, end: offset } }, command),
+    ).toEqual({ text: expected, selection: { start: cursor, end: cursor } });
   });
 
   it.each([
@@ -30,19 +31,34 @@ describe('Markdown line commands', () => {
     ['abc', 1, 2, { type: 'newLine' }, 'a\nc', 2, 2],
     ['a', 0, 1, { type: 'moveLines', direction: 'previous' }, 'a', 0, 1],
     ['a', 0, 1, { type: 'moveLines', direction: 'next' }, 'a', 0, 1],
-  ] as const)('transforms %s with %j', (text, start, end, command, expected, nextStart, nextEnd) => {
-    const input = Object.freeze({ text, selection: Object.freeze({ start, end }) });
-    expect(applyMarkdownCommand(input, command)).toEqual({ text: expected, selection: { start: nextStart, end: nextEnd } });
-    expect(input).toEqual({ text, selection: { start, end } });
-  });
+  ] as const)(
+    'transforms %s with %j',
+    (text, start, end, command, expected, nextStart, nextEnd) => {
+      const input = Object.freeze({ text, selection: Object.freeze({ start, end }) });
+      expect(applyMarkdownCommand(input, command)).toEqual({
+        text: expected,
+        selection: { start: nextStart, end: nextEnd },
+      });
+      expect(input).toEqual({ text, selection: { start, end } });
+    },
+  );
 
-  it.each([0, 17, 1.5, NaN, Infinity])('rejects indent size %s', size => {
-    expect(() => applyMarkdownCommand({ text: '', selection: { start: 0, end: 0 } }, { type: 'indent', size })).toThrow(RangeError);
+  it.each([0, 17, 1.5, NaN, Infinity])('rejects indent size %s', (size) => {
+    expect(() =>
+      applyMarkdownCommand({ text: '', selection: { start: 0, end: 0 } }, { type: 'indent', size }),
+    ).toThrow(RangeError);
   });
 
   it('rejects invalid runtime parameters', () => {
     const doc = { text: '', selection: { start: 0, end: 0 } };
-    expect(() => applyMarkdownCommand(doc, { type: 'outdent', size: '2' } as unknown as MarkdownCommand)).toThrow(TypeError);
-    expect(() => applyMarkdownCommand(doc, { type: 'moveLines', direction: 'up' } as unknown as MarkdownCommand)).toThrow(TypeError);
+    expect(() =>
+      applyMarkdownCommand(doc, { type: 'outdent', size: '2' } as unknown as MarkdownCommand),
+    ).toThrow(TypeError);
+    expect(() =>
+      applyMarkdownCommand(doc, {
+        type: 'moveLines',
+        direction: 'up',
+      } as unknown as MarkdownCommand),
+    ).toThrow(TypeError);
   });
 });

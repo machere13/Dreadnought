@@ -4,5 +4,10 @@ import { switchPresentation } from '#presentation/Fields/Switch/switchPresentati
 
 export type SwitchProps = SwitchAdapterProps;
 export function Switch({ className, ...props }: SwitchProps) {
-  return <SwitchAdapter {...props} className={[switchPresentation.root, className].filter(Boolean).join(' ')} />;
+  return (
+    <SwitchAdapter
+      {...props}
+      className={[switchPresentation.root, className].filter(Boolean).join(' ')}
+    />
+  );
 }

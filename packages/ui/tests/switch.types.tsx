@@ -3,9 +3,18 @@ import { Switch } from '@dreadnought/ui/react';
 import { SwitchAdapter } from '@dreadnought/react/unstyled';
 import { switchPresentation } from '@dreadnought/ui';
 
-export const Ready = <Switch ref={createRef<HTMLInputElement>()} name="alerts" defaultChecked
-  className={switchPresentation.root} onChange={event => event.currentTarget.checked}
-  slotProps={{ label: { title: 'Settings' }, indicator: { className: 'track' } }}>Alerts</Switch>;
+export const Ready = (
+  <Switch
+    ref={createRef<HTMLInputElement>()}
+    name="alerts"
+    defaultChecked
+    className={switchPresentation.root}
+    onChange={(event) => event.currentTarget.checked}
+    slotProps={{ label: { title: 'Settings' }, indicator: { className: 'track' } }}
+  >
+    Alerts
+  </Switch>
+);
 export const Plain = <SwitchAdapter aria-label="Alerts" checked={false} onChange={() => {}} />;
 // @ts-expect-error a switch has only two states
 export const Mixed = <Switch indeterminate />;

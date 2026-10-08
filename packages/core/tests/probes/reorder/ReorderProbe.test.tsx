@@ -5,9 +5,16 @@ import { ReorderProbe } from './ReorderProbe.tsx';
 
 afterEach(cleanup);
 const handle = (value: string) => screen.getByRole('button', { name: `Move ${value}` });
-const order = () => within(screen.getByRole('list', { name: 'Tasks' })).getAllByRole('button').map(node => node.textContent);
+const order = () =>
+  within(screen.getByRole('list', { name: 'Tasks' }))
+    .getAllByRole('button')
+    .map((node) => node.textContent);
 const status = () => screen.getByRole('status').textContent;
-const dataTransfer = () => ({ effectAllowed: 'uninitialized', dropEffect: 'none', setData(_type: string, _value: string) {} });
+const dataTransfer = () => ({
+  effectAllowed: 'uninitialized',
+  dropEffect: 'none',
+  setData(_type: string, _value: string) {},
+});
 
 it('selects a keyboard destination without mutating order, then commits on Enter', async () => {
   render(<ReorderProbe />);
@@ -82,7 +89,12 @@ it('does not accept external drops or a drop during keyboard movement', async ()
 });
 
 it('lets Tab leave while cancelling an unfinished keyboard move', async () => {
-  render(<><ReorderProbe /><button type="button">Outside</button></>);
+  render(
+    <>
+      <ReorderProbe />
+      <button type="button">Outside</button>
+    </>,
+  );
   handle('Gamma').focus();
   await userEvent.keyboard('{Enter}{Home}');
   await userEvent.tab();
@@ -92,11 +104,25 @@ it('lets Tab leave while cancelling an unfinished keyboard move', async () => {
 });
 
 it('respects cancelled, composing and modified keyboard events', () => {
-  const { rerender } = render(<div onKeyDownCapture={event => event.preventDefault()}><ReorderProbe /></div>);
+  const { rerender } = render(
+    <div onKeyDownCapture={(event) => event.preventDefault()}>
+      <ReorderProbe />
+    </div>,
+  );
   fireEvent.keyDown(handle('Alpha'), { key: 'Enter' });
   expect(status()).toBe('Ready');
-  rerender(<div><ReorderProbe /></div>);
-  for (const flags of [{ isComposing: true }, { shiftKey: true }, { ctrlKey: true }, { altKey: true }, { metaKey: true }]) {
+  rerender(
+    <div>
+      <ReorderProbe />
+    </div>,
+  );
+  for (const flags of [
+    { isComposing: true },
+    { shiftKey: true },
+    { ctrlKey: true },
+    { altKey: true },
+    { metaKey: true },
+  ]) {
     expect(fireEvent.keyDown(handle('Alpha'), { key: 'Enter', ...flags })).toBe(true);
   }
   expect(status()).toBe('Ready');

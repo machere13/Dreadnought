@@ -7,9 +7,20 @@ afterEach(cleanup);
 
 it('merges themed slots, native nav properties and local tokens', () => {
   const ref = createRef<HTMLElement>();
-  const view = render(<ui.Pagination total={200} current={10} className="custom-root" ref={ref}
-    slotClassNames={{ button: 'custom-button', summary: 'custom-summary', ellipsis: 'custom-ellipsis' }}
-    style={{ '--dreadnought-pagination-size': '40px' } as CSSProperties} />);
+  const view = render(
+    <ui.Pagination
+      total={200}
+      current={10}
+      className="custom-root"
+      ref={ref}
+      slotClassNames={{
+        button: 'custom-button',
+        summary: 'custom-summary',
+        ellipsis: 'custom-ellipsis',
+      }}
+      style={{ '--dreadnought-pagination-size': '40px' } as CSSProperties}
+    />,
+  );
   const nav = screen.getByRole('navigation');
   expect(ref.current).toBe(nav);
   expect(nav.classList.contains('custom-root')).toBe(true);
@@ -21,7 +32,9 @@ it('merges themed slots, native nav properties and local tokens', () => {
   expect(button.classList.length).toBeGreaterThan(1);
   expect(nav.querySelectorAll('.custom-ellipsis')).toHaveLength(2);
   expect(nav.querySelector('.custom-ellipsis')!.classList.length).toBeGreaterThan(1);
-  view.rerender(<ui.Pagination total={200} simple slotClassNames={{ summary: 'custom-summary' }} />);
+  view.rerender(
+    <ui.Pagination total={200} simple slotClassNames={{ summary: 'custom-summary' }} />,
+  );
   expect(screen.getByText('1 / 20').classList.contains('custom-summary')).toBe(true);
   expect(screen.getByText('1 / 20').classList.length).toBeGreaterThan(1);
 });

@@ -9,11 +9,21 @@ afterEach(cleanup);
 
 function Probe(props: UseSliderOptions) {
   const slider = useSlider(props);
-  return <><div {...slider.thumbProps} /><input {...slider.fieldProps} /><output>{slider.progress}</output></>;
+  return (
+    <>
+      <div {...slider.thumbProps} />
+      <input {...slider.fieldProps} />
+      <output>{slider.progress}</output>
+    </>
+  );
 }
 
 it('uses decimal steps in keyboard input and form submission', async () => {
-  render(<form><Probe aria-label="Volume" name="volume" min={0} max={0.4} step={0.1} defaultValue={0.2} /></form>);
+  render(
+    <form>
+      <Probe aria-label="Volume" name="volume" min={0} max={0.4} step={0.1} defaultValue={0.2} />
+    </form>,
+  );
   await userEvent.click(screen.getByRole('slider'));
   await userEvent.keyboard('{ArrowRight}');
   expect(screen.getByRole('slider').getAttribute('aria-valuenow')).toBe('0.3');
@@ -43,13 +53,20 @@ it('keeps fixed values finite and never emits an update', () => {
   expect(changed).not.toHaveBeenCalled();
 });
 
-it.each([{ min: NaN }, { max: Infinity }, { defaultValue: NaN }, { step: 0 }, { min: 4, max: 2 }])('rejects an invalid grid or value %o', props => {
-  expect(() => render(<Probe {...props} />)).toThrow();
-});
+it.each([{ min: NaN }, { max: Infinity }, { defaultValue: NaN }, { step: 0 }, { min: 4, max: 2 }])(
+  'rejects an invalid grid or value %o',
+  (props) => {
+    expect(() => render(<Probe {...props} />)).toThrow();
+  },
+);
 
 it('keeps the accepted controlled value, progress and form field when refused', () => {
   const changed = vi.fn();
-  render(<form><Probe name="volume" value={2} onValueChange={changed} /></form>);
+  render(
+    <form>
+      <Probe name="volume" value={2} onValueChange={changed} />
+    </form>,
+  );
   fireEvent.keyDown(screen.getByRole('slider'), { key: 'ArrowRight' });
   expect(changed.mock.calls).toEqual([[3]]);
   expect(screen.getByRole('slider').getAttribute('aria-valuenow')).toBe('2');
@@ -67,14 +84,19 @@ it('updates when the controlled parent accepts', () => {
   expect(screen.getByRole('slider').getAttribute('aria-valuenow')).toBe('3');
 });
 
-it.each(['ctrlKey', 'altKey', 'shiftKey', 'metaKey', 'isComposing'])('does not intercept %s input', modifier => {
-  render(<Probe defaultValue={2} />);
-  fireEvent.keyDown(screen.getByRole('slider'), { key: 'ArrowRight', [modifier]: true });
-  expect(screen.getByRole('slider').getAttribute('aria-valuenow')).toBe('2');
-});
+it.each(['ctrlKey', 'altKey', 'shiftKey', 'metaKey', 'isComposing'])(
+  'does not intercept %s input',
+  (modifier) => {
+    render(<Probe defaultValue={2} />);
+    fireEvent.keyDown(screen.getByRole('slider'), { key: 'ArrowRight', [modifier]: true });
+    expect(screen.getByRole('slider').getAttribute('aria-valuenow')).toBe('2');
+  },
+);
 
 it('honors consumer cancellation and disabled input', () => {
-  const { rerender } = render(<Probe defaultValue={2} onKeyDown={event => event.preventDefault()} />);
+  const { rerender } = render(
+    <Probe defaultValue={2} onKeyDown={(event) => event.preventDefault()} />,
+  );
   fireEvent.keyDown(screen.getByRole('slider'), { key: 'ArrowRight' });
   expect(screen.getByRole('slider').getAttribute('aria-valuenow')).toBe('2');
   rerender(<Probe disabled name="volume" defaultValue={2} />);
@@ -85,9 +107,17 @@ it('honors consumer cancellation and disabled input', () => {
 
 it('resets the original default on the current grid without notification', async () => {
   const changed = vi.fn();
-  const { rerender } = render(<form><Probe defaultValue={3} onValueChange={changed} /></form>);
+  const { rerender } = render(
+    <form>
+      <Probe defaultValue={3} onValueChange={changed} />
+    </form>,
+  );
   fireEvent.keyDown(screen.getByRole('slider'), { key: 'End' });
-  rerender(<form><Probe defaultValue={80} min={0} max={10} step={2} onValueChange={changed} /></form>);
+  rerender(
+    <form>
+      <Probe defaultValue={80} min={0} max={10} step={2} onValueChange={changed} />
+    </form>,
+  );
   expect(screen.getByRole('slider').getAttribute('aria-valuenow')).toBe('10');
   await act(async () => document.querySelector('form')!.reset());
   expect(screen.getByRole('slider').getAttribute('aria-valuenow')).toBe('4');
@@ -96,21 +126,41 @@ it('resets the original default on the current grid without notification', async
 
 it('ignores canceled resets and controlled resets', async () => {
   const changed = vi.fn();
-  const { rerender } = render(<form onReset={event => event.preventDefault()}><Probe defaultValue={2} onValueChange={changed} /></form>);
+  const { rerender } = render(
+    <form onReset={(event) => event.preventDefault()}>
+      <Probe defaultValue={2} onValueChange={changed} />
+    </form>,
+  );
   fireEvent.keyDown(screen.getByRole('slider'), { key: 'ArrowRight' });
   await act(async () => document.querySelector('form')!.reset());
   expect(screen.getByRole('slider').getAttribute('aria-valuenow')).toBe('3');
-  rerender(<form><Probe value={8} onValueChange={changed} /></form>);
+  rerender(
+    <form>
+      <Probe value={8} onValueChange={changed} />
+    </form>,
+  );
   await act(async () => document.querySelector('form')!.reset());
   expect(screen.getByRole('slider').getAttribute('aria-valuenow')).toBe('8');
   expect(changed.mock.calls).toEqual([[3]]);
 });
 
 it('resets only through the current external form owner', async () => {
-  const { rerender } = render(<><form id="first" /><form id="second" /><Probe form="first" name="volume" defaultValue={2} /></>);
+  const { rerender } = render(
+    <>
+      <form id="first" />
+      <form id="second" />
+      <Probe form="first" name="volume" defaultValue={2} />
+    </>,
+  );
   fireEvent.keyDown(screen.getByRole('slider'), { key: 'ArrowRight' });
   expect(new FormData(document.getElementById('first') as HTMLFormElement).get('volume')).toBe('3');
-  rerender(<><form id="first" /><form id="second" /><Probe form="second" name="volume" defaultValue={2} /></>);
+  rerender(
+    <>
+      <form id="first" />
+      <form id="second" />
+      <Probe form="second" name="volume" defaultValue={2} />
+    </>,
+  );
   await act(async () => (document.getElementById('first') as HTMLFormElement).reset());
   expect(screen.getByRole('slider').getAttribute('aria-valuenow')).toBe('3');
   await act(async () => (document.getElementById('second') as HTMLFormElement).reset());
@@ -118,9 +168,21 @@ it('resets only through the current external form owner', async () => {
 });
 
 it('follows the actual form owner even when the form prop does not change', async () => {
-  const { rerender } = render(<><form id="owner" /><form id="second" /><Probe form="owner" defaultValue={2} /></>);
+  const { rerender } = render(
+    <>
+      <form id="owner" />
+      <form id="second" />
+      <Probe form="owner" defaultValue={2} />
+    </>,
+  );
   fireEvent.keyDown(screen.getByRole('slider'), { key: 'ArrowRight' });
-  rerender(<><form id="old" /><form id="owner" /><Probe form="owner" defaultValue={2} /></>);
+  rerender(
+    <>
+      <form id="old" />
+      <form id="owner" />
+      <Probe form="owner" defaultValue={2} />
+    </>,
+  );
   await act(async () => (document.getElementById('owner') as HTMLFormElement).reset());
   expect(screen.getByRole('slider').getAttribute('aria-valuenow')).toBe('2');
   fireEvent.keyDown(screen.getByRole('slider'), { key: 'ArrowRight' });

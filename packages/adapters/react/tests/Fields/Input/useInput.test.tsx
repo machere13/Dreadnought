@@ -25,7 +25,12 @@ it('provides password visibility behavior for custom markup', async () => {
       defaultValue: 'secret',
       passwordVisibilityLabels: { show: 'Показать пароль', hide: 'Скрыть пароль' },
     });
-    return <><input {...inputProps} aria-label="Пароль" /><button {...visibilityButtonProps} /></>;
+    return (
+      <>
+        <input {...inputProps} aria-label="Пароль" />
+        <button {...visibilityButtonProps} />
+      </>
+    );
   }
   render(<CustomPasswordInput />);
   const input = screen.getByLabelText('Пароль') as HTMLInputElement;

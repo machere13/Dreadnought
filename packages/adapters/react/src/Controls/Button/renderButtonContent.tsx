@@ -6,12 +6,23 @@ export interface ButtonContentProps {
   iconPosition?: 'start' | 'end';
 }
 
-export function renderButtonContent({ children, icon, iconPosition = 'start' }: ButtonContentProps) {
-  const iconSlot = icon == null ? null : <span data-slot="icon" aria-hidden="true">{icon}</span>;
+export function renderButtonContent({
+  children,
+  icon,
+  iconPosition = 'start',
+}: ButtonContentProps) {
+  const iconSlot =
+    icon == null ? null : (
+      <span data-slot="icon" aria-hidden="true">
+        {icon}
+      </span>
+    );
 
-  return <>
-    {iconPosition === 'start' && iconSlot}
-    {children != null && <span data-slot="label">{children}</span>}
-    {iconPosition === 'end' && iconSlot}
-  </>;
+  return (
+    <>
+      {iconPosition === 'start' && iconSlot}
+      {children != null && <span data-slot="label">{children}</span>}
+      {iconPosition === 'end' && iconSlot}
+    </>
+  );
 }

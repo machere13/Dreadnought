@@ -10,7 +10,9 @@ export interface PopoverCore {
 
 export function getPopoverState(options: PopoverCoreOptions): PopoverCore {
   const state = getDisclosureState({ ...options, open: !!options.open && !options.disabled });
-  return { open: state.open,
+  return {
+    open: state.open,
     triggerProps: { ...state.triggerProps, 'aria-haspopup': 'dialog' },
-    contentProps: { ...state.panelProps, role: 'dialog', 'aria-modal': false } };
+    contentProps: { ...state.panelProps, role: 'dialog', 'aria-modal': false },
+  };
 }

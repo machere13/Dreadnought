@@ -7,36 +7,93 @@ import type { UseTreeOptions } from './useTree.ts';
 import { CheckboxAdapter } from '../../Fields/Checkbox/CheckboxAdapter.tsx';
 import type { CheckboxAdapterProps } from '../../Fields/Checkbox/CheckboxAdapter.tsx';
 
-export type TreeAdapterProps<RecordType, Key extends TreeKey = TreeKey> =
-  UseTreeOptions<RecordType, Key> & Omit<ComponentPropsWithRef<'ul'>, 'children'> & {
+export type TreeAdapterProps<RecordType, Key extends TreeKey = TreeKey> = UseTreeOptions<
+  RecordType,
+  Key
+> &
+  Omit<ComponentPropsWithRef<'ul'>, 'children'> & {
     getLabel: (record: RecordType) => string;
     renderLabel?: (row: VisibleTreeRow<RecordType, Key>) => ReactNode;
     renderIndicator?: (row: VisibleTreeRow<RecordType, Key>) => ReactNode;
-    renderCheckbox?: (props: CheckboxAdapterProps, row: VisibleTreeRow<RecordType, Key>) => ReactNode;
+    renderCheckbox?: (
+      props: CheckboxAdapterProps,
+      row: VisibleTreeRow<RecordType, Key>,
+    ) => ReactNode;
     slotClassNames?: { item?: string; content?: string; group?: string; indicator?: string };
   };
 
 export function TreeAdapter<RecordType, Key extends TreeKey = TreeKey>({
-  records, getKey, getChildren, expandedKeys, defaultExpandedKeys, onExpandedKeysChange,
-  selectable = false, multiple = false, selectedKeys, defaultSelectedKeys, onSelectedKeysChange,
-  checkable = false, checkStrictly = false, checkedKeys, defaultCheckedKeys, onCheckedKeysChange,
-  getDisabled, getSelectable, getCheckDisabled, renderCheckbox,
-  disabled = false, getLabel, renderLabel, renderIndicator, slotClassNames, ref, onKeyDown, onClick, onFocusCapture,
-  'aria-label': ariaLabel, 'aria-labelledby': labelledBy, ...domProps
+  records,
+  getKey,
+  getChildren,
+  expandedKeys,
+  defaultExpandedKeys,
+  onExpandedKeysChange,
+  selectable = false,
+  multiple = false,
+  selectedKeys,
+  defaultSelectedKeys,
+  onSelectedKeysChange,
+  checkable = false,
+  checkStrictly = false,
+  checkedKeys,
+  defaultCheckedKeys,
+  onCheckedKeysChange,
+  getDisabled,
+  getSelectable,
+  getCheckDisabled,
+  renderCheckbox,
+  disabled = false,
+  getLabel,
+  renderLabel,
+  renderIndicator,
+  slotClassNames,
+  ref,
+  onKeyDown,
+  onClick,
+  onFocusCapture,
+  'aria-label': ariaLabel,
+  'aria-labelledby': labelledBy,
+  ...domProps
 }: TreeAdapterProps<RecordType, Key>) {
-  const tree = useTree({ records, getKey, getChildren, expandedKeys, defaultExpandedKeys, onExpandedKeysChange, disabled,
-    selectable, multiple, selectedKeys, defaultSelectedKeys, onSelectedKeysChange,
-    checkable, checkStrictly, checkedKeys, defaultCheckedKeys, onCheckedKeysChange, getDisabled, getSelectable, getCheckDisabled });
+  const tree = useTree({
+    records,
+    getKey,
+    getChildren,
+    expandedKeys,
+    defaultExpandedKeys,
+    onExpandedKeysChange,
+    disabled,
+    selectable,
+    multiple,
+    selectedKeys,
+    defaultSelectedKeys,
+    onSelectedKeysChange,
+    checkable,
+    checkStrictly,
+    checkedKeys,
+    defaultCheckedKeys,
+    onCheckedKeysChange,
+    getDisabled,
+    getSelectable,
+    getCheckDisabled,
+  });
   const { rows } = tree;
-  const selectedSet = new Set(tree.selectedKeys), checkedSet = new Set(tree.checkedKeys), halfCheckedSet = new Set(tree.halfCheckedKeys);
+  const selectedSet = new Set(tree.selectedKeys);
+  const checkedSet = new Set(tree.checkedKeys);
+  const halfCheckedSet = new Set(tree.halfCheckedKeys);
   const current = useRef({ tree, disabled });
   const root = useRef<HTMLUListElement>(null);
   useImperativeHandle(ref, () => root.current!, []);
   const elements = useRef(new Map<Key, HTMLLIElement>());
   const [focusedKey, setFocusedKey] = useState<Key | undefined>();
   const previousParents = useRef(new Map<Key, Key | null>());
-  const pendingFocus = useRef<{ key: Key; element: HTMLLIElement; parents: Map<Key, Key | null> } | null>(null);
-  const visible = new Set(rows.map(row => row.key));
+  const pendingFocus = useRef<{
+    key: Key;
+    element: HTMLLIElement;
+    parents: Map<Key, Key | null>;
+  } | null>(null);
+  const visible = new Set(rows.map((row) => row.key));
 
   function fallback(key: Key | undefined, parents: Map<Key, Key | null>): Key | undefined {
     while (key !== undefined && !visible.has(key)) {
@@ -46,22 +103,34 @@ export function TreeAdapter<RecordType, Key extends TreeKey = TreeKey>({
     return key ?? rows[0]?.key;
   }
   const tabKey = fallback(focusedKey, previousParents.current);
-  const parents = new Map(rows.map(row => [row.key, row.parentKey]));
+  const parents = new Map(rows.map((row) => [row.key, row.parentKey]));
 
-  function focus(key: Key) { elements.current.get(key)?.focus(); }
+  function focus(key: Key) {
+    elements.current.get(key)?.focus();
+  }
 
   useLayoutEffect(() => {
     current.current = { tree, disabled };
     const pending = pendingFocus.current;
     pendingFocus.current = null;
     previousParents.current = parents;
-    if (focusedKey !== tabKey) setFocusedKey(tabKey);
-    if (!pending || pending.element.isConnected) return;
+    if (focusedKey !== tabKey) {
+      setFocusedKey(tabKey);
+    }
+    if (!pending || pending.element.isConnected) {
+      return;
+    }
     const doc = pending.element.ownerDocument;
     const active = doc.activeElement;
-    if (active && active !== doc.body && active !== pending.element && active !== root.current) return;
+    if (active && active !== doc.body && active !== pending.element && active !== root.current) {
+      return;
+    }
     const next = fallback(pending.key, pending.parents);
-    if (next === undefined) root.current?.focus(); else focus(next);
+    if (next === undefined) {
+      root.current?.focus();
+    } else {
+      focus(next);
+    }
   });
 
   function ownItem(target: EventTarget | null): HTMLLIElement | undefined {
@@ -69,41 +138,88 @@ export function TreeAdapter<RecordType, Key extends TreeKey = TreeKey>({
     const item = node?.closest?.('[data-slot="tree-item"]') as HTMLLIElement | null;
     return item?.closest('[role="tree"]') === root.current ? item : undefined;
   }
-  function rowOf(item: HTMLLIElement) { return rows[Number(item.dataset.treeIndex)]; }
+  function rowOf(item: HTMLLIElement) {
+    return rows[Number(item.dataset.treeIndex)];
+  }
   function interactive(target: EventTarget | null): boolean {
-    return Boolean((target as HTMLElement | null)?.closest?.('button,input,select,textarea,a[href],[contenteditable="true"]'));
+    return Boolean(
+      (target as HTMLElement | null)?.closest?.(
+        'button,input,select,textarea,a[href],[contenteditable="true"]',
+      ),
+    );
   }
   function handleKeyDown(event: KeyboardEvent<HTMLUListElement>) {
     const item = ownItem(event.target);
     const key = item ? rowOf(item)?.key : undefined;
     onKeyDown?.(event);
-    if (event.defaultPrevented || event.nativeEvent.isComposing || current.current.disabled
-      || event.ctrlKey || event.altKey || event.metaKey || event.shiftKey || interactive(event.target)) return;
-    if (!item || event.target !== item || key === undefined || elements.current.get(key) !== item) return;
+    if (
+      event.defaultPrevented ||
+      event.nativeEvent.isComposing ||
+      current.current.disabled ||
+      event.ctrlKey ||
+      event.altKey ||
+      event.metaKey ||
+      event.shiftKey ||
+      interactive(event.target)
+    ) {
+      return;
+    }
+    if (!item || event.target !== item || key === undefined || elements.current.get(key) !== item) {
+      return;
+    }
     const latest = current.current.tree;
-    const row = latest.rows.find(row => row.key === key);
-    if (!row) return;
+    const row = latest.rows.find((row) => row.key === key);
+    if (!row) {
+      return;
+    }
     const action = getTreeKeyAction(latest.rows, key, event.key, { selectable, checkable });
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)
-      || action) event.preventDefault();
-    if (action?.type === 'focus') focus(action.key);
-    if (action?.type === 'expand') latest.setExpanded(action.key, action.expanded);
-    if (action?.type === 'select') latest.select(action.key);
-    if (action?.type === 'check') latest.setChecked(action.key, !latest.checkedKeys.includes(action.key));
+    if (
+      ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key) ||
+      action
+    ) {
+      event.preventDefault();
+    }
+    if (action?.type === 'focus') {
+      focus(action.key);
+    }
+    if (action?.type === 'expand') {
+      latest.setExpanded(action.key, action.expanded);
+    }
+    if (action?.type === 'select') {
+      latest.select(action.key);
+    }
+    if (action?.type === 'check') {
+      latest.setChecked(action.key, !latest.checkedKeys.includes(action.key));
+    }
   }
   function handleClick(event: MouseEvent<HTMLUListElement>) {
     const item = ownItem(event.target);
     const key = item ? rowOf(item)?.key : undefined;
     const content = (event.target as HTMLElement).closest('[data-slot="tree-content"]');
     onClick?.(event);
-    if (event.defaultPrevented || current.current.disabled || interactive(event.target)
-      || (event.target as HTMLElement).closest('[data-slot="tree-checkbox"]')) return;
-    if (!item || !content || content.closest('[data-slot="tree-item"]') !== item
-      || key === undefined || elements.current.get(key) !== item) return;
+    if (
+      event.defaultPrevented ||
+      current.current.disabled ||
+      interactive(event.target) ||
+      (event.target as HTMLElement).closest('[data-slot="tree-checkbox"]')
+    ) {
+      return;
+    }
+    if (
+      !item ||
+      !content ||
+      content.closest('[data-slot="tree-item"]') !== item ||
+      key === undefined ||
+      elements.current.get(key) !== item
+    ) {
+      return;
+    }
     focus(key);
-    if ((event.target as HTMLElement).closest('[data-slot="tree-indicator"]') || !selectable)
+    if ((event.target as HTMLElement).closest('[data-slot="tree-indicator"]') || !selectable) {
       current.current.tree.toggle(key);
-    else current.current.tree.select(key);
+    } else {
+      current.current.tree.select(key);
+    }
   }
 
   const groups = new Map<Key | null, ReactNode[]>();
@@ -111,55 +227,118 @@ export function TreeAdapter<RecordType, Key extends TreeKey = TreeKey>({
     const row = rows[index];
     const nodeDisabled = disabled || Boolean(getDisabled?.(row.record));
     const nodeSelectable = selectable && getSelectable?.(row.record) !== false;
-    const checked = checkedSet.has(row.key), indeterminate = halfCheckedSet.has(row.key);
-    const checkboxProps: CheckboxAdapterProps = { checked, indeterminate,
-      disabled: nodeDisabled || Boolean(getCheckDisabled?.(row.record)), tabIndex: -1, 'aria-label': getLabel(row.record),
-      onChange: event => {
-        if (event.nativeEvent.defaultPrevented) return;
+    const checked = checkedSet.has(row.key);
+    const indeterminate = halfCheckedSet.has(row.key);
+    const checkboxProps: CheckboxAdapterProps = {
+      checked,
+      indeterminate,
+      disabled: nodeDisabled || Boolean(getCheckDisabled?.(row.record)),
+      tabIndex: -1,
+      'aria-label': getLabel(row.record),
+      onChange: (event) => {
+        if (event.nativeEvent.defaultPrevented) {
+          return;
+        }
         focus(row.key);
         current.current.tree.setChecked(row.key, event.currentTarget.checked);
-      } };
+      },
+    };
     const children = groups.get(row.key);
-    const element = <li key={`${typeof row.key}:${row.key}`} role="treeitem" data-slot="tree-item"
-      data-tree-index={index} aria-label={getLabel(row.record)} aria-level={row.depth + 1}
-      aria-disabled={nodeDisabled || undefined}
-      aria-selected={nodeSelectable ? selectedSet.has(row.key) : undefined}
-      aria-checked={checkable ? indeterminate ? 'mixed' : checked : undefined}
-      aria-expanded={row.expandable ? row.expanded : undefined} tabIndex={row.key === tabKey ? 0 : -1}
-      className={slotClassNames?.item} ref={node => {
-        if (!node) return;
-        elements.current.set(row.key, node);
-        return () => {
-          if (node.ownerDocument.activeElement === node)
-            pendingFocus.current = { key: row.key, element: node, parents };
-          if (elements.current.get(row.key) === node) elements.current.delete(row.key);
-        };
-      }}>
-      <span data-slot="tree-content" className={slotClassNames?.content}>
-        {row.expandable && <span data-slot="tree-indicator" className={slotClassNames?.indicator}
-          aria-hidden="true">{renderIndicator ? renderIndicator(row) : row.expanded ? '▾' : '▸'}</span>}
-        {checkable && <span data-slot="tree-checkbox">{renderCheckbox
-          ? renderCheckbox(checkboxProps, row) : <CheckboxAdapter {...checkboxProps} />}</span>}
-        {renderLabel ? renderLabel(row) : getLabel(row.record)}
-      </span>
-      {children?.length ? <ul role="group" data-slot="tree-group"
-        className={slotClassNames?.group}>{children.reverse()}</ul> : null}
-    </li>;
+    const element = (
+      <li
+        key={`${typeof row.key}:${row.key}`}
+        role="treeitem"
+        data-slot="tree-item"
+        data-tree-index={index}
+        aria-label={getLabel(row.record)}
+        aria-level={row.depth + 1}
+        aria-disabled={nodeDisabled || undefined}
+        aria-selected={nodeSelectable ? selectedSet.has(row.key) : undefined}
+        aria-checked={checkable ? (indeterminate ? 'mixed' : checked) : undefined}
+        aria-expanded={row.expandable ? row.expanded : undefined}
+        tabIndex={row.key === tabKey ? 0 : -1}
+        className={slotClassNames?.item}
+        ref={(node) => {
+          if (!node) {
+            return;
+          }
+          elements.current.set(row.key, node);
+          return () => {
+            if (node.ownerDocument.activeElement === node) {
+              pendingFocus.current = { key: row.key, element: node, parents };
+            }
+            if (elements.current.get(row.key) === node) {
+              elements.current.delete(row.key);
+            }
+          };
+        }}
+      >
+        <span data-slot="tree-content" className={slotClassNames?.content}>
+          {row.expandable && (
+            <span
+              data-slot="tree-indicator"
+              className={slotClassNames?.indicator}
+              aria-hidden="true"
+            >
+              {renderIndicator ? renderIndicator(row) : row.expanded ? '▾' : '▸'}
+            </span>
+          )}
+          {checkable && (
+            <span data-slot="tree-checkbox">
+              {renderCheckbox ? (
+                renderCheckbox(checkboxProps, row)
+              ) : (
+                <CheckboxAdapter {...checkboxProps} />
+              )}
+            </span>
+          )}
+          {renderLabel ? renderLabel(row) : getLabel(row.record)}
+        </span>
+        {children?.length ? (
+          <ul role="group" data-slot="tree-group" className={slotClassNames?.group}>
+            {children.reverse()}
+          </ul>
+        ) : null}
+      </li>
+    );
     const siblings = groups.get(row.parentKey);
-    if (siblings) siblings.push(element); else groups.set(row.parentKey, [element]);
+    if (siblings) {
+      siblings.push(element);
+    } else {
+      groups.set(row.parentKey, [element]);
+    }
   }
-  return <ul {...domProps} ref={root} role="tree" data-ui="tree" aria-disabled={disabled || undefined}
-    aria-multiselectable={selectable ? multiple : undefined}
-    aria-label={labelledBy ? ariaLabel : ariaLabel ?? 'Дерево'} aria-labelledby={labelledBy}
-    tabIndex={rows.length ? undefined : 0} onKeyDown={handleKeyDown} onClick={handleClick}
-    onFocusCapture={event => {
-      const item = ownItem(event.target);
-      const key = item ? rowOf(item)?.key : undefined;
-      onFocusCapture?.(event);
-      if (event.defaultPrevented) return;
-      if (item && (event.target as EventTarget) === item && key !== undefined
-        && elements.current.get(key) === item) setFocusedKey(key);
-    }}>
-    {groups.get(null)?.reverse()}
-  </ul>;
+  return (
+    <ul
+      {...domProps}
+      ref={root}
+      role="tree"
+      data-ui="tree"
+      aria-disabled={disabled || undefined}
+      aria-multiselectable={selectable ? multiple : undefined}
+      aria-label={labelledBy ? ariaLabel : (ariaLabel ?? 'Дерево')}
+      aria-labelledby={labelledBy}
+      tabIndex={rows.length ? undefined : 0}
+      onKeyDown={handleKeyDown}
+      onClick={handleClick}
+      onFocusCapture={(event) => {
+        const item = ownItem(event.target);
+        const key = item ? rowOf(item)?.key : undefined;
+        onFocusCapture?.(event);
+        if (event.defaultPrevented) {
+          return;
+        }
+        if (
+          item &&
+          (event.target as EventTarget) === item &&
+          key !== undefined &&
+          elements.current.get(key) === item
+        ) {
+          setFocusedKey(key);
+        }
+      }}
+    >
+      {groups.get(null)?.reverse()}
+    </ul>
+  );
 }

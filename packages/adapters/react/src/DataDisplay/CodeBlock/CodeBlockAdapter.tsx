@@ -28,7 +28,12 @@ export function CodeBlockAdapter({
   ...rootProps
 }: CodeBlockAdapterProps) {
   const { status, handleCopy } = useCodeBlockCopy(code, onCopy, onCopyError);
-  const label = status === 'copied' ? copyLabels.copied : status === 'error' ? copyLabels.error : copyLabels.copy;
+  const label =
+    status === 'copied'
+      ? copyLabels.copied
+      : status === 'error'
+        ? copyLabels.error
+        : copyLabels.copy;
   const icon = copyIcons?.[status === 'copied' || status === 'error' ? status : 'copy'];
 
   return (
@@ -37,14 +42,24 @@ export function CodeBlockAdapter({
         <div data-slot="header" className={slotClassNames?.header}>
           {language !== undefined && <span data-slot="language">{language}</span>}
           {copyable && (
-            <ButtonAdapter type="button" loading={status === 'pending'} className={slotClassNames?.copyButton}
-              icon={icon} aria-label={icon != null ? label : undefined} onClick={handleCopy}>
+            <ButtonAdapter
+              type="button"
+              loading={status === 'pending'}
+              className={slotClassNames?.copyButton}
+              icon={icon}
+              aria-label={icon != null ? label : undefined}
+              onClick={handleCopy}
+            >
               {icon == null ? label : null}
             </ButtonAdapter>
           )}
         </div>
       )}
-      <pre data-slot="pre" className={slotClassNames?.pre}><code data-slot="code" className={slotClassNames?.code}>{code}</code></pre>
+      <pre data-slot="pre" className={slotClassNames?.pre}>
+        <code data-slot="code" className={slotClassNames?.code}>
+          {code}
+        </code>
+      </pre>
     </div>
   );
 }

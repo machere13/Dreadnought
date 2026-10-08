@@ -18,8 +18,11 @@ it('provides props for custom unstyled markup', () => {
 
 it('moves auto-size observation when custom markup replaces the textarea node', () => {
   function CustomTextArea({ version }: { version: number }) {
-    const { textAreaProps, textAreaRef } = useTextArea({ autoSize: true, rows: 1,
-      style: { boxSizing: 'content-box', lineHeight: '20px', padding: 0, border: 0 } });
+    const { textAreaProps, textAreaRef } = useTextArea({
+      autoSize: true,
+      rows: 1,
+      style: { boxSizing: 'content-box', lineHeight: '20px', padding: 0, border: 0 },
+    });
     return <textarea key={version} {...textAreaProps} ref={textAreaRef} aria-label="Custom" />;
   }
 

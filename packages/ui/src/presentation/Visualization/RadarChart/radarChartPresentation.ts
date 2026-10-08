@@ -15,9 +15,18 @@ export const radarChartPresentation = {
   legend: styles.legend,
   legendButton: styles.legendButton,
   table: styles.table,
-  seriesStyles: [styles.series1, styles.series2, styles.series3, styles.series4, styles.series5, styles.series6],
+  seriesStyles: [
+    styles.series1,
+    styles.series2,
+    styles.series3,
+    styles.series4,
+    styles.series5,
+    styles.series6,
+  ],
 } as const;
 
 export function getRadarSeriesClass(id: string) {
-  return radarChartPresentation.seriesStyles[getChartSeriesIndex(id, radarChartPresentation.seriesStyles.length)];
+  return radarChartPresentation.seriesStyles[
+    getChartSeriesIndex(id, radarChartPresentation.seriesStyles.length)
+  ];
 }

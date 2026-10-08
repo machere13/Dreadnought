@@ -22,12 +22,31 @@ export interface DisclosureState {
   };
 }
 
-export function getDisclosureState({ open = false, disabled = false, triggerId, panelId }: DisclosureStateOptions): DisclosureState {
-  if (!triggerId || !panelId || /[\t\n\f\r ]/.test(triggerId)
-    || /[\t\n\f\r ]/.test(panelId) || triggerId === panelId) {
+export function getDisclosureState({
+  open = false,
+  disabled = false,
+  triggerId,
+  panelId,
+}: DisclosureStateOptions): DisclosureState {
+  if (
+    !triggerId ||
+    !panelId ||
+    /[\t\n\f\r ]/.test(triggerId) ||
+    /[\t\n\f\r ]/.test(panelId) ||
+    triggerId === panelId
+  ) {
     throw new Error('Disclosure needs distinct nonempty IDs without ASCII whitespace.');
   }
-  return { open, disabled,
-    triggerProps: { id: triggerId, type: 'button', disabled, 'aria-expanded': open, 'aria-controls': panelId },
-    panelProps: { id: panelId, hidden: !open, 'aria-labelledby': triggerId } };
+  return {
+    open,
+    disabled,
+    triggerProps: {
+      id: triggerId,
+      type: 'button',
+      disabled,
+      'aria-expanded': open,
+      'aria-controls': panelId,
+    },
+    panelProps: { id: panelId, hidden: !open, 'aria-labelledby': triggerId },
+  };
 }

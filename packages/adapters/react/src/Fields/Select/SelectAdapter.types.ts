@@ -1,8 +1,10 @@
 import type { ComponentPropsWithRef, ComponentPropsWithoutRef, ReactNode } from 'react';
 import type { SelectOption, SelectCoreOptions } from '@dreadnought/core';
 
-export type SelectAdapterProps = Omit<ComponentPropsWithRef<'input'>,
-  'value' | 'defaultValue' | 'onChange' | 'type' | 'multiple' | 'children' | 'readOnly' | 'size'> & {
+export type SelectAdapterProps = Omit<
+  ComponentPropsWithRef<'input'>,
+  'value' | 'defaultValue' | 'onChange' | 'type' | 'multiple' | 'children' | 'readOnly' | 'size'
+> & {
   options: SelectCoreOptions['options'];
   searchable?: boolean;
   open?: boolean;
@@ -14,7 +16,10 @@ export type SelectAdapterProps = Omit<ComponentPropsWithRef<'input'>,
   filterOption?: SelectCoreOptions['filterOption'];
   loading?: boolean;
   loadingContent?: ReactNode;
-  optionRender?: (option: SelectOption, state: { active: boolean; selected: boolean; index: number }) => ReactNode;
+  optionRender?: (
+    option: SelectOption,
+    state: { active: boolean; selected: boolean; index: number },
+  ) => ReactNode;
   allowClear?: boolean;
   invalid?: boolean;
   emptyContent?: ReactNode;
@@ -31,6 +36,16 @@ export type SelectAdapterProps = Omit<ComponentPropsWithRef<'input'>,
     clear?: ComponentPropsWithoutRef<'button'>;
   };
 } & (
-  | { multiple?: false; value?: string | null; defaultValue?: string | null; onValueChange?: (value: string | null) => void }
-  | { multiple: true; value?: readonly string[]; defaultValue?: readonly string[]; onValueChange?: (value: string[]) => void }
-);
+    | {
+        multiple?: false;
+        value?: string | null;
+        defaultValue?: string | null;
+        onValueChange?: (value: string | null) => void;
+      }
+    | {
+        multiple: true;
+        value?: readonly string[];
+        defaultValue?: readonly string[];
+        onValueChange?: (value: string[]) => void;
+      }
+  );

@@ -17,10 +17,18 @@ describe('getSelectionValue', () => {
   it('changes multiple values without duplicates or input mutation', () => {
     const current = Object.freeze(['a', 'b']);
     expect(core.getSelectionValue(current, { type: 'select', value: 'b' })).toEqual(['a', 'b']);
-    expect(core.getSelectionValue(current, { type: 'select', value: 'c' })).toEqual(['a', 'b', 'c']);
+    expect(core.getSelectionValue(current, { type: 'select', value: 'c' })).toEqual([
+      'a',
+      'b',
+      'c',
+    ]);
     expect(core.getSelectionValue(current, { type: 'deselect', value: 'a' })).toEqual(['b']);
     expect(core.getSelectionValue(current, { type: 'toggle', value: 'a' })).toEqual(['b']);
-    expect(core.getSelectionValue(current, { type: 'toggle', value: 'c' })).toEqual(['a', 'b', 'c']);
+    expect(core.getSelectionValue(current, { type: 'toggle', value: 'c' })).toEqual([
+      'a',
+      'b',
+      'c',
+    ]);
     expect(core.getSelectionValue(current, { type: 'clear' })).toEqual([]);
     expect(current).toEqual(['a', 'b']);
     expect(core.getSelectionValue(['a', 'a'], { type: 'select', value: 'b' })).toEqual(['a', 'b']);
@@ -34,7 +42,10 @@ describe('getSelectionValue', () => {
   it('blocks interaction with disabled values and preserves them on clear', () => {
     const options = { disabledValues: ['b'] };
     expect(core.getSelectionValue('a', { type: 'select', value: 'b' }, options)).toBe('a');
-    expect(core.getSelectionValue(['a', 'b'], { type: 'toggle', value: 'b' }, options)).toEqual(['a', 'b']);
+    expect(core.getSelectionValue(['a', 'b'], { type: 'toggle', value: 'b' }, options)).toEqual([
+      'a',
+      'b',
+    ]);
     expect(core.getSelectionValue(['a', 'b'], { type: 'clear' }, options)).toEqual(['b']);
     expect(core.getSelectionValue('b', { type: 'clear' }, options)).toBe('b');
     expect(core.getSelectionValue(['a'], { type: 'clear' }, { disabled: true })).toEqual(['a']);
@@ -46,7 +57,9 @@ describe('getSelectionValue', () => {
     expect(core.getSelectionValue('a', { type: 'toggle', value: 'a' }, options)).toBe('a');
     expect(core.getSelectionValue('a', { type: 'select', value: 'b' }, options)).toBe('b');
     expect(core.getSelectionValue(['a'], { type: 'deselect', value: 'a' }, options)).toEqual(['a']);
-    expect(core.getSelectionValue(['a', 'b'], { type: 'toggle', value: 'a' }, options)).toEqual(['b']);
+    expect(core.getSelectionValue(['a', 'b'], { type: 'toggle', value: 'a' }, options)).toEqual([
+      'b',
+    ]);
     expect(core.getSelectionValue<string>(null, { type: 'clear' }, options)).toBeNull();
   });
 });

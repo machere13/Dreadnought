@@ -5,6 +5,12 @@ import { toolbarPresentation } from '#presentation/Controls/Toolbar/toolbarPrese
 export type ToolbarProps = ToolbarAdapterProps;
 
 export function Toolbar({ className, orientation = 'horizontal', ...props }: ToolbarProps) {
-  const classes = [toolbarPresentation.root, toolbarPresentation.orientations[orientation], className].filter(Boolean).join(' ');
+  const classes = [
+    toolbarPresentation.root,
+    toolbarPresentation.orientations[orientation],
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
   return <ToolbarAdapter {...props} orientation={orientation} className={classes} />;
 }

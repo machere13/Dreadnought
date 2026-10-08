@@ -8,6 +8,11 @@
     border: var(--dreadnought-toolbar-border-width) solid var(--dreadnought-toolbar-border-color);
     border-radius: var(--dreadnought-toolbar-radius);
   }
-  .horizontal { flex-direction: row; }
-  .vertical { flex-direction: column; align-items: flex-start; }
+  .horizontal {
+    flex-direction: row;
+  }
+  .vertical {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

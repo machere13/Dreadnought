@@ -8,10 +8,12 @@ afterEach(cleanup);
 describe('CardAdapter', () => {
   it('keeps arbitrary content and forwards native div properties without library styling', () => {
     const root = createRef<HTMLDivElement>();
-    render(<CardAdapter ref={root} className="custom" aria-label="Возможность" data-test-id="card">
-      <strong>Три слоя</strong>
-      <span>Готовое оформление или своя реализация</span>
-    </CardAdapter>);
+    render(
+      <CardAdapter ref={root} className="custom" aria-label="Возможность" data-test-id="card">
+        <strong>Три слоя</strong>
+        <span>Готовое оформление или своя реализация</span>
+      </CardAdapter>,
+    );
 
     expect(root.current?.tagName).toBe('DIV');
     expect(root.current?.className).toBe('custom');

@@ -1,7 +1,10 @@
 import { getButtonState } from '@dreadnought/core';
 import type { ButtonHTMLAttributes, MouseEvent } from 'react';
 
-export interface UseButtonOptions extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'> {
+export interface UseButtonOptions extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  'disabled'
+> {
   disabled?: boolean;
   loading?: boolean;
 }

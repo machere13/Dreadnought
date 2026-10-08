@@ -1,5 +1,10 @@
 import { getDisclosureOpen, getDisclosureState } from '@dreadnought/core';
-import type { DisclosureAction, DisclosureOptions, DisclosureState, DisclosureStateOptions } from '@dreadnought/core';
+import type {
+  DisclosureAction,
+  DisclosureOptions,
+  DisclosureState,
+  DisclosureStateOptions,
+} from '@dreadnought/core';
 
 const options: DisclosureStateOptions = { triggerId: 'trigger', panelId: 'panel' };
 const state: DisclosureState = getDisclosureState(options);

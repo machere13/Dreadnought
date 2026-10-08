@@ -7,8 +7,18 @@ export type ButtonProps = ButtonAdapterProps & {
   size?: 'default' | 'compact';
 };
 
-export function Button({ variant = 'primary', size = 'default', className, ...props }: ButtonProps) {
-  const classes = [buttonPresentation.root, buttonPresentation.variants[variant], buttonPresentation.sizes[size], className]
+export function Button({
+  variant = 'primary',
+  size = 'default',
+  className,
+  ...props
+}: ButtonProps) {
+  const classes = [
+    buttonPresentation.root,
+    buttonPresentation.variants[variant],
+    buttonPresentation.sizes[size],
+    className,
+  ]
     .filter(Boolean)
     .join(' ');
 
@@ -17,5 +27,7 @@ export function Button({ variant = 'primary', size = 'default', className, ...pr
   }
 
   const { href: _href, ...actionProps } = props;
-  return <ButtonAdapter {...actionProps} className={classes} data-variant={variant} data-size={size} />;
+  return (
+    <ButtonAdapter {...actionProps} className={classes} data-variant={variant} data-size={size} />
+  );
 }

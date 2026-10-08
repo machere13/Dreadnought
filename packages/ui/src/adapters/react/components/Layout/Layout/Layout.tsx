@@ -9,7 +9,12 @@ import { LayoutSidebar } from './LayoutSidebar.tsx';
 export type LayoutProps = LayoutAdapterProps;
 
 function LayoutRoot({ className, ...props }: LayoutProps) {
-  return <LayoutAdapter {...props} className={[layoutPresentation.root, className].filter(Boolean).join(' ')} />;
+  return (
+    <LayoutAdapter
+      {...props}
+      className={[layoutPresentation.root, className].filter(Boolean).join(' ')}
+    />
+  );
 }
 
 export const Layout = Object.assign(LayoutRoot, {

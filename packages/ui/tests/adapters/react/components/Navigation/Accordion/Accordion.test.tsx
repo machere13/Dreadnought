@@ -7,16 +7,22 @@ afterEach(cleanup);
 
 describe('Accordion', () => {
   it('styles only ready parts and preserves each consumer class', () => {
-    render(<>
-      <Accordion className="own-root"><Accordion.Item value="a" className="own-item">
-        <Accordion.Trigger className="own-trigger">Ready</Accordion.Trigger>
-        <Accordion.Panel className="own-panel">Ready answer</Accordion.Panel>
-      </Accordion.Item></Accordion>
-      <AccordionAdapter><AccordionAdapter.Item value="b">
-        <AccordionAdapter.Trigger>Plain</AccordionAdapter.Trigger>
-        <AccordionAdapter.Panel>Plain answer</AccordionAdapter.Panel>
-      </AccordionAdapter.Item></AccordionAdapter>
-    </>);
+    render(
+      <>
+        <Accordion className="own-root">
+          <Accordion.Item value="a" className="own-item">
+            <Accordion.Trigger className="own-trigger">Ready</Accordion.Trigger>
+            <Accordion.Panel className="own-panel">Ready answer</Accordion.Panel>
+          </Accordion.Item>
+        </Accordion>
+        <AccordionAdapter>
+          <AccordionAdapter.Item value="b">
+            <AccordionAdapter.Trigger>Plain</AccordionAdapter.Trigger>
+            <AccordionAdapter.Panel>Plain answer</AccordionAdapter.Panel>
+          </AccordionAdapter.Item>
+        </AccordionAdapter>
+      </>,
+    );
 
     const readyTrigger = screen.getByRole('button', { name: 'Ready' });
     const plainTrigger = screen.getByRole('button', { name: 'Plain' });

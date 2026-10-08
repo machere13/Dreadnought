@@ -3,10 +3,11 @@ import { useState, type ComponentPropsWithRef, type MouseEvent, type ReactNode }
 export type AlertType = 'info' | 'success' | 'warning' | 'error';
 
 type AlertContent =
-  | { title: ReactNode; description?: ReactNode }
-  | { title?: ReactNode; description: ReactNode };
+  { title: ReactNode; description?: ReactNode } | { title?: ReactNode; description: ReactNode };
 
-export type AlertSlotClassNames = Partial<Record<'icon' | 'title' | 'description' | 'actions' | 'close', string>>;
+export type AlertSlotClassNames = Partial<
+  Record<'icon' | 'title' | 'description' | 'actions' | 'close', string>
+>;
 
 export type AlertCloseOptions = {
   closeIcon?: ReactNode;
@@ -41,7 +42,9 @@ export function AlertAdapter({
   const [closed, setClosed] = useState(false);
   const closeOptions = typeof closable === 'object' ? closable : undefined;
 
-  if (closed) return null;
+  if (closed) {
+    return null;
+  }
 
   return (
     <div
@@ -52,10 +55,26 @@ export function AlertAdapter({
       data-ui="alert"
       data-type={type}
     >
-      {showIcon && icon != null && <span data-slot="icon" className={slotClassNames?.icon} aria-hidden="true">{icon}</span>}
-      {title != null && <div data-slot="title" className={slotClassNames?.title}>{title}</div>}
-      {description != null && <div data-slot="description" className={slotClassNames?.description}>{description}</div>}
-      {action != null && <div data-slot="actions" className={slotClassNames?.actions}>{action}</div>}
+      {showIcon && icon != null && (
+        <span data-slot="icon" className={slotClassNames?.icon} aria-hidden="true">
+          {icon}
+        </span>
+      )}
+      {title != null && (
+        <div data-slot="title" className={slotClassNames?.title}>
+          {title}
+        </div>
+      )}
+      {description != null && (
+        <div data-slot="description" className={slotClassNames?.description}>
+          {description}
+        </div>
+      )}
+      {action != null && (
+        <div data-slot="actions" className={slotClassNames?.actions}>
+          {action}
+        </div>
+      )}
       {closable && (
         <button
           type="button"

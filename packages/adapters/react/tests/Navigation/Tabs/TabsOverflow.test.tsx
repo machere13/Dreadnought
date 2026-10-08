@@ -7,19 +7,36 @@ import { within } from '@testing-library/react';
 
 let width = 100;
 let resizeCallbacks: (() => void)[] = [];
-const rect = (left: number, right: number) => ({ left, right, top: 0, bottom: 44,
-  width: right - left, height: 44, x: left, y: 0, toJSON() {} }) as DOMRect;
+const rect = (left: number, right: number) =>
+  ({
+    left,
+    right,
+    top: 0,
+    bottom: 44,
+    width: right - left,
+    height: 44,
+    x: left,
+    y: 0,
+    toJSON() {},
+  }) as DOMRect;
 
 beforeEach(() => {
   width = 100;
   resizeCallbacks = [];
-  vi.stubGlobal('ResizeObserver', class {
-    constructor(callback: () => void) { resizeCallbacks.push(callback); }
-    observe() {}
-    disconnect() {}
-  });
+  vi.stubGlobal(
+    'ResizeObserver',
+    class {
+      constructor(callback: () => void) {
+        resizeCallbacks.push(callback);
+      }
+      observe() {}
+      disconnect() {}
+    },
+  );
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function () {
-    if (this.getAttribute('data-slot') === 'list') return rect(0, width);
+    if (this.getAttribute('data-slot') === 'list') {
+      return rect(0, width);
+    }
     if (this.getAttribute('role') === 'tab') {
       const list = this.closest('[role="tablist"]')!;
       const index = [...list.querySelectorAll('[role="tab"]')].indexOf(this);
@@ -31,17 +48,29 @@ beforeEach(() => {
     return this.getAttribute('data-slot') === 'list' ? width : 800;
   });
   vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockImplementation(function () {
-    return this.getAttribute('data-slot') === 'list' ? this.querySelectorAll('[role="tab"]').length * 100 : 0;
+    return this.getAttribute('data-slot') === 'list'
+      ? this.querySelectorAll('[role="tab"]').length * 100
+      : 0;
   });
   const matches = HTMLElement.prototype.matches;
   vi.spyOn(HTMLElement.prototype, 'matches').mockImplementation(function (selector) {
-    return selector === ':popover-open' ? this.hasAttribute('data-test-open') : matches.call(this, selector);
+    return selector === ':popover-open'
+      ? this.hasAttribute('data-test-open')
+      : matches.call(this, selector);
   });
   // jsdom has no Popover API; emulate its open/close state, not Tabs behavior.
-  Object.defineProperty(HTMLElement.prototype, 'showPopover', { configurable: true,
-    value(this: HTMLElement) { this.setAttribute('data-test-open', ''); } });
-  Object.defineProperty(HTMLElement.prototype, 'hidePopover', { configurable: true,
-    value(this: HTMLElement) { this.removeAttribute('data-test-open'); } });
+  Object.defineProperty(HTMLElement.prototype, 'showPopover', {
+    configurable: true,
+    value(this: HTMLElement) {
+      this.setAttribute('data-test-open', '');
+    },
+  });
+  Object.defineProperty(HTMLElement.prototype, 'hidePopover', {
+    configurable: true,
+    value(this: HTMLElement) {
+      this.removeAttribute('data-test-open');
+    },
+  });
 });
 
 afterEach(() => {
@@ -52,24 +81,32 @@ afterEach(() => {
   delete (HTMLElement.prototype as Partial<HTMLElement>).hidePopover;
 });
 
-function Sample({ value, onValueChange, last = true }: {
+function Sample({
+  value,
+  onValueChange,
+  last = true,
+}: {
   value?: string;
   onValueChange?: (value: string) => void;
   last?: boolean;
 }) {
   const selection = value === undefined ? { defaultValue: 'a' } : { value };
-  return <TabsAdapter {...selection} onValueChange={onValueChange}>
-    <TabsAdapter.List aria-label="Sections" moreLabel="More sections">
-      <TabsAdapter.Tab value="a">A</TabsAdapter.Tab>
-      <TabsAdapter.Tab value="b" disabled>B</TabsAdapter.Tab>
-      <TabsAdapter.Tab value="c">C</TabsAdapter.Tab>
-      {last && <TabsAdapter.Tab value="d">D</TabsAdapter.Tab>}
-    </TabsAdapter.List>
-    <TabsAdapter.Panel value="a">Alpha</TabsAdapter.Panel>
-    <TabsAdapter.Panel value="b">Beta</TabsAdapter.Panel>
-    <TabsAdapter.Panel value="c">Gamma</TabsAdapter.Panel>
-    {last && <TabsAdapter.Panel value="d">Delta</TabsAdapter.Panel>}
-  </TabsAdapter>;
+  return (
+    <TabsAdapter {...selection} onValueChange={onValueChange}>
+      <TabsAdapter.List aria-label="Sections" moreLabel="More sections">
+        <TabsAdapter.Tab value="a">A</TabsAdapter.Tab>
+        <TabsAdapter.Tab value="b" disabled>
+          B
+        </TabsAdapter.Tab>
+        <TabsAdapter.Tab value="c">C</TabsAdapter.Tab>
+        {last && <TabsAdapter.Tab value="d">D</TabsAdapter.Tab>}
+      </TabsAdapter.List>
+      <TabsAdapter.Panel value="a">Alpha</TabsAdapter.Panel>
+      <TabsAdapter.Panel value="b">Beta</TabsAdapter.Panel>
+      <TabsAdapter.Panel value="c">Gamma</TabsAdapter.Panel>
+      {last && <TabsAdapter.Panel value="d">Delta</TabsAdapter.Panel>}
+    </TabsAdapter>
+  );
 }
 
 describe('Tabs overflow', () => {
@@ -78,11 +115,25 @@ describe('Tabs overflow', () => {
     document.body.append(frame);
     const doc = frame.contentDocument!;
     const proto = doc.defaultView!.HTMLElement.prototype;
-    vi.spyOn(proto, 'getBoundingClientRect').mockImplementation(HTMLElement.prototype.getBoundingClientRect);
-    vi.spyOn(proto, 'clientWidth', 'get').mockImplementation(function () { return this.getAttribute('data-slot') === 'list' ? width : 120; });
-    vi.spyOn(proto, 'scrollWidth', 'get').mockImplementation(function () { return this.getAttribute('data-slot') === 'list' ? this.querySelectorAll('[role="tab"]').length * 100 : 0; });
-    Object.defineProperty(proto, 'showPopover', { configurable: true, value: HTMLElement.prototype.showPopover });
-    Object.defineProperty(proto, 'hidePopover', { configurable: true, value: HTMLElement.prototype.hidePopover });
+    vi.spyOn(proto, 'getBoundingClientRect').mockImplementation(
+      HTMLElement.prototype.getBoundingClientRect,
+    );
+    vi.spyOn(proto, 'clientWidth', 'get').mockImplementation(function () {
+      return this.getAttribute('data-slot') === 'list' ? width : 120;
+    });
+    vi.spyOn(proto, 'scrollWidth', 'get').mockImplementation(function () {
+      return this.getAttribute('data-slot') === 'list'
+        ? this.querySelectorAll('[role="tab"]').length * 100
+        : 0;
+    });
+    Object.defineProperty(proto, 'showPopover', {
+      configurable: true,
+      value: HTMLElement.prototype.showPopover,
+    });
+    Object.defineProperty(proto, 'hidePopover', {
+      configurable: true,
+      value: HTMLElement.prototype.hidePopover,
+    });
     vi.spyOn(proto, 'matches').mockImplementation(HTMLElement.prototype.matches);
     Object.defineProperty(doc.documentElement, 'clientWidth', { configurable: true, value: 120 });
     Object.defineProperty(doc.documentElement, 'clientHeight', { configurable: true, value: 160 });
@@ -90,7 +141,11 @@ describe('Tabs overflow', () => {
     try {
       const more = within(doc.body).getByRole('button', { name: 'More sections' });
       let right = 144;
-      vi.spyOn(more, 'getBoundingClientRect').mockImplementation(() => ({ ...rect(right - 44, right), top: 50, bottom: 94 }));
+      vi.spyOn(more, 'getBoundingClientRect').mockImplementation(() => ({
+        ...rect(right - 44, right),
+        top: 50,
+        bottom: 94,
+      }));
       fireEvent.keyDown(more, { key: 'ArrowDown' });
       const menu = within(doc.body).getByRole('menu');
       expect(menu.style.left).toBe('76px');
@@ -99,15 +154,26 @@ describe('Tabs overflow', () => {
       expect(menu.style.left).toBe('40px');
       fireEvent.keyDown(doc.activeElement!, { key: 'Escape' });
       expect(doc.activeElement).toBe(more);
-    } finally { unmount(); frame.remove(); }
+    } finally {
+      unmount();
+      frame.remove();
+    }
   });
   it('lists offscreen tabs, skips disabled items and selects without submitting', () => {
     const change = vi.fn();
     const submit = vi.fn((event) => event.preventDefault());
-    render(<form onSubmit={submit}><Sample onValueChange={change} /></form>);
+    render(
+      <form onSubmit={submit}>
+        <Sample onValueChange={change} />
+      </form>,
+    );
     const more = screen.getByRole('button', { name: 'More sections' });
     fireEvent.keyDown(more, { key: 'ArrowDown' });
-    expect(screen.getAllByRole('menuitemradio').map((item) => item.textContent)).toEqual(['B', 'C', 'D']);
+    expect(screen.getAllByRole('menuitemradio').map((item) => item.textContent)).toEqual([
+      'B',
+      'C',
+      'D',
+    ]);
     expect(document.activeElement).toBe(screen.getByRole('menuitemradio', { name: 'C' }));
     fireEvent.keyDown(document.activeElement!, { key: 'End' });
     fireEvent.click(screen.getByRole('menuitemradio', { name: 'D' }));
@@ -162,14 +228,20 @@ describe('Tabs overflow', () => {
     list.scrollLeft = 200;
     fireEvent.scroll(list);
     fireEvent.click(screen.getByRole('button', { name: 'More sections' }));
-    expect(screen.getAllByRole('menuitemradio').map((item) => item.textContent)).toEqual(['A', 'B', 'D']);
+    expect(screen.getAllByRole('menuitemradio').map((item) => item.textContent)).toEqual([
+      'A',
+      'B',
+      'D',
+    ]);
     fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
     rerender(<Sample last={false} />);
     await act(async () => {});
     fireEvent.click(screen.getByRole('button', { name: 'More sections' }));
     expect(screen.queryByRole('menuitemradio', { name: 'D' })).toBeNull();
     width = 500;
-    await act(async () => { resizeCallbacks.forEach((callback) => callback()); });
+    await act(async () => {
+      resizeCallbacks.forEach((callback) => callback());
+    });
     expect(screen.queryByRole('button', { name: 'More sections' })).toBeNull();
     expect(screen.queryByRole('menu')).toBeNull();
   });

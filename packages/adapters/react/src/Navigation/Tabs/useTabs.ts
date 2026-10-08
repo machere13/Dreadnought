@@ -1,8 +1,7 @@
 import { useState } from 'react';
 
 export type UseTabsOptions = (
-  | { value: string; defaultValue?: never }
-  | { value?: never; defaultValue: string }
+  { value: string; defaultValue?: never } | { value?: never; defaultValue: string }
 ) & { onValueChange?: (value: string) => void };
 
 export interface UseTabsResult {
@@ -15,8 +14,12 @@ export function useTabs({ value, defaultValue, onValueChange }: UseTabsOptions):
   const selectedValue = value ?? internalValue;
 
   function setValue(next: string) {
-    if (next === selectedValue) return;
-    if (value === undefined) setInternalValue(next);
+    if (next === selectedValue) {
+      return;
+    }
+    if (value === undefined) {
+      setInternalValue(next);
+    }
     onValueChange?.(next);
   }
 

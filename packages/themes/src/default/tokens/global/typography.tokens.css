@@ -43,7 +43,7 @@
 
   --dreadnought-font-family-ui: 'Roboto Flex Variable', system-ui, sans-serif;
   --dreadnought-font-family-monospace: ui-monospace, monospace;
-  --dreadnought-font-variation-wide: "wdth" 150;
+  --dreadnought-font-variation-wide: 'wdth' 150;
 }
 
 :root[data-dreadnought-wide-typography='false'] {

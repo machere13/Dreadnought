@@ -10,9 +10,19 @@ it('exports the unstyled progress adapter', () => {
 it('keeps exact geometry, core ARIA and ref while updating', () => {
   expect(unstyled).toHaveProperty('ProgressAdapter');
   const ref = createRef<HTMLDivElement>();
-  const { rerender } = render(<unstyled.ProgressAdapter value={3} max={8} ref={ref} aria-label="Загрузка"
-    id="upload" aria-describedby="hint" aria-valuetext="Три из восьми" className="local"
-    slotClassNames={{ fill: 'my-fill', label: 'my-label' }} />);
+  const { rerender } = render(
+    <unstyled.ProgressAdapter
+      value={3}
+      max={8}
+      ref={ref}
+      aria-label="Загрузка"
+      id="upload"
+      aria-describedby="hint"
+      aria-valuetext="Три из восьми"
+      className="local"
+      slotClassNames={{ fill: 'my-fill', label: 'my-label' }}
+    />,
+  );
   const root = screen.getByRole('progressbar', { name: 'Загрузка' });
   expect(ref.current).toBe(root);
   expect(root.getAttribute('aria-valuenow')).toBe('3');
@@ -25,7 +35,9 @@ it('keeps exact geometry, core ARIA and ref while updating', () => {
   expect(root.querySelector('[data-slot="fill"]')!.className).toBe('my-fill');
   expect(root.querySelector('[data-slot="label"]')!.className).toBe('my-label');
   expect(root.textContent).toBe('38%');
-  rerender(<unstyled.ProgressAdapter value={20} max={8} aria-label="Загрузка" showPercent={false} />);
+  rerender(
+    <unstyled.ProgressAdapter value={20} max={8} aria-label="Загрузка" showPercent={false} />,
+  );
   expect(root.getAttribute('aria-valuenow')).toBe('8');
   expect(root.querySelector<HTMLElement>('[data-slot="fill"]')!.style.width).toBe('100%');
   expect(root.querySelector('[data-slot="label"]')).toBeNull();
@@ -35,7 +47,12 @@ it('keeps exact geometry, core ARIA and ref while updating', () => {
 });
 it('cannot replace core semantics through untyped props', () => {
   expect(unstyled).toHaveProperty('ProgressAdapter');
-  const bad = { role: 'button', 'aria-valuenow': 99, 'aria-valuemax': 200, 'aria-valuemin': -5 } as any;
+  const bad = {
+    role: 'button',
+    'aria-valuenow': 99,
+    'aria-valuemax': 200,
+    'aria-valuemin': -5,
+  } as any;
   render(<unstyled.ProgressAdapter {...bad} value={3} max={8} aria-label="Загрузка" />);
   const root = screen.getByRole('progressbar');
   expect(root.getAttribute('aria-valuenow')).toBe('3');

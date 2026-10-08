@@ -13,11 +13,24 @@ afterEach(() => {
 describe('CodeBlock', () => {
   it('styles only the ready facade and preserves consumer classes, attrs, and ref', () => {
     const ref = createRef<HTMLDivElement>();
-    render(<>
-      <CodeBlock code="one" language="ts" ref={ref} className="my-root" title="Example"
-        slotClassNames={{ header: 'my-header', pre: 'my-pre', code: 'my-code', copyButton: 'my-copy' }} />
-      <CodeBlockAdapter code="two" />
-    </>);
+    render(
+      <>
+        <CodeBlock
+          code="one"
+          language="ts"
+          ref={ref}
+          className="my-root"
+          title="Example"
+          slotClassNames={{
+            header: 'my-header',
+            pre: 'my-pre',
+            code: 'my-code',
+            copyButton: 'my-copy',
+          }}
+        />
+        <CodeBlockAdapter code="two" />
+      </>,
+    );
     const ready = screen.getByText('one').closest('[data-ui="code-block"]');
     const unstyled = screen.getByText('two').closest('[data-ui="code-block"]');
     expect(ref.current).toBe(ready);
@@ -55,10 +68,14 @@ describe('CodeBlock', () => {
   });
 
   it('uses the ready Button visual contract for its compact copy action', () => {
-    render(<>
-      <CodeBlock code="example" />
-      <Button size="compact" variant="ghosted">Reference action</Button>
-    </>);
+    render(
+      <>
+        <CodeBlock code="example" />
+        <Button size="compact" variant="ghosted">
+          Reference action
+        </Button>
+      </>,
+    );
     const copy = screen.getByRole('button', { name: 'Copy' });
     const reference = screen.getByRole('button', { name: 'Reference action' });
     for (const className of reference.classList) {

@@ -2,7 +2,9 @@
   .root {
     min-width: 0;
     overflow: hidden;
-    border: var(--dreadnought-markdown-editor-border-width) var(--dreadnought-markdown-editor-border-style) var(--dreadnought-markdown-editor-border-default);
+    border: var(--dreadnought-markdown-editor-border-width)
+      var(--dreadnought-markdown-editor-border-style)
+      var(--dreadnought-markdown-editor-border-default);
     border-radius: var(--dreadnought-markdown-editor-radius);
     background: var(--dreadnought-markdown-editor-bg);
   }
@@ -21,7 +23,8 @@
     --dreadnought-toolbar-radius: var(--dreadnought-border-radius-square);
     --dreadnought-toolbar-padding: var(--dreadnought-markdown-editor-toolbar-padding);
     --dreadnought-toolbar-gap: var(--dreadnought-markdown-editor-toolbar-gap);
-    border-bottom: var(--dreadnought-markdown-editor-divider-width) var(--dreadnought-markdown-editor-border-style) var(--dreadnought-markdown-editor-divider);
+    border-bottom: var(--dreadnought-markdown-editor-divider-width)
+      var(--dreadnought-markdown-editor-border-style) var(--dreadnought-markdown-editor-divider);
   }
 
   .field {
@@ -59,7 +62,8 @@
     background: var(--dreadnought-markdown-editor-bg);
   }
   .root [data-ui='markdown-editor-preview'] {
-    padding: var(--dreadnought-markdown-editor-padding-y) var(--dreadnought-markdown-editor-padding-x);
+    padding: var(--dreadnought-markdown-editor-padding-y)
+      var(--dreadnought-markdown-editor-padding-x);
   }
   .toolbar [aria-pressed='true'] {
     --dreadnought-button-ghosted-bg: var(--dreadnought-markdown-editor-mode-selected-bg);

@@ -1,48 +1,208 @@
 @layer dreadnought {
-  .root { display: grid; gap: var(--dreadnought-radar-chart-gap); min-width: 0; margin: 0; color: var(--dreadnought-radar-chart-text); }
-  .root > figcaption { font-weight: var(--dreadnought-radar-chart-title-font-weight); }
-  .root > p { margin: 0; color: var(--dreadnought-radar-chart-description-text); }
-  .plotContainer { width: 100%; min-width: 0; max-width: var(--dreadnought-radar-chart-plot-max-width); margin-inline: auto; }
-  .plot { display: block; max-width: 100%; }
-  .grid { fill: none; stroke: var(--dreadnought-radar-chart-grid-color); stroke-width: var(--dreadnought-radar-chart-grid-width); }
-  .axis { stroke: var(--dreadnought-radar-chart-grid-color); stroke-width: var(--dreadnought-radar-chart-grid-width); }
-  .axisLabel { fill: var(--dreadnought-radar-chart-text); font-size: var(--dreadnought-radar-chart-label-font-size); }
-  .series { stroke: var(--radar-series-color); fill: var(--radar-series-color); fill-opacity: var(--dreadnought-radar-chart-fill-opacity); stroke-width: var(--dreadnought-radar-chart-series-width); stroke-dasharray: var(--radar-series-dash); }
-  .point { r: var(--dreadnought-radar-chart-point-radius); fill: var(--radar-series-color); stroke: var(--dreadnought-radar-chart-point-border); stroke-width: var(--dreadnought-radar-chart-point-border-width); cursor: help; }
-  .point:is(:hover, :focus-visible, [data-active='true']) { r: var(--dreadnought-radar-chart-point-active-radius); stroke: var(--dreadnought-radar-chart-focus-color); stroke-width: var(--dreadnought-radar-chart-focus-width); outline: none; }
-  .series1 { --radar-series-color: var(--dreadnought-radar-chart-series-1-color); --radar-series-dash: var(--dreadnought-radar-chart-dash-solid); --radar-series-border: solid; }
-  .series2 { --radar-series-color: var(--dreadnought-radar-chart-series-2-color); --radar-series-dash: var(--dreadnought-radar-chart-dash-short); --radar-series-border: dashed; }
-  .series3 { --radar-series-color: var(--dreadnought-radar-chart-series-3-color); --radar-series-dash: var(--dreadnought-radar-chart-dash-dot); --radar-series-border: dotted; }
-  .series4 { --radar-series-color: var(--dreadnought-radar-chart-series-4-color); --radar-series-dash: var(--dreadnought-radar-chart-dash-long); --radar-series-border: dashed; }
-  .series5 { --radar-series-color: var(--dreadnought-radar-chart-series-5-color); --radar-series-dash: var(--dreadnought-radar-chart-dash-dot); --radar-series-border: dotted; }
-  .series6 { --radar-series-color: var(--dreadnought-radar-chart-series-6-color); --radar-series-dash: var(--dreadnought-radar-chart-dash-short); --radar-series-border: dashed; }
-  .legend { display: flex; flex-wrap: wrap; gap: var(--dreadnought-radar-chart-legend-gap); }
-  .legendButton { display: inline-flex; align-items: center; gap: var(--dreadnought-radar-chart-legend-gap); min-height: var(--dreadnought-radar-chart-legend-min-height); padding: var(--dreadnought-radar-chart-legend-padding-block) var(--dreadnought-radar-chart-legend-padding-inline); border: var(--dreadnought-radar-chart-border-width) solid var(--dreadnought-radar-chart-border); border-radius: var(--dreadnought-radar-chart-legend-radius); background: var(--dreadnought-radar-chart-legend-bg); color: var(--dreadnought-radar-chart-text); font: inherit; cursor: pointer; }
-  .legendButton::before { content: ''; width: var(--dreadnought-radar-chart-swatch-width); border-block-start: var(--dreadnought-radar-chart-series-width) var(--radar-series-border) var(--radar-series-color); flex-shrink: 0; }
-  .legendButton { font-variation-settings: var(--dreadnought-radar-chart-legend-font-variation); }
-  .legendButton:hover { background: var(--dreadnought-radar-chart-legend-bg-hover); }
-  .legendButton[aria-pressed='false'] { text-decoration: line-through; color: var(--dreadnought-radar-chart-description-text); }
-  .legendButton:focus-visible { outline: var(--dreadnought-radar-chart-focus-width) solid var(--dreadnought-radar-chart-focus-color); outline-offset: var(--dreadnought-radar-chart-focus-offset); }
-  .table { display: block; max-width: 100%; overflow-x: auto; }
-  .tooltipTable { width: 100%; border-collapse: collapse; }
-  .tooltipTable caption { text-align: start; font-weight: var(--dreadnought-radar-chart-title-font-weight); padding-block-end: var(--dreadnought-radar-chart-tooltip-row-gap); }
-  .tooltipTable :is(th, td) { padding: var(--dreadnought-radar-chart-tooltip-row-gap) 0; text-align: start; vertical-align: middle; }
-  .tooltipTable th { padding-inline: var(--dreadnought-radar-chart-tooltip-column-gap); font-weight: inherit; }
-  .tooltipTable td:last-child { font-variant-numeric: tabular-nums; }
-  .tooltipMark { --dreadnought-mark-color: var(--radar-series-color); }
-  .table caption { padding-block: var(--dreadnought-radar-chart-legend-padding-block); text-align: start; }
-  .table :is(th, td) { padding-block: var(--dreadnought-table-active-padding-block); padding-inline: var(--dreadnought-table-active-padding-inline); border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); vertical-align: middle; }
-  .table th { color: var(--dreadnought-table-header-text); font-weight: var(--dreadnought-table-header-font-weight); }
-  .table th[scope='row'] { color: var(--dreadnought-table-text); }
-  .table thead th { background: var(--dreadnought-table-header-bg); }
-  .table thead th:first-child { border-start-start-radius: var(--dreadnought-table-header-radius); }
-  .table thead th:last-child { border-start-end-radius: var(--dreadnought-table-header-radius); }
+  .root {
+    display: grid;
+    gap: var(--dreadnought-radar-chart-gap);
+    min-width: 0;
+    margin: 0;
+    color: var(--dreadnought-radar-chart-text);
+  }
+  .root > figcaption {
+    font-weight: var(--dreadnought-radar-chart-title-font-weight);
+  }
+  .root > p {
+    margin: 0;
+    color: var(--dreadnought-radar-chart-description-text);
+  }
+  .plotContainer {
+    width: 100%;
+    min-width: 0;
+    max-width: var(--dreadnought-radar-chart-plot-max-width);
+    margin-inline: auto;
+  }
+  .plot {
+    display: block;
+    max-width: 100%;
+  }
+  .grid {
+    fill: none;
+    stroke: var(--dreadnought-radar-chart-grid-color);
+    stroke-width: var(--dreadnought-radar-chart-grid-width);
+  }
+  .axis {
+    stroke: var(--dreadnought-radar-chart-grid-color);
+    stroke-width: var(--dreadnought-radar-chart-grid-width);
+  }
+  .axisLabel {
+    fill: var(--dreadnought-radar-chart-text);
+    font-size: var(--dreadnought-radar-chart-label-font-size);
+  }
+  .series {
+    stroke: var(--radar-series-color);
+    fill: var(--radar-series-color);
+    fill-opacity: var(--dreadnought-radar-chart-fill-opacity);
+    stroke-width: var(--dreadnought-radar-chart-series-width);
+    stroke-dasharray: var(--radar-series-dash);
+  }
+  .point {
+    r: var(--dreadnought-radar-chart-point-radius);
+    fill: var(--radar-series-color);
+    stroke: var(--dreadnought-radar-chart-point-border);
+    stroke-width: var(--dreadnought-radar-chart-point-border-width);
+    cursor: help;
+  }
+  .point:is(:hover, :focus-visible, [data-active='true']) {
+    r: var(--dreadnought-radar-chart-point-active-radius);
+    stroke: var(--dreadnought-radar-chart-focus-color);
+    stroke-width: var(--dreadnought-radar-chart-focus-width);
+    outline: none;
+  }
+  .series1 {
+    --radar-series-color: var(--dreadnought-radar-chart-series-1-color);
+    --radar-series-dash: var(--dreadnought-radar-chart-dash-solid);
+    --radar-series-border: solid;
+  }
+  .series2 {
+    --radar-series-color: var(--dreadnought-radar-chart-series-2-color);
+    --radar-series-dash: var(--dreadnought-radar-chart-dash-short);
+    --radar-series-border: dashed;
+  }
+  .series3 {
+    --radar-series-color: var(--dreadnought-radar-chart-series-3-color);
+    --radar-series-dash: var(--dreadnought-radar-chart-dash-dot);
+    --radar-series-border: dotted;
+  }
+  .series4 {
+    --radar-series-color: var(--dreadnought-radar-chart-series-4-color);
+    --radar-series-dash: var(--dreadnought-radar-chart-dash-long);
+    --radar-series-border: dashed;
+  }
+  .series5 {
+    --radar-series-color: var(--dreadnought-radar-chart-series-5-color);
+    --radar-series-dash: var(--dreadnought-radar-chart-dash-dot);
+    --radar-series-border: dotted;
+  }
+  .series6 {
+    --radar-series-color: var(--dreadnought-radar-chart-series-6-color);
+    --radar-series-dash: var(--dreadnought-radar-chart-dash-short);
+    --radar-series-border: dashed;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dreadnought-radar-chart-legend-gap);
+  }
+  .legendButton {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--dreadnought-radar-chart-legend-gap);
+    min-height: var(--dreadnought-radar-chart-legend-min-height);
+    padding: var(--dreadnought-radar-chart-legend-padding-block)
+      var(--dreadnought-radar-chart-legend-padding-inline);
+    border: var(--dreadnought-radar-chart-border-width) solid var(--dreadnought-radar-chart-border);
+    border-radius: var(--dreadnought-radar-chart-legend-radius);
+    background: var(--dreadnought-radar-chart-legend-bg);
+    color: var(--dreadnought-radar-chart-text);
+    font: inherit;
+    cursor: pointer;
+  }
+  .legendButton::before {
+    content: '';
+    width: var(--dreadnought-radar-chart-swatch-width);
+    border-block-start: var(--dreadnought-radar-chart-series-width) var(--radar-series-border)
+      var(--radar-series-color);
+    flex-shrink: 0;
+  }
+  .legendButton {
+    font-variation-settings: var(--dreadnought-radar-chart-legend-font-variation);
+  }
+  .legendButton:hover {
+    background: var(--dreadnought-radar-chart-legend-bg-hover);
+  }
+  .legendButton[aria-pressed='false'] {
+    text-decoration: line-through;
+    color: var(--dreadnought-radar-chart-description-text);
+  }
+  .legendButton:focus-visible {
+    outline: var(--dreadnought-radar-chart-focus-width) solid
+      var(--dreadnought-radar-chart-focus-color);
+    outline-offset: var(--dreadnought-radar-chart-focus-offset);
+  }
+  .table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .tooltipTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .tooltipTable caption {
+    text-align: start;
+    font-weight: var(--dreadnought-radar-chart-title-font-weight);
+    padding-block-end: var(--dreadnought-radar-chart-tooltip-row-gap);
+  }
+  .tooltipTable :is(th, td) {
+    padding: var(--dreadnought-radar-chart-tooltip-row-gap) 0;
+    text-align: start;
+    vertical-align: middle;
+  }
+  .tooltipTable th {
+    padding-inline: var(--dreadnought-radar-chart-tooltip-column-gap);
+    font-weight: inherit;
+  }
+  .tooltipTable td:last-child {
+    font-variant-numeric: tabular-nums;
+  }
+  .tooltipMark {
+    --dreadnought-mark-color: var(--radar-series-color);
+  }
+  .table caption {
+    padding-block: var(--dreadnought-radar-chart-legend-padding-block);
+    text-align: start;
+  }
+  .table :is(th, td) {
+    padding-block: var(--dreadnought-table-active-padding-block);
+    padding-inline: var(--dreadnought-table-active-padding-inline);
+    border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border);
+    vertical-align: middle;
+  }
+  .table th {
+    color: var(--dreadnought-table-header-text);
+    font-weight: var(--dreadnought-table-header-font-weight);
+  }
+  .table th[scope='row'] {
+    color: var(--dreadnought-table-text);
+  }
+  .table thead th {
+    background: var(--dreadnought-table-header-bg);
+  }
+  .table thead th:first-child {
+    border-start-start-radius: var(--dreadnought-table-header-radius);
+  }
+  .table thead th:last-child {
+    border-start-end-radius: var(--dreadnought-table-header-radius);
+  }
   @media (forced-colors: active) {
-    .series { stroke: CanvasText; fill: none; }
-    .point { fill: CanvasText; stroke: Canvas; }
-    .point:is(:hover, :focus-visible, [data-active='true']) { stroke: Highlight; }
-    .grid, .axis { stroke: GrayText; }
-    .axisLabel { fill: CanvasText; }
-    .legendButton::before { border-color: CanvasText; }
+    .series {
+      stroke: CanvasText;
+      fill: none;
+    }
+    .point {
+      fill: CanvasText;
+      stroke: Canvas;
+    }
+    .point:is(:hover, :focus-visible, [data-active='true']) {
+      stroke: Highlight;
+    }
+    .grid,
+    .axis {
+      stroke: GrayText;
+    }
+    .axisLabel {
+      fill: CanvasText;
+    }
+    .legendButton::before {
+      border-color: CanvasText;
+    }
   }
 }
