@@ -43,6 +43,7 @@ import { useKnowledge } from '../knowledge/useKnowledge.ts';
 import { DocsAssistant } from '../assistant/DocsAssistant.tsx';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
+import { ComponentOutline } from './ComponentOutline.tsx';
 
 type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'markdowneditor' | 'markdownpreview' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'dropdown' | 'accordion' | 'codeblock' | 'alert' | 'toast' | 'loader' | 'progress' | 'pagination' | 'tree' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'switch' | 'slider' | 'radio' | 'select' | 'radarchart' | 'linechart' | 'barchart' | 'tooltip' | 'popover' | 'modal' | 'drawer';
 type DocsSection = 'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
@@ -93,7 +94,7 @@ function Sidebar({ section, knowledge }: { section: DocsSection; knowledge: Retu
   const [query, setQuery] = useState('');
   const results = searchKnowledge(knowledge.entries, query);
 
-  return <Layout.Sidebar aria-label="Разделы документации" expandLabel="Открыть меню" collapseLabel="Свернуть меню">
+  return <Layout.Sidebar className={styles.sidebar} slotClassNames={{ body: styles.sidebarBody }} aria-label="Разделы документации" expandLabel="Открыть меню" collapseLabel="Свернуть меню">
     <div role="search" className={styles.search}>
       <Input type="search" aria-label="Поиск по документации" placeholder="Поиск по документации"
         value={query} onChange={(event) => setQuery(event.target.value)} />
@@ -169,7 +170,7 @@ function ButtonDemo() {
 
 function TableDemo() {
   const [hideCity, setHideCity] = useState(false);
-  return <div className={styles.demo}>
+  return <div className={`${styles.demo} ${styles.demoStack}`}>
     <TableManualDemo />
     <TableFiltersDemo />
     <p><code>processing="local"</code> — обработка полного набора данных внутри таблицы. <code>processing="manual"</code> — показ переданной страницы без локальных фильтров, сортировки и обрезки. Для пагинации укажите <code>pagination.total</code>; без пагинации передайте <code>pagination=false</code>. Серверные колонки используют <code>sorter: true</code> или <code>sorter: {'{ multiple: 2 }'}</code>. <code>onChange</code> сообщает запрос, а <code>extra.currentDataSource</code> и <code>summary</code> получают переданные строки. <code>loading</code> использует Loader и не удаляет таблицу или фокус; параметры Loader доступны в <code>slotProps.loader</code>. Выбранные ключи сохраняются между страницами, но <code>rowSelection.onChange</code> возвращает записи только из доступной страницы.</p>
@@ -208,7 +209,7 @@ function TableDemo() {
       summary={rows => <Table.Row><Table.HeaderCell scope="row">Итого на странице</Table.HeaderCell>
         <Table.Cell style={{ textAlign: 'right' }}>{rows.reduce((sum, row) => sum + row.amount, 0)}</Table.Cell>
       </Table.Row>} />
-    <Table<{ id: number; name: string; city: string }> aria-label="Раскрываемые строки" rowKey="id" pagination={false}
+    <Table<{ id: number; name: string; city: string }> aria-label="Раскрываемые строки" bordered rowKey="id" pagination={false}
       dataSource={[{ id: 1, name: 'Анна', city: 'Москва' }, { id: 2, name: 'Марк', city: 'Казань' }]}
       columns={[{ key: 'name', title: 'Участник', dataIndex: 'name' }]}
       expandable={{ defaultExpandedRowKeys: [1], expandedRowRender: record => <p>Город: {record.city}</p> }} />
@@ -316,14 +317,15 @@ const copyLabels = { copy: 'Копировать', copied: 'Скопирован
 
 function ComponentDocumentation({ component }: { component: ComponentSection }) {
   const doc = componentDocs[component];
-  return <article className={styles.article}>
+  return <div className={styles.componentPage}>
+    <ComponentOutline key={component} component={component} />
+    <article className={styles.article}>
     <Breadcrumb items={[{ label: 'Документация', href: '/' }, { label: 'Компоненты' }, { label: doc.title }]} aria-label="Путь по документации" />
     <div data-knowledge id={`${component}-overview`} data-knowledge-title={doc.title}><PageHeading title={doc.title} description={doc.description} /></div>
 
     <section className={styles.section} aria-labelledby={`${component}-example`}>
       <div className={styles.sectionHeading}>
         <h2 id={`${component}-example`} className={styles.sectionTitle}>Пример</h2>
-        <span className={styles.sectionMeta}>{doc.readyCode ? 'Готовый компонент' : 'Адаптер второго слоя'}</span>
       </div>
       {doc.demo}
       <CodeBlock code={doc.readyCode ?? doc.adapterCode} language="tsx" copyLabels={copyLabels} />
@@ -332,7 +334,6 @@ function ComponentDocumentation({ component }: { component: ComponentSection }) 
     <section data-knowledge className={styles.section} aria-labelledby={`${component}-layers`}>
       <div className={styles.sectionHeading}>
         <h2 id={`${component}-layers`} className={styles.sectionTitle}>Когда нужен другой слой</h2>
-        <span className={styles.sectionMeta}>{doc.readyCode ? doc.logicCode ? 'Один контракт · три уровня' : 'Готовый компонент · адаптер' : 'Адаптер · модель core'}</span>
       </div>
       <div className={styles.layerExamples}>
         <div>
@@ -351,17 +352,17 @@ function ComponentDocumentation({ component }: { component: ComponentSection }) 
     <section className={styles.section} aria-labelledby={`${component}-api`}>
       <div className={styles.sectionHeading}>
         <h2 id={`${component}-api`} className={styles.sectionTitle}>Основные свойства</h2>
-        <span className={styles.sectionMeta}>{doc.title}</span>
       </div>
       <div className={styles.tableScroll}>
-        <Table className={styles.apiTable}>
+        <Table bordered className={styles.apiTable}>
           <Table.Head><Table.Row><Table.HeaderCell scope="col">Свойство</Table.HeaderCell><Table.HeaderCell scope="col">Значения</Table.HeaderCell><Table.HeaderCell scope="col">По умолчанию</Table.HeaderCell><Table.HeaderCell scope="col">Назначение</Table.HeaderCell></Table.Row></Table.Head>
           <Table.Body>{doc.apiRows.map(([name, values, fallback, meaning]) => <Table.Row key={name}><Table.HeaderCell scope="row"><code>{name}</code></Table.HeaderCell><Table.Cell><code>{values}</code></Table.Cell><Table.Cell>{fallback}</Table.Cell><Table.Cell>{meaning}</Table.Cell></Table.Row>)}</Table.Body>
         </Table>
       </div>
       <p data-knowledge data-knowledge-id={`${component}-api`} data-knowledge-title={`${doc.title}: примечания`} className={styles.footnote}>{doc.footnote}</p>
     </section>
-  </article>;
+    </article>
+  </div>;
 }
 
 export function DocsPage({ section }: { section: DocsSection }) {
@@ -370,14 +371,16 @@ export function DocsPage({ section }: { section: DocsSection }) {
     <Header />
     <Layout direction="horizontal" className={styles.body}>
       <Sidebar section={section} knowledge={knowledge} />
-      <Layout.Content className={styles.main}>
+      <Layout className={styles.contentColumn}>
+        <Layout.Content className={styles.main}>
         <DocsContent section={section} />
         <aside id="docs-assistant" className={styles.assistantArea} aria-label="Помощник по документации">
           <DocsAssistant entries={knowledge.entries} loading={knowledge.loading} error={knowledge.error ?? undefined} />
         </aside>
-      </Layout.Content>
+        </Layout.Content>
+        <Footer />
+      </Layout>
     </Layout>
-    <Footer />
   </Layout>;
 }
 

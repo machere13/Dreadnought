@@ -13,6 +13,51 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('links the component outline to real sections and tracks the current section', () => {
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
+      callback(0);
+      return 1;
+    });
+    render(<DocsPage section="button" />);
+    const outline = screen.getByRole('navigation', { name: 'На этой странице' });
+    const links = within(outline).getAllByRole('link');
+    expect(links.map(link => link.getAttribute('href'))).toEqual([
+      '#button-overview', '#button-example', '#button-layers', '#button-api',
+    ]);
+    for (const link of links) {
+      const target = document.querySelector(link.getAttribute('href')!)!;
+      expect(target).toBeTruthy();
+      vi.spyOn(target, 'getBoundingClientRect').mockReturnValue({ top: -100 } as DOMRect);
+    }
+    fireEvent.scroll(window);
+    expect(within(outline).getByRole('link', { name: 'API' }).getAttribute('aria-current')).toBe('location');
+    fireEvent.click(within(outline).getByRole('button', { name: 'На этой странице' }));
+    expect(within(outline).getByRole('button').getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('keeps the footer in the content column rather than under the sidebar', () => {
+    render(<DocsPage section="overview" />);
+    const footer = screen.getByRole('contentinfo');
+    const sidebar = screen.getByRole('complementary', { name: 'Разделы документации' });
+    expect(footer.previousElementSibling?.tagName).toBe('MAIN');
+    expect(footer.parentElement?.contains(sidebar)).toBe(false);
+    expect(sidebar.parentElement?.contains(footer)).toBe(true);
+  });
+
+  it('uses bordered documentation tables without repeated section captions', () => {
+    render(<DocsPage section="table" />);
+    for (const table of screen.getAllByRole('table')) {
+      expect(table.getAttribute('data-bordered')).toBe('true');
+    }
+    expect(screen.queryByText('Готовый компонент')).toBeNull();
+    expect(screen.queryByText('Один контракт · три уровня')).toBeNull();
+  });
+
+  it('does not add a component outline to guides', () => {
+    render(<DocsPage section="theming" />);
+    expect(screen.queryByRole('navigation', { name: 'На этой странице' })).toBeNull();
+  });
+
   it('shows the ready Tree and documents all three layers', () => {
     render(<DocsPage section="tree" />);
     const tree = screen.getByRole('tree', { name: 'Разделы документации' });
@@ -166,7 +211,7 @@ describe('documentation pages', () => {
     const button = screen.getByRole('button', { name: 'Вариант A' });
     fireEvent.click(button); expect(button.getAttribute('aria-pressed')).toBe('false');
     expect(screen.getByRole('table', { name: 'Сравнение вариантов: Данные' })).toBeTruthy();
-    expect(screen.getByText('Готовый компонент')).toBeTruthy();
+    expect(screen.getByRole('navigation', { name: 'На этой странице' })).toBeTruthy();
   });
   it('documents a custom disclosure with a working example and anchor', () => {
     render(<DocsPage section="custom-components" />);
