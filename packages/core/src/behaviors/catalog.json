@@ -1,5 +1,13 @@
 [
   {
+    "id": "behavior:get-visible-menu-rows", "kind": "behavior", "name": "getVisibleMenuRows", "family": "Behaviors",
+    "description": "Проецирует группы, подменю, пункты и разделители в видимые строки; наследует disabled без React или DOM.",
+    "docsUrl": "/components/menu/#menu-api", "composesWith": ["component:menu", "behavior:get-visible-tree-rows", "behavior:get-tree-key-action"],
+    "constraints": ["getKey/getChildren/getKind/getDisabled — чистые callbacks. kind: item/submenu/group/divider. Группы всегда раскрыты; expandedKeys раскрывают подменю. item/divider не допускают непустых children. Ключи — непустые уникальные строки во всём дереве; скрытые ветви проверяются. Возвращает ссылки record, depth, parentKey, expandable, expanded, kind и inherited disabled. Не хранит состояние и не задаёт ARIA. Обход O(N), без рекурсии; виртуализации и всплывающих подменю нет."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getVisibleMenuRows",
+      "examples": [{ "id": "rows", "code": "import { getVisibleMenuRows } from '@dreadnought/core';\ntype Item = { value: string; children?: readonly Item[] };\nconst items: readonly Item[] = [{ value: 'export', children: [{ value: 'pdf' }] }];\nconst rows = getVisibleMenuRows(items, { getKey: item => item.value, getChildren: item => item.children, getKind: item => item.children ? 'submenu' : 'item', expandedKeys: ['export'] });" }] }]
+  },
+  {
     "id": "behavior:get-tree-check-state", "kind": "behavior", "name": "getTreeCheckState", "family": "Behaviors",
     "description": "Вычисляет полные и частичные отметки дерева и применяет отметку узла без React или DOM.",
     "docsUrl": "/components/tree/#tree-api", "composesWith": ["component:tree", "behavior:get-visible-tree-rows"],

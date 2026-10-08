@@ -18,3 +18,14 @@ it('styles Menu parts while leaving the adapter unstyled and supports the ellips
   expect(screen.getByRole('menuitem', { name: 'B' }).className).toBe('');
   expect(screen.getByRole('img', { name: 'More' }).querySelector('svg')).toBeTruthy();
 });
+
+it('styles navigation links and group slots and uses the shared submenu icon', () => {
+  render(<Menu mode="navigation" aria-label="Pages" defaultOpenKeys={['more']} items={[
+    { value: 'group', type: 'group', label: 'Group', children: [{ value: 'docs', label: 'Docs', href: '/docs' }] },
+    { value: 'more', label: 'More', children: [{ value: 'leaf', label: 'Leaf', href: '/leaf' }] },
+  ]} slotProps={{ link: { className: 'own-link' }, group: { className: 'own-group' } }} />);
+  expect(screen.getByRole('link', { name: 'Docs' }).className).toContain('own-link');
+  expect(screen.getByRole('link', { name: 'Docs' }).className).toContain('dreadnought-text-menu-item');
+  expect(screen.getByRole('group', { name: 'Group' }).className).toContain('own-group');
+  expect(screen.getByRole('button', { name: 'More' }).querySelector('svg[data-icon="down"]')).not.toBeNull();
+});

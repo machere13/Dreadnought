@@ -1,5 +1,6 @@
 :root {
   --dreadnought-menu-gap: var(--dreadnought-spacing-x1);
+  --dreadnought-menu-indent: var(--dreadnought-spacing-x4);
   --dreadnought-menu-padding: var(--dreadnought-spacing-x1);
   --dreadnought-menu-item-padding-y: var(--dreadnought-spacing-x2);
   --dreadnought-menu-item-padding-x: var(--dreadnought-spacing-x4);

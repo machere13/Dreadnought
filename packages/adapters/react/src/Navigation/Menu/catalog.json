@@ -4,13 +4,28 @@
   "name": "Menu",
   "family": "Navigation",
   "docsUrl": "/components/menu/#menu-api",
-  "description": "Переиспользуемый список действий или выбора с клавиатурной навигацией и переходом по набранным буквам; открытие и позиционирование задаёт владелец.",
-  "states": ["disabled", "selected"],
+  "description": "Действия и навигация, группы, разделители и вложенные подменю с раскрытием внутри списка. Выбранное значение задаёт владелец.",
+  "states": ["disabled", "selected", "expanded", "collapsed"],
+  "composesWith": ["behavior:get-visible-menu-rows", "behavior:get-tree-key-action", "behavior:get-selection-value", "behavior:get-next-enabled-value", "behavior:get-typeahead-value"],
   "constraints": ["Значения пунктов непустые и уникальные.", "Задайте aria-label или aria-labelledby.", "Menu сам не открывает всплывающее окно.", "Поиск по буквам меняет только фокус: повтор буквы перебирает совпадения, пауза больше 500 мс сбрасывает запрос. Для сложной подписи задайте ariaLabel; иначе поиск использует textContent."],
   "bindings": [{
+    "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getVisibleMenuRows",
+    "examples": [{ "id": "projection", "code": "import { getVisibleMenuRows } from '@dreadnought/core';\ntype Item = { value: string; children?: readonly Item[] };\nconst items: readonly Item[] = [{ value: 'export', children: [{ value: 'pdf' }] }];\nconst rows = getVisibleMenuRows(items, { getKey: item => item.value, getChildren: item => item.children, getKind: item => item.children ? 'submenu' : 'item', expandedKeys: ['export'] });" }]
+  }, {
     "id": "react-adapter", "layer": 2, "framework": "react",
     "importPath": "@dreadnought/react/unstyled", "exportName": "MenuAdapter",
     "description": "Разметка и клавиатурное поведение меню без оформления.",
+    "propertyDescriptions": {
+      "items": "Пункты value/label; children создаёт подменю, type=group/divider — группу или разделитель. value уникален во всём дереве. href создаёт настоящую ссылку; disabled наследуется потомками.",
+      "mode": "actions: меню команд с одним Tab-входом; navigation: навигация с обычным Tab-порядком ссылок и aria-current для selectedValue.",
+      "openKeys": "Раскрытые подменю владельца; callback только запрашивает изменение.",
+      "defaultOpenKeys": "Начальное внутреннее раскрытие.", "onOpenKeysChange": "Запрос нового массива раскрытых ключей.",
+      "selectedValue": "Выбор остаётся у владельца; actions использует menuitemradio, navigation — aria-current=page.",
+      "onAction": "Активация конечного пункта, не раскрытие. Не отменяет нативный переход по ссылке.",
+      "renderIndicator": "Содержимое индикатора подменю; функция (item, expanded).",
+      "slotProps": "Свойства item/link/group/groupLabel/submenu/divider/indicator. Для отмены перехода используйте slotProps.link.onClick с preventDefault."
+    },
+    "defaults": { "mode": "actions", "defaultOpenKeys": [] },
     "examples": [{ "id": "basic", "code": "import { MenuAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <MenuAdapter aria-label=\"Действия\" items={[{ value: 'copy', label: 'Копировать' }]} onAction={value => console.log(value)} />; }" }]
   }]
 }

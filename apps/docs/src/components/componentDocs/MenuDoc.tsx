@@ -9,7 +9,7 @@ function MenuDemo() {
   return <div className={styles.demo}>
     <Menu aria-label="Действия примера" items={[
       { value: 'copy', label: 'Копировать' },
-      { value: 'edit', label: 'Редактировать' },
+      { value: 'export', label: 'Экспорт', children: [{ value: 'pdf', label: 'PDF' }, { value: 'csv', label: 'CSV' }] },
       { value: 'delete', label: 'Удалить', disabled: true },
     ]} onAction={setAction} />
     <p role="status">{action ? `Действие: ${action}` : 'Выберите действие'}</p>
@@ -19,8 +19,9 @@ function MenuDemo() {
 export const menuDoc: ComponentDoc = {
   ...getCatalogDoc('menu'),
   title: 'Menu',
-  description: 'Переиспользуемый список действий или выбора. Используется в меню скрытых вкладок Tabs; сам не открывает всплывающее окно.',
+  description: 'Действия, группы, разделители и вложенные пункты с раскрытием внутри меню. mode="navigation" создаёт навигацию с настоящими ссылками. Menu используется также в Tabs и Dropdown.',
   adapterDescription: 'MenuAdapter задаёт разметку, выбор и клавиатурную навигацию без оформления.',
-  footnote: <>Стрелки вверх/вниз и Home/End перемещают фокус, пропуская отключённые пункты. Набор букв ищет начало названия; повтор буквы перебирает совпадения. Пауза больше 500 мс сбрасывает запрос. Для сложной подписи задайте ariaLabel. Поиск не выбирает пункт и не запускает действие. Открытие, закрытие и позиционирование задаёт владелец меню.</>,
+  logicDescription: <>getVisibleMenuRows рассчитывает видимость групп, подменю и наследование disabled. getTreeKeyAction, getNextEnabledValue и getTypeaheadValue задают клавиатурные правила без React и DOM.</>,
+  footnote: <>Стрелки вверх/вниз и Home/End перемещают фокус; вправо раскрывает подменю и входит в него, влево закрывает его или возвращает к родителю. Набор букв ищет среди видимых доступных пунктов. Группы и разделители не участвуют в фокусе. openKeys управляет раскрытием, defaultOpenKeys задаёт начальное состояние; onOpenKeysChange сообщает запрос. onAction вызывается только у конечного пункта. В режиме navigation ссылки получают href и aria-current="page", Tab проходит по ним обычным способом. Раскрытие сейчас только внутри меню: боковых всплывающих подменю и горизонтального режима пока нет.</>,
   demo: <MenuDemo />,
 };

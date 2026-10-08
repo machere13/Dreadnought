@@ -5,11 +5,16 @@
     "importPath": "@dreadnought/ui/react", "exportName": "Menu",
     "description": "Оформленный список действий или выбора для самостоятельного использования, Tabs и Dropdown.",
     "propertyDescriptions": {
-      "items": "Пункты с value, label, необязательными disabled и ariaLabel.",
+      "items": "Пункты value/label; children создаёт подменю, type=group/divider — группу или разделитель. href создаёт настоящую ссылку, disabled наследуется потомками.",
+      "mode": "actions — меню команд; navigation — навигация с обычным Tab-порядком и aria-current для текущей страницы.",
+      "openKeys": "Раскрытые подменю владельца.", "defaultOpenKeys": "Начальное внутреннее раскрытие.",
+      "onOpenKeysChange": "Запрос нового массива раскрытых ключей.",
+      "renderIndicator": "Индикатор (item, expanded); по умолчанию иконка down из общего Icon.",
       "selectedValue": "Проверенное значение: включает семантику menuitemradio. Без него пункты являются действиями menuitem.",
       "onAction": "Действие по выбранному значению; выбранное состояние остаётся у владельца.",
-      "slotProps": "DOM-свойства и класс кнопок через slotProps.item."
+      "slotProps": "DOM-свойства item/link/group/groupLabel/submenu/divider/indicator; собственные классы добавляются к оформлению."
     },
+    "defaults": { "mode": "actions", "defaultOpenKeys": [] },
     "examples": [{ "id": "basic", "code": "import { Menu } from '@dreadnought/ui/react';\nexport function Example() { return <Menu aria-label=\"Действия\" items={[{ value: 'copy', label: 'Копировать' }, { value: 'delete', label: 'Удалить', disabled: true }]} onAction={value => console.log(value)} />; }" }]
   }]
 }

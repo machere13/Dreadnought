@@ -17,7 +17,7 @@ export function DropdownAdapter({ items, selectedValue, onAction, menuProps = {}
   const menuId = `${popover.contentProps.id}-menu`;
   function focusEdge() {
     const menu = popover.contentProps.ref.current?.querySelector<HTMLElement>('[role="menu"]');
-    const buttons = menu?.querySelectorAll<HTMLButtonElement>('[data-menu-value]:not(:disabled)');
+    const buttons = menu?.querySelectorAll<HTMLElement>('[data-menu-value]:not([aria-disabled="true"])');
     (buttons?.[edge.current === 'last' ? buttons.length - 1 : 0] ?? menu)?.focus({ preventScroll: true });
     revealFocus();
   }

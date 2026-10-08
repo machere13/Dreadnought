@@ -21,6 +21,17 @@ export const Actions: Story = {
   render: (args) => <Menu {...args} />,
 };
 
+export const Nested: Story = { args: { defaultOpenKeys: ['export'], items: [
+  { value: 'files', type: 'group', label: 'Файл', children: [{ value: 'copy', label: 'Копировать' },
+    { value: 'export', label: 'Экспорт', children: [{ value: 'pdf', label: 'PDF' }, { value: 'csv', label: 'CSV' }] }] },
+  { value: 'separator', type: 'divider' }, { value: 'delete', label: 'Удалить', disabled: true },
+] } };
+export const Navigation: Story = { args: { mode: 'navigation', selectedValue: 'button', defaultOpenKeys: ['components'], items: [
+  { value: 'start', label: 'Начало', href: '#start' }, { value: 'components', label: 'Компоненты', children: [
+    { value: 'button', label: 'Button', href: '#button' }, { value: 'input', label: 'Input', href: '#input' },
+  ] },
+] } };
+
 export const Typeahead: Story = {
   args: { items: [
     { value: 'news', label: 'Новости' },

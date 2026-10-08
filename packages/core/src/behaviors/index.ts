@@ -1,5 +1,7 @@
 export { getTextFieldState } from './getTextFieldState.ts';
 export { getVisibleTreeRows } from './getVisibleTreeRows.ts';
+export { getVisibleMenuRows } from './getVisibleMenuRows.ts';
+export type { MenuRowKind, VisibleMenuRow, VisibleMenuRowsOptions } from './getVisibleMenuRows.ts';
 export { getTreeCheckState } from './getTreeCheckState.ts';
 export type { TreeCheckOptions, TreeCheckState } from './getTreeCheckState.ts';
 export { getTreeKeyAction } from './getTreeKeyAction.ts';

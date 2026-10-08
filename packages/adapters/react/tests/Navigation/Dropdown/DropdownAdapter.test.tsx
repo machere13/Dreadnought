@@ -6,6 +6,21 @@ import * as adapters from '../../../src/unstyled.ts';
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 const items = [{ value: 'edit', label: 'Edit' }, { value: 'delete', label: 'Delete', disabled: true }, { value: 'save', label: 'Save' }];
+it('skips disabled links when opening and keeps submenu disclosure separate from actions', () => {
+  const action = vi.fn();
+  render(<adapters.DropdownAdapter onAction={action} items={[
+    { value: 'locked', label: 'Locked', href: '/locked', disabled: true },
+    { value: 'more', label: 'More', children: [{ value: 'save', label: 'Save' }] },
+  ]}>{trigger => <button {...trigger}>Commands</button>}</adapters.DropdownAdapter>);
+  fireEvent.keyDown(screen.getByRole('button', { name: 'Commands' }), { key: 'ArrowDown' });
+  expect(document.activeElement).toBe(screen.getByRole('menuitem', { name: 'More' }));
+  fireEvent.click(screen.getByRole('menuitem', { name: 'More' }));
+  expect(screen.getByRole('menu')).toBeTruthy();
+  expect(action).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('menuitem', { name: 'Save' }));
+  expect(action).toHaveBeenCalledExactlyOnceWith('save');
+  expect(screen.queryByRole('menu')).toBeNull();
+});
 function example(props = {}) {
   expect(typeof adapters.DropdownAdapter).toBe('function');
   return render(<StrictMode><adapters.DropdownAdapter items={items} {...props}>
