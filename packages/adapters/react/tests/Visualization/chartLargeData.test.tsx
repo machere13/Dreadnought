@@ -1,5 +1,5 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, cleanup, fireEvent, isInaccessible, render, screen, within } from '@testing-library/react';
 import { BarChartAdapter, LineChartAdapter } from '../../src/unstyled.ts';
 
 afterEach(() => { cleanup(); vi.useRealTimers(); });
@@ -55,17 +55,22 @@ it('shows an exact unsampled point on hover without reading the full input again
   let reads = 0;
   const data = Array.from({ length: 10000 }, (_, x) => ({ get x() { reads++; return x; }, y: 0 }));
   const { container } = render(<LineChartAdapter label="Exact" series={[{ id: 'a', label: 'A', data }]} xDomain={[0, 9999]} yDomain={[0, 100]} width={500} height={300} />);
-  expect(screen.queryByRole('img', { name: 'A, 117: 0' })).toBeNull();
   const plot = container.querySelector<SVGSVGElement>('[data-ui="line-plot"]')!;
+  const marker = (x: number) => plot.querySelector<SVGCircleElement>(`[data-ui="line-point"][data-series-id="a"][data-x="${x}"]`);
+  expect(marker(117)).toBeNull();
   vi.spyOn(plot, 'getBoundingClientRect').mockReturnValue({ left: 0, top: 0, width: 500, height: 300 } as DOMRect);
   reads = 0;
   fireEvent(plot, new MouseEvent('pointermove', { clientX: 48 + 436 * 117 / 9999, clientY: 268, bubbles: true }));
-  expect(screen.getByRole('img', { name: 'A, 117: 0' })).toBeTruthy();
+  expect(marker(117)?.getAttribute('role')).toBe('img');
+  expect(marker(117)?.getAttribute('aria-label')).toBe('A, 117: 0');
+  expect(isInaccessible(marker(117)!)).toBe(false);
   expect(screen.queryByRole('tooltip')).toBeNull();
   act(() => vi.advanceTimersByTime(100));
   expect(screen.getByRole('tooltip').textContent).toContain('117');
   expect(reads).toBe(0);
-  const first = screen.getByRole('img', { name: 'A, 0: 0' });
+  const first = marker(0)!;
+  expect(first.getAttribute('aria-label')).toBe('A, 0: 0');
+  expect(isInaccessible(first)).toBe(false);
   act(() => first.focus()); fireEvent.keyDown(first, { key: 'ArrowRight' });
   expect(document.activeElement?.getAttribute('aria-label')).toBe('A, 1: 0');
   const focused = document.activeElement;
