@@ -5,6 +5,7 @@ import type {
   TableChangeSorter,
   TableColumn,
   TableDataAdapterProps,
+  TableFilterValue,
   TableRowKey,
 } from './table.types.ts';
 
@@ -82,6 +83,33 @@ export function tableHeaders<RecordType extends object>(
     }),
   );
   return { cells, signature, ids, columnHeaders };
+}
+
+export function resolveFilterValues<RecordType extends object>(
+  column: TableColumn<RecordType>,
+  localFilters: TableChangeFilters,
+): readonly TableFilterValue[] {
+  if (column.filteredValue !== undefined) {
+    return column.filteredValue ?? [];
+  }
+  return localFilters[column.key] ?? [];
+}
+
+export function resolveFilters<RecordType extends object>(
+  columns: readonly TableColumn<RecordType>[],
+  localFilters: TableChangeFilters,
+  requestedFilter?: { columnKey: string; values: readonly TableFilterValue[] },
+): TableChangeFilters {
+  return Object.fromEntries(
+    columns
+      .filter((column) => column.filters || column.filterDropdown || column.onFilter)
+      .map((column) => [
+        column.key,
+        requestedFilter?.columnKey === column.key
+          ? requestedFilter.values
+          : resolveFilterValues(column, localFilters),
+      ]),
+  );
 }
 
 export function matchingRows<RecordType extends object>(

@@ -30,6 +30,8 @@ import {
   matchingRows,
   paginationNumber,
   recordKey,
+  resolveFilters,
+  resolveFilterValues,
   tableHeaders,
 } from './tableData.ts';
 import type {
@@ -86,13 +88,13 @@ export function DataTableAdapter<RecordType extends object>({
     signature: headers.signature,
   });
   const controlWidth = selectionWidth + expansionWidth;
-  const [expanded, setExpanded] = useState<TableRowKey[]>(() => [
+  const [localExpandedKeys, setLocalExpandedKeys] = useState<TableRowKey[]>(() => [
     ...(expandable?.defaultExpandedRowKeys ?? []),
   ]);
-  const expandedKeys = expandable?.expandedRowKeys ?? expanded;
-  const pendingExpanded = useRef(expandedKeys);
+  const expandedKeys = expandable?.expandedRowKeys ?? localExpandedKeys;
+  const expandedKeysRef = useRef(expandedKeys);
   useLayoutEffect(() => {
-    pendingExpanded.current = expandedKeys;
+    expandedKeysRef.current = expandedKeys;
   }, [expandedKeys]);
   useImperativeHandle(tableProps.ref, () => tableRef.current!);
   const headerStyle: CSSProperties = sticky
@@ -102,53 +104,60 @@ export function DataTableAdapter<RecordType extends object>({
         zIndex: 2,
       }
     : {};
-  const [sorting, setSorting] = useState(() => defaultSorters(columns));
-  const pendingSorting = useRef(sorting);
+  const [localSorters, setLocalSorters] = useState(() => defaultSorters(columns));
+  const sortersRef = useRef(localSorters);
   useLayoutEffect(() => {
-    pendingSorting.current = sorting;
-  }, [sorting]);
-  const [filters, setFilters] = useState<Record<string, readonly TableFilterValue[]>>(() =>
+    sortersRef.current = localSorters;
+  }, [localSorters]);
+  const [localFilters, setLocalFilters] = useState<TableChangeFilters>(() =>
     Object.fromEntries(columns.map((column) => [column.key, column.defaultFilteredValue ?? []])),
   );
-  const pendingFilters = useRef(filters);
+  const filtersRef = useRef(localFilters);
   useLayoutEffect(() => {
-    pendingFilters.current = filters;
-  }, [filters]);
-  const [page, setPage] = useState(() => ({
+    filtersRef.current = localFilters;
+  }, [localFilters]);
+  const [localPage, setLocalPage] = useState(() => ({
     current: paginationNumber(pagination ? pagination.defaultCurrent : undefined, 1),
     pageSize: paginationNumber(
       pagination ? (pagination.pageSize ?? pagination.defaultPageSize) : undefined,
       10,
     ),
   }));
-  const [selected, setSelected] = useState<TableRowKey[]>([
+  const [localSelectedKeys, setLocalSelectedKeys] = useState<TableRowKey[]>([
     ...(rowSelection?.defaultSelectedRowKeys ?? []),
   ]);
-  const activeSorters = resolveSorters(columns, sorting);
+  const activeSorters = resolveSorters(columns, localSorters);
   const sorted = manual
     ? dataSource
-    : matchingRows(dataSource, columns, currentFilters(), activeSorters);
+    : matchingRows(dataSource, columns, resolveFilters(columns, localFilters), activeSorters);
   const total = manual && pagination !== false ? pagination?.total : sorted.length;
   if (total === undefined) {
     throw new TypeError('Table manual pagination requires pagination.total.');
   }
-  const pageSize = paginationNumber(pagination ? pagination.pageSize : undefined, page.pageSize);
+  const pageSize = paginationNumber(
+    pagination ? pagination.pageSize : undefined,
+    localPage.pageSize,
+  );
   const requestedPage = paginationNumber(
     pagination ? pagination.current : undefined,
-    pageSize !== page.pageSize ? 1 : page.current,
+    pageSize !== localPage.pageSize ? 1 : localPage.current,
   );
   const { current: currentPage, pageCount } = getPaginationState({
     total,
     current: requestedPage,
     pageSize,
   });
-  const storedPage = pagination && pagination.current !== undefined ? page.current : currentPage;
-  if (pagination !== false && (storedPage !== page.current || pageSize !== page.pageSize)) {
-    setPage({ current: storedPage, pageSize });
+  const storedPage =
+    pagination && pagination.current !== undefined ? localPage.current : currentPage;
+  if (
+    pagination !== false &&
+    (storedPage !== localPage.current || pageSize !== localPage.pageSize)
+  ) {
+    setLocalPage({ current: storedPage, pageSize });
   }
   const rows =
     manual || pagination === false ? sorted : paginateTableRows(sorted, currentPage, pageSize);
-  const selectedKeys = rowSelection?.selectedRowKeys ?? selected;
+  const selectedKeys = rowSelection?.selectedRowKeys ?? localSelectedKeys;
   const sourceKeys =
     rowSelection || expandable ? dataSource.map((record) => recordKey(record, rowKey)) : [];
   if (new Set(sourceKeys.map(String)).size !== sourceKeys.length) {
@@ -165,35 +174,12 @@ export function DataTableAdapter<RecordType extends object>({
     .filter((_, index) => !rowSelection?.getCheckboxProps?.(rows[index]!)?.disabled);
   const selectedOnPage = keysOnPage.filter((key) => selectedKeys.includes(key)).length;
 
-  function filterValues(
-    column: TableColumn<RecordType>,
-    source = filters,
-  ): readonly TableFilterValue[] {
-    return column.filteredValue !== undefined
-      ? (column.filteredValue ?? [])
-      : (source[column.key] ?? []);
-  }
-
-  function currentFilters(
-    override?: { key: string; values: readonly TableFilterValue[] },
-    source = filters,
-  ): TableChangeFilters {
-    return Object.fromEntries(
-      columns
-        .filter((column) => column.filters || column.filterDropdown || column.onFilter)
-        .map((column) => [
-          column.key,
-          override?.key === column.key ? override.values : filterValues(column, source),
-        ]),
-    );
-  }
-
-  function currentSorter(): TableChangeSorter {
+  function getChangeSorter(): TableChangeSorter {
     return (
-      resolveSorters(columns, pendingSorting.current)[0] ?? {
+      resolveSorters(columns, sortersRef.current)[0] ?? {
         columnKey:
           columns.find((column) => column.sortOrder !== undefined)?.key ??
-          pendingSorting.current[0]?.columnKey,
+          sortersRef.current[0]?.columnKey,
         order: null,
       }
     );
@@ -201,91 +187,90 @@ export function DataTableAdapter<RecordType extends object>({
 
   function publishChange(
     action: 'sort' | 'filter' | 'paginate',
-    nextPage: number,
-    nextFilters: TableChangeFilters,
-    nextSorter: TableChangeSorter,
-    sorters = resolveSorters(columns, pendingSorting.current),
+    requestedPage: number,
+    requestedFilters: TableChangeFilters,
+    requestedSorter: TableChangeSorter,
+    requestedSorters = resolveSorters(columns, sortersRef.current),
   ) {
-    onChange?.({ current: nextPage, pageSize }, nextFilters, nextSorter, {
+    onChange?.({ current: requestedPage, pageSize }, requestedFilters, requestedSorter, {
       action,
-      sorters,
+      sorters: requestedSorters,
       currentDataSource: manual
         ? dataSource
-        : matchingRows(dataSource, columns, nextFilters, sorters),
+        : matchingRows(dataSource, columns, requestedFilters, requestedSorters),
     });
   }
 
   function changeSort(column: TableColumn<RecordType>) {
-    const current =
-      resolveSorters(columns, pendingSorting.current).find(
-        (sorter) => sorter.columnKey === column.key,
-      )?.order ?? null;
-    const order = current === null ? 'ascend' : current === 'ascend' ? 'descend' : null;
-    const next: TableChangeSorter = { columnKey: column.key, order };
-    const requested = changeSorters(columns, pendingSorting.current, next);
+    const currentOrder =
+      resolveSorters(columns, sortersRef.current).find((sorter) => sorter.columnKey === column.key)
+        ?.order ?? null;
+    const order = currentOrder === null ? 'ascend' : currentOrder === 'ascend' ? 'descend' : null;
+    const requestedSorter: TableChangeSorter = { columnKey: column.key, order };
+    const requestedSorters = changeSorters(columns, sortersRef.current, requestedSorter);
     if (column.sortOrder === undefined) {
-      pendingSorting.current = requested;
-      setSorting(requested);
+      sortersRef.current = requestedSorters;
+      setLocalSorters(requestedSorters);
     }
     publishChange(
       'sort',
       currentPage,
-      currentFilters(undefined, pendingFilters.current),
-      next,
-      resolveSorters(columns, requested, next),
+      resolveFilters(columns, filtersRef.current),
+      requestedSorter,
+      resolveSorters(columns, requestedSorters, requestedSorter),
     );
   }
-  function changePage(next: number) {
+  function changePage(requestedPage: number) {
     if (pagination === false) {
       return;
     }
     if (pagination?.current === undefined) {
-      setPage({ current: next, pageSize });
+      setLocalPage({ current: requestedPage, pageSize });
     }
-    pagination?.onChange?.(next, pageSize);
+    pagination?.onChange?.(requestedPage, pageSize);
     publishChange(
       'paginate',
-      next,
-      currentFilters(undefined, pendingFilters.current),
-      currentSorter(),
+      requestedPage,
+      resolveFilters(columns, filtersRef.current),
+      getChangeSorter(),
     );
   }
   function changeFilter(column: TableColumn<RecordType>, values: TableFilterValue[]) {
     if (column.filteredValue === undefined) {
-      pendingFilters.current = { ...pendingFilters.current, [column.key]: values };
-      setFilters(pendingFilters.current);
+      filtersRef.current = { ...filtersRef.current, [column.key]: values };
+      setLocalFilters(filtersRef.current);
     }
     if (pagination !== false) {
       if (pagination?.current === undefined) {
-        setPage({ current: 1, pageSize });
+        setLocalPage({ current: 1, pageSize });
       }
       pagination?.onChange?.(1, pageSize);
     }
     publishChange(
       'filter',
       1,
-      currentFilters({ key: column.key, values }, pendingFilters.current),
-      currentSorter(),
+      resolveFilters(columns, filtersRef.current, { columnKey: column.key, values }),
+      getChangeSorter(),
     );
   }
-  function changeSelection(next: TableRowKey[]) {
+  function changeSelection(requestedKeys: TableRowKey[]) {
     if (rowSelection?.selectedRowKeys === undefined) {
-      setSelected(next);
+      setLocalSelectedKeys(requestedKeys);
     }
     rowSelection?.onChange?.(
-      next,
-      dataSource.filter((_, index) => next.includes(sourceKeys[index]!)),
+      requestedKeys,
+      dataSource.filter((_, index) => requestedKeys.includes(sourceKeys[index]!)),
     );
   }
   function changeExpansion(record: RecordType, key: TableRowKey) {
-    const previous = expandable?.expandedRowKeys ?? pendingExpanded.current;
-    const next = getSelectionValue(previous, { type: 'toggle', value: key });
+    const previousKeys = expandable?.expandedRowKeys ?? expandedKeysRef.current;
+    const requestedKeys = getSelectionValue(previousKeys, { type: 'toggle', value: key });
     if (expandable?.expandedRowKeys === undefined) {
-      pendingExpanded.current = next;
-      setExpanded(next);
+      expandedKeysRef.current = requestedKeys;
+      setLocalExpandedKeys(requestedKeys);
     }
-    expandable?.onExpand?.(next.includes(key), record);
-    expandable?.onExpandedRowsChange?.(next);
+    expandable?.onExpand?.(requestedKeys.includes(key), record);
+    expandable?.onExpandedRowsChange?.(requestedKeys);
   }
 
   function renderHeaderCell(
@@ -302,7 +287,7 @@ export function DataTableAdapter<RecordType extends object>({
     const order = !group
       ? (activeSorters.find((sorter) => sorter.columnKey === column.key)?.order ?? null)
       : null;
-    const values = filterValues(column);
+    const values = resolveFilterValues(column, localFilters);
     const sortIndex = activeSorters.findIndex((sorter) => sorter.columnKey === column.key);
     const ariaSort =
       !group && column.sorter && (activeSorters.length < 2 || sortIndex === 0)
