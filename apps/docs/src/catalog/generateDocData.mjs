@@ -1,6 +1,9 @@
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createContext } from '../../../../tools/catalog/src/compiler.mjs';
+import { packages } from '../../../../tools/catalog/src/config.mjs';
+import { tableApiGroups } from './tableApi.mjs';
 
 function apiOwner(entry, binding) {
   if (binding.propertyPath?.length) return [entry.name, ...binding.propertyPath].join('.');
@@ -32,7 +35,7 @@ function apiRows(entry, binding) {
   });
 }
 
-export function prepareCatalogDocs(root) {
+export function prepareCatalogDocs(root, context) {
   const catalog = JSON.parse(readFileSync(path.join(root, 'tools/catalog/dist/catalog.json'), 'utf8'));
   const components = {};
   for (const entry of catalog.entries) {
@@ -48,6 +51,7 @@ export function prepareCatalogDocs(root) {
       adapterCode: adapter.examples[0].code,
       ...(logic?.examples[0] ? { logicCode: logic.examples[0].code } : {}),
       apiRows: entry.bindings.filter((binding) => binding.layer === (ready ? 3 : 2)).flatMap((binding) => apiRows(entry, binding)),
+      ...(entry.name === 'Table' ? { apiGroups: tableApiGroups(context ?? createContext(root, packages)) } : {}),
     };
   }
   const output = path.join(root, 'apps/docs/src/generated/catalog-docs.json');

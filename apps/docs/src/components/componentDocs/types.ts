@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
-
-type ApiRow = readonly [name: string, values: string, fallback: string, meaning: string];
+import type { ApiGroup, ApiRow } from '../../catalog/getCatalogDoc.ts';
 
 export type ComponentDoc = {
   title: string;
@@ -11,6 +10,7 @@ export type ComponentDoc = {
   adapterDescription: string;
   logicDescription?: ReactNode;
   apiRows: readonly ApiRow[];
+  apiGroups?: readonly ApiGroup[];
   footnote: ReactNode;
   demo: ReactNode;
 };

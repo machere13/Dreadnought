@@ -1,4 +1,5 @@
 import { getCatalogDoc } from '../catalog/getCatalogDoc';
+import { ApiTable, apiGroupId } from './ApiTable.tsx';
 import { useEffect, useRef, useState } from 'react';
 import { Accordion, Breadcrumb, Button, Card, CodeBlock, Input, Layout, Table, TextArea } from '@dreadnought/ui/react';
 import { badgeDoc } from './componentDocs/BadgeDoc';
@@ -172,8 +173,10 @@ function TableDemo() {
   const [hideCity, setHideCity] = useState(false);
   return <div className={`${styles.demo} ${styles.demoStack}`}>
     <TableManualDemo />
-    <TableFiltersDemo />
     <p><code>processing="local"</code> — обработка полного набора данных внутри таблицы. <code>processing="manual"</code> — показ переданной страницы без локальных фильтров, сортировки и обрезки. Для пагинации укажите <code>pagination.total</code>; без пагинации передайте <code>pagination=false</code>. Серверные колонки используют <code>sorter: true</code> или <code>sorter: {'{ multiple: 2 }'}</code>. <code>onChange</code> сообщает запрос, а <code>extra.currentDataSource</code> и <code>summary</code> получают переданные строки. <code>loading</code> использует Loader и не удаляет таблицу или фокус; параметры Loader доступны в <code>slotProps.loader</code>. Выбранные ключи сохраняются между страницами, но <code>rowSelection.onChange</code> возвращает записи только из доступной страницы.</p>
+    <p>Для выбора строк нужен уникальный <code>rowKey</code> или <code>record.key</code>: строка либо конечное число.</p>
+    <TableFiltersDemo />
+    <p>Фильтрация запрашивает страницу 1, сортировка сохраняет страницу. Причина изменения — <code>extra.action</code>.</p>
     <Button variant="secondary" size="compact" onClick={() => setHideCity(!hideCity)}>{hideCity ? 'Показать город' : 'Скрыть город'}</Button>
     <Table<{ key: number; name: string; email: string; city: string }> aria-label="Многоуровневая шапка" bordered sticky scroll={{ x: 700, y: 320 }} pagination={false}
       dataSource={[{ key: 1, name: 'Анна', email: 'anna.very.long.email.address.for.documentation@example.com', city: 'Москва' }, { key: 2, name: 'Марк', email: 'mark@example.com', city: 'Казань' }]}
@@ -184,6 +187,7 @@ function TableDemo() {
           { key: 'address', title: 'Адрес', children: [{ key: 'city', title: 'Город', dataIndex: 'city', width: 180, align: 'center', hidden: hideCity }] },
         ] },
       ]} />
+    <p><code>scroll</code> создаёт контейнер прокрутки, <code>fixed</code> закрепляет колонку. Ширина измеряется автоматически; <code>width</code> задаёт минимум. Для объединённых или скрытых заголовков задайте ширину явно.</p>
     <Table
       aria-label="Пример таблицы"
       rowKey="id"
@@ -195,7 +199,6 @@ function TableDemo() {
       pagination={false}
       bordered
     />
-    <p><code>summary(rows)</code> получает строки текущей страницы после фильтрации и сортировки. При <code>pagination=false</code> — все подходящие строки. Верните строки через <code>Table.Row</code> и ячейки через <code>Table.Cell</code>: <code>tfoot</code> создаётся автоматически. Формулы и <code>colSpan</code> задаёт приложение; <code>null</code> скрывает итог. Итоги прокручиваются с таблицей, закрепление колонок на ручные ячейки не переносится.</p>
     <p>Для нескольких колонок задайте <code>sorter: {'{ compare, multiple }'}</code>: большее <code>multiple</code> означает более высокий приоритет, равные приоритеты следуют порядку колонок. Нажмите «Команда», затем «Участник»: имя уточняет порядок внутри команды. Третье нажатие сбрасывает только выбранную колонку. Обычная функция <code>sorter</code> переключает таблицу обратно на одиночную сортировку. <code>sortOrder</code> управляет состоянием, <code>defaultSortOrder</code> задаёт начальное значение. Управляемая одиночная сортировка имеет приоритет над цепочкой. Третий аргумент <code>onChange</code> остаётся объектом выбранной колонки; полный порядок доступен в <code>extra.sorters</code>, при фильтре и пагинации — тоже.</p>
     <Table<{ key: number; team: string; name: string }> aria-label="Множественная сортировка" bordered pagination={false}
       dataSource={[{ key: 1, team: 'Разработка', name: 'Марк' }, { key: 2, team: 'Дизайн', name: 'Нина' }, { key: 3, team: 'Разработка', name: 'Анна' }, { key: 4, team: 'Дизайн', name: 'Лев' }]}
@@ -203,6 +206,7 @@ function TableDemo() {
         { key: 'team', title: 'Команда', dataIndex: 'team', sorter: { compare: (a, b) => a.team.localeCompare(b.team), multiple: 2 } },
         { key: 'name', title: 'Участник', dataIndex: 'name', sorter: { compare: (a, b) => a.name.localeCompare(b.name), multiple: 1 } },
       ]} />
+    <p><code>summary(rows)</code> получает строки текущей страницы после фильтрации и сортировки; без пагинации — все подходящие строки. Используйте <code>Table.Row</code> и <code>Table.Cell</code>; <code>tfoot</code> создаётся автоматически. Формулы и <code>colSpan</code> задаёт приложение, <code>null</code> скрывает итог. Итоги прокручиваются с таблицей; закрепление колонок на ручные ячейки не переносится.</p>
     <Table<{ key: number; item: string; amount: number }> aria-label="Итоги страницы" bordered pagination={{ pageSize: 2 }}
       dataSource={[{ key: 1, item: 'Дизайн', amount: 120 }, { key: 2, item: 'Разработка', amount: 240 }, { key: 3, item: 'Тестирование', amount: 80 }]}
       columns={[{ key: 'item', title: 'Работа', dataIndex: 'item' }, { key: 'amount', title: 'Часы', dataIndex: 'amount', align: 'right', sorter: (a, b) => a.amount - b.amount }]}
@@ -213,6 +217,7 @@ function TableDemo() {
       dataSource={[{ id: 1, name: 'Анна', city: 'Москва' }, { id: 2, name: 'Марк', city: 'Казань' }]}
       columns={[{ key: 'name', title: 'Участник', dataIndex: 'name' }]}
       expandable={{ defaultExpandedRowKeys: [1], expandedRowRender: record => <p>Город: {record.city}</p> }} />
+    <p><code>rowSpan/colSpan=0</code> скрывает ячейку. Остальные значения объединяют её. Приложение пересчитывает spans при изменении порядка строк; не объединяйте ячейки через границу закреплённых областей.</p>
     <Table<{ id: number; team: string; name: string }> aria-label="Объединённые ячейки" rowKey="id" pagination={false} bordered
       dataSource={[{ id: 1, team: 'Дизайн', name: 'Анна' }, { id: 2, team: 'Дизайн', name: 'Нина' }, { id: 3, team: 'Разработка', name: 'Марк' }]}
       onRow={record => ({ title: `Участник: ${record.name}` })}
@@ -290,7 +295,7 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
     description: 'Структурированные данные с группами колонок, сортировкой, фильтрами, выбором и раскрытием строк, пагинацией и закреплением шапки.',
     adapterDescription: 'Адаптер сохраняет семантику и поведение таблицы, но позволяет оформить её самостоятельно.',
     logicDescription: 'Ядро рассчитывает уровни и объединения шапки, сортирует и фильтрует строки — независимо от фреймворка.',
-    footnote: <>Для закреплённых колонок задайте <code>fixed</code>; их ширина измеряется автоматически, <code>width</code> задаёт необязательный минимум. Для колонок с объединённым или скрытым заголовком указывайте <code>width</code>: ширину каждой части нельзя измерить отдельно. <code>scroll</code> создаёт собственный контейнер прокрутки. При <code>rowSelection</code> обязателен уникальный ключ из <code>rowKey</code> или <code>record.key</code>: строка либо конечное число. <code>filteredValue: null</code> очищает управляемый фильтр. Фильтрация запрашивает страницу 1, сортировка сохраняет страницу; причина изменения доступна в <code>extra.action</code>. <code>onRow</code>, <code>onHeaderRow</code>, <code>column.onCell</code> и <code>column.onHeaderCell</code> возвращают нативные свойства, события и ref. Индекс строки относится к текущей странице после сортировки и фильтрации. Содержимое задаётся через render/title; геометрия width/fixed/sticky и aria-sort сохраняются. <code>rowSpan/colSpan=0</code> скрывает ячейку; остальные значения объединяют её. Согласованные spans и их пересчёт при изменении порядка строк задаёт приложение; не объединяйте ячейки через границу закреплённых областей.</>,
+    footnote: <>Обработчики строк и ячеек возвращают нативные свойства, события и ref. Индекс строки относится к текущей странице. Содержимое задавайте через <code>render/title</code>; геометрия и <code>aria-sort</code> сохраняются.</>,
     demo: <TableDemo />,
   },
   badge: badgeDoc,
@@ -353,12 +358,11 @@ function ComponentDocumentation({ component }: { component: ComponentSection }) 
       <div className={styles.sectionHeading}>
         <h2 id={`${component}-api`} className={styles.sectionTitle}>Основные свойства</h2>
       </div>
-      <div className={styles.tableScroll}>
-        <Table bordered className={styles.apiTable}>
-          <Table.Head><Table.Row><Table.HeaderCell scope="col">Свойство</Table.HeaderCell><Table.HeaderCell scope="col">Значения</Table.HeaderCell><Table.HeaderCell scope="col">По умолчанию</Table.HeaderCell><Table.HeaderCell scope="col">Назначение</Table.HeaderCell></Table.Row></Table.Head>
-          <Table.Body>{doc.apiRows.map(([name, values, fallback, meaning]) => <Table.Row key={name}><Table.HeaderCell scope="row"><code>{name}</code></Table.HeaderCell><Table.Cell><code>{values}</code></Table.Cell><Table.Cell>{fallback}</Table.Cell><Table.Cell>{meaning}</Table.Cell></Table.Row>)}</Table.Body>
-        </Table>
-      </div>
+      <ApiTable component={component} label={`${doc.title} API`} rows={doc.apiRows} groups={doc.apiGroups} />
+      {doc.apiGroups?.map(group => <div key={group.title} className={styles.apiGroup}>
+        <h3 id={apiGroupId(component, group.title)} className={styles.subheading}>{group.title}</h3>
+        <ApiTable component={component} label={group.title} rows={group.rows} groups={doc.apiGroups} />
+      </div>)}
       <p data-knowledge data-knowledge-id={`${component}-api`} data-knowledge-title={`${doc.title}: примечания`} className={styles.footnote}>{doc.footnote}</p>
     </section>
     </article>

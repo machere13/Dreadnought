@@ -255,10 +255,14 @@
 .bodyText { margin: var(--dreadnought-spacing-x2) 0 var(--dreadnought-spacing-x4); }
 
 .tableScroll { overflow-x: auto; }
+.apiGroup { display: grid; gap: var(--dreadnought-spacing-x4); min-width: 0; }
 .apiTable thead th { white-space: nowrap; }
 .apiTable code,
 .footnote code { font-family: var(--dreadnought-font-family-monospace); }
 .apiTable code { white-space: normal; overflow-wrap: anywhere; }
+.apiTable tbody th code { white-space: nowrap; }
+.apiTable a { color: inherit; text-underline-offset: 0.2em; }
+.apiTable a:focus-visible { outline: var(--dreadnought-border-width-x2) solid var(--dreadnought-color-focus-ring); }
 .footnote { margin: var(--dreadnought-spacing-x4) 0 0; font-size: var(--dreadnought-font-size-body-3); }
 
 .layerList { display: grid; gap: var(--dreadnought-spacing-x2); margin-block: calc(var(--dreadnought-spacing-x4) * 2); }

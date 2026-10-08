@@ -13,6 +13,19 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('keeps the main Table API concise and links to nested configurations', () => {
+    render(<DocsPage section="table" />);
+    const mainTable = document.getElementById('table-api')!.closest('section')!.querySelector('table')!;
+    const columns = within(mainTable).getByRole('rowheader', { name: 'columns' }).closest('tr')!;
+    expect(columns.lastElementChild?.textContent).toBe('Конфигурация колонок.');
+    const link = within(columns).getByRole('link');
+    const target = document.querySelector(link.getAttribute('href')!);
+    expect(target?.textContent).toBe('TableColumn');
+    expect(screen.getByRole('heading', { name: 'TablePagination', level: 3 })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'TableRowSelection', level: 3 })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'TableExpandable', level: 3 })).toBeTruthy();
+  });
+
   it('links the component outline to real sections and tracks the current section', () => {
     vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
       callback(0);

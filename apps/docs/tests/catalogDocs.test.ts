@@ -4,6 +4,38 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { expect, it } from 'vitest';
 import { prepareCatalogDocs } from '../src/catalog/generateDocData.mjs';
+import ts from 'typescript';
+
+it('derives nested table properties from public types without rewriting the catalog', () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'dreadnought-nested-api-'));
+  const input = path.join(root, 'tools/catalog/dist/catalog.json');
+  const source = path.join(root, 'public.ts');
+  try {
+    mkdirSync(path.dirname(input), { recursive: true });
+    const contract = { variants: [{ properties: [{ name: 'columns', type: 'TableColumn[]', origin: 'library' }] }] };
+    const catalog = JSON.stringify({ packageVersions: {}, entries: [{ kind: 'component', name: 'Table', bindings: [
+      { id: 'react-adapter', layer: 2, exportName: 'TableAdapter', examples: [{ code: '<TableAdapter />' }], contracts: [contract] },
+      { id: 'react-ui', layer: 3, exportName: 'Table', examples: [{ code: '<Table />' }], contracts: [contract] },
+    ] }] });
+    writeFileSync(input, catalog);
+    const definitions = 'export type TableColumn = { key: string; width?: number; sortOrder?: "ascend" | null };\n' +
+      ['TablePagination', 'TableRowSelection', 'TableExpandable', 'TableFilterDropdownProps', 'TableFilterOption', 'TableFilterSlots']
+        .map(name => `export type ${name} = {};`).join('\n');
+    writeFileSync(source, definitions);
+    const generate = () => {
+      const program = ts.createProgram([source], { strict: true });
+      prepareCatalogDocs(root, { program, checker: program.getTypeChecker(), entries: new Map([['@dreadnought/ui/react', source]]) });
+      return JSON.parse(readFileSync(path.join(root, 'apps/docs/src/generated/catalog-docs.json'), 'utf8')).components.table;
+    };
+    const rows = generate().apiGroups[0].rows;
+    expect(rows.slice(0, 2).map((row: string[]) => row.slice(0, 2))).toEqual([['key', 'string'], ['width', 'number']]);
+    expect(rows[2][1]).toContain('null');
+    expect(rows[2][1]).not.toContain('undefined');
+    writeFileSync(source, definitions.replace('width?: number', 'width?: string'));
+    expect(generate().apiGroups[0].rows[1][1]).toBe('string');
+    expect(readFileSync(input, 'utf8')).toBe(catalog);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
 
 it('does not project a core function default onto a controlled React prop', () => {
   const root = mkdtempSync(path.join(tmpdir(), 'dreadnought-pagination-docs-'));
