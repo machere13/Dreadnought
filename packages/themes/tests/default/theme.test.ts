@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const css = (file: string) => readFileSync(resolve('packages/themes/src/default', file), 'utf8');
-const componentFamilies = { Button: 'Controls', Input: 'Fields', TextArea: 'Fields', MarkdownEditor: 'Fields', MarkdownPreview: 'DataDisplay', Checkbox: 'Fields', Radio: 'Fields', Select: 'Fields', Badge: 'DataDisplay', CodeBlock: 'DataDisplay', Table: 'DataDisplay', Tabs: 'Navigation', RadarChart: 'Visualization', LineChart: 'Visualization', BarChart: 'Visualization' } as const;
+const componentFamilies = { Button: 'Controls', Input: 'Fields', TextArea: 'Fields', MarkdownEditor: 'Fields', MarkdownPreview: 'DataDisplay', Checkbox: 'Fields', Radio: 'Fields', Select: 'Fields', Badge: 'DataDisplay', CodeBlock: 'DataDisplay', Table: 'DataDisplay', Tabs: 'Navigation', Tree: 'Navigation', RadarChart: 'Visualization', LineChart: 'Visualization', BarChart: 'Visualization' } as const;
 
 describe('default theme', () => {
   it('enables the wide axis only for headings and Button and supports the page setting', () => {
@@ -157,6 +157,7 @@ describe('default theme', () => {
       "@import './components/Surfaces/Card/index.css';",
       "@import './components/Navigation/Tabs/index.css';",
       "@import './components/Navigation/Menu/index.css';",
+      "@import './components/Navigation/Tree/index.css';",
       "@import './components/Navigation/Dropdown/index.css';",
       "@import './components/Navigation/Accordion/index.css';",
       "@import './components/Feedback/Alert/index.css';",

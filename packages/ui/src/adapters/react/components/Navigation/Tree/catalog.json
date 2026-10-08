@@ -1,0 +1,22 @@
+{
+  "componentId": "component:tree",
+  "bindings": [{
+    "id": "react-ui", "layer": 3, "framework": "react",
+    "importPath": "@dreadnought/ui/react", "exportName": "Tree",
+    "description": "Оформленное дерево с вложенными строками, раскрытием и клавиатурным фокусом. Стили меняются через токены.",
+    "propertyDescriptions": {
+      "records": "Вложенные данные; readonly массив.",
+      "getKey": "Уникальный строковый или числовой ключ.",
+      "getChildren": "Дочерние записи или null/undefined.",
+      "getLabel": "Доступное имя пункта без имён потомков.",
+      "expandedKeys": "Раскрытые ключи в управляемом режиме.",
+      "defaultExpandedKeys": "Начальные раскрытые ключи неуправляемого дерева.",
+      "onExpandedKeysChange": "Запрос нового массива раскрытых ключей.",
+      "disabled": "Блокирует раскрытие и клавиатурное управление.",
+      "renderLabel": "Неинтерактивное содержимое названия вместо текста getLabel.",
+      "slotClassNames": "Дополнительные классы item/content/group/indicator; оформление сохраняется."
+    },
+    "defaults": { "defaultExpandedKeys": [], "disabled": false },
+    "examples": [{ "id": "basic", "code": "import { Tree } from '@dreadnought/ui/react';\ntype Node = { id: string; label: string; children?: readonly Node[] };\nconst records: readonly Node[] = [\n  { id: 'docs', label: 'Документация', children: [\n    { id: 'start', label: 'Начало' },\n    { id: 'components', label: 'Компоненты' },\n  ] },\n];\nexport function Example() {\n  return <Tree records={records}\n    getKey={node => node.id}\n    getChildren={node => node.children}\n    getLabel={node => node.label}\n    defaultExpandedKeys={['docs']}\n    aria-label=\"Разделы документации\" />;\n}" }]
+  }]
+}

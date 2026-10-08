@@ -13,6 +13,15 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('shows the ready Tree and documents all three layers', () => {
+    render(<DocsPage section="tree" />);
+    const tree = screen.getByRole('tree', { name: 'Разделы документации' });
+    expect(tree.className).not.toBe('');
+    fireEvent.keyDown(screen.getByRole('treeitem', { name: 'Компоненты' }), { key: 'ArrowRight' });
+    expect(screen.getByRole('treeitem', { name: 'Button' })).toBeTruthy();
+    expect(screen.getByRole('rowheader', { name: 'expandedKeys' })).toBeTruthy();
+    expect(screen.getByText(/import \{ Tree \} from '@dreadnought\/ui\/react'/)).toBeTruthy();
+  });
   it('documents Slider with an editable example and public API', () => {
     render(<DocsPage section="slider" />);
     const thumb = screen.getByRole('slider', { name: 'Громкость' });

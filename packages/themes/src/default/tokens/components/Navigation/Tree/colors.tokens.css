@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-tree-bg: transparent;
+  --dreadnought-tree-fg: var(--dreadnought-color-text-primary);
+  --dreadnought-tree-row-bg-hover: var(--dreadnought-color-surface-hover);
+  --dreadnought-tree-focus-ring: var(--dreadnought-color-focus-ring);
+}

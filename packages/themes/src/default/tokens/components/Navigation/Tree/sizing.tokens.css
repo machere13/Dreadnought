@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-tree-radius: var(--dreadnought-border-radius-pill);
+  --dreadnought-tree-row-min-height: var(--dreadnought-size-control-min-height);
+  --dreadnought-tree-focus-width: var(--dreadnought-border-width-x2);
+  --dreadnought-tree-indicator-size: var(--dreadnought-spacing-x4);
+  --dreadnought-tree-chevron-size: var(--dreadnought-spacing-x2);
+  --dreadnought-tree-chevron-width: var(--dreadnought-border-width-outline);
+}

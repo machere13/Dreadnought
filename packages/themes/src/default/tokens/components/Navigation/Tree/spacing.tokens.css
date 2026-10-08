@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-tree-indent: var(--dreadnought-spacing-x4);
+  --dreadnought-tree-padding-x: var(--dreadnought-spacing-x2);
+  --dreadnought-tree-padding-y: var(--dreadnought-spacing-x2);
+  --dreadnought-tree-indicator-gap: var(--dreadnought-spacing-x2);
+}

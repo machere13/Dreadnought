@@ -1,0 +1,61 @@
+@layer dreadnought {
+  .root {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: var(--dreadnought-tree-row-min-height);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: var(--dreadnought-tree-bg);
+    color: var(--dreadnought-tree-fg);
+    border-radius: var(--dreadnought-tree-radius);
+  }
+
+  .item { margin: 0; padding: 0; list-style: none; outline: none; }
+
+  .content {
+    display: block;
+    position: relative;
+    box-sizing: border-box;
+    min-height: var(--dreadnought-tree-row-min-height);
+    padding: var(--dreadnought-tree-padding-y) var(--dreadnought-tree-padding-x);
+    padding-inline-start: calc(var(--dreadnought-tree-padding-x) + var(--dreadnought-tree-indicator-size) + var(--dreadnought-tree-indicator-gap));
+    border-radius: var(--dreadnought-tree-radius);
+    overflow-wrap: anywhere;
+  }
+
+  .group { margin: 0; padding: 0; padding-inline-start: var(--dreadnought-tree-indent); list-style: none; }
+  .item[aria-expanded] > .content { cursor: pointer; }
+  .root:not([aria-disabled='true']) .content:hover { background: var(--dreadnought-tree-row-bg-hover); }
+  .item:focus-visible > .content, .root:focus-visible {
+    outline: var(--dreadnought-tree-focus-width) solid var(--dreadnought-tree-focus-ring);
+    outline-offset: calc(-1 * var(--dreadnought-tree-focus-width));
+  }
+  .root[aria-disabled='true'] { opacity: var(--dreadnought-tree-disabled-opacity); }
+  .root[aria-disabled='true'] .content { cursor: not-allowed; }
+
+  .indicator {
+    position: absolute;
+    inset-inline-start: var(--dreadnought-tree-padding-x);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--dreadnought-tree-indicator-size);
+    height: var(--dreadnought-tree-indicator-size);
+    font-size: 0;
+  }
+  .indicator::before {
+    content: '';
+    box-sizing: border-box;
+    width: var(--dreadnought-tree-chevron-size);
+    height: var(--dreadnought-tree-chevron-size);
+    border-right: var(--dreadnought-tree-chevron-width) solid currentColor;
+    border-bottom: var(--dreadnought-tree-chevron-width) solid currentColor;
+    transform: rotate(-45deg);
+  }
+  .item[aria-expanded='true'] > .content > .indicator::before { transform: rotate(45deg); }
+  .root:dir(rtl) .item[aria-expanded='false'] > .content > .indicator::before { transform: rotate(135deg); }
+}

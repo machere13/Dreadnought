@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-font-size-tree: var(--dreadnought-font-size-body-2);
+  --dreadnought-font-weight-tree: var(--dreadnought-font-weight-body-2);
+  --dreadnought-line-height-tree: var(--dreadnought-line-height-body-2);
+  --dreadnought-font-letter-spacing-tree: normal;
+  --dreadnought-font-style-tree: normal;
+  --dreadnought-font-text-transform-tree: none;
+}

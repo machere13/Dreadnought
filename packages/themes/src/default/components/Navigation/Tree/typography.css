@@ -1,0 +1,11 @@
+@layer dreadnought {
+  .dreadnought-text-tree {
+    font-family: var(--dreadnought-font-family-ui);
+    font-size: var(--dreadnought-font-size-tree);
+    font-weight: var(--dreadnought-font-weight-tree);
+    line-height: var(--dreadnought-line-height-tree);
+    letter-spacing: var(--dreadnought-font-letter-spacing-tree);
+    font-style: var(--dreadnought-font-style-tree);
+    text-transform: var(--dreadnought-font-text-transform-tree);
+  }
+}
