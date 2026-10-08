@@ -43,6 +43,8 @@
 }
 
 @layer dreadnought {
+  [data-slot='table-container']:has(> .root, > [data-slot='scroll-container'] > .root) { position: relative; }
+  [data-slot='table-container']:has(> .root, > [data-slot='scroll-container'] > .root) > [data-slot='loading'] { position: absolute; inset: 0; z-index: 4; display: flex; align-items: center; justify-content: center; background: var(--dreadnought-loader-overlay-bg); pointer-events: none; }
   [data-slot='table-container']:has(> .root, > [data-slot='scroll-container'] > .root) > [data-slot='pagination'] { display: flex; justify-content: flex-end; align-items: center; gap: var(--dreadnought-table-control-gap); padding-block: var(--dreadnought-table-cell-padding-block-middle); color: var(--dreadnought-table-text); }
   [data-slot='table-container']:has(> .root, > [data-slot='scroll-container'] > .root) > [data-slot='pagination'] button { border: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border); border-radius: var(--dreadnought-table-header-radius); padding: var(--dreadnought-table-cell-padding-block-small) var(--dreadnought-table-cell-padding-inline-small); background: var(--dreadnought-table-control-bg); color: var(--dreadnought-table-control-text); cursor: pointer; }
   [data-slot='table-container']:has(> .root, > [data-slot='scroll-container'] > .root) > [data-slot='pagination'] button:disabled { opacity: var(--dreadnought-opacity-disabled); cursor: not-allowed; }

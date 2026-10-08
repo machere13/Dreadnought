@@ -6,6 +6,25 @@ import { Table } from '@dreadnought/ui/react';
 afterEach(cleanup);
 
 describe('Table', () => {
+  it('styles the shared loader, keeps consumer options and preserves focused rows', () => {
+    const props = { processing: 'manual' as const, pagination: { total: 10, current: 2, pageSize: 2 },
+      columns: [{ key: 'name', title: 'Name', dataIndex: 'name' as const, sorter: true as const }], dataSource: [{ key: 3, name: 'Anna' }] };
+    const view = render(<Table {...props} />);
+    const trigger = screen.getByRole('button', { name: 'Сортировать Name' });
+    const cell = screen.getByRole('cell', { name: 'Anna' });
+    trigger.focus();
+    view.rerender(<Table {...props} loading slotProps={{ loader: { label: 'Loading results', showLabel: true,
+      indicator: <span>Custom spinner</span>, className: 'consumer-loader', slotClassNames: { graphic: 'consumer-graphic' } } }} />);
+    const status = screen.getByRole('status', { name: 'Loading results' });
+    expect(status.closest('[data-ui="loader"]')?.className).toContain('consumer-loader');
+    expect(status.closest('[data-ui="loader"]')?.className).not.toBe('consumer-loader');
+    expect(status.closest('[data-ui="loader"]')?.getAttribute('data-custom-indicator')).toBe('true');
+    expect(screen.getByText('Custom spinner').parentElement?.className).toContain('consumer-graphic');
+    expect(screen.getByRole('cell', { name: 'Anna' })).toBe(cell);
+    expect(document.activeElement).toBe(trigger);
+    expect(cell.closest('[inert]')).toBeNull();
+    expect(screen.getByText('2 / 5')).toBeTruthy();
+  });
   it('renders styled summary cells with native spans and consumer properties', () => {
     render(<Table columns={[{ key: 'name', title: 'Name', dataIndex: 'name' }]} dataSource={[{ key: 1, name: 'Anna' }]}
       rowSelection={{}} expandable={{ expandedRowRender: row => row.name }}

@@ -29,7 +29,7 @@ export function matchingRows<RecordType extends object>(data: readonly RecordTyp
   })));
   return sortTableRowsBy(filtered, sorters.flatMap(sorter => {
     const column = columns.find(column => column.key === sorter.columnKey);
-    const compare = typeof column?.sorter === 'object' ? column.sorter.compare : column?.sorter;
+    const compare = typeof column?.sorter === 'object' ? column.sorter.compare : typeof column?.sorter === 'function' ? column.sorter : undefined;
     return compare ? [{ compare, order: sorter.order }] : [];
   }));
 }

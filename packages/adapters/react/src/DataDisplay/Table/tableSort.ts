@@ -13,8 +13,8 @@ export function defaultSorters<RecordType extends object>(columns: readonly Tabl
 export function resolveSorters<RecordType extends object>(columns: readonly TableColumn<RecordType>[], state: readonly TableChangeSorter[], override?: TableChangeSorter): TableChangeSorter[] {
   const controlledSingle = columns.find(column => !isMultiple(column) && column.sortOrder !== undefined);
   const result = columns.flatMap(column => {
-    if (typeof column.sorter === 'object' && (!Number.isFinite(column.sorter.multiple) || typeof column.sorter.compare !== 'function')) {
-      throw new TypeError('Table multiple sorter requires a finite priority and a compare function.');
+    if (typeof column.sorter === 'object' && (!Number.isFinite(column.sorter.multiple) || column.sorter.compare !== undefined && typeof column.sorter.compare !== 'function')) {
+      throw new TypeError('Table multiple sorter requires a finite priority and an optional compare function.');
     }
     const order = override?.columnKey === column.key ? override.order
       : column.sortOrder !== undefined ? column.sortOrder : state.find(sorter => sorter.columnKey === column.key)?.order;

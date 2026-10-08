@@ -13,6 +13,9 @@ const example = <Table<Person> expandable={expandable} columns={columns} dataSou
   onHeaderRow={(columns, index) => ({ title: `${columns.length}:${index}` })}
   summary={rows => <Table.Row><Table.Cell colSpan={2}>{rows.map(row => row.name).join(', ')}</Table.Cell></Table.Row>} />;
 void example;
+void <Table<Person> processing="manual" loading dataSource={[{ id: 3, name: 'Anna' }]} rowKey="id"
+  pagination={{ current: 2, pageSize: 2, total: 10 }} slotProps={{ loader: { label: 'Loading', indicator: '…', showLabel: true } }}
+  columns={[{ key: 'name', title: 'Name', sorter: true }, { key: 'id', title: 'ID', sorter: { multiple: 2 } }]} />;
 const grouped: readonly TableColumn<Person>[] = [{ key: 'person', title: 'Person', children: [
   { key: 'name', title: 'Name', dataIndex: 'name', sorter: (a, b) => a.name.localeCompare(b.name) },
   { key: 'id', title: 'ID', dataIndex: 'id', hidden: false, align: 'right', ellipsis: true, onCell: person => ({ title: String(person.id) }) },

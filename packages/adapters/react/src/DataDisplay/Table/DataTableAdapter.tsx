@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react';
 import { getDisclosureState, getPaginationState, getSelectionValue, paginateTableRows } from '@dreadnought/core';
 import { CheckboxAdapter } from '../../Fields/Checkbox/CheckboxAdapter.tsx';
 import { PaginationAdapter } from '../../Navigation/Pagination/index.ts';
+import { LoaderAdapter } from '../../Feedback/Loader/index.ts';
 import { TableFilterMenu } from './TableFilterMenu.tsx';
 import { TableDetailRow } from './TableDetailRow.tsx';
 import { TableEllipsis } from './TableEllipsis.tsx';
@@ -13,10 +14,14 @@ import { cellValue, fixedStyle, groupedColumns, matchingRows, paginationNumber, 
 import type { TableChangeFilters, TableChangeSorter, TableColumn, TableDataAdapterProps, TableFilterValue, TableRowKey } from './table.types.ts';
 
 export function DataTableAdapter<RecordType extends object>({
-  columns: columnTree, dataSource, rowKey, pagination, rowSelection, expandable, summary, onRow, onHeaderRow, sticky, scroll, locale, slotProps, onChange, ...tableProps
+  columns: columnTree, dataSource, processing = 'local', loading = false, rowKey, pagination, rowSelection, expandable, summary, onRow, onHeaderRow, sticky, scroll, locale, slotProps, onChange, ...tableProps
 }: TableDataAdapterProps<RecordType>) {
   const selectionName = useId();
   const { columns, rows: headerRows } = useMemo(() => groupedColumns(columnTree), [columnTree]);
+  const manual = processing === 'manual';
+  if (!manual && columns.some(column => column.sorter === true || typeof column.sorter === 'object' && !column.sorter.compare)) {
+    throw new TypeError('Table sorter without compare requires processing="manual".');
+  }
   const headerCells = headerRows.map(row => row.map(cell => cell.column.onHeaderCell?.(cell.column, cell.columnIndex)));
   const headerSpans = headerRows.map((row, rowIndex) => row.map((cell, index) =>
     `${cell.column.key}:${headerCells[rowIndex]![index]?.colSpan ?? cell.colSpan}:${headerCells[rowIndex]![index]?.rowSpan ?? cell.rowSpan}`).join(',')).join(';');
@@ -52,15 +57,17 @@ export function DataTableAdapter<RecordType extends object>({
   }));
   const [selected, setSelected] = useState<TableRowKey[]>([...(rowSelection?.defaultSelectedRowKeys ?? [])]);
   const activeSorters = resolveSorters(columns, sorting);
-  const sorted = matchingRows(dataSource, columns, currentFilters(), activeSorters);
+  const sorted = manual ? dataSource : matchingRows(dataSource, columns, currentFilters(), activeSorters);
+  const total = manual && pagination !== false ? pagination?.total : sorted.length;
+  if (total === undefined) throw new TypeError('Table manual pagination requires pagination.total.');
   const pageSize = paginationNumber(pagination ? pagination.pageSize : undefined, page.pageSize);
   const requestedPage = paginationNumber(pagination ? pagination.current : undefined, pageSize !== page.pageSize ? 1 : page.current);
-  const { current: currentPage, pageCount } = getPaginationState({ total: sorted.length, current: requestedPage, pageSize });
+  const { current: currentPage, pageCount } = getPaginationState({ total, current: requestedPage, pageSize });
   const storedPage = pagination && pagination.current !== undefined ? page.current : currentPage;
   if (pagination !== false && (storedPage !== page.current || pageSize !== page.pageSize)) {
     setPage({ current: storedPage, pageSize });
   }
-  const rows = pagination === false ? sorted : paginateTableRows(sorted, currentPage, pageSize);
+  const rows = manual || pagination === false ? sorted : paginateTableRows(sorted, currentPage, pageSize);
   const selectedKeys = rowSelection?.selectedRowKeys ?? selected;
   const sourceKeys = rowSelection || expandable ? dataSource.map(record => recordKey(record, rowKey)) : [];
   if (new Set(sourceKeys.map(String)).size !== sourceKeys.length) {
@@ -91,7 +98,7 @@ export function DataTableAdapter<RecordType extends object>({
       { current: nextPage, pageSize },
       nextFilters,
       nextSorter,
-      { action, sorters, currentDataSource: matchingRows(dataSource, columns, nextFilters, sorters) },
+      { action, sorters, currentDataSource: manual ? dataSource : matchingRows(dataSource, columns, nextFilters, sorters) },
     );
   }
 
@@ -144,7 +151,7 @@ export function DataTableAdapter<RecordType extends object>({
   } as CSSProperties;
   const footer = summary?.(rows);
 
-  const table = <table {...tableProps} ref={tableRef} data-ui="table" data-sticky={Boolean(sticky)} data-ellipsis={columns.some(column => column.ellipsis)} style={tableStyle}>
+  const table = <table {...tableProps} aria-busy={loading || tableProps['aria-busy']} ref={tableRef} data-ui="table" data-sticky={Boolean(sticky)} data-ellipsis={columns.some(column => column.ellipsis)} style={tableStyle}>
     <thead>{headerRows.map((headerRow, rowIndex) => <tr key={rowIndex} {...onHeaderRow?.(headerRow.map(cell => cell.column), rowIndex)}>
       {rowIndex === 0 && rowSelection && <th rowSpan={headerRows.length} scope="col" data-slot="selection-cell" data-fixed="left" style={{ ...headerStyle, position: 'sticky', left: 0, zIndex: 3 }} aria-label="Выбор строк">
         {rowSelection.type !== 'radio' && <CheckboxAdapter
@@ -249,7 +256,8 @@ export function DataTableAdapter<RecordType extends object>({
     {scroll ? <div data-slot="scroll-container" style={{ overflow: 'auto', maxHeight: scroll.y, maxWidth: '100%' }}>
       {table}
     </div> : table}
-    {pagination !== false && pageCount > 1 && <PaginationAdapter simple total={sorted.length}
+    {loading && <LoaderAdapter label="Загрузка таблицы" showLabel {...slotProps?.loader} loading data-slot="loading" />}
+    {pagination !== false && pageCount > 1 && <PaginationAdapter simple total={total}
       current={currentPage} pageSize={pageSize} onChange={changePage}
       aria-label="Страницы таблицы" data-slot="pagination" />}
   </div>;

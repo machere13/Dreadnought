@@ -170,3 +170,20 @@ export const MultipleSorters: Story = { render: () => <Table<(typeof people)[num
     { key: 'age', title: 'Возраст', dataIndex: 'age', defaultSortOrder: 'ascend', sorter: { compare: (a, b) => a.age - b.age, multiple: 1 } },
     { key: 'name', title: 'Имя', dataIndex: 'name' },
   ]} /> };
+
+function ManualPageExample() {
+  const [current, setCurrent] = useState(2);
+  const [loading, setLoading] = useState(false);
+  const [order, setOrder] = useState<'ascend' | 'descend' | null>(null);
+  const sorted = order ? [...people].sort((a, b) => (a.age - b.age) * (order === 'ascend' ? 1 : -1)) : people;
+  return <>
+    <Button variant="secondary" size="compact" onClick={() => setLoading(!loading)}>Переключить загрузку</Button>
+    <p>Приложение передаёт только текущую страницу. Сортировка и обрезка в этом примере выполняются снаружи таблицы.</p>
+    <Table processing="manual" aria-label="Серверная страница" bordered loading={loading}
+      rowKey="id" dataSource={sorted.slice((current - 1) * 2, current * 2)}
+      columns={[{ key: 'name', title: 'Участник', dataIndex: 'name' }, { key: 'age', title: 'Возраст', dataIndex: 'age', sorter: true }]}
+      pagination={{ current, pageSize: 2, total: people.length }}
+      onChange={(page, _filters, sorter) => { setCurrent(page.current); setOrder(sorter.order); }} />
+  </>;
+}
+export const ManualPage: Story = { render: () => <ManualPageExample /> };

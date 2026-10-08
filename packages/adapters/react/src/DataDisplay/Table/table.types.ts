@@ -1,6 +1,7 @@
 import type { ComponentPropsWithRef, ReactNode } from 'react';
 import type { TableSortOrder } from '@dreadnought/core';
 import type { TooltipAdapterProps } from '../../Overlays/Tooltip/index.ts';
+import type { LoaderAdapterProps } from '../../Feedback/Loader/index.ts';
 
 export type TableRowKey = string | number;
 export type TableFilterValue = string | number;
@@ -18,7 +19,7 @@ export type TableColumn<RecordType extends object> = {
   onHeaderCell?: (column: TableColumn<RecordType>, index: number) => Omit<ComponentPropsWithRef<'th'>, 'children' | 'dangerouslySetInnerHTML'>;
   width?: number;
   fixed?: 'left' | 'right';
-  sorter?: ((a: RecordType, b: RecordType) => number) | { compare: (a: RecordType, b: RecordType) => number; multiple: number };
+  sorter?: true | ((a: RecordType, b: RecordType) => number) | { compare?: (a: RecordType, b: RecordType) => number; multiple: number };
   sortOrder?: TableSortOrder;
   defaultSortOrder?: Exclude<TableSortOrder, null>;
   sortLabel?: string;
@@ -30,6 +31,7 @@ export type TableColumn<RecordType extends object> = {
 };
 
 export type TablePagination = {
+  total?: number;
   current?: number;
   defaultCurrent?: number;
   pageSize?: number;
@@ -62,6 +64,8 @@ export type TableExpandable<RecordType extends object> = {
 export type TableDataAdapterProps<RecordType extends object> = Omit<ComponentPropsWithRef<'table'>, 'children' | 'onChange' | 'summary'> & {
   columns: readonly TableColumn<RecordType>[];
   dataSource: readonly RecordType[];
+  processing?: 'local' | 'manual';
+  loading?: boolean;
   rowKey?: keyof RecordType | ((record: RecordType) => TableRowKey);
   pagination?: false | TablePagination;
   rowSelection?: TableRowSelection<RecordType>;
@@ -72,7 +76,10 @@ export type TableDataAdapterProps<RecordType extends object> = Omit<ComponentPro
   sticky?: boolean | { offsetHeader?: number };
   scroll?: { x?: number | string; y?: number | string };
   locale?: { emptyText?: ReactNode };
-  slotProps?: { tooltip?: Omit<TooltipAdapterProps, 'children' | 'content'> };
+  slotProps?: {
+    tooltip?: Omit<TooltipAdapterProps, 'children' | 'content'>;
+    loader?: Omit<LoaderAdapterProps, 'children' | 'loading'>;
+  };
   onChange?: (
     pagination: { current: number; pageSize: number },
     filters: TableChangeFilters,
