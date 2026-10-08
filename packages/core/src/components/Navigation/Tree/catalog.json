@@ -1,11 +1,12 @@
 {
   "id": "component:tree", "kind": "component", "name": "Tree", "family": "Navigation",
   "description": "Вложенное дерево: общий расчёт строк, доступный React-адаптер и готовый компонент с темой.",
-  "docsUrl": "/components/tree/#tree-api", "states": ["expanded", "collapsed", "disabled"],
-  "composesWith": ["behavior:get-visible-tree-rows", "behavior:get-tree-key-action", "behavior:get-selection-value"],
+  "docsUrl": "/components/tree/#tree-api", "states": ["expanded", "collapsed", "disabled", "selected", "checked", "indeterminate"],
+  "composesWith": ["behavior:get-visible-tree-rows", "behavior:get-tree-key-action", "behavior:get-selection-value", "behavior:get-tree-check-state", "component:checkbox"],
   "constraints": [
     "Ключи уникальны: строки или конечные числа; 1 и '1' различаются. Данные проверяет getVisibleTreeRows, включая скрытые ветви.",
-    "Без выбора, checkbox, загрузки детей, drag-and-drop, typeahead и виртуализации. renderLabel — неинтерактивное содержимое.",
+    "selectable и checkable по умолчанию false для совместимости с деревом раскрытия. Выбор, отметки и раскрытие независимы. Загрузки детей, drag-and-drop, typeahead и виртуализации пока нет. renderLabel — неинтерактивное содержимое.",
+    "checkedKeys распространяются на скрытых потомков и собирают родителей; halfCheckedKeys вычисляются в core. checkStrictly отключает связь. getDisabled/getCheckDisabled останавливают распространение на узле, не блокируя независимые действия с его потомками.",
     "expandedKeys задаёт владельческое состояние; callback сообщает запрос. Закрытие сохраняет раскрытие потомков."
   ],
   "bindings": [{ "id": "core", "layer": 1, "framework": null,

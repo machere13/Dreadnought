@@ -22,6 +22,21 @@ it('uses the shared Ant Design icon for branches, not text triangles', () => {
   expect(screen.getByRole('treeitem', { name: 'Leaf' }).querySelector('[data-slot="tree-indicator"]')).toBeNull();
 });
 
+it('reuses themed Checkbox and forwards selection and checking without conflating expansion', () => {
+  render(<Tree {...props} selectable checkable defaultExpandedKeys={[0]} defaultCheckedKeys={[1]} />);
+  const leaf = screen.getByRole('treeitem', { name: 'Leaf' });
+  const control = screen.getByRole('checkbox', { name: 'Leaf' });
+  expect(control.closest('[data-ui="checkbox"]')?.className).not.toBe('');
+  expect(control.closest('[data-ui="checkbox"]')?.querySelector('svg[data-icon="check"]')).not.toBeNull();
+  fireEvent.click(leaf.querySelector('[data-slot="tree-content"]')!);
+  expect(leaf.getAttribute('aria-selected')).toBe('true');
+  expect(leaf.getAttribute('aria-checked')).toBe('true');
+  fireEvent.click(control);
+  expect(leaf.getAttribute('aria-checked')).toBe('false');
+  expect(leaf.getAttribute('aria-selected')).toBe('true');
+  expect(screen.getByRole('treeitem', { name: 'Root' }).getAttribute('aria-expanded')).toBe('true');
+});
+
 it('merges all presentation slots without changing generic records, refs or custom labels', () => {
   const ref = createRef<HTMLUListElement>();
   render(<><Tree {...props} ref={ref} aria-label="Ready" className="own-root" id="files"

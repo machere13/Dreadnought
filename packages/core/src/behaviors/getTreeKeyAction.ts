@@ -3,14 +3,23 @@ import { getNavigationDirection } from './getNavigationDirection.ts';
 
 export type TreeKeyAction<Key extends TreeKey = TreeKey> =
   | { type: 'focus'; key: Key }
+  | { type: 'select' | 'check'; key: Key }
   | { type: 'expand'; key: Key; expanded: boolean };
+
+export interface TreeKeyOptions {
+  selectable?: boolean;
+  checkable?: boolean;
+}
 
 export function getTreeKeyAction<RecordType, Key extends TreeKey>(
   rows: readonly VisibleTreeRow<RecordType, Key>[], currentKey: Key, key: string,
+  options: TreeKeyOptions = {},
 ): TreeKeyAction<Key> | undefined {
   const index = rows.findIndex(row => row.key === currentKey);
   if (index < 0) return;
   const row = rows[index];
+  if (key === ' ' && options.checkable) return { type: 'check', key: currentKey };
+  if ((key === 'Enter' || key === ' ') && options.selectable) return { type: 'select', key: currentKey };
   const direction = getNavigationDirection(key);
   if (direction) {
     const nextIndex = direction === 'first' ? 0 : direction === 'last' ? rows.length - 1

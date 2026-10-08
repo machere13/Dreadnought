@@ -17,6 +17,14 @@ export function getVisibleTreeRows<RecordType, Key extends TreeKey = TreeKey>(
   records: readonly RecordType[],
   options: VisibleTreeRowsOptions<RecordType, Key>,
 ): VisibleTreeRow<RecordType, Key>[] {
+  return getTreeRows(records, options);
+}
+
+export function getTreeRows<RecordType, Key extends TreeKey = TreeKey>(
+  records: readonly RecordType[],
+  options: VisibleTreeRowsOptions<RecordType, Key>,
+  includeCollapsed = false,
+): VisibleTreeRow<RecordType, Key>[] {
   const { getKey, getChildren, expandedKeys = [] } = options;
   const expanded = new Set(expandedKeys);
   const seen = new Set<Key>();
@@ -33,7 +41,7 @@ export function getVisibleTreeRows<RecordType, Key extends TreeKey = TreeKey>(
     if (children != null && !Array.isArray(children)) throw new TypeError('Tree children must be an array, null or undefined.');
     const expandable = (children?.length ?? 0) > 0;
     const open = expandable && expanded.has(key);
-    if (visible) rows.push({ key, record, depth, parentKey, expandable, expanded: open });
+    if (visible || includeCollapsed) rows.push({ key, record, depth, parentKey, expandable, expanded: open });
     if (children) for (let i = children.length - 1; i >= 0; i--) {
       stack.push({ record: children[i], depth: depth + 1, parentKey: key, visible: visible && open });
     }

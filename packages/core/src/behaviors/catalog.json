@@ -1,5 +1,13 @@
 [
   {
+    "id": "behavior:get-tree-check-state", "kind": "behavior", "name": "getTreeCheckState", "family": "Behaviors",
+    "description": "Вычисляет полные и частичные отметки дерева и применяет отметку узла без React или DOM.",
+    "docsUrl": "/components/tree/#tree-api", "composesWith": ["component:tree", "behavior:get-visible-tree-rows"],
+    "constraints": ["Принимает records, getKey/getChildren, checkedKeys, getDisabled, checkStrictly и необязательное action {key, checked}. Возвращает checkedKeys и halfCheckedKeys. По умолчанию отметка проходит вниз и собирает родителей вверх; disabled узлы — границы в обоих направлениях. Их явные отметки сохраняются, потомки могут отмечаться независимо. checkStrictly отключает связь. Неизвестные ключи сохраняются для будущих данных; действие на неизвестном/disabled узле игнорируется. Вход не меняется, known ключи возвращаются в preorder, неизвестные — в исходном порядке. Проверяет всё дерево, включая скрытые ветки; O(N+E), без рекурсии. Не хранит состояние и не управляет фокусом."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getTreeCheckState",
+      "examples": [{ "id": "checking", "code": "import { getTreeCheckState } from '@dreadnought/core';\ntype Node = { id: string; children?: readonly Node[] };\nconst records: readonly Node[] = [{ id: 'root', children: [{ id: 'a' }, { id: 'b' }] }];\nconst state = getTreeCheckState(records, { getKey: node => node.id, getChildren: node => node.children, checkedKeys: ['a'], action: { key: 'b', checked: true } });" }] }]
+  },
+  {
     "id": "behavior:get-checkable-state", "kind": "behavior", "name": "getCheckableState", "family": "Behaviors",
     "description": "Общие checked, disabled, required и invalid для собственного флажка или переключателя.",
     "docsUrl": "/components/switch/#switch-api",
@@ -172,10 +180,10 @@
   },
   {
     "id": "behavior:get-tree-key-action", "kind": "behavior", "name": "getTreeKeyAction", "family": "Behaviors",
-    "description": "Решает клавиатурное действие дерева по видимым строкам: перенос фокуса или раскрытие ветви без React и DOM.",
+    "description": "Решает клавиатурное действие дерева: фокус, раскрытие, выбор или отметка без React и DOM. options.selectable включает Enter/Space для выбора, options.checkable отдаёт Space отметке с приоритетом над выбором; по умолчанию сохранено раскрытие Enter/Space.",
     "docsUrl": "/custom-components/#core-parts",
     "composesWith": ["behavior:get-visible-tree-rows", "behavior:get-selection-value"],
-    "constraints": ["Принимает актуальные видимые rows из getVisibleTreeRows и точный строковый/числовой currentKey. ArrowUp/Down/Home/End — видимый порядок без зацикливания; край возвращает undefined. ArrowRight раскрывает родителя или переходит к первому ребёнку; ArrowLeft закрывает раскрытого родителя или переходит к его родителю. Enter/Space переключают родителя; лист ничего не делает. Пустые rows, неизвестный currentKey и посторонняя клавиша возвращают undefined. Чистая функция с линейным поиском по видимым строкам; не хранит состояние и не обрабатывает IME, модификаторы, disabled, DOM, preventDefault или реальный фокус — это ответственность адаптера."],
+    "constraints": ["Принимает актуальные видимые rows из getVisibleTreeRows и точный строковый/числовой currentKey. ArrowUp/Down/Home/End — видимый порядок без зацикливания; край возвращает undefined. ArrowRight раскрывает родителя или переходит к первому ребёнку; ArrowLeft закрывает раскрытого родителя или переходит к его родителю. Без options Enter/Space переключают родителя; лист ничего не делает. options.selectable включает выбор Enter/Space; options.checkable отдаёт Space отметке с приоритетом над выбором. Пустые rows, неизвестный currentKey и посторонняя клавиша возвращают undefined. Чистая функция с линейным поиском по видимым строкам; не хранит состояние и не обрабатывает IME, модификаторы, disabled, DOM, preventDefault или реальный фокус — это ответственность адаптера."],
     "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getTreeKeyAction",
       "examples": [{ "id": "keyboard", "code": "import { getVisibleTreeRows, getTreeKeyAction } from '@dreadnought/core';\ntype Node = { id: number; children?: readonly Node[] };\nconst records: readonly Node[] = [{ id: 0, children: [{ id: 1 }] }];\nconst rows = getVisibleTreeRows(records, { getKey: node => node.id, getChildren: node => node.children });\nconst action = getTreeKeyAction(rows, 0, 'ArrowRight');" }] }]
   },

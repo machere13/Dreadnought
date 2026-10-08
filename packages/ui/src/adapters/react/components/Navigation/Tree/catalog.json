@@ -3,7 +3,7 @@
   "bindings": [{
     "id": "react-ui", "layer": 3, "framework": "react",
     "importPath": "@dreadnought/ui/react", "exportName": "Tree",
-    "description": "Оформленное дерево с вложенными строками, раскрытием и клавиатурным фокусом. Стили меняются через токены.",
+    "description": "Оформленное дерево с раскрытием, выбором и связанными чекбоксами; переиспользует Checkbox. Стили меняются через токены.",
     "propertyDescriptions": {
       "records": "Вложенные данные; readonly массив.",
       "getKey": "Уникальный строковый или числовой ключ.",
@@ -12,12 +12,26 @@
       "expandedKeys": "Раскрытые ключи в управляемом режиме.",
       "defaultExpandedKeys": "Начальные раскрытые ключи неуправляемого дерева.",
       "onExpandedKeysChange": "Запрос нового массива раскрытых ключей.",
+      "selectable": "Включает выбор; по умолчанию false. Клик по названию или Enter выбирает; стрелка раскрывает отдельно.",
+      "multiple": "Позволяет переключать несколько выбранных узлов; иначе выбирается один.",
+      "selectedKeys": "Выбранные ключи владельца.", "defaultSelectedKeys": "Начальный внутренний выбор.",
+      "onSelectedKeysChange": "Запрос нового массива выбранных ключей.",
+      "checkable": "Показывает Checkbox; Space переключает отметку текущего узла.",
+      "checkStrictly": "Независимые отметки без связи родителя и потомков.",
+      "checkedKeys": "Отмеченные ключи владельца; core вычисляет полные и частичные отметки.",
+      "defaultCheckedKeys": "Начальные внутренние отметки.",
+      "onCheckedKeysChange": "Запрос (checkedKeys, halfCheckedKeys); props не вызывают callback.",
+      "getDisabled": "Блокирует выбор и отметку узла; граница распространения. Раскрытие остаётся доступным.",
+      "getSelectable": "false отключает выбор отдельного узла.",
+      "getCheckDisabled": "Блокирует только чекбокс узла и останавливает распространение отметок.",
+      "renderCheckbox": "Своя реализация чекбокса из готовых props и строки; по умолчанию наш Checkbox.",
       "disabled": "Блокирует раскрытие и клавиатурное управление.",
       "renderLabel": "Неинтерактивное содержимое названия вместо текста getLabel.",
       "renderIndicator": "Неинтерактивное содержимое индикатора раскрытия вместо стандартной иконки.",
       "slotClassNames": "Дополнительные классы item/content/group/indicator; оформление сохраняется."
     },
-    "defaults": { "defaultExpandedKeys": [], "disabled": false },
+    "defaults": { "defaultExpandedKeys": [], "disabled": false, "selectable": false, "multiple": false,
+      "checkable": false, "checkStrictly": false, "defaultSelectedKeys": [], "defaultCheckedKeys": [] },
     "examples": [{ "id": "basic", "code": "import { Tree } from '@dreadnought/ui/react';\ntype Node = { id: string; label: string; children?: readonly Node[] };\nconst records: readonly Node[] = [\n  { id: 'docs', label: 'Документация', children: [\n    { id: 'start', label: 'Начало' },\n    { id: 'components', label: 'Компоненты' },\n  ] },\n];\nexport function Example() {\n  return <Tree records={records}\n    getKey={node => node.id}\n    getChildren={node => node.children}\n    getLabel={node => node.label}\n    defaultExpandedKeys={['docs']}\n    aria-label=\"Разделы документации\" />;\n}" }]
   }]
 }

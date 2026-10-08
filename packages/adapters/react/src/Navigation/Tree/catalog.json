@@ -8,10 +8,24 @@
       "expandedKeys": "Раскрытые ключи владельца; запрос принимается новым prop.",
       "defaultExpandedKeys": "Начальные раскрытые ключи неуправляемого дерева.",
       "onExpandedKeysChange": "Запрос нового массива раскрытых ключей.", "disabled": "Блокирует раскрытие и клавиатурное управление.",
+      "selectable": "Включает выбор; по умолчанию false. Клик по названию или Enter выбирает; стрелка раскрывает отдельно.",
+      "multiple": "Позволяет переключать несколько выбранных узлов; иначе выбирается один.",
+      "selectedKeys": "Выбранные ключи владельца.", "defaultSelectedKeys": "Начальный внутренний выбор.",
+      "onSelectedKeysChange": "Запрос нового массива выбранных ключей.",
+      "checkable": "Показывает чекбоксы; Space переключает отметку текущего узла.",
+      "checkStrictly": "Независимые отметки без связи родителя и потомков.",
+      "checkedKeys": "Отмеченные ключи владельца; core вычисляет полные и частичные отметки.",
+      "defaultCheckedKeys": "Начальные внутренние отметки.",
+      "onCheckedKeysChange": "Запрос (checkedKeys, halfCheckedKeys); props не вызывают callback.",
+      "getDisabled": "Блокирует выбор и отметку узла; граница распространения. Раскрытие остаётся доступным.",
+      "getSelectable": "false отключает выбор отдельного узла.",
+      "getCheckDisabled": "Блокирует только чекбокс узла и останавливает распространение отметок.",
+      "renderCheckbox": "Рендер чекбокса из готовых props и строки; сохраняйте переданные состояние и обработчик.",
       "renderLabel": "Неинтерактивное содержимое названия вместо текста getLabel.",
       "renderIndicator": "Неинтерактивное содержимое индикатора раскрытия вместо текстового треугольника.",
       "slotClassNames": "Классы item/content/group/indicator без встроенной темы."
-    }, "defaults": { "defaultExpandedKeys": [], "disabled": false },
+    }, "defaults": { "defaultExpandedKeys": [], "disabled": false, "selectable": false, "multiple": false,
+      "checkable": false, "checkStrictly": false, "defaultSelectedKeys": [], "defaultCheckedKeys": [] },
     "examples": [{ "id": "adapter", "code": "import { TreeAdapter } from '@dreadnought/react/unstyled';\ntype Node = { id: string; label: string; children?: readonly Node[] };\nconst records: readonly Node[] = [{ id: 'root', label: 'Документация', children: [{ id: 'leaf', label: 'Начало' }] }];\nexport function Example() { return <TreeAdapter records={records} getKey={node => node.id} getChildren={node => node.children} getLabel={node => node.label} defaultExpandedKeys={['root']} />; }" }]
   }]
 }

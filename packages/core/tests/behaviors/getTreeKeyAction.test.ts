@@ -9,6 +9,13 @@ const records: readonly Node[] = [
 const project = (expandedKeys: readonly (string | number)[]) =>
   getVisibleTreeRows(records, { getKey: node => node.id, getChildren: node => node.children, expandedKeys });
 
+it('assigns Enter to selection and Space to checking when enabled', () => {
+  const rows = project([0]);
+  expect(getTreeKeyAction(rows, '1', 'Enter', { selectable: true, checkable: true })).toEqual({ type: 'select', key: '1' });
+  expect(getTreeKeyAction(rows, 0, ' ', { selectable: true, checkable: true })).toEqual({ type: 'check', key: 0 });
+  expect(getTreeKeyAction(rows, '1', ' ', { selectable: true })).toEqual({ type: 'select', key: '1' });
+});
+
 it('moves through visible rows without wrapping or coercing keys', () => {
   const rows = project([0, 1]);
   for (const [current, key, target] of [

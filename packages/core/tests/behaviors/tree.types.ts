@@ -1,10 +1,11 @@
-import { getTreeKeyAction, getVisibleTreeRows } from '@dreadnought/core';
+import { getTreeCheckState, getTreeKeyAction, getVisibleTreeRows } from '@dreadnought/core';
 import type { TreeKey, TreeKeyAction, VisibleTreeRow, VisibleTreeRowsOptions } from '@dreadnought/core';
 
 type Folder = { id: number; name: string; children?: readonly Folder[] };
 const records: readonly Folder[] = [{ id: 0, name: 'Documents' }];
 const options: VisibleTreeRowsOptions<Folder, number> = { getKey: n => n.id, getChildren: n => n.children, expandedKeys: [0] };
 const rows: VisibleTreeRow<Folder, number>[] = getVisibleTreeRows(records, options);
+const checked: number[] = getTreeCheckState(records, { ...options, checkedKeys: [0] }).checkedKeys;
 const key: number = rows[0].key;
 const name: string = rows[0].record.name;
 const parent: number | null = rows[0].parentKey;
@@ -20,4 +21,4 @@ if (action) { const actionKey: number = action.key; void actionKey; }
 getVisibleTreeRows(records, { getKey: n => ({ id: n.id }), getChildren: n => n.children });
 // @ts-expect-error Children must contain Folder records.
 getVisibleTreeRows(records, { getKey: n => n.id, getChildren: () => [1] });
-void [rows, key, name, parent, inferredKey, treeKey, focusAction, expansionAction];
+void [rows, checked, key, name, parent, inferredKey, treeKey, focusAction, expansionAction];
