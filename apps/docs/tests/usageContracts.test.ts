@@ -60,6 +60,7 @@ it.each([
   expect(context.sources[0].apiSummary).toContain('По умолчанию');
   if (name === 'Input') expect(context.sources[0].apiSummary).toContain('Обязательные пропсы: нет.');
   if (name === 'Button') {
+    expect(context.sources[0].apiSummary).toContain('variant: "primary"\nsize: "default"');
     expect(context.sources[0].apiSummary).toContain('Вариант API 1.2');
     expect(context.sources[0].apiSummary).toContain('href');
   }

@@ -31,6 +31,7 @@
 .turn,
 .sources,
 .answer,
+.facts,
 .question {
   display: grid;
   gap: var(--dreadnought-spacing-x2);
@@ -43,8 +44,10 @@
   gap: var(--dreadnought-spacing-x4);
 }
 .question {
+  justify-self: end;
+  max-width: 85%;
+  box-sizing: border-box;
   padding: var(--dreadnought-spacing-x3);
-  margin-inline-start: var(--dreadnought-spacing-x4);
   border-radius: var(--dreadnought-border-radius-x1);
   background: var(--dreadnought-color-surface-canvas);
   white-space: pre-wrap;
@@ -64,12 +67,28 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+.facts {
+  font-size: var(--dreadnought-font-size-caption-1);
+}
+.panel .sourceLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dreadnought-spacing-x2) var(--dreadnought-spacing-x3);
+  padding: 0;
+  list-style: none;
+  font-size: var(--dreadnought-font-size-caption-1);
+}
+.sendIcon {
+  transform: rotate(-90deg);
+}
 .panel progress {
   width: 100%;
   accent-color: var(--dreadnought-color-focus-ring);
 }
 .composer {
   display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
   gap: var(--dreadnought-spacing-x2);
   width: 100%;
   min-width: 0;

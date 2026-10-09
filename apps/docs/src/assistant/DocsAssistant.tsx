@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { Button, FloatingPanel, TextArea } from '@dreadnought/ui/react';
+import { Button, FloatingPanel, Icon, TextArea } from '@dreadnought/ui/react';
 import type { KnowledgeEntry } from '../knowledge/types.ts';
 import {
   getConversationContext,
@@ -10,7 +10,7 @@ import {
 } from './context.ts';
 import { createEngine, supportsWebGPU, type EngineSession } from './engine.ts';
 import styles from './DocsAssistant.module.css';
-import { ApiFacts } from './ApiFacts.tsx';
+import { AssistantReply } from './AssistantReply.tsx';
 
 type Phase = 'idle' | 'loading' | 'ready' | 'generating';
 type Turn = ConversationTurn & { id: number };
@@ -239,34 +239,10 @@ export function DocsAssistant({
             {turns.map((turn) => (
               <div key={turn.id} className={styles.turn}>
                 <div className={styles.question}>
-                  <span className={styles.muted}>Вы</span>
+                  <span className={styles.inputLabel}>Вы</span>
                   <p>{turn.question}</p>
                 </div>
-                <div className={styles.answer}>
-                  <span className={styles.muted}>Помощник</span>
-                  {turn.answer ? (
-                    <>
-                      <p className={styles.answerText}>{turn.answer.text}</p>
-                      <p className={styles.muted}>Сверьте ответ модели с источниками.</p>
-                    </>
-                  ) : (
-                    <p>
-                      {turn.sources.length
-                        ? 'Найдено в документации'
-                        : 'Подходящих сведений нет. Уточните вопрос.'}
-                    </p>
-                  )}
-                  <ApiFacts sources={turn.sources} />
-                  {turn.sources.length > 0 && (
-                    <ul aria-label={turn.answer ? 'Источники ответа' : 'Найденные источники'}>
-                      {(turn.answer?.sources ?? turn.sources).map((source) => (
-                        <li key={source.id}>
-                          <a href={safeSourceUrl(source.url)}>{source.title}</a>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
+                <AssistantReply turn={turn} />
               </div>
             ))}
           </div>
@@ -287,18 +263,27 @@ export function DocsAssistant({
             id={inputId}
             value={question}
             onChange={(event) => changeQuestion(event.target.value)}
-            rows={2}
+            autoSize
+            rows={1}
+            maxRows={4}
             maxLength={500}
             placeholder="Как показать пароль в Input?"
           />
           {busy ? (
-            <Button type="button" size="compact" variant="secondary" onClick={cancel}>
-              Отменить
-            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={cancel}
+              aria-label="Отменить"
+              icon={<Icon name="close" />}
+            />
           ) : (
-            <Button type="submit" size="compact" disabled={!canSubmit}>
-              {phase === 'ready' ? 'Ответить по источникам' : 'Отправить вопрос'}
-            </Button>
+            <Button
+              type="submit"
+              disabled={!canSubmit}
+              aria-label={phase === 'ready' ? 'Ответить по источникам' : 'Отправить вопрос'}
+              icon={<Icon name="down" className={styles.sendIcon} />}
+            />
           )}
         </form>
       }

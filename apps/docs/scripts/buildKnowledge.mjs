@@ -60,13 +60,14 @@ function usageProps(binding, russian = false) {
       const required = Array.isArray(variant.properties)
         ? variant.properties.filter(prop => !prop.optional).map(prop => prop.name).join(', ') || (russian ? 'нет' : 'none')
         : unknown;
-      if (russian) return `Вариант API ${contractIndex + 1}.${variantIndex + 1}. Обязательные пропсы: ${required}.`
-        + (Array.isArray(variant.properties) ? ' Остальные объявленные пропсы в этом варианте необязательны.' : '');
+      if (russian) return `Вариант API ${contractIndex + 1}.${variantIndex + 1}. Обязательные пропсы: ${required}.`;
       return `Contract ${contractIndex + 1}, branch ${variantIndex + 1}: required props: ${required}.`
         + (Array.isArray(variant.properties) ? ' Other declared props are optional in that branch.' : '');
     }));
   const defaults = Object.keys(binding.defaults || {}).length
-    ? JSON.stringify(binding.defaults)
+    ? (russian
+      ? '\n' + Object.entries(binding.defaults).map(([name, value]) => `${name}: ${JSON.stringify(value)}`).join('\n')
+      : JSON.stringify(binding.defaults))
     : `${unknown}.`;
   return russian
     ? `${branches.join('\n') || `Обязательные пропсы: ${unknown}.`}\nПо умолчанию: ${defaults}`

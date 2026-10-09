@@ -43,6 +43,7 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
+  vi.unstubAllGlobals();
 });
 const ask = () => {
   if (!screen.queryByRole('textbox', { name: 'Ваш вопрос' })) {
@@ -64,6 +65,27 @@ const answer = (id: number, sources = ['catalog:input']) =>
   );
 
 describe('documentation assistant', () => {
+  it('lets a reader copy the complete catalog example from the assistant reply without loading a model', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal('navigator', { clipboard: { writeText } });
+    const example = {
+      ...entry, id: 'catalog:component:input:react-ui:example:basic', title: 'Input · пример пароля',
+      code: ['import { Input } from \'@dreadnought/ui/react\';\n<Input type="password" />'],
+    };
+    mocked.search.mockReturnValue([entry, example]);
+    render(<DocsAssistant entries={[entry, example]} />);
+    ask();
+    fireEvent.click(screen.getByRole('button', { name: 'Отправить вопрос' }));
+    const log = screen.getByRole('log');
+    await act(async () => {
+      fireEvent.click(within(log).getByRole('button', { name: 'Копировать пример' }));
+    });
+    expect(writeText).toHaveBeenCalledWith(
+      'import { Input } from \'@dreadnought/ui/react\';\n<Input type="password" />',
+    );
+    expect(within(log).getByRole('button', { name: 'Пример скопирован' })).toBeTruthy();
+    expect(within(log).getByRole('link', { name: example.title }).getAttribute('href')).toBe(entry.url);
+  });
   it('shows catalog facts once without a model and preserves them beside an incorrect model answer', () => {
     const facts = {
       ...entry,
