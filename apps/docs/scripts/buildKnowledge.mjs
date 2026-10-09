@@ -53,6 +53,21 @@ export function extractGuides(document, route) {
   return entries;
 }
 
+function usageProps(binding) {
+  const branches = (binding.contracts || []).flatMap((contract, contractIndex) =>
+    (contract.variants || []).map((variant, variantIndex) => {
+      const required = Array.isArray(variant.properties)
+        ? variant.properties.filter(prop => !prop.optional).map(prop => prop.name).join(', ') || 'none'
+        : 'not specified in catalog';
+      return `Contract ${contractIndex + 1}, branch ${variantIndex + 1}: required props: ${required}.`
+        + (Array.isArray(variant.properties) ? ' Other declared props are optional in that branch.' : '');
+    }));
+  const defaults = Object.keys(binding.defaults || {}).length
+    ? JSON.stringify(binding.defaults)
+    : 'not specified in catalog.';
+  return `${branches.join('\n') || 'Required props: not specified in catalog.'}\nDefaults: ${defaults}`;
+}
+
 export function catalogChunks(catalog, pages) {
   const entries = [];
   for (const entity of catalog.entries) {
@@ -66,7 +81,8 @@ export function catalogChunks(catalog, pages) {
       const publicName = [binding.exportName, ...(binding.propertyPath || [])].join('.');
       const title = `${entity.name} · ${publicName}`;
       const importCode = `import { ${binding.exportName} } from '${binding.importPath}';`;
-      const context = binding.description || entity.description;
+      const description = binding.description || entity.description || '';
+      const context = binding.layer === 3 ? `${usageProps(binding)}\n${description}` : description;
       entries.push({ ...base, id: prefix, title, text: `${publicName}: ${context}`, code: [importCode], keywords: [entity.name, publicName, binding.importPath] });
       for (const [contractIndex, contract] of (binding.contracts || []).entries()) {
         const parameters = (contract.parameters || []).map(parameter => `${parameter.name}${parameter.optional ? '?' : ''}: ${parameter.type}`).join(', ');
