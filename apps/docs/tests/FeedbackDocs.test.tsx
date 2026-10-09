@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
-import { DocsPage } from '../src/components/DocsPage';
+import { DocsPage } from './helpers/DocsPage.tsx';
 
 afterEach(cleanup);
 it('documents Progress with a real editable value and a Feedback link', () => {

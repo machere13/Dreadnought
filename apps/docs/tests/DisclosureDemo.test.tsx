@@ -1,7 +1,7 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
-import { DisclosureDemo } from '../src/components/DisclosureDemo.tsx';
+import { DisclosureDemo } from '../src/content/guides/DisclosureDemo.tsx';
 
 afterEach(cleanup);
 const trigger = () => screen.getByRole('button', { name: 'Дополнительные настройки' });

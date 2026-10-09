@@ -1,6 +1,7 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { DocsPage } from '../src/components/DocsPage';
+import { DocsPage } from './helpers/DocsPage.tsx';
+import { InputPage } from '../src/content/components/Fields/InputDoc.tsx';
 
 vi.mock('../src/data/knowledge/useKnowledge.ts', () => {
   const state = { entries: [{ id: 'catalog:table:sticky', sourceKind: 'catalog', sourceId: 'catalog:table', title: 'Table · sticky', url: '/components/table/#table-api', text: 'sticky: закреплённая шапка', code: [] }], loading: false, error: null, retry: vi.fn() };
@@ -13,6 +14,12 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('hydrates a local Input page with a working password control', () => {
+    render(<InputPage />);
+    expect(screen.getByRole('heading', { name: 'Input', level: 1 })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Показать пароль' }));
+    expect(screen.getByLabelText('Пароль').getAttribute('type')).toBe('text');
+  });
   it('documents FloatingPanel and keeps page navigation available while open', () => {
     render(<DocsPage section="floatingpanel" />);
     expect(screen.getByRole('heading', { name: 'FloatingPanel', level: 1 })).toBeTruthy();
