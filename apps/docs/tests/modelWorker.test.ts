@@ -41,7 +41,7 @@ it('provides a serialized JSON schema required by WebLLM 0.2.85 and delivers the
       ],
     };
   });
-  await import('../src/assistant/model.worker.ts');
+  await import('../src/features/assistant/model/model.worker.ts');
   await worker.onmessage!({ data: { type: 'load' } });
   await worker.onmessage!({
     data: {

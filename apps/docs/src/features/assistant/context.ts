@@ -1,5 +1,5 @@
-import type { KnowledgeEntry } from '../data/knowledge/types.ts';
-import { searchKnowledge } from '../data/knowledge/search.ts';
+import type { KnowledgeEntry } from '../../data/knowledge/types.ts';
+import { searchKnowledge } from '../../data/knowledge/search.ts';
 
 export type AssistantContext = { text: string; sources: KnowledgeEntry[] };
 const bytes = (value: string) => new TextEncoder().encode(value).length;

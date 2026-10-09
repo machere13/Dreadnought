@@ -1,4 +1,4 @@
-import type { ConversationMessage } from './context.ts';
+import type { ConversationMessage } from '../context.ts';
 
 export type EngineEvent =
   | { type: 'progress'; progress: number }

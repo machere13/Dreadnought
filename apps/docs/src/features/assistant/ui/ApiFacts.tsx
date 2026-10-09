@@ -1,5 +1,5 @@
-import type { KnowledgeEntry } from '../data/knowledge/types.ts';
-import { safeSourceUrl } from './context.ts';
+import type { KnowledgeEntry } from '../../../data/knowledge/types.ts';
+import { safeSourceUrl } from '../context.ts';
 import styles from './DocsAssistant.module.css';
 
 export function ApiFacts({ sources }: { sources: KnowledgeEntry[] }) {

@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { expect, it } from 'vitest';
-import { buildContext } from '../src/assistant/context.ts';
+import { buildContext } from '../src/features/assistant/context.ts';
 import { searchKnowledge } from '../src/data/knowledge/search.ts';
 import type { KnowledgeEntry } from '../src/data/knowledge/types.ts';
 

@@ -1,16 +1,36 @@
 export type ComponentSection = keyof typeof componentTitles;
-export type DocsSection = 'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
-export const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
-  { name: 'Controls', sections: ['button', 'toolbar'] },
-  { name: 'DataDisplay', sections: ['badge', 'codeblock', 'icon', 'mark', 'table', 'markdownpreview'] },
-  { name: 'Feedback', sections: ['alert', 'toast', 'loader', 'progress'] },
-  { name: 'Fields', sections: ['input', 'textarea', 'markdowneditor', 'checkbox', 'switch', 'radio', 'select', 'slider'] },
-  { name: 'Layout', sections: ['layout'] },
-  { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs', 'menu', 'dropdown', 'pagination', 'tree'] },
-  { name: 'Surfaces', sections: ['card'] },
-  { name: 'Visualization', sections: ['radarchart', 'linechart', 'barchart'] },
-  { name: 'Overlays', sections: ['tooltip', 'popover', 'modal', 'drawer', 'floatingpanel'] },
-];
+export type DocsSection =
+  'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
+export const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] =
+  [
+    { name: 'Controls', sections: ['button', 'toolbar'] },
+    {
+      name: 'DataDisplay',
+      sections: ['badge', 'codeblock', 'icon', 'mark', 'table', 'markdownpreview'],
+    },
+    { name: 'Feedback', sections: ['alert', 'toast', 'loader', 'progress'] },
+    {
+      name: 'Fields',
+      sections: [
+        'input',
+        'textarea',
+        'markdowneditor',
+        'checkbox',
+        'switch',
+        'radio',
+        'select',
+        'slider',
+      ],
+    },
+    { name: 'Layout', sections: ['layout'] },
+    {
+      name: 'Navigation',
+      sections: ['accordion', 'breadcrumb', 'tabs', 'menu', 'dropdown', 'pagination', 'tree'],
+    },
+    { name: 'Surfaces', sections: ['card'] },
+    { name: 'Visualization', sections: ['radarchart', 'linechart', 'barchart'] },
+    { name: 'Overlays', sections: ['tooltip', 'popover', 'modal', 'drawer', 'floatingpanel'] },
+  ];
 
 export const componentTitles = {
   button: 'Button',

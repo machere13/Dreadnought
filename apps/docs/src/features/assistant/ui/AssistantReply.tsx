@@ -1,6 +1,6 @@
 import { CodeBlock } from '@dreadnought/ui/react';
 import { ApiFacts } from './ApiFacts.tsx';
-import { safeSourceUrl, type ConversationTurn } from './context.ts';
+import { safeSourceUrl, type ConversationTurn } from '../context.ts';
 import styles from './DocsAssistant.module.css';
 
 export function AssistantReply({ turn }: { turn: ConversationTurn }) {

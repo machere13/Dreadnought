@@ -1,5 +1,5 @@
 import { CreateMLCEngine, type MLCEngine } from '@mlc-ai/web-llm';
-import { SYSTEM_PROMPT, type ConversationMessage } from './context.ts';
+import { SYSTEM_PROMPT, type ConversationMessage } from '../context.ts';
 import type { EngineEvent } from './engine.ts';
 
 const send = (event: EngineEvent) => self.postMessage(event);

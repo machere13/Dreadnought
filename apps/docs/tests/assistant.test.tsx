@@ -1,18 +1,18 @@
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DocsAssistant } from '../src/assistant/DocsAssistant.tsx';
+import { DocsAssistant } from '../src/features/assistant/ui/DocsAssistant.tsx';
 import {
   buildContext,
   getConversationContext,
   parseAnswer,
   safeSourceUrl,
-} from '../src/assistant/context.ts';
-import type { EngineEvent } from '../src/assistant/engine.ts';
+} from '../src/features/assistant/context.ts';
+import type { EngineEvent } from '../src/features/assistant/model/engine.ts';
 import type { KnowledgeEntry } from '../src/data/knowledge/types.ts';
 const { searchKnowledge: searchEntries } = await vi.importActual<typeof import('../src/data/knowledge/search.ts')>('../src/data/knowledge/search.ts');
 
 const mocked = vi.hoisted(() => ({ create: vi.fn(), gpu: vi.fn(), search: vi.fn() }));
-vi.mock('../src/assistant/engine.ts', () => ({
+vi.mock('../src/features/assistant/model/engine.ts', () => ({
   createEngine: mocked.create,
   supportsWebGPU: mocked.gpu,
 }));
@@ -224,6 +224,27 @@ describe('documentation assistant', () => {
     expect(dispose).toHaveBeenCalledTimes(1);
     expect(screen.queryByRole('button', { name: 'Ответить по источникам' })).toBeNull();
     expect(screen.getByRole('link', { name: entry.title })).toBeTruthy();
+  });
+  it.each([
+    { entries: [...entries] },
+    { entries, loading: true },
+    { entries, error: 'Индекс недоступен' },
+  ])('rejects old model events after knowledge changes: %j', (next) => {
+    const view = render(<DocsAssistant entries={entries} />);
+    ask();
+    load();
+    ready();
+    fireEvent.click(screen.getByRole('button', { name: 'Ответить по источникам' }));
+    const id = generate.mock.calls[0][0];
+    view.rerender(<DocsAssistant {...next} />);
+    ready();
+    answer(id);
+    act(() => listener({ type: 'error', message: 'Устаревшая ошибка' }));
+    expect(dispose).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText('Используйте type=password.')).toBeNull();
+    expect(screen.queryByText('Устаревшая ошибка')).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Ответить по источникам' })).toBeNull();
+    expect(screen.getByRole('log').textContent).toBe('');
   });
   it('cancels generation and discards late answers after changing the question', () => {
     render(<DocsAssistant entries={entries} />);
