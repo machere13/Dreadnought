@@ -1,5 +1,5 @@
 import { Tree } from '@dreadnought/ui/react';
-import { getCatalogDoc } from '../../catalog/getCatalogDoc';
+import { getCatalogDoc } from '../../data/catalog/getCatalogDoc';
 import type { ComponentDoc } from './types';
 
 type Node = { id: string; label: string; children?: readonly Node[] };

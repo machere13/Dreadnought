@@ -1,4 +1,4 @@
-import data from '../generated/catalog-docs.json';
+import data from './generated/catalog-docs.json';
 import { propertySummaries } from './propertySummaries.ts';
 
 export type ApiRow = readonly [name: string, values: string, fallback: string, meaning: string];

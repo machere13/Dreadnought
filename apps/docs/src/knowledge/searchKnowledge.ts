@@ -1,1 +1,0 @@
-export { searchKnowledge } from './search';

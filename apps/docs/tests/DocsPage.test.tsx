@@ -2,7 +2,7 @@ import { cleanup, fireEvent, render, screen, within } from '@testing-library/rea
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DocsPage } from '../src/components/DocsPage';
 
-vi.mock('../src/knowledge/useKnowledge.ts', () => {
+vi.mock('../src/data/knowledge/useKnowledge.ts', () => {
   const state = { entries: [{ id: 'catalog:table:sticky', sourceKind: 'catalog', sourceId: 'catalog:table', title: 'Table · sticky', url: '/components/table/#table-api', text: 'sticky: закреплённая шапка', code: [] }], loading: false, error: null, retry: vi.fn() };
   return { useKnowledge: () => state };
 });

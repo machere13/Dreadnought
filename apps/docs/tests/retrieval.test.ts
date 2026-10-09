@@ -1,8 +1,8 @@
 // @vitest-environment node
 import { expect, it } from 'vitest';
 import { buildContext } from '../src/assistant/context.ts';
-import { searchKnowledge } from '../src/knowledge/search.ts';
-import type { KnowledgeEntry } from '../src/knowledge/types.ts';
+import { searchKnowledge } from '../src/data/knowledge/search.ts';
+import type { KnowledgeEntry } from '../src/data/knowledge/types.ts';
 
 function componentSources(name: string): KnowledgeEntry[] {
   const slug = name.toLowerCase();

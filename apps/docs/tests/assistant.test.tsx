@@ -8,15 +8,15 @@ import {
   safeSourceUrl,
 } from '../src/assistant/context.ts';
 import type { EngineEvent } from '../src/assistant/engine.ts';
-import type { KnowledgeEntry } from '../src/knowledge/types.ts';
-import { searchKnowledge as searchEntries } from '../src/knowledge/search.ts';
+import type { KnowledgeEntry } from '../src/data/knowledge/types.ts';
+const { searchKnowledge: searchEntries } = await vi.importActual<typeof import('../src/data/knowledge/search.ts')>('../src/data/knowledge/search.ts');
 
 const mocked = vi.hoisted(() => ({ create: vi.fn(), gpu: vi.fn(), search: vi.fn() }));
 vi.mock('../src/assistant/engine.ts', () => ({
   createEngine: mocked.create,
   supportsWebGPU: mocked.gpu,
 }));
-vi.mock('../src/knowledge/searchKnowledge.ts', () => ({ searchKnowledge: mocked.search }));
+vi.mock('../src/data/knowledge/search.ts', () => ({ searchKnowledge: mocked.search }));
 const entry: KnowledgeEntry = {
   id: 'catalog:input',
   sourceId: 'catalog:input',

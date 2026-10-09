@@ -2,7 +2,7 @@
 import { expect, it } from 'vitest';
 import { catalogChunks, parsePage } from '../scripts/buildKnowledge.mjs';
 import { buildContext } from '../src/assistant/context.ts';
-import { searchKnowledge } from '../src/knowledge/search.ts';
+import { searchKnowledge } from '../src/data/knowledge/search.ts';
 
 const prop = (name: string, optional = true) => ({ name, optional, type: 'string' });
 

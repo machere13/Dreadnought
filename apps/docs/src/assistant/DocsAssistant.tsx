@@ -1,6 +1,6 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Button, FloatingPanel, Icon, TextArea } from '@dreadnought/ui/react';
-import type { KnowledgeEntry } from '../knowledge/types.ts';
+import type { KnowledgeEntry } from '../data/knowledge/types.ts';
 import {
   getConversationContext,
   parseAnswer,

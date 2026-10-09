@@ -1,4 +1,4 @@
-import { getCatalogDoc } from '../catalog/getCatalogDoc';
+import { getCatalogDoc } from '../data/catalog/getCatalogDoc';
 import { ApiTable, apiGroupId } from './ApiTable.tsx';
 import { useEffect, useRef, useState } from 'react';
 import { Accordion, Breadcrumb, Button, Card, CodeBlock, Input, Layout, Table, TextArea } from '@dreadnought/ui/react';
@@ -40,8 +40,8 @@ import { floatingPanelDoc } from './componentDocs/FloatingPanelDoc';
 import { GettingStarted } from './GettingStarted';
 import { ThemingGuide } from './ThemingGuide';
 import { CustomComponentsGuide } from './CustomComponentsGuide';
-import { searchKnowledge } from '../knowledge/searchKnowledge.ts';
-import { useKnowledge } from '../knowledge/useKnowledge.ts';
+import { searchKnowledge } from '../data/knowledge/search.ts';
+import { useKnowledge } from '../data/knowledge/useKnowledge.ts';
 import { DocsAssistant } from '../assistant/DocsAssistant.tsx';
 import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';

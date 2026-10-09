@@ -6,7 +6,7 @@ import { JSDOM } from 'jsdom';
 import { packages } from '../../../tools/catalog/src/config.mjs';
 
 const defaultRoot = fileURLToPath(new URL('../../../', import.meta.url));
-export const allowedRoutes = JSON.parse(readFileSync(new URL('../src/knowledge/routes.json', import.meta.url), 'utf8'));
+export const allowedRoutes = JSON.parse(readFileSync(new URL('../src/data/knowledge/routes.json', import.meta.url), 'utf8'));
 const normalize = text => text.replace(/\s+/g, ' ').trim();
 const guideLabels = {
   '/getting-started/': ['install', 'setup', 'установка', 'начало'],

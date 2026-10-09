@@ -1,5 +1,5 @@
 import { Table } from '@dreadnought/ui/react';
-import type { ApiGroup, ApiRow } from '../catalog/getCatalogDoc.ts';
+import type { ApiGroup, ApiRow } from '../data/catalog/getCatalogDoc.ts';
 import styles from './DocsPage.module.css';
 
 export function apiGroupId(component: string, title: string) {

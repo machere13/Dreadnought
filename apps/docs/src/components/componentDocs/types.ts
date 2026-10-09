@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { ApiGroup, ApiRow } from '../../catalog/getCatalogDoc.ts';
+import type { ApiGroup, ApiRow } from '../../data/catalog/getCatalogDoc.ts';
 
 export type ComponentDoc = {
   title: string;

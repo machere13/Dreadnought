@@ -59,7 +59,6 @@ function words(text: string): string[] {
     .map((word) => aliases[word] ?? word);
 }
 
-/** Every meaningful query term needs evidence; a component name alone cannot justify an unrelated feature. */
 export function searchKnowledge(
   entries: KnowledgeEntry[],
   query: string,

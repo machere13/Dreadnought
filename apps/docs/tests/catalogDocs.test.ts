@@ -3,7 +3,7 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { expect, it } from 'vitest';
-import { prepareCatalogDocs } from '../src/catalog/generateDocData.mjs';
+import { prepareCatalogDocs } from '../scripts/catalog/generateDocData.mjs';
 import ts from 'typescript';
 
 it('derives nested table properties from public types without rewriting the catalog', () => {
@@ -25,7 +25,7 @@ it('derives nested table properties from public types without rewriting the cata
     const generate = () => {
       const program = ts.createProgram([source], { strict: true });
       prepareCatalogDocs(root, { program, checker: program.getTypeChecker(), entries: new Map([['@dreadnought/ui/react', source]]) });
-      return JSON.parse(readFileSync(path.join(root, 'apps/docs/src/generated/catalog-docs.json'), 'utf8')).components.table;
+      return JSON.parse(readFileSync(path.join(root, 'apps/docs/src/data/catalog/generated/catalog-docs.json'), 'utf8')).components.table;
     };
     const rows = generate().apiGroups[0].rows;
     expect(rows.slice(0, 2).map((row: string[]) => row.slice(0, 2))).toEqual([['key', 'string'], ['width', 'number']]);
@@ -53,7 +53,7 @@ it('does not project a core function default onto a controlled React prop', () =
     mkdirSync(path.dirname(input), { recursive: true });
     writeFileSync(input, JSON.stringify(catalog));
     prepareCatalogDocs(root);
-    const doc = JSON.parse(readFileSync(path.join(root, 'apps/docs/src/generated/catalog-docs.json'), 'utf8')).components.pagination;
+    const doc = JSON.parse(readFileSync(path.join(root, 'apps/docs/src/data/catalog/generated/catalog-docs.json'), 'utf8')).components.pagination;
     expect(doc.apiRows.map((row: string[]) => [row[0], row[2]])).toEqual([['current', '—'], ['defaultCurrent', '1']]);
     expect(doc.logicCode).toBe('getPaginationState({ total: 20 })');
   } finally { rmSync(root, { recursive: true, force: true }); }
@@ -74,7 +74,7 @@ it('keeps a separately exported viewport API distinct from its toast', () => {
       binding('react-ui-viewport', 3, 'ToastViewport', 'placement', 'library'),
     ] }] }));
     prepareCatalogDocs(root);
-    const rows = JSON.parse(readFileSync(path.join(root, 'apps/docs/src/generated/catalog-docs.json'), 'utf8')).components.toast.apiRows;
+    const rows = JSON.parse(readFileSync(path.join(root, 'apps/docs/src/data/catalog/generated/catalog-docs.json'), 'utf8')).components.toast.apiRows;
     expect(rows.map((row: string[]) => row[0])).toEqual(['title', 'ToastViewport.placement']);
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
@@ -92,7 +92,7 @@ it('projects adapter-only API and related core without claiming a ready componen
   try {
     mkdirSync(path.dirname(input), { recursive: true }); writeFileSync(input, JSON.stringify(catalog));
     prepareCatalogDocs(root);
-    const doc = JSON.parse(readFileSync(path.join(root, 'apps/docs/src/generated/catalog-docs.json'), 'utf8')).components.radarchart;
+    const doc = JSON.parse(readFileSync(path.join(root, 'apps/docs/src/data/catalog/generated/catalog-docs.json'), 'utf8')).components.radarchart;
     expect(doc).toEqual({ adapterCode: 'RadarChartAdapter', logicCode: 'buildRadarLayout', apiRows: [['label', 'string', '—', 'Название']] });
     catalog.entries[0].bindings.push({ ...adapter, id: 'react-ui', layer: 3, examples: [] });
     writeFileSync(input, JSON.stringify(catalog));
@@ -112,7 +112,7 @@ it('projects current catalog properties and keeps compound defaults separate', (
     const catalog = { packageVersions: {}, entries: [{ kind: 'component', name: 'Layout', bindings: [binding('react-adapter', 2, [], 'enabled', true), binding('react-ui', 3, [], 'enabled', true), binding('sidebar', 3, ['Sidebar'], 'enabled', false)] }, {kind: 'action', name: 'copy', bindings: []}] };
     writeFileSync(input, JSON.stringify(catalog));
     prepareCatalogDocs(root);
-    const readRows = () => JSON.parse(readFileSync(path.join(root, 'apps/docs/src/generated/catalog-docs.json'), 'utf8')).components.layout.apiRows;
+    const readRows = () => JSON.parse(readFileSync(path.join(root, 'apps/docs/src/data/catalog/generated/catalog-docs.json'), 'utf8')).components.layout.apiRows;
     expect(readRows()).toEqual([['enabled', 'boolean', 'true', 'Root option'], ['Layout.Sidebar.enabled', 'boolean', 'false', 'Sidebar option']]);
     catalog.entries[0].bindings = [binding('react-adapter', 2, [], 'renamed', true), binding('react-ui', 3, [], 'renamed', true)];
     writeFileSync(input, JSON.stringify(catalog));

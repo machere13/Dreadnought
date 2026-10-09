@@ -1,4 +1,4 @@
-import type { KnowledgeEntry } from '../knowledge/types.ts';
+import type { KnowledgeEntry } from '../data/knowledge/types.ts';
 import { safeSourceUrl } from './context.ts';
 import styles from './DocsAssistant.module.css';
 

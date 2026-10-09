@@ -1,4 +1,4 @@
-import { getCatalogDoc } from '../../catalog/getCatalogDoc';
+import { getCatalogDoc } from '../../data/catalog/getCatalogDoc';
 import { useState } from 'react';
 import { Button, Card } from '@dreadnought/ui/react';
 import type { ComponentDoc } from './types';

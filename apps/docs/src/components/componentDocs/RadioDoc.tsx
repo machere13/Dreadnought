@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Radio } from '@dreadnought/ui/react';
-import { getCatalogDoc } from '../../catalog/getCatalogDoc';
+import { getCatalogDoc } from '../../data/catalog/getCatalogDoc';
 import type { ComponentDoc } from './types';
 import styles from '../DocsPage.module.css';
 

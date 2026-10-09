@@ -1,9 +1,9 @@
 // @vitest-environment node
 import { describe, expect, it, vi } from 'vitest';
 import { extractGuides, parsePage, validateLink, catalogChunks } from '../scripts/buildKnowledge.mjs';
-import { searchKnowledge } from '../src/knowledge/search';
-import { validateManifest, type KnowledgeEntry } from '../src/knowledge/types';
-import { loadKnowledge } from '../src/knowledge/load';
+import { searchKnowledge } from '../src/data/knowledge/search';
+import { validateManifest, type KnowledgeEntry } from '../src/data/knowledge/types';
+import { loadKnowledge } from '../src/data/knowledge/load';
 
 const entry: KnowledgeEntry = { id: 'catalog:input:password', sourceId: 'catalog:input', sourceKind: 'catalog', title: 'Input · allowPasswordToggle', url: '/components/input/#input-api', text: 'Показать пароль password. allowPasswordToggle: boolean', code: ["import { Input } from '@dreadnought/ui/react';"], keywords: ['password'] };
 const identity = { buildId: 'a'.repeat(64), packageVersions: { '@dreadnought/core': '0.1.0' } };

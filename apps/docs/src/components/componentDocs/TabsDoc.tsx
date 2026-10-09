@@ -1,4 +1,4 @@
-import { getCatalogDoc } from '../../catalog/getCatalogDoc';
+import { getCatalogDoc } from '../../data/catalog/getCatalogDoc';
 import { Tabs } from '@dreadnought/ui/react';
 import type { ComponentDoc } from './types';
 import styles from '../DocsPage.module.css';

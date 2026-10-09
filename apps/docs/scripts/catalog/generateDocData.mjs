@@ -54,7 +54,7 @@ export function prepareCatalogDocs(root, context) {
       ...(entry.name === 'Table' ? { apiGroups: tableApiGroups(context ?? createContext(root, packages)) } : {}),
     };
   }
-  const output = path.join(root, 'apps/docs/src/generated/catalog-docs.json');
+  const output = path.join(root, 'apps/docs/src/data/catalog/generated/catalog-docs.json');
   mkdirSync(path.dirname(output), { recursive: true });
   writeFileSync(output, `${JSON.stringify({ packageVersions: catalog.packageVersions, components }, null, 2)}\n`);
 }
