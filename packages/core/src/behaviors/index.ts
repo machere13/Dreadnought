@@ -42,3 +42,5 @@ export { getTooltipPosition } from './getTooltipPosition.ts';
 export type { TooltipPlacement, TooltipPositionOptions } from './getTooltipPosition.ts';
 export { getHistoryState } from './getHistoryState.ts';
 export type { HistoryState, HistoryAction, HistoryOptions } from './getHistoryState.ts';
+export { getContentMountState } from './getContentMountState.ts';
+export type { ContentMountPolicy, ContentMountOptions } from './getContentMountState.ts';

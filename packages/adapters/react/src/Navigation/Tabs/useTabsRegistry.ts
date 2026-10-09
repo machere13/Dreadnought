@@ -1,6 +1,7 @@
 import { useCallback, useLayoutEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import type { RegisteredTab } from './TabsContext.tsx';
+import { containsActiveElement } from '../../shared/containsActiveElement.ts';
 
 export function useTabsRegistry(selectedValue: string) {
   const tabs = useRef(new Map<string, RegisteredTab>());
@@ -69,6 +70,12 @@ export function useTabsRegistry(selectedValue: string) {
     const selected = tabs.current.get(selectedValue);
     if (!selected || selected.disabled) {
       throw new Error(`Invalid selected Tabs value: ${selectedValue}.`);
+    }
+    for (const [value, panel] of panels.current) {
+      if (value !== selectedValue && containsActiveElement(panel)) {
+        selected.element.focus();
+        break;
+      }
     }
   });
 

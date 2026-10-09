@@ -68,8 +68,10 @@
         "Panel"
       ],
       "propertyDescriptions": {
-        "value": "Связывает панель с вкладкой."
-      }
+        "value": "Связывает панель с вкладкой.",
+        "mountPolicy": "eager создаёт children сразу; lazy при первом открытии и сохраняет; unmount удаляет при закрытии. Оболочка панели остаётся."
+      },
+      "defaults": { "mountPolicy": "eager" }
     }
   ]
 }

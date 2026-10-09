@@ -59,8 +59,14 @@
         "Panel"
       ],
       "propertyDescriptions": {
-        "children": "Содержимое панели."
-      }
+        "children": "Содержимое панели.",
+        "mountPolicy": "eager по умолчанию; lazy создаёт children при первом открытии и сохраняет; unmount удаляет при закрытии и сбрасывает локальное состояние."
+      },
+      "defaults": { "mountPolicy": "eager" },
+      "examples": [{
+        "id": "lifecycle",
+        "code": "import { Accordion, Input } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Accordion><Accordion.Item value=\"form\"><Accordion.Trigger>Форма</Accordion.Trigger><Accordion.Panel mountPolicy=\"unmount\"><Input aria-label=\"Имя\" /></Accordion.Panel></Accordion.Item></Accordion>;\n}"
+      }]
     }
   ]
 }

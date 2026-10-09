@@ -7,7 +7,7 @@
       "framework": "react",
       "importPath": "@dreadnought/ui/react",
       "exportName": "Tabs",
-      "description": "Разделы с клавиатурной навигацией, прокруткой и меню скрытых вкладок при переполнении; состояние скрытых панелей сохраняется.",
+      "description": "Разделы с клавиатурной навигацией и меню вкладок при переполнении; mountPolicy панели задаёт создание и сохранение содержимого.",
       "propertyDescriptions": {
         "defaultValue": "Начальная вкладка.",
         "value": "Текущая вкладка в управляемом режиме.",
@@ -60,8 +60,14 @@
         "Panel"
       ],
       "propertyDescriptions": {
-        "value": "Связывает панель с вкладкой."
-      }
+        "value": "Связывает панель с вкладкой.",
+        "mountPolicy": "eager по умолчанию; lazy создаёт children при первом открытии и сохраняет; unmount удаляет при закрытии и сбрасывает локальное состояние."
+      },
+      "defaults": { "mountPolicy": "eager" },
+      "examples": [{
+        "id": "lifecycle",
+        "code": "import { Tabs, Input } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Tabs defaultValue=\"overview\"><Tabs.List aria-label=\"Разделы\"><Tabs.Tab value=\"overview\">Обзор</Tabs.Tab><Tabs.Tab value=\"form\">Форма</Tabs.Tab></Tabs.List><Tabs.Panel value=\"overview\">Обзор</Tabs.Panel><Tabs.Panel value=\"form\" mountPolicy=\"lazy\"><Input aria-label=\"Имя\" /></Tabs.Panel></Tabs>;\n}"
+      }]
     }
   ]
 }

@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from 'react';
 import type { ComponentPropsWithRef, ReactNode } from 'react';
 import { getDisclosureState } from '@dreadnought/core';
+import { containsActiveElement } from '../../shared/containsActiveElement.ts';
 import { AccordionItemContext, useAccordionRootContext } from './AccordionContext.tsx';
 import { useAccordionParts } from './useAccordionParts.ts';
 
@@ -25,18 +26,7 @@ export function AccordionItemAdapter({
 
   useLayoutEffect(() => root.registerItem(value, itemToken.current), [root.registerItem, value]);
   useLayoutEffect(() => {
-    const panel = panelRef.current;
-    let active = panel?.ownerDocument.activeElement;
-    for (
-      let frame = panel?.ownerDocument.defaultView?.frameElement;
-      frame;
-      frame = frame.ownerDocument.defaultView?.frameElement
-    ) {
-      if (frame.ownerDocument.activeElement !== frame) {
-        active = null;
-      }
-    }
-    if (wasOpen.current && !open && active && panel?.contains(active)) {
+    if (wasOpen.current && !open && containsActiveElement(panelRef.current)) {
       triggerRef.current?.focus();
     }
     wasOpen.current = open;

@@ -3,10 +3,11 @@
   "kind": "component",
   "name": "Tabs",
   "family": "Navigation",
-  "description": "Разделы с клавиатурной навигацией и сохранением состояния скрытых панелей.",
+  "description": "Разделы с клавиатурной навигацией и настраиваемым созданием содержимого панелей.",
   "docsUrl": "/components/tabs/#tabs-api",
   "states": [],
-  "constraints": ["Каждой Tabs.Tab нужна Tabs.Panel с тем же value; дайте Tabs.List доступное имя. Стрелки, Home и End переключают вкладки; скрытые панели остаются в DOM."],
+  "composesWith": ["behavior:get-content-mount-state"],
+  "constraints": ["Каждой Tabs.Tab нужна Tabs.Panel с тем же value; дайте Tabs.List доступное имя. Стрелки, Home и End переключают вкладки. Оболочки скрытых панелей остаются в DOM. mountPolicy панели: eager по умолчанию, lazy после первого открытия, unmount удаляет children при закрытии. Сохранение children не приостанавливает их эффекты; unmount сбрасывает локальное состояние и очищает эффекты, но не внешнее состояние. При динамических списках используйте стабильные React keys."],
   "bindings": [
     {
       "id": "core",

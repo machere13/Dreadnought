@@ -1,5 +1,16 @@
 import { TabsAdapter } from '@dreadnought/react/unstyled';
 
+<TabsAdapter.Panel value="a" mountPolicy="lazy">
+  Lazy
+</TabsAdapter.Panel>;
+<TabsAdapter.Panel value="a" mountPolicy="unmount">
+  Reset
+</TabsAdapter.Panel>;
+// @ts-expect-error Only the three supported mount policies are accepted.
+<TabsAdapter.Panel value="a" mountPolicy="destroy">
+  Invalid
+</TabsAdapter.Panel>;
+
 <TabsAdapter defaultValue="a">
   <TabsAdapter.List aria-label="Sections">
     <TabsAdapter.Tab value="a">A</TabsAdapter.Tab>

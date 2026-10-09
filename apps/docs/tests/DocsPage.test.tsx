@@ -14,6 +14,24 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it.each(['tabs', 'accordion'] as const)('shows state preservation and reset in the %s lifecycle demo', section => {
+    render(<DocsPage section={section} />);
+    const role = section === 'tabs' ? 'tab' : 'button';
+    const choose = (policy: string) => fireEvent.click(screen.getByRole(role, { name: policy, exact: true }));
+    expect(screen.queryByLabelText('Текст lazy')).toBeNull();
+    expect(screen.queryByLabelText('Текст unmount')).toBeNull();
+    choose('lazy');
+    fireEvent.change(screen.getByLabelText('Текст lazy'), { target: { value: 'Сохранить' } });
+    choose('eager');
+    choose('lazy');
+    expect((screen.getByLabelText('Текст lazy') as HTMLInputElement).value).toBe('Сохранить');
+    choose('unmount');
+    fireEvent.change(screen.getByLabelText('Текст unmount'), { target: { value: 'Сбросить' } });
+    choose('eager');
+    expect(screen.queryByLabelText('Текст unmount')).toBeNull();
+    choose('unmount');
+    expect((screen.getByLabelText('Текст unmount') as HTMLInputElement).value).toBe('');
+  });
   it('hydrates a local Input page with a working password control', () => {
     render(<InputPage />);
     expect(screen.getByRole('heading', { name: 'Input', level: 1 })).toBeTruthy();
@@ -468,7 +486,7 @@ describe('documentation pages', () => {
     expect(screen.getByRole('tab', { name: 'Компонент' }).getAttribute('aria-selected')).toBe('true');
     fireEvent.click(screen.getByRole('tab', { name: 'Адаптер' }));
     expect(screen.getByRole('tab', { name: 'Адаптер' }).getAttribute('aria-selected')).toBe('true');
-    expect(screen.getByRole('tabpanel').textContent).toContain('Разметка и поведение без готовых стилей.');
+    expect(screen.getByRole('tabpanel', { name: 'Адаптер' }).textContent).toContain('Разметка и поведение без готовых стилей.');
   });
 
   it('documents Accordion and opens the live FAQ', () => {

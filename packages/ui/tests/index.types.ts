@@ -1,4 +1,6 @@
 import { buttonPresentation } from '@dreadnought/ui';
+import type { ComponentProps } from 'react';
+import { Accordion } from '@dreadnought/ui/react';
 import { Button } from '@dreadnought/ui/react';
 import { MarkdownEditor, type MarkdownEditorProps } from '@dreadnought/ui/react';
 import { markdownEditorPresentation } from '@dreadnought/ui';
@@ -45,6 +47,11 @@ void rootClass;
 void component;
 void tabsPresentation;
 void Tabs;
+const lazyTabsPanel: ComponentProps<typeof Tabs.Panel> = { value: 'a', mountPolicy: 'lazy' };
+const resetAccordionPanel: ComponentProps<typeof Accordion.Panel> = { children: 'Content', mountPolicy: 'unmount' };
+// @ts-expect-error Ready panels only accept the supported mount policies.
+const invalidTabsPanel: ComponentProps<typeof Tabs.Panel> = { value: 'a', mountPolicy: 'destroy' };
+void [lazyTabsPanel, resetAccordionPanel, invalidTabsPanel];
 void TabsAdapter;
 void useTabs;
 const radarSeriesClass: string = getRadarSeriesClass('__proto__');

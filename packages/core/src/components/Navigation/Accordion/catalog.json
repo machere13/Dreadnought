@@ -6,8 +6,8 @@
   "description": "Раскрывающиеся разделы для FAQ и пояснений; поддерживает один или несколько открытых пунктов.",
   "docsUrl": "/components/accordion/#accordion-api",
   "states": [],
-  "composesWith": ["behavior:get-disclosure-state"],
-  "constraints": ["Каждому Accordion.Item нужны один Trigger и один Panel. Скрытые панели остаются в DOM."],
+  "composesWith": ["behavior:get-disclosure-state", "behavior:get-content-mount-state"],
+  "constraints": ["Каждому Accordion.Item нужны один Trigger и один Panel. Оболочки скрытых панелей остаются в DOM. mountPolicy панели: eager по умолчанию, lazy после первого открытия, unmount удаляет children при закрытии. Сохранение children не приостанавливает их эффекты; unmount сбрасывает локальное состояние и очищает эффекты, но не внешнее состояние. При динамических списках используйте стабильные React keys."],
   "bindings": [
     {
       "id": "core",
