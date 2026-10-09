@@ -66,7 +66,7 @@ export function catalogChunks(catalog, pages) {
       const publicName = [binding.exportName, ...(binding.propertyPath || [])].join('.');
       const title = `${entity.name} · ${publicName}`;
       const importCode = `import { ${binding.exportName} } from '${binding.importPath}';`;
-      const context = `${binding.description || entity.description}\n${(entity.constraints || []).join('\n')}`;
+      const context = binding.description || entity.description;
       entries.push({ ...base, id: prefix, title, text: `${publicName}: ${context}`, code: [importCode], keywords: [entity.name, publicName, binding.importPath] });
       for (const [contractIndex, contract] of (binding.contracts || []).entries()) {
         const parameters = (contract.parameters || []).map(parameter => `${parameter.name}${parameter.optional ? '?' : ''}: ${parameter.type}`).join(', ');
@@ -97,6 +97,8 @@ export function catalogChunks(catalog, pages) {
         title: `${title} · ${example.id}`, text: `${context}\n${example.description || example.title || example.id}`,
         code: [example.code], keywords: [entity.name, publicName, example.id] });
     }
+    if (entity.constraints?.length) entries.push({ ...base, id: `${sourceId}:constraints`, title: `${entity.name} · ограничения`,
+      text: entity.constraints.join('\n'), code: [], keywords: [entity.name, 'constraints', 'ограничения'] });
     if (entity.tokens?.length || entity.parts?.length) entries.push({ ...base, id: `${sourceId}:styling`, title: `${entity.name} · оформление`,
       text: [...(entity.parts || []).map(part => `${part.name}: ${part.description}`), ...(entity.tokens || []).map(token => `${token.name}: ${token.value}`)].join('\n'), code: [], keywords: [entity.name, 'theme', 'tokens', 'стили', 'оформление'] });
   }

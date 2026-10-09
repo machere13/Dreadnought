@@ -10,6 +10,22 @@ const identity = { buildId: 'a'.repeat(64), packageVersions: { '@dreadnought/cor
 const manifest = { schemaVersion: 1, ...identity, entries: [entry] };
 
 describe('published knowledge boundaries', () => {
+  it('keeps cross-layer constraints searchable without mixing them into ready examples', () => {
+    const pages = new Map([['/components/input/', parsePage('<h2 id="input-api">API</h2>')]]);
+    const chunks = catalogChunks({ entries: [{
+      id: 'component:input', name: 'Input', description: 'Текстовое поле', docsUrl: entry.url,
+      constraints: ['При использовании useInput передайте inputProps вместе с ref полю.'],
+      bindings: [{
+        id: 'react-ui', layer: 3, exportName: 'Input', importPath: '@dreadnought/ui/react',
+        description: 'Готовое поле ввода.',
+        examples: [{ id: 'usage', code: "import { Input } from '@dreadnought/ui/react';\nconst example = <Input />;" }],
+      }],
+    }] }, pages);
+    const first = searchKnowledge(chunks, 'Как использовать Input?', 1)[0];
+    expect(first.code[0]).toContain('const example = <Input />;');
+    expect(first.text).not.toContain('useInput');
+    expect(searchKnowledge(chunks, 'Input useInput', 1)[0].text).toContain('inputProps вместе с ref');
+  });
   it('publishes Progress knowledge at its public API anchor', () => {
     const url = '/components/progress/#progress-api';
     const pages = new Map([['/components/progress/', parsePage('<h2 id="progress-api">API</h2>')]]);

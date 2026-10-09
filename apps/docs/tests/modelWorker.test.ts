@@ -19,6 +19,9 @@ it('provides a serialized JSON schema required by WebLLM 0.2.85 and delivers the
   };
   vi.stubGlobal('self', worker);
   complete.mockImplementation(async (request) => {
+    expect(request.messages[0].content).toContain(
+      'Properties shown in examples are not necessarily required.',
+    );
     expect(request.messages.slice(1, -1)).toEqual([
       { role: 'user', content: 'Как создать Button?' },
       { role: 'assistant', content: 'Используйте Button.' },
