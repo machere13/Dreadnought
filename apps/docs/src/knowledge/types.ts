@@ -9,6 +9,7 @@ export interface KnowledgeEntry {
   text: string;
   code: string[];
   keywords?: string[];
+  apiSummary?: string;
 }
 
 export interface KnowledgeManifest {
@@ -39,7 +40,9 @@ export function validateManifest(value: unknown, expected: { buildId: string; pa
       || typeof entry.title !== 'string' || !entry.title.trim()
       || typeof entry.text !== 'string' || !entry.text.trim()
       || !isKnowledgeUrl(entry.url) || !Array.isArray(entry.code) || !entry.code.every(code => typeof code === 'string')
-      || (entry.keywords !== undefined && (!Array.isArray(entry.keywords) || !entry.keywords.every(word => typeof word === 'string')))) {
+      || (entry.keywords !== undefined && (!Array.isArray(entry.keywords) || !entry.keywords.every(word => typeof word === 'string')))
+      || (entry.apiSummary !== undefined && (entry.sourceKind !== 'catalog'
+        || typeof entry.apiSummary !== 'string' || !entry.apiSummary.trim()))) {
       throw new Error('Некорректный индекс документации.');
     }
     ids.add(entry.id);

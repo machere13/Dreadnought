@@ -10,6 +10,7 @@ import {
 } from './context.ts';
 import { createEngine, supportsWebGPU, type EngineSession } from './engine.ts';
 import styles from './DocsAssistant.module.css';
+import { ApiFacts } from './ApiFacts.tsx';
 
 type Phase = 'idle' | 'loading' | 'ready' | 'generating';
 type Turn = ConversationTurn & { id: number };
@@ -255,6 +256,7 @@ export function DocsAssistant({
                         : 'Подходящих сведений нет. Уточните вопрос.'}
                     </p>
                   )}
+                  <ApiFacts sources={turn.sources} />
                   {turn.sources.length > 0 && (
                     <ul aria-label={turn.answer ? 'Источники ответа' : 'Найденные источники'}>
                       {(turn.answer?.sources ?? turn.sources).map((source) => (

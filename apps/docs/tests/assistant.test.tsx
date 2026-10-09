@@ -64,6 +64,30 @@ const answer = (id: number, sources = ['catalog:input']) =>
   );
 
 describe('documentation assistant', () => {
+  it('shows catalog facts once without a model and preserves them beside an incorrect model answer', () => {
+    const facts = {
+      ...entry,
+      apiSummary: 'Обязательные пропсы: нет.\nПо умолчанию: не указано в каталоге.',
+    };
+    const duplicate = { ...facts, id: 'catalog:input:example:second' };
+    mocked.search.mockReturnValue([facts, duplicate]);
+    render(<DocsAssistant entries={[facts, duplicate]} />);
+    ask();
+    fireEvent.click(screen.getByRole('button', { name: 'Отправить вопрос' }));
+    const log = screen.getByRole('log');
+    expect(within(log).getAllByText(/Обязательные пропсы: нет/)).toHaveLength(1);
+    expect(mocked.create).not.toHaveBeenCalled();
+    load();
+    ready();
+    fireEvent.click(screen.getByRole('button', { name: 'Ответить по источникам' }));
+    act(() => listener({
+      type: 'answer', id: generate.mock.calls[0][0],
+      text: JSON.stringify({ answer: 'Все пропсы обязательны.', sources: ['catalog:input'] }),
+    }));
+    expect(within(log).getByText('Все пропсы обязательны.')).toBeTruthy();
+    expect(within(log).getAllByText(/Обязательные пропсы: нет/)).toHaveLength(1);
+    expect(within(log).getByRole('link', { name: 'Проверить API' }).getAttribute('href')).toBe(entry.url);
+  });
   it('passes grounded history to the model and cites newly retrieved follow-up evidence', () => {
     mocked.search.mockImplementation(searchEntries);
     const disabled = {

@@ -56,6 +56,16 @@ it.each([
   for (const text of expected) expect(context.text).toContain(text);
   expect(context.text).toContain('Other declared props are optional in that branch.');
   expect(context.text).toContain(`const example = <${name} />;`);
+  expect(context.sources[0].apiSummary).toContain('Обязательные пропсы');
+  expect(context.sources[0].apiSummary).toContain('По умолчанию');
+  if (name === 'Input') expect(context.sources[0].apiSummary).toContain('Обязательные пропсы: нет.');
+  if (name === 'Button') {
+    expect(context.sources[0].apiSummary).toContain('Вариант API 1.2');
+    expect(context.sources[0].apiSummary).toContain('href');
+  }
+  const property = name === 'Input' ? 'required' : name === 'Select' ? 'searchable' : 'variant';
+  expect(searchKnowledge(chunks, `${name} ${property}`, 1)[0].apiSummary)
+    .toBe(context.sources[0].apiSummary);
 });
 
 it('does not interpret an absent API contract as having no required props', () => {
@@ -70,4 +80,5 @@ it('does not interpret an absent API contract as having no required props', () =
   const context = buildContext(searchKnowledge(chunks, 'Input', 1));
   expect(context.text).toContain('Required props: not specified in catalog.');
   expect(context.text).not.toContain('required props: none');
+  expect(context.sources[0].apiSummary).toContain('Обязательные пропсы: не указаны в каталоге.');
 });

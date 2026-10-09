@@ -53,19 +53,24 @@ export function extractGuides(document, route) {
   return entries;
 }
 
-function usageProps(binding) {
+function usageProps(binding, russian = false) {
+  const unknown = russian ? 'не указаны в каталоге' : 'not specified in catalog';
   const branches = (binding.contracts || []).flatMap((contract, contractIndex) =>
     (contract.variants || []).map((variant, variantIndex) => {
       const required = Array.isArray(variant.properties)
-        ? variant.properties.filter(prop => !prop.optional).map(prop => prop.name).join(', ') || 'none'
-        : 'not specified in catalog';
+        ? variant.properties.filter(prop => !prop.optional).map(prop => prop.name).join(', ') || (russian ? 'нет' : 'none')
+        : unknown;
+      if (russian) return `Вариант API ${contractIndex + 1}.${variantIndex + 1}. Обязательные пропсы: ${required}.`
+        + (Array.isArray(variant.properties) ? ' Остальные объявленные пропсы в этом варианте необязательны.' : '');
       return `Contract ${contractIndex + 1}, branch ${variantIndex + 1}: required props: ${required}.`
         + (Array.isArray(variant.properties) ? ' Other declared props are optional in that branch.' : '');
     }));
   const defaults = Object.keys(binding.defaults || {}).length
     ? JSON.stringify(binding.defaults)
-    : 'not specified in catalog.';
-  return `${branches.join('\n') || 'Required props: not specified in catalog.'}\nDefaults: ${defaults}`;
+    : `${unknown}.`;
+  return russian
+    ? `${branches.join('\n') || `Обязательные пропсы: ${unknown}.`}\nПо умолчанию: ${defaults}`
+    : `${branches.join('\n') || 'Required props: not specified in catalog.'}\nDefaults: ${defaults}`;
 }
 
 export function catalogChunks(catalog, pages) {
@@ -83,10 +88,11 @@ export function catalogChunks(catalog, pages) {
       const importCode = `import { ${binding.exportName} } from '${binding.importPath}';`;
       const description = binding.description || entity.description || '';
       const context = binding.layer === 3 ? `${usageProps(binding)}\n${description}` : description;
-      entries.push({ ...base, id: prefix, title, text: `${publicName}: ${context}`, code: [importCode], keywords: [entity.name, publicName, binding.importPath] });
+      const facts = binding.layer === 3 ? { apiSummary: usageProps(binding, true) } : {};
+      entries.push({ ...base, ...facts, id: prefix, title, text: `${publicName}: ${context}`, code: [importCode], keywords: [entity.name, publicName, binding.importPath] });
       for (const [contractIndex, contract] of (binding.contracts || []).entries()) {
         const parameters = (contract.parameters || []).map(parameter => `${parameter.name}${parameter.optional ? '?' : ''}: ${parameter.type}`).join(', ');
-        if (parameters && parameters.length < 1500 && (binding.layer === 1 || (contract.variants || []).every(variant => !variant.properties.length))) entries.push({ ...base, id: `${prefix}:signature:${contractIndex + 1}`,
+        if (parameters && parameters.length < 1500 && (binding.layer === 1 || (contract.variants || []).every(variant => !variant.properties.length))) entries.push({ ...base, ...facts, id: `${prefix}:signature:${contractIndex + 1}`,
           title: `${title} · сигнатура ${contractIndex + 1}`, text: `${publicName}(${parameters})${contract.returnType?.length < 800 ? `: ${contract.returnType}` : ''}`,
           code: [importCode], keywords: [entity.name, publicName, ...(contract.parameters || []).map(parameter => parameter.name)] });
         const variants = contract.variants || [];
@@ -103,13 +109,13 @@ export function catalogChunks(catalog, pages) {
           for (const prop of variant.properties || []) {
             if (prop.origin === 'dependency' && !binding.propertyDescriptions?.[prop.name]) continue;
             const line = `${prop.name}${prop.optional ? '?' : ''}: ${prop.type}. ${binding.propertyDescriptions?.[prop.name] || ''}${Object.hasOwn(binding.defaults || {}, prop.name) ? ` Default: ${JSON.stringify(binding.defaults[prop.name])}.` : ''}`;
-            entries.push({ ...base, id: `${prefix}:contract:${contractIndex + 1}:branch:${variantIndex + 1}:property:${prop.name}`,
+            entries.push({ ...base, ...facts, id: `${prefix}:contract:${contractIndex + 1}:branch:${variantIndex + 1}:property:${prop.name}`,
               title: `${title} · ${prop.name}${variants.length > 1 ? ` · ветвь ${variantIndex + 1}` : ''}`, text: `${publicName}. ${branch}${line}`,
               code: [importCode], keywords: [entity.name, publicName, prop.name] });
           }
         }
       }
-      for (const example of binding.examples || []) entries.push({ ...base, id: `${prefix}:example:${example.id}`,
+      for (const example of binding.examples || []) entries.push({ ...base, ...facts, id: `${prefix}:example:${example.id}`,
         title: `${title} · ${example.id}`, text: `${context}\n${example.description || example.title || example.id}`,
         code: [example.code], keywords: [entity.name, publicName, example.id] });
     }

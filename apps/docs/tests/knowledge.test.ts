@@ -10,6 +10,14 @@ const identity = { buildId: 'a'.repeat(64), packageVersions: { '@dreadnought/cor
 const manifest = { schemaVersion: 1, ...identity, entries: [entry] };
 
 describe('published knowledge boundaries', () => {
+  it('rejects malformed catalog facts while accepting an index without them', () => {
+    expect(() => validateManifest(manifest, identity)).not.toThrow();
+    for (const apiSummary of [null, 42, {}, '', '   ']) {
+      expect(() => validateManifest({ ...manifest, entries: [{ ...entry, apiSummary }] }, identity)).toThrow();
+    }
+    expect(validateManifest({ ...manifest, entries: [{ ...entry, apiSummary: 'Обязательные пропсы: нет.' }] }, identity)
+      .entries[0].apiSummary).toBe('Обязательные пропсы: нет.');
+  });
   it('keeps cross-layer constraints searchable without mixing them into ready examples', () => {
     const pages = new Map([['/components/input/', parsePage('<h2 id="input-api">API</h2>')]]);
     const chunks = catalogChunks({ entries: [{
