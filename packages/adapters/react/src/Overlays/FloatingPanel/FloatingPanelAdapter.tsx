@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { OverlayVisibilityContext } from '../../shared/OverlayVisibilityContext.ts';
 import { useFloatingPanel } from './useFloatingPanel.ts';
 import type { FloatingPanelTriggerProps, UseFloatingPanelOptions } from './useFloatingPanel.ts';
 
@@ -75,7 +76,9 @@ export function FloatingPanelAdapter({
           onBlurCapture?.(event);
         }}
       >
-        {typeof content === 'function' ? content({ close: panel.close }) : content}
+        <OverlayVisibilityContext value={panel.open}>
+          {typeof content === 'function' ? content({ close: panel.close }) : content}
+        </OverlayVisibilityContext>
       </div>
       {children({ ...panel.triggerProps, ref: attachTrigger })}
     </div>,

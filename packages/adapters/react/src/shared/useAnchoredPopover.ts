@@ -1,7 +1,8 @@
-import { useLayoutEffect } from 'react';
+import { useContext, useLayoutEffect } from 'react';
 import type { RefObject } from 'react';
 import { getTooltipPosition } from '@dreadnought/core';
 import type { TooltipPlacement } from '@dreadnought/core';
+import { OverlayVisibilityContext } from './OverlayVisibilityContext.ts';
 
 export interface AnchoredTooltipOptions {
   placement: TooltipPlacement;
@@ -20,6 +21,7 @@ export function useAnchoredPopover(
   matchAnchorWidth = true,
   tooltip?: AnchoredTooltipOptions,
 ) {
+  open = useContext(OverlayVisibilityContext) && open;
   function position() {
     const node = popup.current;
     if (!open || !node || !anchor.current) {

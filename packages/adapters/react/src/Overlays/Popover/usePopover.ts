@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import type { ButtonHTMLAttributes } from 'react';
 import { getDisclosureOpen, getPopoverState } from '@dreadnought/core';
 import type { TooltipPlacement } from '@dreadnought/core';
 import { useAnchoredPopover } from '../../shared/useAnchoredPopover.ts';
 import { getFocusableElements } from '../../shared/getFocusableElements.ts';
+import { OverlayVisibilityContext } from '../../shared/OverlayVisibilityContext.ts';
 
 export interface UsePopoverOptions {
   open?: boolean;
@@ -27,6 +28,7 @@ export function usePopover({
   arrow = true,
   autoAdjustOverflow = true,
 }: UsePopoverOptions = {}) {
+  disabled = !useContext(OverlayVisibilityContext) || disabled;
   const id = useId();
   const [internal, setInternal] = useState(defaultOpen);
   const [anchorElement, setAnchorElement] = useState<HTMLButtonElement | null>(null);

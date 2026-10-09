@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useId, useRef, useState } from 'react';
 import type { DOMAttributes } from 'react';
 import { getDisclosureOpen, getTooltipState } from '@dreadnought/core';
 import type { TooltipPlacement } from '@dreadnought/core';
 import { useAnchoredPopover } from '../../shared/useAnchoredPopover.ts';
+import { OverlayVisibilityContext } from '../../shared/OverlayVisibilityContext.ts';
 
 export interface UseTooltipOptions {
   open?: boolean;
@@ -33,6 +34,7 @@ export function useTooltip({
   openDelay = 100,
   closeDelay = 100,
 }: UseTooltipOptions = {}) {
+  disabled = !useContext(OverlayVisibilityContext) || disabled;
   const id = useId();
   const [internal, setInternal] = useState(defaultOpen);
   const [anchorElement, setAnchorElement] = useState<Element | null>(null);

@@ -174,3 +174,38 @@ it('removes its portal under StrictMode unmount', () => {
   view.unmount();
   expect(document.querySelector('[data-ui="floating-panel-root"]')).toBeNull();
 });
+
+it('hides nested popovers with a disabled parent while retaining ordinary content', () => {
+  const childChange = vi.fn();
+  const content = (
+    <>
+      <input aria-label="Черновик" />
+      <PopoverAdapter
+        open
+        onOpenChange={childChange}
+        aria-label="Вложенная панель"
+        content={<input aria-label="Вложенный ввод" />}
+      >
+        {(trigger) => <button {...trigger}>Вложенная панель</button>}
+      </PopoverAdapter>
+    </>
+  );
+  const panel = (disabled: boolean) => (
+    <FloatingPanelAdapter open disabled={disabled} content={content} aria-label="Помощник">
+      {(trigger) => <button {...trigger}>Открыть</button>}
+    </FloatingPanelAdapter>
+  );
+  const view = render(panel(false));
+  const draft = screen.getByRole('textbox', { name: 'Черновик' }) as HTMLInputElement;
+  fireEvent.change(draft, { target: { value: 'Сохранить' } });
+  screen.getByRole('textbox', { name: 'Вложенный ввод' }).focus();
+  childChange.mockClear();
+  view.rerender(panel(true));
+  expect(document.querySelector('[popover]')).toBeNull();
+  expect(screen.queryByRole('dialog')).toBeNull();
+  expect(childChange).not.toHaveBeenCalled();
+  view.rerender(panel(false));
+  expect(screen.getByRole('textbox', { name: 'Черновик' })).toBe(draft);
+  expect(draft.value).toBe('Сохранить');
+  expect(screen.getByRole('dialog', { name: 'Вложенная панель' })).toBeTruthy();
+});

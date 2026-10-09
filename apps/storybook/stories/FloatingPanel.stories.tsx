@@ -92,6 +92,32 @@ export const Controlled: Story = {
   },
 };
 export const Disabled: Story = { args: { disabled: true } };
+export const DisabledWithNestedPopover: Story = {
+  render: function DisabledParent(args) {
+    const [disabled, setDisabled] = useState(false);
+    return (
+      <>
+        <Button onClick={() => setDisabled(false)}>Включить панель</Button>
+        <FloatingPanel
+          {...args}
+          open
+          disabled={disabled}
+          content={
+            <>
+              <TextArea aria-label="Черновик" />
+              <Popover
+                aria-label="Вложенная панель"
+                content={<Button onClick={() => setDisabled(true)}>Отключить родителя</Button>}
+              >
+                {(trigger) => <Button {...trigger}>Вложенная панель</Button>}
+              </Popover>
+            </>
+          }
+        />
+      </>
+    );
+  },
+};
 export const NestedPopover: Story = {
   args: {
     content: (
