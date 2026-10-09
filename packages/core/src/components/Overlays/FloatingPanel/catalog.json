@@ -1,0 +1,12 @@
+{
+  "id": "component:floatingpanel",
+  "kind": "component",
+  "name": "FloatingPanel",
+  "family": "Overlays",
+  "description": "Немодальная плавающая панель с кнопкой открытия у края экрана.",
+  "docsUrl": "/components/floatingpanel/#floatingpanel-api",
+  "states": ["open", "disabled"],
+  "composesWith": ["behavior:get-disclosure-state", "behavior:get-disclosure-open"],
+  "constraints": ["Core задаёт состояние и ARIA, но не управляет DOM, фокусом или положением панели.", "Панель имеет role=dialog и aria-modal=false; disabled скрывает её и блокирует триггер."],
+  "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getFloatingPanelState", "examples": [{ "id": "state", "code": "import { getFloatingPanelState } from '@dreadnought/core';\nconst state = getFloatingPanelState({ triggerId: 'launch', panelId: 'panel', open: true });" }] }]
+}
