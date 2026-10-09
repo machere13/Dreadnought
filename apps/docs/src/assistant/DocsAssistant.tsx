@@ -1,18 +1,18 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Button, FloatingPanel, TextArea } from '@dreadnought/ui/react';
 import type { KnowledgeEntry } from '../knowledge/types.ts';
-import { searchKnowledge } from '../knowledge/searchKnowledge.ts';
-import { buildContext, parseAnswer, safeSourceUrl, validQuestion } from './context.ts';
+import {
+  getConversationContext,
+  parseAnswer,
+  safeSourceUrl,
+  validQuestion,
+  type ConversationTurn,
+} from './context.ts';
 import { createEngine, supportsWebGPU, type EngineSession } from './engine.ts';
 import styles from './DocsAssistant.module.css';
 
 type Phase = 'idle' | 'loading' | 'ready' | 'generating';
-type Turn = {
-  id: number;
-  question: string;
-  sources: KnowledgeEntry[];
-  answer: ReturnType<typeof parseAnswer>;
-};
+type Turn = ConversationTurn & { id: number };
 export function DocsAssistant({
   entries,
   loading = false,
@@ -35,11 +35,16 @@ export function DocsAssistant({
   const pendingSources = useRef<KnowledgeEntry[]>([]);
   const transcript = useRef<HTMLDivElement>(null);
   const currentQuestion = question.trim() || turns.at(-1)?.question || '';
-  const hits = useMemo(
-    () => (loading || error ? [] : searchKnowledge(entries, currentQuestion, 4)),
-    [entries, currentQuestion, loading, error],
+  const context = useMemo(
+    () =>
+      getConversationContext(
+        loading || error ? [] : entries,
+        currentQuestion,
+        question.trim() ? turns : turns.slice(0, -1),
+      ),
+    [entries, currentQuestion, question, turns, loading, error],
   );
-  const context = useMemo(() => buildContext(hits), [hits]);
+  const hits = context.sources;
   const busy = phase === 'loading' || phase === 'generating';
   const lastTurn = turns.at(-1);
   const canRetry =
@@ -139,7 +144,7 @@ export function DocsAssistant({
     if (phase !== 'ready' || !session.current || !context.sources.length) return;
     pendingSources.current = context.sources;
     setPhase('generating');
-    session.current.generate(id, currentQuestion, context.text);
+    session.current.generate(id, currentQuestion, context.text, context.history);
   }
 
   return (
@@ -148,13 +153,6 @@ export function DocsAssistant({
       className={styles.panel}
       content={
         <>
-          {!turns.length && (
-            <>
-              <p className={styles.muted}>
-                Найдите пример или задайте вопрос об API. Источники доступны сразу.
-              </p>
-            </>
-          )}
           {question && !validQuestion(question) && (
             <p role="status">Сократите вопрос примерно до 250 символов.</p>
           )}
@@ -178,14 +176,6 @@ export function DocsAssistant({
               </ul>
             </div>
           )}
-          <details className={styles.modelInfo}>
-            <summary>Локальная модель · загрузка ≈1 ГБ</summary>
-            <p className={styles.muted}>
-              Qwen3 1.7B загружается с Hugging Face и GitHub. Нужны WebGPU и примерно 2 ГБ свободной
-              памяти GPU; запуск зависит от устройства. Вопрос обрабатывается в этой вкладке.
-              Браузер может сохранить веса в кэше и позже удалить их.
-            </p>
-          </details>
           {gpu === false && (
             <p role="status">WebGPU недоступен. Поиск и ссылки работают без модели.</p>
           )}

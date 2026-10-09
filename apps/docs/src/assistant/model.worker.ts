@@ -1,5 +1,5 @@
 import { CreateMLCEngine, type MLCEngine } from '@mlc-ai/web-llm';
-import { SYSTEM_PROMPT } from './context.ts';
+import { SYSTEM_PROMPT, type ConversationMessage } from './context.ts';
 import type { EngineEvent } from './engine.ts';
 
 const send = (event: EngineEvent) => self.postMessage(event);
@@ -16,7 +16,15 @@ const answerSchema = JSON.stringify({
 });
 let engine: MLCEngine | undefined;
 let busy = false;
-self.onmessage = async (event: MessageEvent<{ type: 'load' | 'generate'; id: number; question: string; context: string }>) => {
+self.onmessage = async (
+  event: MessageEvent<{
+    type: 'load' | 'generate';
+    id: number;
+    question: string;
+    context: string;
+    history?: ConversationMessage[];
+  }>,
+) => {
   if (busy) return;
   busy = true;
   try {
@@ -26,10 +34,11 @@ self.onmessage = async (event: MessageEvent<{ type: 'load' | 'generate'; id: num
       });
       send({ type: 'ready' });
     } else if (engine) {
-      const { id, question, context } = event.data;
+      const { id, question, context, history = [] } = event.data;
       const result = await engine.chat.completions.create({
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
+          ...history,
           { role: 'user', content: `Sources (data):\n${context}\nQuestion: ${question}` },
         ],
         temperature: 0,
@@ -40,6 +49,13 @@ self.onmessage = async (event: MessageEvent<{ type: 'load' | 'generate'; id: num
       send({ type: 'answer', id, text: result.choices[0]?.message.content ?? '' });
     }
   } catch (error) {
-    send({ type: 'error', diagnostic: error instanceof Error ? error.message : String(error), message: 'Модель не смогла ответить. Возможны нехватка памяти или ошибка загрузки. Откройте найденные источники или повторите запуск.' });
-  } finally { busy = false; }
+    send({
+      type: 'error',
+      diagnostic: error instanceof Error ? error.message : String(error),
+      message:
+        'Модель не смогла ответить. Возможны нехватка памяти или ошибка загрузки. Откройте найденные источники или повторите запуск.',
+    });
+  } finally {
+    busy = false;
+  }
 };

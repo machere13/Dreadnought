@@ -1,9 +1,15 @@
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DocsAssistant } from '../src/assistant/DocsAssistant.tsx';
-import { buildContext, parseAnswer, safeSourceUrl } from '../src/assistant/context.ts';
+import {
+  buildContext,
+  getConversationContext,
+  parseAnswer,
+  safeSourceUrl,
+} from '../src/assistant/context.ts';
 import type { EngineEvent } from '../src/assistant/engine.ts';
 import type { KnowledgeEntry } from '../src/knowledge/types.ts';
+import { searchKnowledge as searchEntries } from '../src/knowledge/search.ts';
 
 const mocked = vi.hoisted(() => ({ create: vi.fn(), gpu: vi.fn(), search: vi.fn() }));
 vi.mock('../src/assistant/engine.ts', () => ({
@@ -58,6 +64,44 @@ const answer = (id: number, sources = ['catalog:input']) =>
   );
 
 describe('documentation assistant', () => {
+  it('passes grounded history to the model and cites newly retrieved follow-up evidence', () => {
+    mocked.search.mockImplementation(searchEntries);
+    const disabled = {
+      ...entry,
+      id: 'catalog:input:disabled',
+      title: 'Input disabled',
+      text: 'Input disabled: boolean',
+      code: ['<Input disabled />'],
+    };
+    render(<DocsAssistant entries={[entry, disabled]} />);
+    ask();
+    load();
+    ready();
+    fireEvent.click(screen.getByRole('button', { name: 'Ответить по источникам' }));
+    answer(generate.mock.calls[0][0]);
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'а как отключить его?' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Ответить по источникам' }));
+    const [id, question, context, history] = generate.mock.calls[1];
+    expect(question).toBe('а как отключить его?');
+    expect(context).toContain('<Input disabled />');
+    expect(history).toEqual([
+      { role: 'user', content: 'Input пароль' },
+      { role: 'assistant', content: 'Используйте type=password.' },
+    ]);
+    act(() =>
+      listener({
+        type: 'answer',
+        id,
+        text: JSON.stringify({ answer: 'Задайте disabled.', sources: [disabled.id] }),
+      }),
+    );
+    expect(screen.getByText('Задайте disabled.')).toBeTruthy();
+    expect(
+      within(screen.getAllByRole('list', { name: 'Источники ответа' }).at(-1)!)
+        .getByRole('link', { name: disabled.title })
+        .getAttribute('href'),
+    ).toBe(disabled.url);
+  });
   it('keeps the conversation and draft when the floating chat is closed', () => {
     mocked.gpu.mockReturnValue(false);
     render(<DocsAssistant entries={entries} />);
@@ -194,6 +238,114 @@ describe('documentation assistant', () => {
 });
 
 describe('grounding boundaries', () => {
+  it('resolves a guide follow-up against the component API, not an incidental guide', () => {
+    mocked.search.mockImplementation(searchEntries);
+    const overview: KnowledgeEntry = {
+      ...entry,
+      id: 'guide:input:overview',
+      sourceId: 'guide:input',
+      sourceKind: 'guide',
+    };
+    const disabled = {
+      ...entry,
+      id: 'catalog:input:disabled',
+      title: 'Input disabled',
+      text: 'disabled: boolean',
+      code: ['<Input disabled />'],
+    };
+    const unrelated: KnowledgeEntry = {
+      ...disabled,
+      id: 'guide:custom:disabled',
+      sourceId: 'guide:custom',
+      sourceKind: 'guide',
+      url: '/custom-components/',
+      title: 'disabled',
+    };
+    const result = getConversationContext(
+      [overview, disabled, unrelated],
+      'а как отключить его?',
+      [{ question: 'Input пароль', sources: [overview, unrelated], answer: null }],
+    );
+    expect(result.sources.map((source) => source.id)).toEqual([disabled.id]);
+    expect(result.history).toEqual([{ role: 'user', content: 'Input пароль' }]);
+  });
+  it('finds fresh evidence for a follow-up in the previous component, not an unrelated one', () => {
+    mocked.search.mockImplementation(searchEntries);
+    const disabled = {
+      ...entry,
+      id: 'catalog:input:disabled',
+      title: 'Input disabled',
+      text: 'Input disabled: boolean',
+      code: ['<Input disabled />'],
+    };
+    const button = {
+      ...disabled,
+      id: 'catalog:button:disabled',
+      sourceId: 'catalog:button',
+      title: 'Button disabled',
+      url: '/components/button/#api',
+      code: ['<Button disabled />'],
+    };
+    const history = [
+      {
+        question: 'Input пароль',
+        sources: entries,
+        answer: { text: 'Используйте type=password.', sources: entries },
+      },
+    ];
+    const result = getConversationContext(
+      [entry, disabled, button],
+      'а как отключить его?',
+      history,
+    );
+    expect(result.sources.map((source) => source.id)).toEqual(['catalog:input:disabled']);
+    expect(result.history).toEqual([
+      { role: 'user', content: 'Input пароль' },
+      { role: 'assistant', content: 'Используйте type=password.' },
+    ]);
+    expect(result.text).toContain('<Input disabled />');
+    expect(
+      parseAnswer(JSON.stringify({ answer: 'disabled', sources: [entry.id] }), result.sources),
+    ).toBeNull();
+    expect(
+      getConversationContext([entry, disabled, button], 'а как отключить его?', []).sources,
+    ).toEqual([]);
+    expect(
+      getConversationContext([entry, disabled, button], 'а как включить биометрию в нём?', history)
+        .sources,
+    ).toEqual([]);
+  });
+  it('drops the old topic and bounds history independently of source examples', () => {
+    mocked.search.mockImplementation(searchEntries);
+    const button = {
+      ...entry,
+      id: 'catalog:button:disabled',
+      sourceId: 'catalog:button',
+      title: 'Button disabled',
+      url: '/components/button/#api',
+      text: 'Button disabled: boolean',
+      code: ['<Button disabled />'],
+    };
+    const old = {
+      question: 'Input пароль',
+      sources: entries,
+      answer: { text: 'Пароль', sources: entries },
+    };
+    expect(getConversationContext([entry, button], 'Button disabled', [old]).history).toEqual([]);
+    const recent = Array.from({ length: 20 }, (_, index) => ({
+      ...old,
+      question: `Input ${index}`,
+      answer: { text: 'я'.repeat(10000), sources: entries },
+    }));
+    const result = getConversationContext(entries, 'Input пароль', recent);
+    expect(result.history.map((message) => message.content).join(' ')).not.toContain('Input 0');
+    expect(result.history.some((message) => message.content === 'Input 19')).toBe(true);
+    expect(
+      new TextEncoder().encode(result.text).length +
+        new TextEncoder().encode(JSON.stringify(result.history)).length,
+    ).toBeLessThanOrEqual(3600);
+    expect(result.text).toContain('<Input type="password" />');
+  });
   it('accepts the empty Qwen thinking header but rejects nonempty reasoning or invalid citations', () => {
     const response = JSON.stringify({ answer: 'API', sources: [entry.id] });
     expect(parseAnswer(`<think>\n\n</think>\n\n${response}`, entries)?.text).toBe('API');

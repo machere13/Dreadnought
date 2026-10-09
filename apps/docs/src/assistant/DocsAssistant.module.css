@@ -7,15 +7,6 @@
   display: grid;
   gap: var(--dreadnought-spacing-x3);
 }
-.modelInfo {
-  font-size: var(--dreadnought-font-size-caption-1);
-}
-.modelInfo summary {
-  cursor: pointer;
-}
-.modelInfo p {
-  margin-block-start: var(--dreadnought-spacing-x2);
-}
 .panel p,
 .panel h3,
 .panel ul {
