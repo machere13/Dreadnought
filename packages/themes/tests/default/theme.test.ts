@@ -308,6 +308,7 @@ describe('default theme', () => {
       "@import './components/Overlays/Popover/index.css';",
       "@import './components/Overlays/Modal/index.css';",
       "@import './components/Overlays/Drawer/index.css';",
+      "@import './components/Overlays/FloatingPanel/index.css';",
       "@import './components/DataDisplay/MarkdownPreview/index.css';",
     ]);
     for (const file of ['colors', 'spacing', 'sizing', 'typography', 'effects', 'motion']) {

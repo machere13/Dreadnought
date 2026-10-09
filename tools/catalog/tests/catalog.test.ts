@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { setImmediate } from 'node:timers/promises';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -20,12 +20,14 @@ const temporaryRoots: string[] = [];
 let context: ReturnType<typeof createContext>;
 let catalog: ReturnType<typeof generateCatalog>;
 
-beforeAll(() => {
+beforeAll(async () => {
+  await setImmediate();
   context = createContext(root, packages);
   catalog = generateCatalog(context, metadata);
 });
 
 // Compiler checks are synchronous; let the worker report results between tests.
+beforeEach(() => setImmediate());
 afterEach(() => setImmediate());
 
 afterAll(() => {
