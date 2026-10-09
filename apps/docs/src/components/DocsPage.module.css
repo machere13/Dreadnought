@@ -32,7 +32,6 @@
   align-items: center;
 }
 
-.assistantArea { max-width: 76rem; margin-inline: auto; padding: var(--dreadnought-spacing-x4) calc(var(--dreadnought-spacing-x4) * 2); scroll-margin-top: var(--dreadnought-spacing-x4); }
 
 .brand {
   margin: 0;
@@ -300,7 +299,6 @@
 
 @media (max-width: 40rem) {
   .outline { margin-inline: var(--dreadnought-spacing-x2); }
-  .assistantArea { padding-inline: var(--dreadnought-spacing-x2); }
   .article { padding: var(--dreadnought-spacing-x4) var(--dreadnought-spacing-x2) calc(var(--dreadnought-spacing-x4) * 3); }
   .pageHeading { margin-block: calc(var(--dreadnought-spacing-x4) * 2); }
   .title { font-size: var(--dreadnought-font-size-h4); line-height: var(--dreadnought-line-height-h4); }

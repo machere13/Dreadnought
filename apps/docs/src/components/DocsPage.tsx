@@ -380,13 +380,11 @@ export function DocsPage({ section }: { section: DocsSection }) {
       <Layout className={styles.contentColumn}>
         <Layout.Content className={styles.main}>
         <DocsContent section={section} />
-        <aside id="docs-assistant" className={styles.assistantArea} aria-label="Помощник по документации">
-          <DocsAssistant entries={knowledge.entries} loading={knowledge.loading} error={knowledge.error ?? undefined} />
-        </aside>
         </Layout.Content>
         <Footer />
       </Layout>
     </Layout>
+    <DocsAssistant entries={knowledge.entries} loading={knowledge.loading} error={knowledge.error ?? undefined} />
   </Layout>;
 }
 

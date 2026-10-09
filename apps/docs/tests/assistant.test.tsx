@@ -6,48 +6,140 @@ import type { EngineEvent } from '../src/assistant/engine.ts';
 import type { KnowledgeEntry } from '../src/knowledge/types.ts';
 
 const mocked = vi.hoisted(() => ({ create: vi.fn(), gpu: vi.fn(), search: vi.fn() }));
-vi.mock('../src/assistant/engine.ts', () => ({ createEngine: mocked.create, supportsWebGPU: mocked.gpu }));
+vi.mock('../src/assistant/engine.ts', () => ({
+  createEngine: mocked.create,
+  supportsWebGPU: mocked.gpu,
+}));
 vi.mock('../src/knowledge/searchKnowledge.ts', () => ({ searchKnowledge: mocked.search }));
-const entry: KnowledgeEntry = { id: 'catalog:input', sourceId: 'catalog:input', sourceKind: 'catalog', title: 'Input: пароль', url: '/components/input/#api', text: 'Input с type=password показывает переключатель видимости.', code: ['<Input type="password" />'] };
+const entry: KnowledgeEntry = {
+  id: 'catalog:input',
+  sourceId: 'catalog:input',
+  sourceKind: 'catalog',
+  title: 'Input: пароль',
+  url: '/components/input/#api',
+  text: 'Input с type=password показывает переключатель видимости.',
+  code: ['<Input type="password" />'],
+};
 const entries = [entry];
 let listener: (event: EngineEvent) => void;
 let generate: ReturnType<typeof vi.fn>;
 let dispose: ReturnType<typeof vi.fn>;
 beforeEach(() => {
   mocked.gpu.mockReturnValue(true);
-  mocked.search.mockImplementation((_entries, question) => question ? entries : []);
-  generate = vi.fn(); dispose = vi.fn();
-  mocked.create.mockImplementation((callback) => { listener = callback; return { generate, dispose }; });
+  mocked.search.mockImplementation((_entries, question) => (question ? entries : []));
+  generate = vi.fn();
+  dispose = vi.fn();
+  mocked.create.mockImplementation((callback) => {
+    listener = callback;
+    return { generate, dispose };
+  });
 });
-afterEach(() => { cleanup(); vi.clearAllMocks(); });
-const ask = () => fireEvent.change(screen.getByRole('textbox', { name: 'Ваш вопрос' }), { target: { value: 'Input пароль' } });
+afterEach(() => {
+  cleanup();
+  vi.clearAllMocks();
+});
+const ask = () => {
+  if (!screen.queryByRole('textbox', { name: 'Ваш вопрос' })) {
+    fireEvent.click(screen.getByRole('button', { name: 'Спросить документацию' }));
+  }
+  fireEvent.change(screen.getByRole('textbox', { name: 'Ваш вопрос' }), {
+    target: { value: 'Input пароль' },
+  });
+};
 const load = () => fireEvent.click(screen.getByRole('button', { name: /Загрузить модель/ }));
 const ready = () => act(() => listener({ type: 'ready' }));
-const answer = (id: number, sources = ['catalog:input']) => act(() => listener({ type: 'answer', id, text: JSON.stringify({ answer: 'Используйте type=password.', sources }) }));
+const answer = (id: number, sources = ['catalog:input']) =>
+  act(() =>
+    listener({
+      type: 'answer',
+      id,
+      text: JSON.stringify({ answer: 'Используйте type=password.', sources }),
+    }),
+  );
 
 describe('documentation assistant', () => {
+  it('keeps the conversation and draft when the floating chat is closed', () => {
+    mocked.gpu.mockReturnValue(false);
+    render(<DocsAssistant entries={entries} />);
+    expect(screen.queryByRole('textbox')).toBeNull();
+    ask();
+    fireEvent.click(screen.getByRole('button', { name: 'Отправить вопрос' }));
+    expect(screen.getByRole('log').textContent).toContain('Input пароль');
+    expect((screen.getByRole('textbox') as HTMLTextAreaElement).value).toBe('');
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Черновик' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Закрыть панель' }));
+    expect(screen.queryByRole('log')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Спросить документацию' }));
+    expect((screen.getByRole('textbox') as HTMLTextAreaElement).value).toBe('Черновик');
+    expect(screen.getByRole('log').textContent).toContain('Input пароль');
+    expect(mocked.create).not.toHaveBeenCalled();
+  });
+  it('retains previous answers and ignores an old answer during the next request', () => {
+    render(<DocsAssistant entries={entries} />);
+    ask();
+    load();
+    ready();
+    fireEvent.click(screen.getByRole('button', { name: 'Ответить по источникам' }));
+    const first = generate.mock.calls[0][0];
+    answer(first);
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Input disabled' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Ответить по источникам' }));
+    const second = generate.mock.calls[1][0];
+    act(() =>
+      listener({
+        type: 'answer',
+        id: first,
+        text: JSON.stringify({ answer: 'Устаревший ответ', sources: [entry.id] }),
+      }),
+    );
+    act(() =>
+      listener({
+        type: 'answer',
+        id: second,
+        text: JSON.stringify({ answer: 'Используйте disabled.', sources: [entry.id] }),
+      }),
+    );
+    const log = screen.getByRole('log');
+    expect(log.textContent).toContain('Input пароль');
+    expect(log.textContent).toContain('Input disabled');
+    expect(log.textContent).toContain('Используйте type=password.');
+    expect(log.textContent).toContain('Используйте disabled.');
+    expect(log.textContent).not.toContain('Устаревший ответ');
+  });
   it('shows sources before consent and generates only after explicit actions', () => {
-    render(<DocsAssistant entries={entries} />); ask();
+    render(<DocsAssistant entries={entries} />);
+    ask();
     expect(screen.getByRole('link', { name: entry.title }).getAttribute('href')).toBe(entry.url);
     expect(mocked.create).not.toHaveBeenCalled();
-    load(); expect(mocked.create).toHaveBeenCalledTimes(1);
+    load();
+    expect(mocked.create).toHaveBeenCalledTimes(1);
     act(() => listener({ type: 'progress', progress: 0.35 }));
     expect(screen.getByRole('progressbar').getAttribute('value')).toBe('35');
-    ready(); expect(generate).not.toHaveBeenCalled();
+    ready();
+    expect(generate).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: 'Ответить по источникам' }));
     answer(generate.mock.calls[0][0]);
     expect(screen.getByText('Используйте type=password.')).toBeTruthy();
-    expect(within(screen.getByRole('list', { name: 'Источники ответа' })).getAllByRole('link')).toHaveLength(1);
+    expect(
+      within(screen.getByRole('list', { name: 'Источники ответа' })).getAllByRole('link'),
+    ).toHaveLength(1);
   });
   it('cancels model loading and ignores late ready events', () => {
-    render(<DocsAssistant entries={entries} />); ask(); load();
-    fireEvent.click(screen.getByRole('button', { name: 'Отменить' })); ready();
+    render(<DocsAssistant entries={entries} />);
+    ask();
+    load();
+    const footer = screen.getByRole('dialog').querySelector('[data-slot="footer"]')!;
+    fireEvent.click(within(footer as HTMLElement).getByRole('button', { name: 'Отменить' }));
+    ready();
     expect(dispose).toHaveBeenCalledTimes(1);
     expect(screen.queryByRole('button', { name: 'Ответить по источникам' })).toBeNull();
     expect(screen.getByRole('link', { name: entry.title })).toBeTruthy();
   });
   it('cancels generation and discards late answers after changing the question', () => {
-    render(<DocsAssistant entries={entries} />); ask(); load(); ready();
+    render(<DocsAssistant entries={entries} />);
+    ask();
+    load();
+    ready();
     fireEvent.click(screen.getByRole('button', { name: 'Ответить по источникам' }));
     const id = generate.mock.calls[0][0];
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Button' } });
@@ -57,19 +149,26 @@ describe('documentation assistant', () => {
   });
   it('keeps search available without WebGPU and never constructs an engine', () => {
     mocked.gpu.mockReturnValue(false);
-    render(<DocsAssistant entries={entries} />); ask(); load();
+    render(<DocsAssistant entries={entries} />);
+    ask();
+    load();
     expect(mocked.create).not.toHaveBeenCalled();
     expect(screen.getByText(/WebGPU недоступен/)).toBeTruthy();
     expect(screen.getByRole('link', { name: entry.title })).toBeTruthy();
   });
   it('does not load or answer when retrieval has no supporting evidence', () => {
     mocked.search.mockReturnValue([]);
-    render(<DocsAssistant entries={entries} />); ask(); load();
+    render(<DocsAssistant entries={entries} />);
+    ask();
+    load();
     expect(mocked.create).not.toHaveBeenCalled();
     expect(screen.getByText(/Подходящих сведений нет/)).toBeTruthy();
   });
   it('rejects invented citations and retains real source links on engine failure', () => {
-    render(<DocsAssistant entries={entries} />); ask(); load(); ready();
+    render(<DocsAssistant entries={entries} />);
+    ask();
+    load();
+    ready();
     fireEvent.click(screen.getByRole('button', { name: 'Ответить по источникам' }));
     answer(generate.mock.calls[0][0], ['catalog:invented']);
     expect(screen.queryByText('Используйте type=password.')).toBeNull();
@@ -79,12 +178,18 @@ describe('documentation assistant', () => {
     expect(screen.getByRole('link', { name: entry.title })).toBeTruthy();
   });
   it('cancels generation on explicit cancel and releases the worker on unmount', () => {
-    const view = render(<DocsAssistant entries={entries} />); ask(); load(); ready();
+    const view = render(<DocsAssistant entries={entries} />);
+    ask();
+    load();
+    ready();
     fireEvent.click(screen.getByRole('button', { name: 'Ответить по источникам' }));
     const id = generate.mock.calls[0][0];
-    fireEvent.click(screen.getByRole('button', { name: 'Отменить' })); answer(id);
+    fireEvent.click(screen.getByRole('button', { name: 'Отменить' }));
+    answer(id);
     expect(screen.queryByText('Используйте type=password.')).toBeNull();
-    load(); view.unmount(); expect(dispose).toHaveBeenCalledTimes(2);
+    load();
+    view.unmount();
+    expect(dispose).toHaveBeenCalledTimes(2);
   });
 });
 
@@ -93,7 +198,9 @@ describe('grounding boundaries', () => {
     const response = JSON.stringify({ answer: 'API', sources: [entry.id] });
     expect(parseAnswer(`<think>\n\n</think>\n\n${response}`, entries)?.text).toBe('API');
     expect(parseAnswer(`<think>private reasoning</think>${response}`, entries)).toBeNull();
-    expect(parseAnswer('<think></think>{"answer":"API","sources":["invented"]}', entries)).toBeNull();
+    expect(
+      parseAnswer('<think></think>{"answer":"API","sources":["invented"]}', entries),
+    ).toBeNull();
   });
   it('bounds context without cutting a code example', () => {
     const huge = '<Input ' + 'x'.repeat(4000) + ' />';
@@ -107,7 +214,9 @@ describe('grounding boundaries', () => {
       expect(parseAnswer(JSON.stringify({ answer: 'API', sources }), entries)).toBeNull();
     }
     expect(parseAnswer('<script>alert(1)</script>', entries)).toBeNull();
-    expect(parseAnswer(JSON.stringify({ answer: 'API', sources: [entry.id] }), entries)?.sources).toEqual(entries);
+    expect(
+      parseAnswer(JSON.stringify({ answer: 'API', sources: [entry.id] }), entries)?.sources,
+    ).toEqual(entries);
     expect(safeSourceUrl('javascript:alert(1)')).toBeUndefined();
     expect(safeSourceUrl('//example.com')).toBeUndefined();
   });
