@@ -30,8 +30,12 @@ it('provides a serialized JSON schema required by WebLLM 0.2.85 and delivers the
     const schema = JSON.parse(request.response_format.schema);
     expect(schema.required).toEqual(['answer', 'sources']);
     expect(schema.properties.sources.items.type).toBe('string');
+    expect(schema.properties.sources.items.enum).toEqual(['catalog:button:disabled']);
+    expect(Object.keys(schema.properties)[0]).toBe('sources');
     return {
-      choices: [{ message: { content: '{"answer":"Use Input","sources":["catalog:input"]}' } }],
+      choices: [
+        { message: { content: '{"sources":["catalog:button:disabled"],"answer":"Use disabled"}' } },
+      ],
     };
   });
   await import('../src/assistant/model.worker.ts');
@@ -42,6 +46,7 @@ it('provides a serialized JSON schema required by WebLLM 0.2.85 and delivers the
       id: 7,
       question: 'А как отключить её?',
       context: 'Button disabled docs',
+      sourceIds: ['catalog:button:disabled'],
       history: [
         { role: 'user', content: 'Как создать Button?' },
         { role: 'assistant', content: 'Используйте Button.' },
@@ -50,6 +55,10 @@ it('provides a serialized JSON schema required by WebLLM 0.2.85 and delivers the
   });
   expect(events).toEqual([
     { type: 'ready' },
-    { type: 'answer', id: 7, text: '{"answer":"Use Input","sources":["catalog:input"]}' },
+    {
+      type: 'answer',
+      id: 7,
+      text: '{"sources":["catalog:button:disabled"],"answer":"Use disabled"}',
+    },
   ]);
 });

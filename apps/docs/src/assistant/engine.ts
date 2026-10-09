@@ -6,7 +6,13 @@ export type EngineEvent =
   | { type: 'answer'; id: number; text: string }
   | { type: 'error'; message: string; diagnostic?: string };
 export type EngineSession = {
-  generate(id: number, question: string, context: string, history?: ConversationMessage[]): void;
+  generate(
+    id: number,
+    question: string,
+    context: string,
+    history: ConversationMessage[],
+    sourceIds: string[],
+  ): void;
   dispose(): void;
 };
 
@@ -33,8 +39,9 @@ export function createEngine(onEvent: (event: EngineEvent) => void): EngineSessi
   };
   worker.postMessage({ type: 'load' });
   return {
-    generate(id, question, context, history = []) {
-      if (!disposed) worker.postMessage({ type: 'generate', id, question, context, history });
+    generate(id, question, context, history, sourceIds) {
+      if (!disposed)
+        worker.postMessage({ type: 'generate', id, question, context, history, sourceIds });
     },
     // Termination also cancels fetches during loading and releases the GPU engine.
     dispose() {

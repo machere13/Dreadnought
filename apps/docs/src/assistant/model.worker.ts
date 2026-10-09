@@ -5,15 +5,16 @@ import type { EngineEvent } from './engine.ts';
 const send = (event: EngineEvent) => self.postMessage(event);
 const MODEL_ID = 'Qwen3-1.7B-q4f16_1-MLC';
 // WebLLM 0.2.85 requires a serialized schema for json_object responses.
-const answerSchema = JSON.stringify({
-  type: 'object',
-  properties: {
-    answer: { type: 'string' },
-    sources: { type: 'array', items: { type: 'string' }, minItems: 1 },
-  },
-  required: ['answer', 'sources'],
-  additionalProperties: false,
-});
+const answerSchema = (sourceIds: string[]) =>
+  JSON.stringify({
+    type: 'object',
+    properties: {
+      sources: { type: 'array', items: { type: 'string', enum: sourceIds }, minItems: 1 },
+      answer: { type: 'string' },
+    },
+    required: ['answer', 'sources'],
+    additionalProperties: false,
+  });
 let engine: MLCEngine | undefined;
 let busy = false;
 self.onmessage = async (
@@ -23,6 +24,7 @@ self.onmessage = async (
     question: string;
     context: string;
     history?: ConversationMessage[];
+    sourceIds: string[];
   }>,
 ) => {
   if (busy) return;
@@ -34,7 +36,7 @@ self.onmessage = async (
       });
       send({ type: 'ready' });
     } else if (engine) {
-      const { id, question, context, history = [] } = event.data;
+      const { id, question, context, history = [], sourceIds } = event.data;
       const result = await engine.chat.completions.create({
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
@@ -43,7 +45,7 @@ self.onmessage = async (
         ],
         temperature: 0,
         max_tokens: 512,
-        response_format: { type: 'json_object', schema: answerSchema },
+        response_format: { type: 'json_object', schema: answerSchema(sourceIds) },
         extra_body: { enable_thinking: false },
       });
       send({ type: 'answer', id, text: result.choices[0]?.message.content ?? '' });

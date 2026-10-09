@@ -144,7 +144,13 @@ export function DocsAssistant({
     if (phase !== 'ready' || !session.current || !context.sources.length) return;
     pendingSources.current = context.sources;
     setPhase('generating');
-    session.current.generate(id, currentQuestion, context.text, context.history);
+    session.current.generate(
+      id,
+      currentQuestion,
+      context.text,
+      context.history,
+      context.sources.map((source) => source.id),
+    );
   }
 
   return (
