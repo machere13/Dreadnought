@@ -34,3 +34,4 @@ export * from './Feedback/Progress/index.ts';
 export * from './Navigation/Pagination/index.ts';
 export * from './DataDisplay/MarkdownPreview/index.ts';
 export * from './Fields/Slider/index.ts';
+export * from './Overlays/FloatingPanel/index.ts';

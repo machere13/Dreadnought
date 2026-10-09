@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-floating-panel-font-family: var(--dreadnought-font-family-ui);
+  --dreadnought-floating-panel-font-size: var(--dreadnought-font-size-body-2);
+  --dreadnought-floating-panel-font-weight: var(--dreadnought-font-weight-body-2);
+  --dreadnought-floating-panel-line-height: var(--dreadnought-line-height-body-2);
+}

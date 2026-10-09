@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-floating-panel-offset: var(--dreadnought-spacing-x4);
+  --dreadnought-floating-panel-gap: var(--dreadnought-spacing-x3);
+  --dreadnought-floating-panel-padding: var(--dreadnought-spacing-x4);
+}

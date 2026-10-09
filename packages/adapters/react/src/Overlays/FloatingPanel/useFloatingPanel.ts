@@ -24,7 +24,10 @@ export function useFloatingPanel({
   const trigger = useRef<HTMLButtonElement | null>(null);
   const focusInside = useRef(false);
   const state = getFloatingPanelState({
-    triggerId: `${id}-trigger`, panelId: id, open: controlled ?? internal, disabled,
+    triggerId: `${id}-trigger`,
+    panelId: id,
+    open: controlled ?? internal,
+    disabled,
   });
   const current = useRef({ open: state.open, controlled, disabled, onOpenChange });
   current.current = { open: state.open, controlled, disabled, onOpenChange };
@@ -63,7 +66,8 @@ export function useFloatingPanel({
   function blur(event: FocusEvent<HTMLDivElement>) {
     if (!current.current.open) return;
     const target = event.relatedTarget;
-    focusInside.current = !!target && 'nodeType' in target && event.currentTarget.contains(target as Node);
+    focusInside.current =
+      !!target && 'nodeType' in target && event.currentTarget.contains(target as Node);
   }
   const triggerProps: FloatingPanelTriggerProps = {
     ...state.triggerProps,
@@ -78,7 +82,9 @@ export function useFloatingPanel({
       ref: attachPanel,
       tabIndex: -1,
       onKeyDown: keyDown,
-      onFocusCapture: () => { focusInside.current = true; },
+      onFocusCapture: () => {
+        focusInside.current = true;
+      },
       onBlurCapture: blur,
     },
     show: () => request(true),

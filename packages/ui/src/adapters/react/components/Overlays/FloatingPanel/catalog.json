@@ -1,0 +1,34 @@
+{
+  "componentId": "component:floatingpanel",
+  "constraints": [
+    "Немодальная панель без затемнения, блокировки страницы, focus trap и анимации.",
+    "Внешний клик, уход фокуса и прокрутка страницы не закрывают панель. Escape внутри и close() закрывают её.",
+    "Содержимое сохраняется смонтированным; прокручивается только body.",
+    "children возвращает кнопку с triggerProps, включая ref; title задаёт шапку, а не нативный tooltip.",
+    "rootStyle задаёт токены положения и размера; style относится к самой панели."
+  ],
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "FloatingPanel",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Button, FloatingPanel, TextArea } from '@dreadnought/ui/react';\nexport function Example() { return <FloatingPanel title=\"Обратная связь\" content={<TextArea aria-label=\"Сообщение\" />} footer={({ close }) => <Button onClick={close}>Готово</Button>}>{trigger => <Button {...trigger}>Обратная связь</Button>}</FloatingPanel>; }"
+        }
+      ],
+      "defaults": { "placement": "bottom-right", "closable": true, "closeLabel": "Закрыть панель" },
+      "propertyDescriptions": {
+        "title": "Заголовок панели, ReactNode.",
+        "footer": "Нижняя область или функция с close().",
+        "placement": "Угол экрана: bottom-right, bottom-left, top-right, top-left.",
+        "closable": "Показывает кнопку закрытия в шапке.",
+        "closeIcon": "Иконка кнопки закрытия.",
+        "closeLabel": "Доступное имя кнопки закрытия."
+      }
+    }
+  ]
+}

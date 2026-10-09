@@ -13,6 +13,18 @@ afterEach(() => {
 });
 
 describe('documentation pages', () => {
+  it('documents FloatingPanel and keeps page navigation available while open', () => {
+    render(<DocsPage section="floatingpanel" />);
+    expect(screen.getByRole('heading', { name: 'FloatingPanel', level: 1 })).toBeTruthy();
+    const link = screen.getByRole('link', { name: 'FloatingPanel' });
+    expect(link.getAttribute('href')).toBe('/components/floatingpanel/');
+    fireEvent.click(screen.getByRole('button', { name: 'Обратная связь' }));
+    expect(screen.getByRole('dialog', { name: 'Обратная связь' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('link', { name: 'API' }));
+    expect(screen.getByRole('dialog', { name: 'Обратная связь' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Закрыть панель' }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
   it('keeps the main Table API concise and links to nested configurations', () => {
     render(<DocsPage section="table" />);
     const mainTable = document.getElementById('table-api')!.closest('section')!.querySelector('table')!;

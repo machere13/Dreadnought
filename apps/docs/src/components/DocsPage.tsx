@@ -36,6 +36,7 @@ import { tooltipDoc } from './componentDocs/TooltipDoc';
 import { popoverDoc } from './componentDocs/PopoverDoc';
 import { modalDoc } from './componentDocs/ModalDoc';
 import { drawerDoc } from './componentDocs/DrawerDoc';
+import { floatingPanelDoc } from './componentDocs/FloatingPanelDoc';
 import { GettingStarted } from './GettingStarted';
 import { ThemingGuide } from './ThemingGuide';
 import { CustomComponentsGuide } from './CustomComponentsGuide';
@@ -46,7 +47,7 @@ import type { ComponentDoc } from './componentDocs/types';
 import styles from './DocsPage.module.css';
 import { ComponentOutline } from './ComponentOutline.tsx';
 
-type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'markdowneditor' | 'markdownpreview' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'dropdown' | 'accordion' | 'codeblock' | 'alert' | 'toast' | 'loader' | 'progress' | 'pagination' | 'tree' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'switch' | 'slider' | 'radio' | 'select' | 'radarchart' | 'linechart' | 'barchart' | 'tooltip' | 'popover' | 'modal' | 'drawer';
+type ComponentSection = 'button' | 'toolbar' | 'input' | 'textarea' | 'markdowneditor' | 'markdownpreview' | 'table' | 'badge' | 'card' | 'tabs' | 'menu' | 'dropdown' | 'accordion' | 'codeblock' | 'alert' | 'toast' | 'loader' | 'progress' | 'pagination' | 'tree' | 'layout' | 'breadcrumb' | 'icon' | 'mark' | 'checkbox' | 'switch' | 'slider' | 'radio' | 'select' | 'radarchart' | 'linechart' | 'barchart' | 'tooltip' | 'popover' | 'modal' | 'drawer' | 'floatingpanel';
 type DocsSection = 'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
 const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] = [
   { name: 'Controls', sections: ['button', 'toolbar'] },
@@ -57,7 +58,7 @@ const componentFamilies: readonly { name: string; sections: readonly ComponentSe
   { name: 'Navigation', sections: ['accordion', 'breadcrumb', 'tabs', 'menu', 'dropdown', 'pagination', 'tree'] },
   { name: 'Surfaces', sections: ['card'] },
   { name: 'Visualization', sections: ['radarchart', 'linechart', 'barchart'] },
-  { name: 'Overlays', sections: ['tooltip', 'popover', 'modal', 'drawer'] },
+  { name: 'Overlays', sections: ['tooltip', 'popover', 'modal', 'drawer', 'floatingpanel'] },
 ];
 
 function Header() {
@@ -257,6 +258,7 @@ const componentDocs: Record<ComponentSection, ComponentDoc> = {
   popover: popoverDoc,
   modal: modalDoc,
   drawer: drawerDoc,
+  floatingpanel: floatingPanelDoc,
   checkbox: checkboxDoc,
   switch: switchDoc,
   slider: sliderDoc,

@@ -9,12 +9,18 @@ import type { FloatingPanelAdapterProps } from '../../../src/unstyled.ts';
 afterEach(cleanup);
 
 function example(props: Partial<FloatingPanelAdapterProps> = {}) {
-  return render(<>
-    <FloatingPanelAdapter aria-label="Помощник" content={<input aria-label="Вопрос" />} {...props}>
-      {trigger => <button {...trigger}>Открыть</button>}
-    </FloatingPanelAdapter>
-    <button>Снаружи</button>
-  </>);
+  return render(
+    <>
+      <FloatingPanelAdapter
+        aria-label="Помощник"
+        content={<input aria-label="Вопрос" />}
+        {...props}
+      >
+        {(trigger) => <button {...trigger}>Открыть</button>}
+      </FloatingPanelAdapter>
+      <button>Снаружи</button>
+    </>,
+  );
 }
 
 it('opens a nonmodal panel without focusing the editor', () => {
@@ -59,10 +65,14 @@ it('does not restore focus after closing from outside', () => {
   const view = example({ open: true });
   const outside = screen.getByRole('button', { name: 'Снаружи' });
   outside.focus();
-  view.rerender(<>
-    <FloatingPanelAdapter open={false} content="Содержимое">{p => <button {...p}>Открыть</button>}</FloatingPanelAdapter>
-    <button>Снаружи</button>
-  </>);
+  view.rerender(
+    <>
+      <FloatingPanelAdapter open={false} content="Содержимое">
+        {(p) => <button {...p}>Открыть</button>}
+      </FloatingPanelAdapter>
+      <button>Снаружи</button>
+    </>,
+  );
   expect(document.activeElement).toBe(outside);
 });
 
@@ -75,9 +85,11 @@ it('requests controlled closing without hiding or moving focus until confirmatio
   expect(onOpenChange).toHaveBeenCalledWith(false);
   expect(screen.getByRole('dialog')).toBeTruthy();
   expect(document.activeElement).toBe(input);
-  view.rerender(<FloatingPanelAdapter open={false} content={<input aria-label="Вопрос" />}>
-    {p => <button {...p}>Открыть</button>}
-  </FloatingPanelAdapter>);
+  view.rerender(
+    <FloatingPanelAdapter open={false} content={<input aria-label="Вопрос" />}>
+      {(p) => <button {...p}>Открыть</button>}
+    </FloatingPanelAdapter>,
+  );
   expect(screen.queryByRole('dialog')).toBeNull();
   expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Открыть' }));
 });
@@ -85,9 +97,11 @@ it('requests controlled closing without hiding or moving focus until confirmatio
 it('hides an open panel when disabled without requesting a state change', () => {
   const onOpenChange = vi.fn();
   const view = example({ open: true, onOpenChange });
-  view.rerender(<FloatingPanelAdapter open disabled onOpenChange={onOpenChange} content="Содержимое">
-    {p => <button {...p}>Открыть</button>}
-  </FloatingPanelAdapter>);
+  view.rerender(
+    <FloatingPanelAdapter open disabled onOpenChange={onOpenChange} content="Содержимое">
+      {(p) => <button {...p}>Открыть</button>}
+    </FloatingPanelAdapter>,
+  );
   expect(screen.queryByRole('dialog')).toBeNull();
   expect((screen.getByRole('button') as HTMLButtonElement).disabled).toBe(true);
   fireEvent.click(screen.getByRole('button'));
@@ -95,7 +109,11 @@ it('hides an open panel when disabled without requesting a state change', () => 
 });
 
 it('respects handled Escape and IME composition', () => {
-  example({ onKeyDown: event => { if (event.altKey) event.preventDefault(); } });
+  example({
+    onKeyDown: (event) => {
+      if (event.altKey) event.preventDefault();
+    },
+  });
   fireEvent.click(screen.getByRole('button', { name: 'Открыть' }));
   const input = screen.getByRole('textbox');
   fireEvent.keyDown(input, { key: 'Escape', altKey: true });
@@ -106,9 +124,13 @@ it('respects handled Escape and IME composition', () => {
 });
 
 it('lets nested Popover handle Escape before its parent', () => {
-  example({ content: <PopoverAdapter content={<input aria-label="Вложенное поле" />}>
-    {p => <button {...p}>Вложенная панель</button>}
-  </PopoverAdapter> });
+  example({
+    content: (
+      <PopoverAdapter content={<input aria-label="Вложенное поле" />}>
+        {(p) => <button {...p}>Вложенная панель</button>}
+      </PopoverAdapter>
+    ),
+  });
   fireEvent.click(screen.getByRole('button', { name: 'Открыть' }));
   fireEvent.click(screen.getByRole('button', { name: 'Вложенная панель' }));
   fireEvent.keyDown(screen.getByRole('textbox'), { key: 'Escape' });
@@ -122,9 +144,11 @@ it('uses the trigger owner document for the portal and focus', () => {
   const frame = document.createElement('iframe');
   document.body.append(frame);
   const doc = frame.contentDocument!;
-  const view = render(<FloatingPanelAdapter content={<input aria-label="Вопрос" />}>
-    {p => createPortal(<button {...p}>Открыть</button>, doc.body)}
-  </FloatingPanelAdapter>);
+  const view = render(
+    <FloatingPanelAdapter content={<input aria-label="Вопрос" />}>
+      {(p) => createPortal(<button {...p}>Открыть</button>, doc.body)}
+    </FloatingPanelAdapter>,
+  );
   const query = within(doc.body);
   const trigger = query.getByRole('button');
   fireEvent.click(trigger);
@@ -139,9 +163,13 @@ it('uses the trigger owner document for the portal and focus', () => {
 });
 
 it('removes its portal under StrictMode unmount', () => {
-  const view = render(<StrictMode><FloatingPanelAdapter defaultOpen content="Текст">
-    {p => <button {...p}>Открыть</button>}
-  </FloatingPanelAdapter></StrictMode>);
+  const view = render(
+    <StrictMode>
+      <FloatingPanelAdapter defaultOpen content="Текст">
+        {(p) => <button {...p}>Открыть</button>}
+      </FloatingPanelAdapter>
+    </StrictMode>,
+  );
   expect(screen.getByRole('dialog')).toBeTruthy();
   view.unmount();
   expect(document.querySelector('[data-ui="floating-panel-root"]')).toBeNull();

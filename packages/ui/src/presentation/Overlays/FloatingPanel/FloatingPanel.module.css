@@ -1,0 +1,101 @@
+@layer dreadnought {
+  .root {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    gap: var(--dreadnought-floating-panel-gap);
+    width: var(--dreadnought-floating-panel-width);
+    max-width: calc(100vw - var(--dreadnought-floating-panel-offset) * 2);
+    max-height: calc(100dvh - var(--dreadnought-floating-panel-offset) * 2);
+    min-width: 0;
+    pointer-events: none;
+    z-index: var(--dreadnought-floating-panel-z-index);
+  }
+  .bottomRight,
+  .bottomLeft {
+    bottom: var(--dreadnought-floating-panel-offset);
+  }
+  .topRight,
+  .topLeft {
+    top: var(--dreadnought-floating-panel-offset);
+    flex-direction: column-reverse;
+  }
+  .bottomRight,
+  .topRight {
+    right: var(--dreadnought-floating-panel-offset);
+  }
+  .bottomLeft,
+  .topLeft {
+    left: var(--dreadnought-floating-panel-offset);
+  }
+  .root > :last-child {
+    flex: none;
+    align-self: flex-end;
+    max-width: 100%;
+    white-space: normal;
+    pointer-events: auto;
+  }
+  .bottomLeft > :last-child,
+  .topLeft > :last-child {
+    align-self: flex-start;
+  }
+  .panel {
+    box-sizing: border-box;
+    min-width: 0;
+    max-height: var(--dreadnought-floating-panel-max-height);
+    padding: var(--dreadnought-floating-panel-padding);
+    border: var(--dreadnought-floating-panel-border-width) solid
+      var(--dreadnought-floating-panel-border-color);
+    border-radius: var(--dreadnought-floating-panel-border-radius);
+    background: var(--dreadnought-floating-panel-background);
+    color: var(--dreadnought-floating-panel-color);
+    font-family: var(--dreadnought-floating-panel-font-family);
+    font-size: var(--dreadnought-floating-panel-font-size);
+    font-weight: var(--dreadnought-floating-panel-font-weight);
+    line-height: var(--dreadnought-floating-panel-line-height);
+    overflow-wrap: anywhere;
+  }
+  .panel:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    min-height: 0;
+    gap: var(--dreadnought-floating-panel-gap);
+    overflow: hidden;
+    pointer-events: auto;
+  }
+  .header {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--dreadnought-spacing-x2);
+    min-width: 0;
+  }
+  .title {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    font-size: var(--dreadnought-font-size-h6);
+    font-weight: var(--dreadnought-font-weight-h6);
+    line-height: var(--dreadnought-line-height-h6);
+  }
+  .close {
+    flex: none;
+    align-self: flex-start;
+    margin-inline-start: auto;
+  }
+  .body {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  .footer {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    gap: var(--dreadnought-spacing-x2);
+    min-width: 0;
+  }
+}

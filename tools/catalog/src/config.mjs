@@ -21,6 +21,7 @@ export const components = [
   { family: 'Overlays', name: 'Popover', sources: [core, adapter, ui] },
   { family: 'Overlays', name: 'Modal', sources: [core, adapter, ui] },
   { family: 'Overlays', name: 'Drawer', sources: [core, adapter, ui] },
+  { family: 'Overlays', name: 'FloatingPanel', sources: [core, adapter, ui] },
   { family: 'Visualization', name: 'RadarChart', sources: [adapter, ui] },
   { family: 'Visualization', name: 'LineChart', sources: [adapter, ui] },
   { family: 'Visualization', name: 'BarChart', sources: [adapter, ui] },

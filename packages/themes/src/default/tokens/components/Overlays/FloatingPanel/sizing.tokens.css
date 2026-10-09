@@ -1,0 +1,7 @@
+:root {
+  --dreadnought-floating-panel-width: 400px;
+  --dreadnought-floating-panel-max-height: 480px;
+  --dreadnought-floating-panel-border-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-floating-panel-border-width: var(--dreadnought-border-width-outline);
+  --dreadnought-floating-panel-z-index: calc(var(--dreadnought-z-index-notification) - 1);
+}

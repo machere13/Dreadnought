@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-floating-panel-background: var(--dreadnought-color-surface-default);
+  --dreadnought-floating-panel-color: var(--dreadnought-color-text-primary);
+  --dreadnought-floating-panel-border-color: var(--dreadnought-color-border-subtle);
+}
