@@ -10,6 +10,9 @@ export const Styled = (
     open={false}
     onOpenChange={() => {}}
     aria-label="Profile"
+    closable
+    closeLabel="Dismiss profile"
+    closeIcon={<span>×</span>}
     className={modalPresentation.root}
     content={({ close }) => (
       <>

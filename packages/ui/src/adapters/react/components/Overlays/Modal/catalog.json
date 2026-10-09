@@ -1,6 +1,12 @@
 {
   "componentId": "component:modal",
-  "constraints": ["Оформление меняется через --dreadnought-modal-*; длинное содержимое прокручивается внутри окна.", "Закрытое окно сохраняет содержимое, но не отображается. Кнопки, заголовок и footer задаются приложением."],
+  "constraints": ["Оформление меняется через --dreadnought-modal-*; длинное содержимое прокручивается внутри окна.", "Закрытое окно сохраняет содержимое, но не отображается. Крестик встроен; заголовок, содержимое и footer задаются приложением. closable скрывает только крестик, не отключая Escape и закрытие по фону."],
   "bindings": [{ "id": "react-ui", "layer": 3, "framework": "react", "importPath": "@dreadnought/ui/react", "exportName": "Modal",
+    "propertyDescriptions": {
+      "closable": "Показывать кнопку закрытия сверху справа.",
+      "closeIcon": "Содержимое иконки кнопки закрытия.",
+      "closeLabel": "Доступное имя кнопки закрытия."
+    },
+    "defaults": { "closable": true, "closeLabel": "Закрыть окно" },
     "examples": [{ "id": "basic", "code": "import { Button, Input, Modal } from '@dreadnought/ui/react';\nexport function Example() { return <Modal aria-label=\"Профиль\" content={({ close }) => <><Input aria-label=\"Имя\" /><Button onClick={close}>Готово</Button></>}>{trigger => <Button {...trigger}>Редактировать</Button>}</Modal>; }" }] }]
 }

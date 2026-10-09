@@ -10,7 +10,8 @@ const meta = { title: 'Overlays/Modal', component: Modal,
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
-export const NonDismissible: Story = { args: { closeOnEscape: false, closeOnBackdrop: false } };
+export const NonDismissible: Story = { args: { closable: false, closeOnEscape: false, closeOnBackdrop: false } };
+export const WithoutCloseButton: Story = { args: { closable: false } };
 export const Controlled: Story = { render: function Controlled(args) {
   const [open, setOpen] = useState(false);
   return <Modal {...args} open={open} onOpenChange={setOpen} />;

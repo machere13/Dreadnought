@@ -21,4 +21,9 @@
   .root::backdrop {
     background: var(--dreadnought-modal-backdrop);
   }
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-block-end: var(--dreadnought-spacing-x2);
+  }
 }
