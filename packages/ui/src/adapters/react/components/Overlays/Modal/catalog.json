@@ -1,12 +1,15 @@
 {
   "componentId": "component:modal",
-  "constraints": ["Оформление меняется через --dreadnought-modal-*; длинное содержимое прокручивается внутри окна.", "Закрытое окно сохраняет содержимое, но не отображается. Крестик встроен; заголовок, содержимое и footer задаются приложением. closable скрывает только крестик, не отключая Escape и закрытие по фону."],
+  "constraints": ["Оформление меняется через --dreadnought-modal-*; прокручивается только body, шапка и footer остаются видны.", "title задаёт заголовок шапки, а не нативную подсказку. Без aria-label и aria-labelledby окно получает доступное имя из title; без title — из триггера.", "Закрытое окно сохраняет содержимое. footer необязателен и не добавляет автоматические кнопки. closable скрывает только крестик, не отключая Escape и закрытие по фону."],
   "bindings": [{ "id": "react-ui", "layer": 3, "framework": "react", "importPath": "@dreadnought/ui/react", "exportName": "Modal",
     "propertyDescriptions": {
+      "title": "Заголовок шапки; это не нативная подсказка title.",
+      "content": "Содержимое прокручиваемой области или функция с close().",
+      "footer": "Содержимое футера или функция с close(). Без значения футер не создаётся.",
       "closable": "Показывать кнопку закрытия сверху справа.",
       "closeIcon": "Содержимое иконки кнопки закрытия.",
       "closeLabel": "Доступное имя кнопки закрытия."
     },
     "defaults": { "closable": true, "closeLabel": "Закрыть окно" },
-    "examples": [{ "id": "basic", "code": "import { Button, Input, Modal } from '@dreadnought/ui/react';\nexport function Example() { return <Modal aria-label=\"Профиль\" content={({ close }) => <><Input aria-label=\"Имя\" /><Button onClick={close}>Готово</Button></>}>{trigger => <Button {...trigger}>Редактировать</Button>}</Modal>; }" }] }]
+    "examples": [{ "id": "basic", "code": "import { Button, Input, Modal } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Modal title=\"Профиль\" content={<Input aria-label=\"Имя\" />}\n    footer={({ close }) => <><Button variant=\"secondary\" onClick={close}>Отмена</Button><Button onClick={close}>Сохранить</Button></>}>\n    {trigger => <Button {...trigger}>Редактировать</Button>}\n  </Modal>;\n}" }] }]
 }

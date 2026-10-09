@@ -5,13 +5,21 @@ import styles from '../DocsPage.module.css';
 
 export const modalDoc: ComponentDoc = {
   ...getCatalogDoc('modal'), title: 'Modal',
-  description: 'Модальное окно для форм и действий. Блокирует фон и прокрутку страницы, закрывается крестиком, по Escape, клику по фону или close(). Содержимое и заголовок задаются приложением.',
+  description: 'Модальное окно с шапкой, содержимым и необязательным футером. Блокирует фон и прокрутку страницы; закрывается крестиком, по Escape или клику по фону.',
   adapterDescription: 'ModalAdapter связывает состояние React с native dialog: showModal(), cancel, close, возврат фокуса и блокировка прокрутки. Не подключает оформление темы.',
   logicDescription: 'useModal возвращает open, triggerProps, contentProps и close(). getModalState из core задаёт семантику и связь триггера с окном; состояние вычисляется через общие disclosure behaviors без DOM.',
-  footnote: <>closable=false скрывает крестик; closeIcon и closeLabel меняют иконку и доступную подпись. Escape и закрытие по фону отключаются отдельно через closeOnEscape и closeOnBackdrop. В controlled-режиме родитель подтверждает onOpenChange через open. Задайте доступное имя окна; autoFocus выбирает начальный фокус.</>,
-  demo: <div className={styles.demo}><Modal aria-label="Редактирование профиля" content={({ close }) =>
-    <div style={{ display: 'grid', gap: 'var(--dreadnought-spacing-x4)' }}>
-      <h2>Профиль</h2><Input aria-label="Имя профиля" placeholder="Ваше имя" />
-      <Button onClick={close}>Сохранить профиль</Button>
-    </div>}>{trigger => <Button {...trigger}>Редактировать профиль</Button>}</Modal></div>,
+  footnote: <>title — заголовок шапки, content — содержимое, footer — действия снизу. Без footer нижний блок не создаётся. Длинное содержимое прокручивается отдельно. title задаёт доступное имя, если не указаны aria-label или aria-labelledby. closable=false скрывает крестик; Escape и фон настраиваются отдельно. В controlled-режиме родитель подтверждает onOpenChange через open.</>,
+  demo: <div className={styles.demo}>
+    <Modal
+      title="Профиль"
+      aria-label="Редактирование профиля"
+      content={<Input aria-label="Имя профиля" placeholder="Ваше имя" />}
+      footer={({ close }) => <>
+        <Button variant="secondary" onClick={close}>Отмена</Button>
+        <Button onClick={close}>Сохранить профиль</Button>
+      </>}
+    >
+      {trigger => <Button {...trigger}>Редактировать профиль</Button>}
+    </Modal>
+  </div>,
 };

@@ -1,6 +1,10 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import * as ui from '../src/adapters/react/index.ts';
+import { Modal } from '../src/adapters/react/components/Overlays/Modal/Modal.tsx';
+import { Button } from '../src/adapters/react/components/Controls/Button/Button.tsx';
+import { Input } from '../src/adapters/react/components/Fields/Input/Input.tsx';
+
+const ui = { Modal, Button, Input };
 
 beforeEach(() => {
   Object.defineProperties(HTMLDialogElement.prototype, {
@@ -81,8 +85,54 @@ afterEach(() => {
   delete (HTMLDialogElement.prototype as Partial<HTMLDialogElement>).close;
 });
 
+it('uses the title as its accessible name and keeps title and close in one header', () => {
+  render(
+    <ui.Modal defaultOpen title="Профиль" content={<ui.Input aria-label="Имя" />}>
+      {(trigger) => <ui.Button {...trigger}>Edit</ui.Button>}
+    </ui.Modal>,
+  );
+  const dialog = screen.getByRole('dialog', { name: 'Профиль' });
+  const title = screen.getByRole('heading', { name: 'Профиль' });
+  const header = title.closest('[data-slot="header"]');
+  expect(header).not.toBeNull();
+  expect(header?.contains(screen.getByRole('button', { name: 'Закрыть окно' }))).toBe(true);
+  expect(dialog.hasAttribute('title')).toBe(false);
+  expect(screen.getByRole('textbox').closest('[data-slot="body"]')).not.toBeNull();
+});
+
+it('renders footer actions outside the body and closes through the existing controls', () => {
+  render(
+    <ui.Modal
+      defaultOpen
+      title="Профиль"
+      aria-label="Редактирование профиля"
+      content={<ui.Input aria-label="Имя" />}
+      footer={({ close }) => <ui.Button onClick={close}>Сохранить</ui.Button>}
+    >
+      {(trigger) => <ui.Button {...trigger}>Edit</ui.Button>}
+    </ui.Modal>,
+  );
+  const dialog = screen.getByRole('dialog', { name: 'Редактирование профиля' });
+  const save = screen.getByRole('button', { name: 'Сохранить' });
+  expect(save.closest('[data-slot="footer"]')).not.toBeNull();
+  expect(save.closest('[data-slot="body"]')).toBeNull();
+  expect(dialog.hasAttribute('footer')).toBe(false);
+  fireEvent.click(save);
+  expect(screen.queryByRole('dialog')).toBeNull();
+});
+
+it('does not reserve empty header and footer slots when they are omitted', () => {
+  render(
+    <ui.Modal defaultOpen closable={false} content="Contents">
+      {(trigger) => <ui.Button {...trigger}>Edit</ui.Button>}
+    </ui.Modal>,
+  );
+  const dialog = screen.getByRole('dialog');
+  expect(dialog.querySelector('[data-slot="header"]')).toBeNull();
+  expect(dialog.querySelector('[data-slot="footer"]')).toBeNull();
+});
+
 it('provides themed modal composition without losing native attributes or closing behavior', () => {
-  expect(ui).toHaveProperty('Modal');
   render(
     <ui.Modal
       aria-label="Profile"

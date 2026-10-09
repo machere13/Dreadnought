@@ -10,6 +10,8 @@ export const Styled = (
     open={false}
     onOpenChange={() => {}}
     aria-label="Profile"
+    title={<span>Profile</span>}
+    footer={({ close }) => <Button onClick={close}>Save</Button>}
     closable
     closeLabel="Dismiss profile"
     closeIcon={<span>×</span>}
