@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, cleanup, createEvent, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DocsAssistant } from '../src/features/assistant/ui/DocsAssistant.tsx';
 import {
@@ -65,6 +65,19 @@ const answer = (id: number, sources = ['catalog:input']) =>
   );
 
 describe('documentation assistant', () => {
+  it('prevents native submission when cancelling model loading', () => {
+    render(<DocsAssistant entries={entries} />);
+    ask();
+    load();
+    const button = screen.getByRole('button', { name: 'Отменить' });
+    const click = createEvent.click(button);
+    fireEvent(button, click);
+    expect(click.defaultPrevented).toBe(true);
+    expect((screen.getByRole('textbox', { name: 'Ваш вопрос' }) as HTMLTextAreaElement).value)
+      .toBe('Input пароль');
+    expect(within(screen.getByRole('log')).queryByText('Input пароль')).toBeNull();
+    expect(screen.getByText('Остановлено. Найденные источники остаются доступны.')).toBeTruthy();
+  });
   it('lets a reader copy the complete catalog example from the assistant reply without loading a model', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     vi.stubGlobal('navigator', { clipboard: { writeText } });

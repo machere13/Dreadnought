@@ -151,7 +151,10 @@ export function DocsAssistant({
             <Button
               type="button"
               variant="secondary"
-              onClick={cancel}
+              onClick={(event) => {
+                event.preventDefault();
+                cancel();
+              }}
               aria-label="Отменить"
               icon={<Icon name="close" />}
             />

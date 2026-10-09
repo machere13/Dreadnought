@@ -11,7 +11,7 @@ import { describeContract } from '../src/contracts.mjs';
 import { checkExamples } from '../src/examples.mjs';
 import { components, packages } from '../src/config.mjs';
 import { mergeMetadata, readMetadata } from '../src/metadata.mjs';
-import { disclosureCode } from '../../../apps/docs/src/components/disclosureCode.ts';
+import { disclosureCode } from '../../../apps/docs/src/content/guides/disclosureCode.ts';
 
 vi.setConfig({ testTimeout: 120_000, hookTimeout: 120_000 });
 const root = fileURLToPath(new URL('../../../', import.meta.url));
