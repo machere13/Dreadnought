@@ -10,7 +10,8 @@
     "disabled"
   ],
   "composesWith": [
-    "component:modal"
+    "component:modal",
+    "behavior:get-content-mount-state"
   ],
   "constraints": [
     "getDrawerState — явный алиас getModalState: общий контракт без визуальных свойств.",

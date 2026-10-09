@@ -1,12 +1,11 @@
-import { Button, Input, Modal } from '../src/adapters/react/index.ts';
+import { Button, Input, Modal } from '@dreadnought/ui/react';
 import { ModalAdapter } from '@dreadnought/react/unstyled';
 import { useModal } from '@dreadnought/react/logic';
-import { getModalState } from '@dreadnought/core';
-import { modalPresentation } from '../src/presentation/index.ts';
+import { modalPresentation } from '@dreadnought/ui';
 
-getModalState({ triggerId: 'trigger', panelId: 'modal', open: true });
 export const Styled = (
   <Modal
+    mountPolicy="unmount"
     open={false}
     onOpenChange={() => {}}
     aria-label="Profile"
@@ -27,7 +26,12 @@ export const Styled = (
   </Modal>
 );
 export const Unstyled = (
-  <ModalAdapter closeOnBackdrop={false} onCancel={(event) => event.preventDefault()} content="Text">
+  <ModalAdapter
+    mountPolicy="lazy"
+    closeOnBackdrop={false}
+    onCancel={(event) => event.preventDefault()}
+    content="Text"
+  >
     {(trigger) => <button {...trigger}>Edit</button>}
   </ModalAdapter>
 );
@@ -44,3 +48,10 @@ export function Custom() {
     </>
   );
 }
+
+export const InvalidPolicy = (
+  // @ts-expect-error Only supported content policies are accepted.
+  <Modal mountPolicy="destroy" content="Text">
+    {(trigger) => <Button {...trigger}>Open</Button>}
+  </Modal>
+);

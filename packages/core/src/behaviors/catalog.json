@@ -2,7 +2,7 @@
   {
     "id": "behavior:get-content-mount-state", "kind": "behavior", "name": "getContentMountState", "family": "Behaviors",
     "description": "Определяет, создавать ли содержимое панели, и сохраняет факт первого открытия без React или DOM.",
-    "docsUrl": "/components/tabs/#tabs-api", "composesWith": ["component:tabs", "component:accordion", "behavior:get-disclosure-open"],
+    "docsUrl": "/components/tabs/#tabs-api", "composesWith": ["component:tabs", "component:accordion", "component:modal", "component:drawer", "behavior:get-disclosure-open"],
     "constraints": ["active и visited по умолчанию false; mountPolicy по умолчанию eager. eager всегда mounted; lazy — после первого active; unmount — только пока active. Возвращает mounted и visited; visited сохраняется после закрытия. Память предыдущего visited хранит вызывающий код. Неподдержанная политика вызывает TypeError. Не монтирует DOM, не хранит состояние и не управляет фокусом. В React политика относится к children, оболочка панели остаётся."],
     "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getContentMountState",
       "examples": [{ "id": "lazy", "code": "import { getContentMountState } from '@dreadnought/core';\nconst opened = getContentMountState({ active: true, mountPolicy: 'lazy' });\nconst closed = getContentMountState({ active: false, visited: opened.visited, mountPolicy: 'lazy' });" }] }]

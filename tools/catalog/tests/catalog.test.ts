@@ -110,7 +110,7 @@ describe('public catalog', () => {
   });
   it('publishes Drawer aliases and visual-only placement and size', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:drawer');
-    expect(entry).toMatchObject({ family: 'Overlays', composesWith: ['component:modal'] });
+    expect(entry).toMatchObject({ family: 'Overlays', composesWith: ['component:modal', 'behavior:get-content-mount-state'] });
     expect(entry!.constraints.join(' ')).not.toContain('showDrawer()');
     expect(entry!.bindings.map(binding => binding.exportName)).toEqual(['getDrawerState', 'DrawerAdapter', 'useDrawer', 'Drawer']);
     for (const binding of entry!.bindings) expect(() => checkExamples(context, binding.examples)).not.toThrow();

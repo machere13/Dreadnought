@@ -177,6 +177,9 @@ describe('documentation pages', () => {
       field.focus(); fireEvent.click(screen.getByRole('button', { name: 'Сохранить профиль' }));
       expect(screen.queryByRole('dialog')).toBeNull();
       expect(document.activeElement).toBe(trigger);
+      expect(screen.queryByLabelText('Имя профиля')).toBeNull();
+      fireEvent.click(trigger);
+      expect((screen.getByLabelText('Имя профиля') as HTMLInputElement).value).toBe('');
     } finally {
       cleanup();
       delete (HTMLDialogElement.prototype as Partial<HTMLDialogElement>).showModal;
@@ -201,6 +204,9 @@ describe('documentation pages', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Сохранить профиль' }));
       expect(screen.queryByRole('dialog')).toBeNull();
       expect(document.activeElement).toBe(trigger);
+      expect(screen.queryByLabelText('Имя профиля')).toBeNull();
+      fireEvent.click(trigger);
+      expect((screen.getByLabelText('Имя профиля') as HTMLInputElement).value).toBe('');
     } finally {
       cleanup();
       delete (HTMLDialogElement.prototype as Partial<HTMLDialogElement>).showModal;

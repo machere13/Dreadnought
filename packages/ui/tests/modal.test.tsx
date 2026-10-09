@@ -6,6 +6,35 @@ import { Input } from '../src/adapters/react/components/Fields/Input/Input.tsx';
 
 const ui = { Modal, Button, Input };
 
+it('applies unmount to the modal header, body and footer together', () => {
+  let footerCalls = 0;
+  render(
+    <ui.Modal
+      mountPolicy="unmount"
+      title="Draft"
+      content={<ui.Input aria-label="Draft text" />}
+      footer={({ close }) => {
+        footerCalls++;
+        return <ui.Button onClick={close}>Done</ui.Button>;
+      }}
+    >
+      {(trigger) => <ui.Button {...trigger}>Edit draft</ui.Button>}
+    </ui.Modal>,
+  );
+  expect(screen.queryByText('Draft')).toBeNull();
+  expect(footerCalls).toBe(0);
+  const trigger = screen.getByRole('button', { name: 'Edit draft' });
+  fireEvent.click(trigger);
+  expect(screen.getByRole('dialog', { name: 'Draft' })).toBeTruthy();
+  fireEvent.change(screen.getByLabelText('Draft text'), { target: { value: 'Saved' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+  expect(screen.queryByText('Draft')).toBeNull();
+  expect(screen.queryByLabelText('Draft text')).toBeNull();
+  expect(screen.queryByRole('button', { name: 'Done' })).toBeNull();
+  fireEvent.click(trigger);
+  expect((screen.getByLabelText('Draft text') as HTMLInputElement).value).toBe('');
+});
+
 beforeEach(() => {
   Object.defineProperties(HTMLDialogElement.prototype, {
     showModal: {

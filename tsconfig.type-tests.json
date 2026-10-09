@@ -22,6 +22,7 @@
     "packages/core/tests/domains/markdown/markdown.types.ts",
     "packages/ui/tests/tooltip.types.tsx",
     "packages/ui/tests/drawer.types.tsx",
+    "packages/ui/tests/modal.types.tsx",
     "packages/ui/tests/dropdown.types.tsx",
     "packages/ui/tests/switch.types.tsx",
     "packages/core/tests/components/Overlays/Drawer/DrawerPublic.types.ts",

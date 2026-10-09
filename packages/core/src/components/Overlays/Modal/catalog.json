@@ -2,7 +2,7 @@
   "id": "component:modal", "kind": "component", "name": "Modal", "family": "Overlays",
   "description": "Модальное окно для форм и действий с заблокированным фоном.",
   "docsUrl": "/components/modal/#modal-api", "states": ["open", "disabled"],
-  "composesWith": ["behavior:get-disclosure-state", "behavior:get-disclosure-open", "behavior:get-next-enabled-value"],
+  "composesWith": ["behavior:get-disclosure-state", "behavior:get-disclosure-open", "behavior:get-next-enabled-value", "behavior:get-content-mount-state"],
   "constraints": ["Core задаёт доступную связь между кнопкой и диалогом, не управляет DOM или фокусом.", "React использует showModal(): необходим браузер с native HTMLDialogElement.", "Содержимое должно предоставлять доступный способ закрытия, например кнопку с close()."],
   "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getModalState",
     "examples": [{ "id": "state", "code": "import { getModalState } from '@dreadnought/core';\nconst state = getModalState({ triggerId: 'edit-button', panelId: 'profile-dialog', open: true });" }] }]

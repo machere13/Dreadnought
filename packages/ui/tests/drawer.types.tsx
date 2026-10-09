@@ -5,6 +5,7 @@ import { drawerPresentation } from '@dreadnought/ui';
 
 export const Styled = (
   <Drawer
+    mountPolicy="lazy"
     placement="left"
     size={320}
     aria-label="Profile"
@@ -25,7 +26,7 @@ export const Edges = (['right', 'left', 'top', 'bottom'] as const).map((placemen
   </Drawer>
 ));
 export const Unstyled = (
-  <DrawerAdapter aria-label="Settings" closeOnBackdrop={false} content="Text">
+  <DrawerAdapter mountPolicy="unmount" aria-label="Settings" closeOnBackdrop={false} content="Text">
     {(trigger) => <button {...trigger}>Edit</button>}
   </DrawerAdapter>
 );
@@ -67,3 +68,10 @@ function InvalidLogic() {
   useDrawer({ size: 320 });
 }
 export { InvalidLogic };
+
+export const InvalidPolicy = (
+  // @ts-expect-error Only supported content policies are accepted.
+  <Drawer mountPolicy="destroy" content="Text">
+    {(trigger) => <Button {...trigger}>Open</Button>}
+  </Drawer>
+);

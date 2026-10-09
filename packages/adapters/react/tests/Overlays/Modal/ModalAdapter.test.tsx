@@ -1,8 +1,8 @@
-import { StrictMode, useState } from 'react';
+import { StrictMode, useEffect, useState } from 'react';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderToString } from 'react-dom/server';
-import { afterEach, beforeEach, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import * as adapters from '../../../src/unstyled.ts';
 
 beforeEach(() => {
@@ -49,6 +49,159 @@ function Example(props: Partial<adapters.ModalAdapterProps> = {}) {
 }
 const opener = () => screen.getByRole('button', { name: 'Edit' });
 const panel = () => screen.getByRole('dialog', { name: 'Profile' }) as HTMLDialogElement;
+
+describe.each(['ModalAdapter', 'DrawerAdapter'] as const)('%s content lifecycle', (name) => {
+  const Overlay = adapters[name];
+
+  it.each([undefined, 'lazy', 'unmount'] as const)(
+    'uses %s while retaining the dialog shell',
+    (mountPolicy) => {
+      let mounts = 0;
+      let cleanups = 0;
+      let contentCalls = 0;
+      function Draft() {
+        useEffect(() => {
+          mounts++;
+          return () => {
+            cleanups++;
+          };
+        }, []);
+        return <input aria-label="Draft" defaultValue="Initial" />;
+      }
+      const { container, unmount } = render(
+        <Overlay
+          aria-label="Draft window"
+          mountPolicy={mountPolicy}
+          content={({ close }) => {
+            contentCalls++;
+            return (
+              <>
+                <Draft />
+                <button onClick={close}>Done</button>
+              </>
+            );
+          }}
+        >
+          {(trigger) => <button {...trigger}>Edit draft</button>}
+        </Overlay>,
+      );
+      const dialog = container.querySelector('dialog')!;
+      const trigger = screen.getByRole('button', { name: 'Edit draft' });
+      expect(dialog.open).toBe(false);
+      expect(dialog.hasAttribute('mountPolicy')).toBe(false);
+      expect(trigger.getAttribute('aria-controls')).toBe(dialog.id);
+      expect(mounts).toBe(mountPolicy === undefined ? 1 : 0);
+      if (mountPolicy !== undefined) expect(contentCalls).toBe(0);
+      trigger.focus();
+      fireEvent.click(trigger);
+      expect(dialog.open).toBe(true);
+      expect(document.documentElement.style.overflow).toBe('hidden');
+      const input = screen.getByLabelText('Draft') as HTMLInputElement;
+      fireEvent.change(input, { target: { value: 'Saved' } });
+      input.focus();
+      fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+      expect(container.querySelector('dialog')).toBe(dialog);
+      expect(dialog.open).toBe(false);
+      expect(document.activeElement).toBe(trigger);
+      expect(document.documentElement.style.overflow).not.toBe('hidden');
+      expect(screen.queryByLabelText('Draft') === null).toBe(mountPolicy === 'unmount');
+      expect(cleanups).toBe(mountPolicy === 'unmount' ? 1 : 0);
+      fireEvent.click(trigger);
+      expect((screen.getByLabelText('Draft') as HTMLInputElement).value).toBe(
+        mountPolicy === 'unmount' ? 'Initial' : 'Saved',
+      );
+      expect(mounts).toBe(mountPolicy === 'unmount' ? 2 : 1);
+      unmount();
+      expect(cleanups).toBe(mounts);
+    },
+  );
+
+  it('retains unmount content until a controlled close is accepted', () => {
+    const requests: boolean[] = [];
+    const view = (open: boolean) => (
+      <Overlay
+        open={open}
+        mountPolicy="unmount"
+        aria-label="Draft window"
+        onOpenChange={(next) => requests.push(next)}
+        content={<input aria-label="Draft" />}
+      >
+        {(trigger) => <button {...trigger}>Edit draft</button>}
+      </Overlay>
+    );
+    const { rerender } = render(view(true));
+    const input = screen.getByLabelText('Draft');
+    fireEvent.change(input, { target: { value: 'Saved' } });
+    fireEvent(screen.getByRole('dialog'), new Event('cancel', { cancelable: true }));
+    expect(requests).toEqual([false]);
+    expect(screen.getByLabelText('Draft')).toBe(input);
+    expect((input as HTMLInputElement).value).toBe('Saved');
+    rerender(view(false));
+    expect(screen.queryByLabelText('Draft')).toBeNull();
+  });
+
+  it('does not steal outside focus when unmount content closes', () => {
+    const view = (open: boolean) => (
+      <>
+        <Overlay
+          open={open}
+          mountPolicy="unmount"
+          aria-label="Draft window"
+          content={<input aria-label="Draft" />}
+        >
+          {(trigger) => <button {...trigger}>Edit draft</button>}
+        </Overlay>
+        <button>Outside</button>
+      </>
+    );
+    const { rerender } = render(view(true));
+    const outside = screen.getByRole('button', { name: 'Outside' });
+    outside.focus();
+    rerender(view(false));
+    expect(document.activeElement).toBe(outside);
+    expect(screen.queryByLabelText('Draft')).toBeNull();
+  });
+
+  it('mounts initially open lazy content under StrictMode', () => {
+    render(
+      <StrictMode>
+        <Overlay
+          defaultOpen
+          mountPolicy="lazy"
+          aria-label="Draft window"
+          content={<input aria-label="Draft" />}
+        >
+          {(trigger) => <button {...trigger}>Edit draft</button>}
+        </Overlay>
+      </StrictMode>,
+    );
+    expect(screen.getByRole('dialog')).toBeTruthy();
+    expect(screen.getByLabelText('Draft')).toBeTruthy();
+  });
+
+  it.each(['lazy', 'unmount'] as const)(
+    'does not evaluate closed %s content during SSR',
+    (mountPolicy) => {
+      let calls = 0;
+      const view = (open: boolean) => (
+        <Overlay
+          open={open}
+          mountPolicy={mountPolicy}
+          content={() => {
+            calls++;
+            return <span>Server draft</span>;
+          }}
+        >
+          {(trigger) => <button {...trigger}>Edit draft</button>}
+        </Overlay>
+      );
+      expect(renderToString(view(false))).not.toContain('Server draft');
+      expect(calls).toBe(0);
+      expect(renderToString(view(true))).toContain('Server draft');
+      expect(calls).toBe(1);
+    },
+  );
+});
 function pointer(
   node: HTMLElement,
   type: 'pointerdown' | 'pointerup',

@@ -4,6 +4,35 @@ import { afterEach, beforeEach, expect, it } from 'vitest';
 import * as ui from '../src/adapters/react/index.ts';
 import * as presentation from '../src/presentation/index.ts';
 
+it.each(['lazy', 'unmount'] as const)(
+  'uses %s content through the themed drawer',
+  (mountPolicy) => {
+    render(
+      <ui.Drawer
+        aria-label="Draft"
+        mountPolicy={mountPolicy}
+        content={({ close }) => (
+          <>
+            <ui.Input aria-label="Draft text" />
+            <ui.Button onClick={close}>Done</ui.Button>
+          </>
+        )}
+      >
+        {(trigger) => <ui.Button {...trigger}>Edit draft</ui.Button>}
+      </ui.Drawer>,
+    );
+    expect(screen.queryByLabelText('Draft text')).toBeNull();
+    const trigger = screen.getByRole('button', { name: 'Edit draft' });
+    fireEvent.click(trigger);
+    fireEvent.change(screen.getByLabelText('Draft text'), { target: { value: 'Saved' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+    fireEvent.click(trigger);
+    expect((screen.getByLabelText('Draft text') as HTMLInputElement).value).toBe(
+      mountPolicy === 'lazy' ? 'Saved' : '',
+    );
+  },
+);
+
 beforeEach(() =>
   Object.defineProperties(HTMLDialogElement.prototype, {
     showModal: {

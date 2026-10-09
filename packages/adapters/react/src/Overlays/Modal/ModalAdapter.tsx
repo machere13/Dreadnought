@@ -1,4 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import type { ContentMountPolicy } from '@dreadnought/core';
+import { useContentMount } from '../../shared/useContentMount.ts';
 import { useModal } from './useModal.ts';
 import type { ModalTriggerProps, UseModalOptions } from './useModal.ts';
 
@@ -21,11 +23,13 @@ export type ModalAdapterProps = UseModalOptions &
   > & {
     children: (trigger: ModalTriggerProps) => ReactNode;
     content: ReactNode | ((controls: ModalControls) => ReactNode);
+    mountPolicy?: ContentMountPolicy;
   };
 
 export function ModalAdapter({
   children,
   content,
+  mountPolicy = 'eager',
   open,
   defaultOpen,
   disabled,
@@ -49,6 +53,7 @@ export function ModalAdapter({
     closeOnEscape,
     closeOnBackdrop,
   });
+  const mounted = useContentMount(modal.open, mountPolicy);
   return (
     <>
       {children(modal.triggerProps)}
@@ -87,7 +92,11 @@ export function ModalAdapter({
           modal.contentProps.onPointerCancel();
         }}
       >
-        {typeof content === 'function' ? content({ close: modal.close }) : content}
+        {mounted
+          ? typeof content === 'function'
+            ? content({ close: modal.close })
+            : content
+          : null}
       </dialog>
     </>
   );

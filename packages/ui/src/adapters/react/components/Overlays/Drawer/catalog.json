@@ -4,7 +4,7 @@
     "Drawer использует DrawerAdapter — общий native Modal lifecycle, но собственное оформление.",
     "placement задаёт край: right, left, top или bottom. size задаёт ширину боковой панели или высоту верхней/нижней.",
     "Положительное конечное число size — пиксели, строка — CSS-размер; невалидные числа оставляют размер темы или локального токена.",
-    "Открытие и закрытие немедленные, без анимации; содержимое сохраняется смонтированным.",
+    "Открытие и закрытие немедленные, без анимации. mountPolicy: eager по умолчанию сохраняет содержимое; lazy создаёт при первом открытии и сохраняет; unmount удаляет при закрытии.",
     "Кнопка закрытия, заголовок и footer задаются приложением. Необходимы доступное имя и поддержка dialog.showModal()."
   ],
   "bindings": [
@@ -16,15 +16,21 @@
       "exportName": "Drawer",
       "examples": [
         {
+          "id": "reset",
+          "code": "import { Button, Drawer, Input } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Drawer mountPolicy=\"unmount\" aria-label=\"Черновик\" content={({ close }) => <><Input aria-label=\"Текст\" /><Button onClick={close}>Закрыть</Button></>}>\n    {trigger => <Button {...trigger}>Открыть</Button>}\n  </Drawer>;\n}"
+        },
+        {
           "id": "basic",
           "code": "import { Button, Drawer, Input } from '@dreadnought/ui/react';\nexport function Example() { return <Drawer placement=\"right\" size={384} aria-label=\"Settings\" content={({ close }) => <><Input aria-label=\"Name\" /><Button onClick={close}>Done</Button></>}>{trigger => <Button {...trigger}>Open</Button>}</Drawer>; }"
         }
       ],
       "defaults": {
         "placement": "right",
+        "mountPolicy": "eager",
         "size": "var(--dreadnought-drawer-size)"
       },
       "propertyDescriptions": {
+        "mountPolicy": "eager — сразу; lazy — с первого открытия; unmount — удалять при закрытии, сбрасывая локальное состояние.",
         "placement": "Край экрана; по умолчанию right.",
         "size": "Ширина для left/right, высота для top/bottom. Число — px, строка — CSS-размер."
       }
