@@ -99,3 +99,5 @@ export type {
 export * from './DataDisplay/MarkdownPreview/index.ts';
 export { TreeAdapter } from './Navigation/Tree/index.ts';
 export type { TreeAdapterProps } from './Navigation/Tree/index.ts';
+export { FloatingPanelAdapter } from './Overlays/FloatingPanel/index.ts';
+export type { FloatingPanelAdapterProps, FloatingPanelControls } from './Overlays/FloatingPanel/index.ts';

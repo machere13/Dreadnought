@@ -1,0 +1,11 @@
+{
+  "componentId": "component:floatingpanel",
+  "constraints": ["Открытая панель не блокирует страницу и не закрывается при внешнем клике или уходе фокуса.", "Escape внутри панели и close() запрашивают закрытие; controlled-владелец подтверждает его через open.", "Закрытие сохраняет содержимое. Фокус возвращается на кнопку только если оставался внутри панели.", "Portal создаётся после клиентского mount, в ownerDocument триггера. Адаптер не задаёт положение или оформление."],
+  "bindings": [
+    { "id": "react-adapter", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/unstyled", "exportName": "FloatingPanelAdapter", "defaults": { "defaultOpen": false, "disabled": false },
+      "propertyDescriptions": { "content": "Содержимое панели или функция с close().", "children": "Render-функция одной кнопки открытия с доступным именем.", "rootClassName": "Класс контейнера панели и триггера.", "rootStyle": "Стили контейнера панели и триггера.", "open": "Управляемое открытие.", "onOpenChange": "Запрос изменения открытия.", "defaultOpen": "Начальное открытие.", "disabled": "Блокирует триггер и скрывает панель." },
+      "examples": [{ "id": "basic", "code": "import { FloatingPanelAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <FloatingPanelAdapter aria-label=\"Помощник\" content={({ close }) => <button onClick={close}>Закрыть</button>}>{trigger => <button {...trigger}>Открыть</button>}</FloatingPanelAdapter>; }" }] },
+    { "id": "react-logic", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/logic", "exportName": "useFloatingPanel",
+      "examples": [{ "id": "basic", "code": "import { useFloatingPanel } from '@dreadnought/react/logic';\nexport function Example() { const panel = useFloatingPanel(); return <><button {...panel.triggerProps}>Открыть</button><div {...panel.contentProps}><button onClick={panel.close}>Закрыть</button></div></>; }" }] }
+  ]
+}

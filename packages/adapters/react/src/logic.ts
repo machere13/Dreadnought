@@ -46,3 +46,5 @@ export { useToast } from './Feedback/Toast/useToast.ts';
 export type { UseToastOptions } from './Feedback/Toast/useToast.ts';
 export { useTree } from './Navigation/Tree/index.ts';
 export type { UseTreeOptions, UseTreeResult } from './Navigation/Tree/index.ts';
+export { useFloatingPanel } from './Overlays/FloatingPanel/index.ts';
+export type { UseFloatingPanelOptions, FloatingPanelTriggerProps } from './Overlays/FloatingPanel/index.ts';
