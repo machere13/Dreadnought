@@ -1,6 +1,7 @@
-import { Fragment, useImperativeHandle } from 'react';
+import { Fragment, useImperativeHandle, useMemo } from 'react';
 import type { ChangeEvent, FocusEvent, FormEvent, MouseEvent } from 'react';
 import { useSelect } from './useSelect.ts';
+import { SelectOptionList } from './SelectOptionList.tsx';
 import type { SelectAdapterProps } from './SelectAdapter.types.ts';
 
 export function SelectAdapter(props: SelectAdapterProps) {
@@ -12,6 +13,7 @@ export function SelectAdapter(props: SelectAdapterProps) {
     onValueChange,
     multiple,
     showSearch,
+    virtual,
     allowClear,
     invalid,
     emptyContent = 'Нет вариантов',
@@ -51,12 +53,14 @@ export function SelectAdapter(props: SelectAdapterProps) {
       : Math.max(0, Math.trunc(maxTagCount)),
   );
   const hiddenTagCount = select.state.selectedOptions.length - visibleTags.length;
-  const additional = select.state.selectedOptions.filter(
-    (option) => !select.state.options.some((item) => item.value === option.value),
-  );
-  const indices = new Map(
-    select.state.filteredOptions.map((option, index) => [option.value, index]),
-  );
+  const nativeOptions = useMemo(() => {
+    const known = new Set(select.state.options.map((option) => option.value));
+    const selected = new Set(select.state.values);
+    return {
+      selected: select.state.options.filter((option) => selected.has(option.value)),
+      additional: select.state.selectedOptions.filter((option) => !known.has(option.value)),
+    };
+  }, [select.state.options, select.state.values, select.state.selectedOptions]);
 
   function handleRootClick(event: MouseEvent<HTMLDivElement>) {
     slotProps.root?.onClick?.(event);
@@ -140,35 +144,6 @@ export function SelectAdapter(props: SelectAdapterProps) {
     event.preventDefault();
   }
 
-  function handleOptionClick(event: MouseEvent<HTMLDivElement>, value: string) {
-    slotProps.option?.onClick?.(event);
-    if (!event.defaultPrevented) {
-      select.choose(value);
-    }
-  }
-
-  const renderOption = (option: (typeof select.state.options)[number]) => (
-    <div
-      {...slotProps.option}
-      key={option.value}
-      id={select.optionId(option.value)}
-      aria-label={option.label}
-      role="option"
-      aria-selected={select.state.values.includes(option.value)}
-      aria-disabled={option.disabled || undefined}
-      data-slot="option"
-      data-active={option.value === select.activeValue ? '' : undefined}
-      onClick={(event) => handleOptionClick(event, option.value)}
-    >
-      {optionRender
-        ? optionRender(option, {
-            active: option.value === select.activeValue,
-            selected: select.state.values.includes(option.value),
-            index: indices.get(option.value)!,
-          })
-        : option.label}
-    </div>
-  );
   const nativeOption = (option: (typeof select.state.options)[number]) => (
     <option key={option.value} value={option.value} disabled={option.disabled}>
       {option.label}
@@ -304,16 +279,18 @@ export function SelectAdapter(props: SelectAdapterProps) {
         onInvalid={handleNativeInvalid}
       >
         {!multiple && <option value="" />}
-        {select.state.groups.map((group, index) =>
-          group.label === undefined ? (
-            group.options.map(nativeOption)
-          ) : (
-            <optgroup key={index} label={group.label} disabled={group.disabled}>
-              {group.options.map(nativeOption)}
-            </optgroup>
-          ),
-        )}
-        {additional.map(nativeOption)}
+        {select.virtual.enabled
+          ? nativeOptions.selected.map(nativeOption)
+          : select.state.groups.map((group, index) =>
+              group.label === undefined ? (
+                group.options.map(nativeOption)
+              ) : (
+                <optgroup key={index} label={group.label} disabled={group.disabled}>
+                  {group.options.map(nativeOption)}
+                </optgroup>
+              ),
+            )}
+        {nativeOptions.additional.map(nativeOption)}
       </select>
       <div
         {...slotProps.popup}
@@ -324,6 +301,7 @@ export function SelectAdapter(props: SelectAdapterProps) {
         hidden={!select.open}
         aria-busy={loading || undefined}
         data-slot="popup"
+        data-virtual={select.virtual.enabled ? '' : undefined}
         aria-label={slotProps.popup?.['aria-label'] ?? props['aria-label'] ?? 'Варианты'}
         aria-labelledby={
           slotProps.popup?.['aria-labelledby'] ??
@@ -337,28 +315,7 @@ export function SelectAdapter(props: SelectAdapterProps) {
             {loadingContent}
           </div>
         )}
-        {select.state.filteredGroups.map((group, index) =>
-          group.label === undefined ? (
-            group.options.map(renderOption)
-          ) : (
-            <div
-              {...slotProps.group}
-              key={index}
-              role="group"
-              aria-labelledby={`${select.id}-group-${index}`}
-              data-slot="group"
-            >
-              <div
-                {...slotProps.groupLabel}
-                id={`${select.id}-group-${index}`}
-                data-slot="group-label"
-              >
-                {group.label}
-              </div>
-              {group.options.map(renderOption)}
-            </div>
-          ),
-        )}
+        <SelectOptionList select={select} props={props} />
         {!loading && select.state.filteredOptions.length === 0 && (
           <div data-slot="empty" role="status">
             {emptyContent}

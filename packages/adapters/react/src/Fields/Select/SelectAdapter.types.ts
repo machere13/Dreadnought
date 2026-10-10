@@ -1,11 +1,12 @@
 import type { ComponentPropsWithRef, ComponentPropsWithoutRef, ReactNode } from 'react';
-import type { SelectOption, SelectCoreOptions } from '@dreadnought/core';
+import type { SelectOption, SelectCoreOptions, VirtualWindowOptions } from '@dreadnought/core';
 
 export type SelectAdapterProps = Omit<
   ComponentPropsWithRef<'input'>,
   'value' | 'defaultValue' | 'onChange' | 'type' | 'multiple' | 'children' | 'readOnly' | 'size'
 > & {
   options: SelectCoreOptions['options'];
+  virtual?: boolean | Partial<Pick<VirtualWindowOptions, 'itemHeight' | 'height' | 'overscan'>>;
   showSearch?:
     | boolean
     | (Pick<SelectCoreOptions, 'filterOption' | 'optionFilterProp' | 'filterSort'> & {
@@ -40,6 +41,7 @@ export type SelectAdapterProps = Omit<
     root?: ComponentPropsWithoutRef<'div'>;
     control?: ComponentPropsWithoutRef<'input'>;
     popup?: ComponentPropsWithoutRef<'div'>;
+    viewport?: ComponentPropsWithoutRef<'div'>;
     option?: ComponentPropsWithoutRef<'div'>;
     group?: ComponentPropsWithoutRef<'div'>;
     groupLabel?: ComponentPropsWithoutRef<'div'>;

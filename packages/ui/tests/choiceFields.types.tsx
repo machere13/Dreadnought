@@ -24,6 +24,7 @@ void [
 const section: SelectOptionGroup = { label: 'Команда', options, disabled: false };
 const grouped = (
   <Select
+    virtual={{ itemHeight: 40, height: 256, overscan: 3 }}
     options={[section, ...options]}
     slotProps={{ group: { className: 'group' }, groupLabel: { className: 'label' } }}
   />

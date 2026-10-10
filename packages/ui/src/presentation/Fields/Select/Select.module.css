@@ -117,6 +117,10 @@
   .popup[hidden] {
     display: none;
   }
+  .popup[data-virtual] {
+    overflow: hidden;
+    max-height: 100dvh;
+  }
   .option {
     padding: var(--dreadnought-select-option-padding-y) var(--dreadnought-select-option-padding-x);
     border-radius: var(--dreadnought-select-option-radius);

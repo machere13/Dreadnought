@@ -5,6 +5,7 @@
   "family": "Fields",
   "description": "Выбор одного или нескольких вариантов с группами, поиском, очисткой и клавиатурной навигацией.",
   "docsUrl": "/components/select/#select-api",
+  "composesWith": ["behavior:get-virtual-window"],
   "states": [
     "disabled",
     "required",

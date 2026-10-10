@@ -5,6 +5,10 @@ import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc';
 import type { ComponentDoc } from '../../../shared/types.ts';
 import styles from '../../../shared/Documentation.module.css';
 
+const largeOptions = Array.from({ length: 10000 }, (_, index) => ({
+  value: String(index), label: `Участник ${index + 1}`,
+}));
+
 function SelectDemo() {
   const [value, setValue] = useState<string | null>(null);
   const options = [{ value: 'anna', label: 'Анна' }, { value: 'boris', label: 'Борис', disabled: true }, { value: 'vera', label: 'Вера' }];
@@ -30,6 +34,8 @@ function SelectDemo() {
     <Select aria-label="Подробные варианты" options={options}
       optionRender={option => <span>{option.label} <small>— {option.value}</small></span>} />
     <Select aria-label="Загрузка вариантов" options={[]} loading loadingContent="Загружаем варианты…" placeholder="Откройте список" />
+    <Select aria-label="10 000 участников" options={largeOptions} showSearch allowClear
+      placeholder="10 000 участников" />
     <Select aria-label="Выбор по командам" showSearch placeholder="Выберите участника" options={[
       { label: 'Команда', options }, { label: 'Гости', options: [{ value: 'guest', label: 'Даша' }] },
     ]} />
@@ -43,7 +49,7 @@ export const selectDoc: ComponentDoc = {
   title: 'Select',
   description: 'Выбор из списка: одиночный или множественный, с группами, поиском и очисткой. При multiple выбранные значения отображаются метками. Backspace в пустом поле удаляет последнее значение; при наличии текста редактирует поиск. Меню открывается поверх страницы и не расширяет её.',
   adapterDescription: 'Адаптер предоставляет разметку и поведение без оформления. Токены и CSS Modules подключает готовый компонент.',
-  footnote: 'showSearch объединяет настройки поиска; optionFilterProp задаёт label, value или оба поля, filterSort сортирует внутри групп. В controlled-режиме обновляйте value, open и searchValue по событиям. Поиск сбрасывается при выборе, закрытии и очистке. Для серверного поиска задайте showSearch={{ filterOption: false }}; запросы и отмену выполняет приложение. optionRender не меняет доступное имя. Не вкладывайте в варианты кнопки или ссылки.',
+  footnote: 'Длинные списки виртуализируются автоматически. virtual={{ itemHeight: 40, height: 256, overscan: 3 }} настраивает окно; для строк произвольной высоты и нативного автозаполнения используйте virtual={false}. Поиск и сортировка работают по всему списку. showSearch объединяет настройки поиска; для серверного поиска задайте showSearch={{ filterOption: false }}. optionRender не меняет доступное имя; не вкладывайте в варианты кнопки или ссылки.',
   demo: <SelectDemo />,
 };
 

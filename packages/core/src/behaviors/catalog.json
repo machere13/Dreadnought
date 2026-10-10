@@ -1,5 +1,13 @@
 [
   {
+    "id": "behavior:get-virtual-window", "kind": "behavior", "name": "getVirtualWindow", "family": "Behaviors",
+    "description": "Рассчитывает видимое окно списка с фиксированной высотой строк без DOM и фреймворка.",
+    "docsUrl": "/components/select/#select-api", "composesWith": ["component:select"],
+    "constraints": ["count — неотрицательное безопасное целое; itemHeight и height — положительные конечные числа в CSS-пикселях. scrollTop — конечное число, ограничивается длиной списка. overscan — неотрицательное безопасное целое, по умолчанию 3. Возвращает start/end (end не включён), offset, totalHeight и scrollTop. activeIndex при наличии должен указывать на строку: scrollTop сдвигается минимально для её показа. Расчёт O(1); не фильтрует данные, не монтирует DOM, не хранит состояние и не поддерживает переменную высоту строк."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getVirtualWindow",
+      "examples": [{ "id": "window", "code": "import { getVirtualWindow } from '@dreadnought/core';\nconst window = getVirtualWindow({ count: 10000, itemHeight: 40, height: 256, scrollTop: 800 });\nconst visibleRange = [window.start, window.end];" }] }]
+  },
+  {
     "id": "behavior:get-content-mount-state", "kind": "behavior", "name": "getContentMountState", "family": "Behaviors",
     "description": "Определяет, создавать ли содержимое панели, и сохраняет факт первого открытия без React или DOM.",
     "docsUrl": "/components/tabs/#tabs-api", "composesWith": ["component:tabs", "component:accordion", "component:modal", "component:drawer", "behavior:get-disclosure-open"],

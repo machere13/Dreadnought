@@ -24,6 +24,18 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 export const Search: Story = { args: { showSearch: true, allowClear: true } };
+export const VirtualList: Story = {
+  args: {
+    options: Array.from({ length: 10000 }, (_, index) => ({
+      value: String(index),
+      label: `Участник ${index + 1}`,
+    })),
+    showSearch: true,
+    allowClear: true,
+    defaultOpen: true,
+    virtual: { itemHeight: 40, height: 256, overscan: 3 },
+  },
+};
 export const SearchFields: Story = {
   args: {
     showSearch: {

@@ -2,6 +2,10 @@
   "componentId": "component:select",
   "parts": [
     {
+      "name": "viewport",
+      "description": "Прокручиваемое окно виртуального списка; существует только при виртуализации."
+    },
+    {
       "name": "selection",
       "description": "Метки выбранных значений и поле поиска при multiple."
     },
@@ -51,6 +55,7 @@
     }
   ],
   "constraints": [
+    "virtual по умолчанию true: длинные списки монтируют только видимые строки, запас overscan и активный вариант для aria-activedescendant. Короткие списки отображаются целиком. Высота строк фиксированная, заголовки групп учитываются как строки. В скрытой форме остаются только выбранные варианты; для нативного автозаполнения и строк произвольной высоты задайте virtual=false. Фильтрация и сортировка выполняются по всему набору данных, а не только видимому окну.",
     "Задавайте доступное имя через текст метки, label или aria-label.",
     "Стили настраиваются через компонентные токены и slotProps.",
     "При multiple значение и defaultValue — массив строк; иначе строка или null.",
@@ -70,6 +75,7 @@
       "importPath": "@dreadnought/react/unstyled",
       "exportName": "SelectAdapter",
       "propertyDescriptions": {
+        "virtual": "Виртуализация длинных списков: true по умолчанию; false отключает. Объект настраивает itemHeight (40px), height (256px), overscan (3 строки). Строки имеют фиксированную высоту.",
         "options": "Варианты { value, label, disabled? } и группы { label, options, disabled? }. Значения уникальны во всём списке; группы не выбираются.",
         "value": "Строка или null для одиночного выбора; массив для multiple.",
         "defaultValue": "Начальное значение в неуправляемом режиме.",
@@ -90,9 +96,10 @@
         "allowClear": "Кнопка очистки выбора.",
         "invalid": "Состояние ошибки.",
         "emptyContent": "Содержимое пустого списка.",
-        "slotProps": "Слоты root/control/popup/option/clear/group/groupLabel/selection/tag/tagLabel/remove. Группы исчезают при отсутствии совпадений; по умолчанию поиск выполняется по label вариантов."
+        "slotProps": "Слоты root/control/popup/viewport/option/clear/group/groupLabel/selection/tag/tagLabel/remove. viewport — прокручиваемое окно виртуального списка."
       },
       "defaults": {
+        "virtual": true,
         "multiple": false,
         "allowClear": false,
         "disabled": false,

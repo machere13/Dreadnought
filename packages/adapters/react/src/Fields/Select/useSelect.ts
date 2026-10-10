@@ -1,10 +1,11 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import {
   getComboboxKeyAction,
   getDisclosureOpen,
   getNextEnabledValue,
   getSelectState,
   getSelectionValue,
+  getVirtualWindow,
 } from '@dreadnought/core';
 import type { SelectValue, SelectionAction } from '@dreadnought/core';
 import type { KeyboardEvent } from 'react';
@@ -44,15 +45,50 @@ export function useSelect(props: SelectAdapterProps) {
   const open = (props.open ?? expanded) && !props.disabled;
   const current = useRef({ open, query, props, searchValue, onSearch });
   current.current = { open, query, props, searchValue, onSearch };
-  const state = getSelectState({
-    ...props,
-    filterOption: search?.filterOption,
-    optionFilterProp: search?.optionFilterProp,
-    filterSort: search?.filterSort,
-    value,
-    query: open ? query : '',
-    invalid: props.invalid || validationInvalid,
-  });
+  const state = useMemo(
+    () =>
+      getSelectState({
+        ...props,
+        filterOption: search?.filterOption,
+        optionFilterProp: search?.optionFilterProp,
+        filterSort: search?.filterSort,
+        value,
+        query: open ? query : '',
+        invalid: props.invalid || validationInvalid,
+      }),
+    [
+      props.options,
+      props.multiple,
+      props.maxCount,
+      props.disabled,
+      props.required,
+      props.invalid,
+      validationInvalid,
+      value,
+      open,
+      query,
+      search?.filterOption,
+      search?.optionFilterProp,
+      search?.filterSort,
+    ],
+  );
+  const virtual = useMemo(() => {
+    const {
+      itemHeight = 40,
+      height = 256,
+      overscan = 3,
+    } = typeof props.virtual === 'object' ? props.virtual : {};
+    const settings = { itemHeight, height, overscan };
+    const count = state.groups.reduce(
+      (total, group) => total + group.options.length + Number(group.label !== undefined),
+      0,
+    );
+    const window = getVirtualWindow({ ...settings, count, scrollTop: 0 });
+    return {
+      ...settings,
+      enabled: props.virtual !== false && window.totalHeight > settings.height,
+    };
+  }, [props.virtual, state.groups]);
   const activeValue =
     state.filteredOptions.find((option) => option.value === active && !option.disabled)?.value ??
     state.filteredOptions.find((option) => state.values.includes(option.value) && !option.disabled)
@@ -109,6 +145,7 @@ export function useSelect(props: SelectAdapterProps) {
     changeSelection({ type: props.multiple ? 'toggle' : 'select', value: v });
     setValidationInvalid(false);
     if (props.multiple) {
+      setActive(v);
       setQuery('');
     } else {
       close();
@@ -210,13 +247,6 @@ export function useSelect(props: SelectAdapterProps) {
     }
   }, [props.disabled]);
   useEffect(() => {
-    if (open && activeValue) {
-      popup.current?.ownerDocument
-        .getElementById(optionId(activeValue))
-        ?.scrollIntoView?.({ block: 'nearest' });
-    }
-  }, [open, activeValue, id]);
-  useEffect(() => {
     if (native.current?.validity.valid) {
       setValidationInvalid(false);
     }
@@ -226,6 +256,7 @@ export function useSelect(props: SelectAdapterProps) {
     function reset(event: Event) {
       queueMicrotask(() => {
         if (!event.defaultPrevented) {
+          setActive('');
           close();
           setValidationInvalid(false);
         }
@@ -241,6 +272,7 @@ export function useSelect(props: SelectAdapterProps) {
     root,
     popup,
     state,
+    virtual,
     open,
     query,
     searchable,

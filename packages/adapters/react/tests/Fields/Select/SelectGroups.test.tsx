@@ -19,7 +19,13 @@ const options = [
 it('navigates group options while skipping headings and disabled children', async () => {
   const { container } = render(
     <form>
-      <SelectAdapter aria-label="Исполнитель" options={options} name="owner" defaultOpen />
+      <SelectAdapter
+        aria-label="Исполнитель"
+        options={options}
+        name="owner"
+        defaultOpen
+        virtual={false}
+      />
     </form>,
   );
   const input = screen.getByRole('combobox');

@@ -44,3 +44,5 @@ export { getHistoryState } from './getHistoryState.ts';
 export type { HistoryState, HistoryAction, HistoryOptions } from './getHistoryState.ts';
 export { getContentMountState } from './getContentMountState.ts';
 export type { ContentMountPolicy, ContentMountOptions } from './getContentMountState.ts';
+export { getVirtualWindow } from './getVirtualWindow.ts';
+export type { VirtualWindowOptions } from './getVirtualWindow.ts';

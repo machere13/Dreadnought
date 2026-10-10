@@ -8,6 +8,7 @@
       "importPath": "@dreadnought/ui/react",
       "exportName": "Select",
       "propertyDescriptions": {
+        "virtual": "Виртуализация длинных списков: true по умолчанию; false отключает. Объект настраивает itemHeight (40px), height (256px), overscan (3 строки). Строки имеют фиксированную высоту.",
         "options": "Варианты { value, label, disabled? } и группы { label, options, disabled? }. Значения уникальны во всём списке; группы не выбираются.",
         "value": "Строка или null для одиночного выбора; массив для multiple.",
         "defaultValue": "Начальное значение в неуправляемом режиме.",
@@ -28,9 +29,10 @@
         "allowClear": "Кнопка очистки выбора.",
         "invalid": "Состояние ошибки.",
         "emptyContent": "Содержимое пустого списка.",
-        "slotProps": "Слоты root/control/popup/option/clear/group/groupLabel/selection/tag/tagLabel/remove. Группы исчезают при отсутствии совпадений; по умолчанию поиск выполняется по label вариантов."
+        "slotProps": "Слоты root/control/popup/viewport/option/clear/group/groupLabel/selection/tag/tagLabel/remove. viewport — прокручиваемое окно виртуального списка."
       },
       "defaults": {
+        "virtual": true,
         "multiple": false,
         "allowClear": false,
         "disabled": false,
