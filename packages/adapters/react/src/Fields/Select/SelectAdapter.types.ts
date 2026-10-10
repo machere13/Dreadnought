@@ -28,6 +28,7 @@ export type SelectAdapterProps = Omit<
   clearContent?: ReactNode;
   removeLabel?: (option: SelectOption) => string;
   removeContent?: ReactNode;
+  maxTagCount?: number;
   slotProps?: {
     root?: ComponentPropsWithoutRef<'div'>;
     control?: ComponentPropsWithoutRef<'input'>;

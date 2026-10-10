@@ -20,6 +20,7 @@ export function SelectAdapter(props: SelectAdapterProps) {
     clearContent = '×',
     removeLabel = (option) => `Удалить ${option.label}`,
     removeContent = '×',
+    maxTagCount,
     open,
     defaultOpen,
     onOpenChange,
@@ -44,6 +45,13 @@ export function SelectAdapter(props: SelectAdapterProps) {
   } = props;
   useImperativeHandle(ref, () => select.control.current!);
   const display = select.state.selectedOptions.map((option) => option.label).join(', ');
+  const visibleTags = select.state.selectedOptions.slice(
+    0,
+    maxTagCount === undefined || !Number.isFinite(maxTagCount)
+      ? undefined
+      : Math.max(0, Math.trunc(maxTagCount)),
+  );
+  const hiddenTagCount = select.state.selectedOptions.length - visibleTags.length;
   const additional = select.state.selectedOptions.filter(
     (option) => !select.state.options.some((item) => item.value === option.value),
   );
@@ -218,7 +226,7 @@ export function SelectAdapter(props: SelectAdapterProps) {
     >
       {multiple ? (
         <div {...slotProps.selection} data-slot="selection">
-          {select.state.selectedOptions.map((option) => (
+          {visibleTags.map((option) => (
             <span {...slotProps.tag} key={option.value} data-slot="tag">
               <span {...slotProps.tagLabel} data-slot="tag-label">
                 {option.label}
@@ -240,6 +248,11 @@ export function SelectAdapter(props: SelectAdapterProps) {
               </button>
             </span>
           ))}
+          {hiddenTagCount > 0 && (
+            <span {...slotProps.tag} data-slot="tag" data-summary="">
+              +{hiddenTagCount}
+            </span>
+          )}
           {control}
         </div>
       ) : (

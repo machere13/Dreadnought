@@ -12,6 +12,7 @@ function SelectDemo() {
     <div className={styles.demoRow}>
     <Select aria-label="Исполнитель" name="owner" options={options} placeholder="Выберите исполнителя" searchable allowClear value={value} onValueChange={setValue} />
     <Select multiple aria-label="Участники" options={options} searchable allowClear defaultValue={['anna', 'vera']} placeholder="Выберите участников" />
+    <Select multiple aria-label="Ограничение меток" options={options} searchable maxTagCount={1} defaultValue={['anna', 'vera']} />
     <Select aria-label="Недоступный выбор" options={options} disabled defaultValue="anna" />
     <Select aria-label="Подробные варианты" options={options}
       optionRender={option => <span>{option.label} <small>— {option.value}</small></span>} />

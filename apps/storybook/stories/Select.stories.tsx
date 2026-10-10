@@ -42,6 +42,15 @@ export const Multiple: Story = {
 export const MultipleLongLabels: Story = {
   args: { multiple: true, searchable: true, defaultValue: ['anna', 'long'] },
 };
+export const LimitedTags: Story = {
+  args: {
+    multiple: true,
+    searchable: true,
+    allowClear: true,
+    maxTagCount: 1,
+    defaultValue: ['anna', 'vera', 'long'],
+  },
+};
 export const Disabled: Story = { args: { disabled: true, defaultValue: 'anna' } };
 export const Invalid: Story = { args: { invalid: true } };
 export const Empty: Story = { args: { options: [], searchable: true } };

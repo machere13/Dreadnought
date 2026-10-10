@@ -10,6 +10,45 @@ const options = [
   { value: 'c', label: 'Вера' },
 ];
 
+it('limits visible tags without losing form values or dropdown selection', async () => {
+  render(
+    <form>
+      <SelectAdapter
+        multiple
+        maxTagCount={1}
+        options={options}
+        defaultValue={['a', 'c']}
+        name="people"
+      />
+    </form>,
+  );
+  const input = screen.getByRole('combobox');
+  expect(screen.getAllByRole('button')).toHaveLength(1);
+  expect(screen.getByText('+1')).toBeTruthy();
+  expect(new FormData(input.closest('form')!).getAll('people')).toEqual(['a', 'c']);
+  await userEvent.click(input);
+  const hiddenSelection = screen.getByRole('option', { name: 'Вера' });
+  expect(hiddenSelection.getAttribute('aria-selected')).toBe('true');
+  await userEvent.click(hiddenSelection);
+  expect(screen.queryByText('+1')).toBeNull();
+  expect(new FormData(input.closest('form')!).getAll('people')).toEqual(['a']);
+});
+
+it('updates the summary when removing visible tags or changing the limit', async () => {
+  const { rerender } = render(
+    <SelectAdapter multiple maxTagCount={1} options={options} defaultValue={['a', 'c']} />,
+  );
+  await userEvent.click(screen.getByRole('button', { name: 'Удалить Анна' }));
+  expect(screen.getByRole('button', { name: 'Удалить Вера' })).toBeTruthy();
+  expect(screen.queryByText('+1')).toBeNull();
+  rerender(<SelectAdapter multiple maxTagCount={0} options={options} />);
+  expect(screen.queryByRole('button')).toBeNull();
+  expect(screen.getByText('+1')).toBeTruthy();
+  rerender(<SelectAdapter multiple options={options} />);
+  expect(screen.getByRole('button', { name: 'Удалить Вера' })).toBeTruthy();
+  expect(screen.queryByText('+1')).toBeNull();
+});
+
 it('removes one selected tag without submitting or opening the form', async () => {
   let submissions = 0;
   render(
