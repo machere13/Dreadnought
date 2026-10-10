@@ -20,6 +20,10 @@ export function Card({
     title: [cardPresentation.title, slotClassNames?.title].filter(Boolean).join(' '),
     extra: [cardPresentation.extra, slotClassNames?.extra].filter(Boolean).join(' '),
     body: [cardPresentation.body, slotClassNames?.body].filter(Boolean).join(' '),
+    cover: [cardPresentation.cover, slotClassNames?.cover].filter(Boolean).join(' '),
+    footer: [cardPresentation.footer, slotClassNames?.footer].filter(Boolean).join(' '),
+    actions: [cardPresentation.actions, slotClassNames?.actions].filter(Boolean).join(' '),
+    action: [cardPresentation.action, slotClassNames?.action].filter(Boolean).join(' '),
   };
   return (
     <CardAdapter

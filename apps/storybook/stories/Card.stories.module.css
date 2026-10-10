@@ -3,3 +3,12 @@
   font-family: var(--dreadnought-font-family-ui);
   color: var(--dreadnought-color-text-primary);
 }
+
+.cover {
+  display: grid;
+  place-items: center;
+  min-height: 8rem;
+  padding: var(--dreadnought-spacing-x4);
+  background: var(--dreadnought-color-surface-field);
+  font-size: var(--dreadnought-font-size-h4);
+}

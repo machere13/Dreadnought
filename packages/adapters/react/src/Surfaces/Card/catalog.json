@@ -18,7 +18,10 @@
       "propertyDescriptions": {
         "title": "Содержимое шапки; это не нативная подсказка title.",
         "extra": "Дополнительное содержимое шапки.",
-        "slotClassNames": "Классы header, title, extra и body. Без шапки children остаются прямыми потомками корня; слот body не создаётся."
+        "cover": "Обложка над шапкой; принимает изображение или другой ReactNode.",
+        "footer": "Нижняя зона после содержимого и перед действиями.",
+        "actions": "Массив кнопок, ссылок или других ReactNode. null и false пропускаются; задавайте стабильные key.",
+        "slotClassNames": "Классы header, title, extra, body, cover, footer, actions и action. Без дополнительных зон children остаются прямыми потомками корня."
       },
       "examples": [
         {

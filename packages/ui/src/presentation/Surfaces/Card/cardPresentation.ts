@@ -6,4 +6,8 @@ export const cardPresentation = {
   title: styles.title,
   extra: styles.extra,
   body: styles.body,
+  cover: styles.cover,
+  footer: styles.footer,
+  actions: styles.actions,
+  action: styles.action,
 } as const;

@@ -9,9 +9,15 @@
     background: var(--dreadnought-card-bg);
   }
 
-  .root[data-variant='borderless'] { border-color: transparent; }
-  .root[data-size='compact'] { --dreadnought-card-padding: var(--dreadnought-card-compact-padding); }
-  .root[data-has-header='true'] { padding: 0; }
+  .root[data-variant='borderless'] {
+    border-color: transparent;
+  }
+  .root[data-size='compact'] {
+    --dreadnought-card-padding: var(--dreadnought-card-compact-padding);
+  }
+  .root[data-has-sections='true'] {
+    padding: 0;
+  }
 
   .header {
     display: flex;
@@ -31,7 +37,60 @@
     line-height: var(--dreadnought-line-height-h6);
   }
 
-  .title :where(h1, h2, h3, h4, h5, h6) { margin: 0; }
-  .extra { margin-inline-start: auto; max-width: 100%; }
-  .body { min-width: 0; padding: var(--dreadnought-card-padding); }
+  .title :where(h1, h2, h3, h4, h5, h6) {
+    margin: 0;
+  }
+  .extra {
+    margin-inline-start: auto;
+    max-width: 100%;
+  }
+  .body {
+    min-width: 0;
+    padding: var(--dreadnought-card-padding);
+  }
+
+  .cover {
+    min-width: 0;
+    overflow: hidden;
+    border-start-start-radius: calc(
+      var(--dreadnought-card-radius) - var(--dreadnought-card-border-width)
+    );
+    border-start-end-radius: calc(
+      var(--dreadnought-card-radius) - var(--dreadnought-card-border-width)
+    );
+  }
+
+  .cover :where(img, video) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .footer,
+  .actions {
+    min-width: 0;
+    padding: var(--dreadnought-card-padding);
+    border-top: var(--dreadnought-card-border-width) solid var(--dreadnought-card-border);
+  }
+
+  .footer {
+    overflow-wrap: anywhere;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--dreadnought-card-header-gap);
+    margin: 0;
+    list-style: none;
+  }
+
+  .action {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
 }

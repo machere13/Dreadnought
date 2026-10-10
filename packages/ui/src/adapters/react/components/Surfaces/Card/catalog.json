@@ -12,9 +12,12 @@
         "children": "Содержимое карточки.",
         "title": "Содержимое шапки; это не нативная подсказка title.",
         "extra": "Действия или другое содержимое справа в шапке.",
+        "cover": "Обложка сверху без внутренних отступов. Изображения растягиваются по ширине карточки.",
+        "footer": "Нижняя зона после содержимого и перед действиями.",
+        "actions": "Массив готовых кнопок, ссылок или других ReactNode в отдельном ряду. Задавайте стабильные key.",
         "variant": "Карточка с рамкой или без неё.",
         "size": "Обычные или уменьшенные отступы.",
-        "slotClassNames": "Классы header, title, extra и body. Без шапки children остаются прямыми потомками корня; слот body не создаётся.",
+        "slotClassNames": "Классы header, title, extra, body, cover, footer, actions и action. Без дополнительных зон children остаются прямыми потомками корня.",
         "className": "Локальное оформление.",
         "ref": "Ссылка на корневой элемент."
       },
@@ -23,6 +26,10 @@
         {
           "id": "basic",
           "code": "import { Button, Card } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Card title=\"Проект\" extra={<Button size=\"compact\" variant=\"ghosted\">Открыть</Button>}>\n    <p>Содержимое карточки</p>\n  </Card>;\n}"
+        },
+        {
+          "id": "sections",
+          "code": "import { Button, Card } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Card title=\"Проект\" cover={<img src=\"/project.jpg\" alt=\"Обложка проекта\" />}\n    footer=\"Обновлено сегодня\"\n    actions={[<Button key=\"open\" size=\"compact\" variant=\"ghosted\">Открыть</Button>]}>\n    <p>Описание проекта</p>\n  </Card>;\n}"
         }
       ]
     }
