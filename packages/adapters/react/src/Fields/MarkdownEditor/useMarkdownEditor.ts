@@ -1,4 +1,8 @@
-import { applyMarkdownCommand, getHistoryState } from '@dreadnought/core';
+import {
+  applyMarkdownCommand,
+  getHistoryState,
+  isContinuousMarkdownInput,
+} from '@dreadnought/core';
 import type {
   HistoryState,
   MarkdownCommand,
@@ -7,19 +11,13 @@ import type {
 } from '@dreadnought/core';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
-import { useTextArea } from '../TextArea/index.ts';
+import { useTextArea } from '../TextArea/useTextArea.ts';
 import type {
   MarkdownEditorPreview,
   UseMarkdownEditorOptions,
   UseMarkdownEditorResult,
 } from './markdownEditor.types.ts';
-import {
-  baseline,
-  continuousInput,
-  recordDocument,
-  sameSelection,
-  snapshot,
-} from './markdownHistory.ts';
+import { baseline, recordDocument, sameSelection, snapshot } from './markdownHistory.ts';
 import { beforeInputEvent } from './beforeInputEvent.ts';
 import { useMarkdownImageUpload } from './useMarkdownImageUpload.ts';
 
@@ -106,6 +104,10 @@ export function useMarkdownEditor({
   const [selection, setSelection] = useState<MarkdownSelection>({ start: 0, end: 0 });
   const [, update] = useState(0);
 
+  function canEdit(current = node.current) {
+    return !!current && !current.matches(':disabled') && !options.disabled && !options.readOnly;
+  }
+
   function setPreview(next: MarkdownEditorPreview) {
     if (!['edit', 'preview', 'live'].includes(next)) {
       throw new TypeError('Invalid Markdown preview mode');
@@ -147,7 +149,7 @@ export function useMarkdownEditor({
   }
 
   function travel(type: 'undo' | 'redo') {
-    if (!node.current || options.disabled || options.readOnly || composing.current) {
+    if (!canEdit() || composing.current) {
       return;
     }
     group.current = null;
@@ -172,13 +174,7 @@ export function useMarkdownEditor({
 
   function execute(command: MarkdownCommand) {
     const current = node.current;
-    if (
-      !current ||
-      options.disabled ||
-      options.readOnly ||
-      composing.current ||
-      preview === 'preview'
-    ) {
+    if (!current || !canEdit(current) || composing.current || preview === 'preview') {
       return;
     }
     const previous =
@@ -196,13 +192,7 @@ export function useMarkdownEditor({
     uploadImage,
     readDocument: () => {
       const current = node.current;
-      if (
-        !current ||
-        options.disabled ||
-        options.readOnly ||
-        composing.current ||
-        preview === 'preview'
-      ) {
+      if (!current || !canEdit(current) || composing.current || preview === 'preview') {
         return null;
       }
       return !controlled && pendingEdit.current?.element === current
@@ -213,11 +203,7 @@ export function useMarkdownEditor({
   });
 
   const acceptsImage = () =>
-    !!uploadImage &&
-    !options.disabled &&
-    !options.readOnly &&
-    !composing.current &&
-    preview !== 'preview';
+    !!uploadImage && canEdit() && !composing.current && preview !== 'preview';
   function receiveImage(
     event: { defaultPrevented: boolean; preventDefault(): void },
     transfer: DataTransfer | null,
@@ -259,7 +245,7 @@ export function useMarkdownEditor({
     onChange(event) {
       onChange?.(event);
       pendingEdit.current = null;
-      if (event.defaultPrevented || options.disabled || options.readOnly) {
+      if (event.defaultPrevented || !canEdit(event.currentTarget)) {
         return;
       }
       const next = normalize(event.currentTarget.value);
@@ -273,10 +259,10 @@ export function useMarkdownEditor({
         ? compositionChanged.current
         : group.current?.type === inputType &&
           time - group.current.time <= 500 &&
-          continuousInput(inputType, history.current.present, document);
+          isContinuousMarkdownInput(inputType, history.current.present, document);
       const state = recordDocument(history.current, document, !!merge, historyLimit);
       group.current =
-        !composition && continuousInput(inputType, history.current.present, document)
+        !composition && isContinuousMarkdownInput(inputType, history.current.present, document)
           ? { type: inputType, time }
           : null;
       setSelection(document.selection);
@@ -331,8 +317,7 @@ export function useMarkdownEditor({
         event.nativeEvent.isComposing ||
         event.keyCode === 229 ||
         composing.current ||
-        options.disabled ||
-        options.readOnly
+        !canEdit(event.currentTarget)
       ) {
         return;
       }
@@ -375,8 +360,7 @@ export function useMarkdownEditor({
       edit.element !== node.current ||
       edit.document.text !== value ||
       !edit.focus ||
-      options.disabled ||
-      options.readOnly ||
+      !canEdit(edit.element) ||
       composing.current
     ) {
       return;
@@ -446,8 +430,7 @@ export function useMarkdownEditor({
         !event.cancelable ||
         event.isComposing ||
         composing.current ||
-        options.disabled ||
-        options.readOnly
+        !canEdit(element)
       ) {
         return;
       }

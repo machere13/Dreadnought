@@ -1,8 +1,8 @@
 import { useLayoutEffect, useRef } from 'react';
-import { MenuAdapter } from '../Menu/index.ts';
-import type { MenuAdapterProps } from '../Menu/index.ts';
-import { usePopover } from '../../Overlays/Popover/index.ts';
-import type { PopoverAdapterProps } from '../../Overlays/Popover/index.ts';
+import { MenuAdapter } from '../Menu/MenuAdapter.tsx';
+import type { MenuAdapterProps } from '../Menu/MenuAdapter.tsx';
+import { usePopover } from '../../Overlays/Popover/usePopover.ts';
+import type { PopoverAdapterProps } from '../../Overlays/Popover/PopoverAdapter.tsx';
 
 export type DropdownAdapterProps = Omit<PopoverAdapterProps, 'content'> &
   Pick<MenuAdapterProps, 'items' | 'selectedValue' | 'onAction'> & {

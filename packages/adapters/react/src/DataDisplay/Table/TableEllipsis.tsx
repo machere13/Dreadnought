@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import { TooltipAdapter } from '../../Overlays/Tooltip/index.ts';
-import type { TooltipAdapterProps } from '../../Overlays/Tooltip/index.ts';
+import { TooltipAdapter } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
+import type { TooltipAdapterProps } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
 
 export function TableEllipsis({
   children,

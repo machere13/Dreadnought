@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { paginateTableRows } from '@dreadnought/core';
-import { ButtonAdapter } from '../Controls/Button/index.ts';
+import { ButtonAdapter } from '../Controls/Button/ButtonAdapter.tsx';
 import { chartNativeProps, type ChartNative } from './chartNativeProps.ts';
 
 export interface ChartPaginationSlots {

@@ -101,7 +101,7 @@ export function useTree<RecordType, Key extends TreeKey = TreeKey>(
       pendingSelection.current = keys;
       setSelection(keys);
     }
-    options.onSelectedKeysChange?.(keys);
+    options.onSelectedKeysChange?.([...keys]);
   }
 
   function setChecked(key: Key, checked: boolean) {
@@ -123,7 +123,7 @@ export function useTree<RecordType, Key extends TreeKey = TreeKey>(
       pendingChecks.current = next.checkedKeys;
       setChecks(next.checkedKeys);
     }
-    options.onCheckedKeysChange?.(next.checkedKeys, next.halfCheckedKeys);
+    options.onCheckedKeysChange?.([...next.checkedKeys], [...next.halfCheckedKeys]);
   }
 
   function change(key: Key, action: 'select' | 'deselect' | 'toggle') {
@@ -132,7 +132,8 @@ export function useTree<RecordType, Key extends TreeKey = TreeKey>(
     }
     const current = expandedKeys ?? pending.current;
     const visible = getVisibleTreeRows(records, { getKey, getChildren, expandedKeys: current });
-    if (!visible.some((row) => row.key === key && row.expandable)) {
+    const row = visible.find((row) => row.key === key);
+    if (!row?.expandable || options.getDisabled?.(row.record)) {
       return;
     }
     const selected = current.includes(key);
@@ -144,7 +145,7 @@ export function useTree<RecordType, Key extends TreeKey = TreeKey>(
       pending.current = next;
       setInternal(next);
     }
-    onExpandedKeysChange?.(next);
+    onExpandedKeysChange?.([...next]);
   }
 
   return {

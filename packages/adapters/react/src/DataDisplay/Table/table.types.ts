@@ -1,7 +1,7 @@
 import type { ComponentPropsWithRef, ReactNode } from 'react';
 import type { TableSortOrder } from '@dreadnought/core';
-import type { TooltipAdapterProps } from '../../Overlays/Tooltip/index.ts';
-import type { LoaderAdapterProps } from '../../Feedback/Loader/index.ts';
+import type { TooltipAdapterProps } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
+import type { LoaderAdapterProps } from '../../Feedback/Loader/LoaderAdapter.tsx';
 
 export type TableRowKey = string | number;
 export type TableFilterValue = string | number;

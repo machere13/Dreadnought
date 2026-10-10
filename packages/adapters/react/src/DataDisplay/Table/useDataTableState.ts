@@ -188,7 +188,7 @@ export function useDataTableState<RecordType extends object>({
       setLocalSelectedKeys(requestedKeys);
     }
     rowSelection?.onChange?.(
-      requestedKeys,
+      [...requestedKeys],
       dataSource.filter((_, index) => requestedKeys.includes(sourceKeys[index]!)),
     );
   }
@@ -200,7 +200,7 @@ export function useDataTableState<RecordType extends object>({
       setLocalExpandedKeys(requestedKeys);
     }
     expandable?.onExpand?.(requestedKeys.includes(key), record);
-    expandable?.onExpandedRowsChange?.(requestedKeys);
+    expandable?.onExpandedRowsChange?.([...requestedKeys]);
   }
 
   return {

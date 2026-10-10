@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type {
   ComponentPropsWithRef,
   ComponentPropsWithoutRef,
@@ -66,7 +66,7 @@ function useSliderImplementation(options: UseSliderOptions) {
     initial.current,
     (next) => {
       if (options.range) {
-        options.onValueChange?.(next as SliderRange);
+        options.onValueChange?.([...(next as SliderRange)] as SliderRange);
       } else {
         options.onValueChange?.(next as number);
       }
@@ -83,20 +83,34 @@ function useSliderImplementation(options: UseSliderOptions) {
   const value = range
     ? getSteppedRange(typeof stored === 'number' ? [stored, last] : stored, grid)
     : getSteppedValue(typeof stored === 'number' ? stored : stored[0], grid);
+  const pendingValue = useRef(value);
+  useLayoutEffect(() => {
+    pendingValue.current = value;
+  }, [value]);
+  function currentValue() {
+    return controlled === undefined ? pendingValue.current : value;
+  }
   const values = typeof value === 'number' ? [value] : value;
   const scaleMax = step === null ? max : last;
   const position = (value: number) => (scaleMax === min ? 0 : (value - min) / (scaleMax - min));
   const start = range ? position(values[0]) : 0;
   const progress = position(values[values.length - 1]);
   function request(candidate: number, index: 0 | 1) {
-    if (typeof value === 'number') {
+    const current = currentValue();
+    if (typeof current === 'number') {
       const next = getSteppedValue(candidate, grid);
-      if (next !== value) {
+      if (next !== current) {
+        if (controlled === undefined) {
+          pendingValue.current = next;
+        }
         setValue(next);
       }
     } else {
-      const next = getSteppedRange(value, grid, { index, value: candidate });
-      if (next[0] !== value[0] || next[1] !== value[1]) {
+      const next = getSteppedRange(current, grid, { index, value: candidate });
+      if (next[0] !== current[0] || next[1] !== current[1]) {
+        if (controlled === undefined) {
+          pendingValue.current = next;
+        }
         setValue(next);
       }
     }
@@ -105,6 +119,8 @@ function useSliderImplementation(options: UseSliderOptions) {
     if (!range) {
       return 0;
     }
+    const current = currentValue();
+    const values = typeof current === 'number' ? [current] : current;
     const lowerDistance = Math.abs(next - values[0]);
     const upperDistance = Math.abs(next - values[1]);
     if (lowerDistance !== upperDistance) {
@@ -244,6 +260,8 @@ function useSliderImplementation(options: UseSliderOptions) {
             return;
           }
           event.preventDefault();
+          const value = currentValue();
+          const current = typeof value === 'number' ? value : value[index];
           const increase = event.key === 'ArrowRight' || event.key === 'ArrowUp';
           const next =
             step === null

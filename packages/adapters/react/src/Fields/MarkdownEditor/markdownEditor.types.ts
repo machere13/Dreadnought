@@ -1,6 +1,6 @@
 import type { MarkdownCommand, MarkdownSelection } from '@dreadnought/core';
 import type { ReactNode, RefCallback, TextareaHTMLAttributes } from 'react';
-import type { UseTextAreaOptions } from '../TextArea/index.ts';
+import type { UseTextAreaOptions } from '../TextArea/useTextArea.ts';
 
 export type MarkdownEditorPreview = 'edit' | 'preview' | 'live';
 export type MarkdownImageUploadState = 'idle' | 'selecting' | 'uploading' | 'error';

@@ -1,5 +1,19 @@
 [
   {
+    "id": "domain:continuous-markdown-input",
+    "kind": "domain",
+    "name": "isContinuousMarkdownInput",
+    "family": "Markdown",
+    "docsUrl": "/custom-components/#core-markdown",
+    "description": "Определяет, продолжает ли ввод или удаление предыдущий Markdown-документ для объединения шагов undo.",
+    "constraints": ["Принимает тип операции и два MarkdownDocument с корректными UTF-16 выделениями. Только insertText, deleteContentBackward и deleteContentForward с пустыми выделениями могут вернуть true. Не хранит историю, не проверяет время между вводами, не изменяет документы и не использует DOM."],
+    "bindings": [{
+      "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "isContinuousMarkdownInput",
+      "examples": [{"id": "typing", "code": "import { isContinuousMarkdownInput } from '@dreadnought/core';\nconst merge = isContinuousMarkdownInput('insertText', { text: 'ab', selection: { start: 1, end: 1 } }, { text: 'axb', selection: { start: 2, end: 2 } });"}]
+    }]
+  },
+  {
     "id": "domain:apply-markdown-command",
     "kind": "domain",
     "name": "applyMarkdownCommand",

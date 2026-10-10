@@ -229,7 +229,7 @@ describe('generated catalog over MCP', () => {
     await withClient(generatedCatalogPath, projectPath, async client => {
       const list = await client.callTool({ name: 'dreadnought_list', arguments: { kind: 'domain' } });
       expect(list.isError).toBeUndefined();
-      expect(replyPayload(list).result.items.map((item: any) => item.name).sort()).toEqual(['applyMarkdownCommand', 'buildBarLayout', 'buildLineLayout', 'buildRadarLayout', 'getClosestLinePoint', 'getLinePointAtX', 'sampleLineLayout']);
+      expect(replyPayload(list).result.items.map((item: any) => item.name).sort()).toEqual(['applyMarkdownCommand', 'buildBarLayout', 'buildLineLayout', 'buildRadarLayout', 'getClosestLinePoint', 'getLinePointAtX', 'isContinuousMarkdownInput', 'sampleLineLayout']);
       const editorApi = await client.callTool({ name: 'dreadnought_get', arguments: {
         component: 'component:markdown-editor', binding: 'react-adapter', section: 'api' } });
       expect(editorApi.isError).toBeUndefined();

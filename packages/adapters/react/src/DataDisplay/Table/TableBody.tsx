@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { getDisclosureState, getSelectionValue } from '@dreadnought/core';
-import { ButtonAdapter } from '../../Controls/Button/index.ts';
+import { ButtonAdapter } from '../../Controls/Button/ButtonAdapter.tsx';
 import { TableDetailRow } from './TableDetailRow.tsx';
 import { TableEllipsis } from './TableEllipsis.tsx';
 import { cellValue, fixedStyle, recordKey } from './tableData.ts';

@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
   getComboboxKeyAction,
   getDisclosureOpen,
@@ -29,12 +29,12 @@ export function useSelect(props: SelectAdapterProps) {
   const query = searchValue ?? localQuery;
   const [active, setActive] = useState('');
   const [validationInvalid, setValidationInvalid] = useState(false);
-  const [value, setValue] = useFieldValue<SelectValue>(
+  const [value, setFieldValue] = useFieldValue<SelectValue>(
     props.value,
     props.defaultValue ?? (props.multiple ? empty : null),
     (next) => {
       if (props.multiple) {
-        props.onValueChange?.(next as string[]);
+        props.onValueChange?.([...(next as string[])]);
       } else {
         props.onValueChange?.(next as string | null);
       }
@@ -42,6 +42,16 @@ export function useSelect(props: SelectAdapterProps) {
     native,
     props.form,
   );
+  const pendingValue = useRef(value);
+  useLayoutEffect(() => {
+    pendingValue.current = value;
+  }, [value]);
+  function setValue(next: SelectValue) {
+    if (props.value === undefined) {
+      pendingValue.current = next;
+    }
+    setFieldValue(next);
+  }
   const open = (props.open ?? expanded) && !props.disabled;
   const current = useRef({ open, query, props, searchValue, onSearch });
   current.current = { open, query, props, searchValue, onSearch };
@@ -126,8 +136,9 @@ export function useSelect(props: SelectAdapterProps) {
     setQuery('');
   }
   function changeSelection(action: SelectionAction<string>) {
+    const currentValue = props.value === undefined ? pendingValue.current : value;
     setValue(
-      getSelectionValue(props.multiple ? state.values : (state.values[0] ?? null), action, {
+      getSelectionValue(currentValue, action, {
         disabled: props.disabled || control.current?.matches(':disabled'),
         required: props.required,
         maxCount: props.maxCount,
@@ -258,9 +269,10 @@ export function useSelect(props: SelectAdapterProps) {
   }, [value, props.required, props.disabled, props.multiple, props.options]);
   useEffect(() => {
     const form = native.current?.form;
+    let attached = true;
     function reset(event: Event) {
       queueMicrotask(() => {
-        if (!event.defaultPrevented) {
+        if (attached && native.current?.form === form && !event.defaultPrevented) {
           setActive('');
           close();
           setValidationInvalid(false);
@@ -268,7 +280,10 @@ export function useSelect(props: SelectAdapterProps) {
       });
     }
     form?.addEventListener('reset', reset);
-    return () => form?.removeEventListener('reset', reset);
+    return () => {
+      attached = false;
+      form?.removeEventListener('reset', reset);
+    };
   }, [props.form]);
   return {
     id,

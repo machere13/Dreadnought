@@ -1,7 +1,7 @@
 import { useId, useImperativeHandle, useMemo } from 'react';
 import type { CSSProperties } from 'react';
-import { PaginationAdapter } from '../../Navigation/Pagination/index.ts';
-import { LoaderAdapter } from '../../Feedback/Loader/index.ts';
+import { PaginationAdapter } from '../../Navigation/Pagination/PaginationAdapter.tsx';
+import { LoaderAdapter } from '../../Feedback/Loader/LoaderAdapter.tsx';
 import { TableHead } from './TableHead.tsx';
 import { TableBody } from './TableBody.tsx';
 import { useDataTableState } from './useDataTableState.ts';

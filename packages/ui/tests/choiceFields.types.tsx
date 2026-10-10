@@ -4,6 +4,17 @@ import { Checkbox, Radio, Select, type SelectOptionGroup } from '@dreadnought/ui
 const inputRef = createRef<HTMLInputElement>();
 const groupRef = createRef<HTMLFieldSetElement>();
 const options = [{ value: 'a', label: 'Первый' }];
+const documentationOptions = [
+  { value: 'anna', label: 'Анна' },
+  { value: 'vera', label: 'Вера' },
+];
+const documentationExample = (
+  <Select aria-label="Исполнитель" options={documentationOptions} showSearch allowClear />
+);
+const documentationMultiple = (
+  <Select multiple aria-label="Участники" options={documentationOptions} defaultValue={['anna']} />
+);
+void [documentationExample, documentationMultiple];
 // @ts-expect-error Search is configured only through showSearch.
 const removedSearchable = <Select options={options} searchable />;
 // @ts-expect-error Search is configured only through showSearch.

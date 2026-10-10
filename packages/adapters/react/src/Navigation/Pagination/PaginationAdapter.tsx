@@ -1,5 +1,5 @@
 import type { ComponentPropsWithRef } from 'react';
-import { ButtonAdapter } from '../../Controls/Button/index.ts';
+import { ButtonAdapter } from '../../Controls/Button/ButtonAdapter.tsx';
 import { usePagination } from './usePagination.ts';
 import type { UsePaginationOptions } from './usePagination.ts';
 
