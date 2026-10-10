@@ -112,9 +112,12 @@ it('filters by search, preserves multiple choices and allows clearing', async ()
   expect(screen.getByRole('option', { name: 'Анна' }).getAttribute('aria-selected')).toBe('true');
   await userEvent.click(screen.getByRole('option', { name: 'Вера' }));
   await userEvent.keyboard('{Escape}');
-  expect((input as HTMLInputElement).value).toBe('Анна, Вера');
+  expect(screen.getByRole('button', { name: 'Удалить Анна' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Удалить Вера' })).toBeTruthy();
   await userEvent.click(screen.getByRole('button', { name: 'Очистить выбор' }));
   expect((input as HTMLInputElement).value).toBe('');
+  expect(screen.queryByRole('button', { name: 'Удалить Анна' })).toBeNull();
+  expect(screen.queryByRole('button', { name: 'Удалить Вера' })).toBeNull();
 });
 
 it('controlled values remain caller-owned and form reset restores default values', async () => {

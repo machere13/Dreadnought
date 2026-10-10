@@ -27,6 +27,14 @@ const multiple = (
     multiple
     options={options}
     value={['a']}
+    removeLabel={(option) => `Remove ${option.label}`}
+    removeContent={<span>×</span>}
+    slotProps={{
+      selection: { className: 'selection' },
+      tag: { className: 'tag' },
+      tagLabel: { className: 'label' },
+      remove: { className: 'remove' },
+    }}
     onValueChange={(value) => {
       const result: string[] = value;
       void result;

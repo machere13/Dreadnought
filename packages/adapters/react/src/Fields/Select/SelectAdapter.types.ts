@@ -26,6 +26,8 @@ export type SelectAdapterProps = Omit<
   clearLabel?: string;
   indicator?: ReactNode;
   clearContent?: ReactNode;
+  removeLabel?: (option: SelectOption) => string;
+  removeContent?: ReactNode;
   slotProps?: {
     root?: ComponentPropsWithoutRef<'div'>;
     control?: ComponentPropsWithoutRef<'input'>;
@@ -34,6 +36,10 @@ export type SelectAdapterProps = Omit<
     group?: ComponentPropsWithoutRef<'div'>;
     groupLabel?: ComponentPropsWithoutRef<'div'>;
     clear?: ComponentPropsWithoutRef<'button'>;
+    selection?: ComponentPropsWithoutRef<'div'>;
+    tag?: ComponentPropsWithoutRef<'span'>;
+    tagLabel?: ComponentPropsWithoutRef<'span'>;
+    remove?: ComponentPropsWithoutRef<'button'>;
   };
 } & (
     | {

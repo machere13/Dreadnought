@@ -113,6 +113,11 @@ export function useSelect(props: SelectAdapterProps) {
     close();
     control.current?.focus();
   }
+  function remove(value: string) {
+    changeSelection({ type: 'deselect', value });
+    setValidationInvalid(false);
+    control.current?.focus();
+  }
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     props.onKeyDown?.(event);
     props.slotProps?.control?.onKeyDown?.(event);
@@ -220,6 +225,7 @@ export function useSelect(props: SelectAdapterProps) {
     optionId,
     choose,
     clear,
+    remove,
     close,
     setValue,
     setExpanded,

@@ -30,6 +30,38 @@
   .root [data-slot='control']::placeholder {
     color: var(--dreadnought-select-placeholder);
   }
+  .root [data-slot='selection'] {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--dreadnought-select-gap);
+    min-width: 0;
+  }
+  .root [data-slot='selection'] [data-slot='control'] {
+    flex: 1 1 1ch;
+    width: 1ch;
+    max-width: 100%;
+  }
+  .root [data-slot='tag'] {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--dreadnought-select-gap);
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
+    padding: calc(var(--dreadnought-select-option-padding-y) / 2)
+      calc(var(--dreadnought-select-option-padding-x) / 2);
+    border: var(--dreadnought-select-border-width) solid var(--dreadnought-select-border);
+    border-radius: var(--dreadnought-select-radius);
+    background: var(--dreadnought-select-selected);
+  }
+  .root [data-slot='tag-label'] {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .root [data-slot='indicator'] {
     display: inline-flex;
     flex: none;
@@ -63,6 +95,10 @@
   }
   .clear:focus-visible {
     outline: var(--dreadnought-select-border-width) solid var(--dreadnought-select-focus);
+  }
+  .clear:disabled {
+    opacity: var(--dreadnought-select-disabled-opacity);
+    cursor: not-allowed;
   }
   .popup {
     position: fixed;

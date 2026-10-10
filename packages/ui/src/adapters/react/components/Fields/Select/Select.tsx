@@ -11,6 +11,7 @@ export function Select({ className, slotProps, ...props }: SelectProps) {
       className={classes(selectPresentation.root, className)}
       indicator={props.indicator ?? <Icon name="down" />}
       clearContent={props.clearContent ?? <Icon name="close" />}
+      removeContent={props.removeContent ?? <Icon name="close" />}
       slotProps={{
         ...slotProps,
         popup: {
@@ -28,6 +29,10 @@ export function Select({ className, slotProps, ...props }: SelectProps) {
         clear: {
           ...slotProps?.clear,
           className: classes(selectPresentation.clear, slotProps?.clear?.className),
+        },
+        remove: {
+          ...slotProps?.remove,
+          className: classes(selectPresentation.clear, slotProps?.remove?.className),
         },
       }}
     />

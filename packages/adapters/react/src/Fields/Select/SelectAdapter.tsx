@@ -18,6 +18,8 @@ export function SelectAdapter(props: SelectAdapterProps) {
     clearLabel = 'Очистить выбор',
     indicator = '▾',
     clearContent = '×',
+    removeLabel = (option) => `Удалить ${option.label}`,
+    removeContent = '×',
     open,
     defaultOpen,
     onOpenChange,
@@ -165,6 +167,41 @@ export function SelectAdapter(props: SelectAdapterProps) {
       {option.label}
     </option>
   );
+  const control = (
+    <input
+      {...inputProps}
+      {...slotProps.control}
+      ref={select.control}
+      type="text"
+      data-slot="control"
+      disabled={disabled}
+      role="combobox"
+      readOnly={!searchable}
+      autoComplete="off"
+      aria-haspopup="listbox"
+      aria-expanded={select.open}
+      aria-controls={`${select.id}-listbox`}
+      aria-autocomplete={searchable ? 'list' : 'none'}
+      aria-activedescendant={
+        select.open && select.activeValue ? select.optionId(select.activeValue) : undefined
+      }
+      aria-required={required || undefined}
+      aria-invalid={select.state.invalid || inputProps['aria-invalid'] || undefined}
+      value={searchable && select.open ? select.query : multiple ? '' : display}
+      placeholder={
+        multiple && select.state.values.length > 0
+          ? undefined
+          : searchable && select.open && display
+            ? display
+            : inputProps.placeholder
+      }
+      onInvalid={handleControlInvalid}
+      onChange={handleControlChange}
+      onClick={handleControlClick}
+      onBlur={handleControlBlur}
+      onKeyDown={select.onKeyDown}
+    />
+  );
   return (
     <div
       {...slotProps.root}
@@ -179,33 +216,35 @@ export function SelectAdapter(props: SelectAdapterProps) {
       onClick={handleRootClick}
       onBlur={handleRootBlur}
     >
-      <input
-        {...inputProps}
-        {...slotProps.control}
-        ref={select.control}
-        type="text"
-        data-slot="control"
-        disabled={disabled}
-        role="combobox"
-        readOnly={!searchable}
-        autoComplete="off"
-        aria-haspopup="listbox"
-        aria-expanded={select.open}
-        aria-controls={`${select.id}-listbox`}
-        aria-autocomplete={searchable ? 'list' : 'none'}
-        aria-activedescendant={
-          select.open && select.activeValue ? select.optionId(select.activeValue) : undefined
-        }
-        aria-required={required || undefined}
-        aria-invalid={select.state.invalid || inputProps['aria-invalid'] || undefined}
-        value={searchable && select.open ? select.query : display}
-        placeholder={searchable && select.open && display ? display : inputProps.placeholder}
-        onInvalid={handleControlInvalid}
-        onChange={handleControlChange}
-        onClick={handleControlClick}
-        onBlur={handleControlBlur}
-        onKeyDown={select.onKeyDown}
-      />
+      {multiple ? (
+        <div {...slotProps.selection} data-slot="selection">
+          {select.state.selectedOptions.map((option) => (
+            <span {...slotProps.tag} key={option.value} data-slot="tag">
+              <span {...slotProps.tagLabel} data-slot="tag-label">
+                {option.label}
+              </span>
+              <button
+                {...slotProps.remove}
+                type="button"
+                data-slot="remove"
+                aria-label={removeLabel(option)}
+                disabled={
+                  disabled || option.disabled || (required && select.state.values.length === 1)
+                }
+                onClick={(event) => {
+                  slotProps.remove?.onClick?.(event);
+                  if (!event.defaultPrevented) select.remove(option.value);
+                }}
+              >
+                {removeContent}
+              </button>
+            </span>
+          ))}
+          {control}
+        </div>
+      ) : (
+        control
+      )}
       {allowClear && select.state.values.length > 0 && (
         <button
           {...slotProps.clear}

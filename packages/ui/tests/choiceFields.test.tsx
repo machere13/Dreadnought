@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
 import { Checkbox, Radio, Select } from '../src/adapters/react/index.ts';
 it('styles Select group labels while preserving consumer slots', () => {
@@ -20,6 +20,26 @@ it('styles Select group labels while preserving consumer slots', () => {
 });
 
 afterEach(cleanup);
+it('renders removable Select tags with library icons and preserves consumer slots', () => {
+  render(
+    <form>
+      <Select
+        multiple
+        options={[{ value: 'a', label: 'Анна' }]}
+        defaultValue={['a']}
+        name="people"
+        slotProps={{ tag: { className: 'custom-tag' }, remove: { className: 'custom-remove' } }}
+      />
+    </form>,
+  );
+  const button = screen.getByRole('button', { name: 'Удалить Анна' });
+  expect(button.querySelector('svg')).not.toBeNull();
+  expect(button.className).toContain('custom-remove');
+  expect(button.className).not.toBe('custom-remove');
+  expect(button.closest('[data-slot="tag"]')?.className).toBe('custom-tag');
+  fireEvent.click(button);
+  expect(new FormData(screen.getByRole('combobox').closest('form')!).getAll('people')).toEqual([]);
+});
 it('adds presentation to native fields and preserves user slots', () => {
   render(
     <>
