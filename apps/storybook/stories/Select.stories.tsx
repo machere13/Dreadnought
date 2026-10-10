@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useEffect, useState } from 'react';
-import { Select } from '@dreadnought/ui/react';
+import { Badge, Button, Icon, Mark, Select } from '@dreadnought/ui/react';
 const options = [
   { value: 'anna', label: 'Анна' },
   { value: 'boris', label: 'Борис', disabled: true },
@@ -58,6 +58,30 @@ export const LimitedSelection: Story = {
     allowClear: true,
     maxCount: 2,
     defaultValue: ['anna', 'vera'],
+  },
+};
+export const CustomTags: Story = {
+  args: {
+    multiple: true,
+    searchable: true,
+    defaultValue: ['anna', 'vera'],
+    tagRender: (option, { disabled, removeLabel, onRemove }) => (
+      <Badge
+        appearance="outline"
+        icon={<Mark color={option.value === 'anna' ? '#73c991' : '#86a9ff'} />}
+      >
+        {option.label}
+        <Button
+          type="button"
+          variant="ghosted"
+          size="compact"
+          disabled={disabled}
+          aria-label={removeLabel}
+          icon={<Icon name="close" />}
+          onClick={onRemove}
+        />
+      </Badge>
+    ),
   },
 };
 export const Disabled: Story = { args: { disabled: true, defaultValue: 'anna' } };

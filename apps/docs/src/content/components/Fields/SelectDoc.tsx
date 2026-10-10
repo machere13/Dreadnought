@@ -1,6 +1,6 @@
 import { ComponentPage } from '../../../shared/ComponentPage.tsx';
 import { useState } from 'react';
-import { Select } from '@dreadnought/ui/react';
+import { Badge, Button, Icon, Mark, Select } from '@dreadnought/ui/react';
 import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc';
 import type { ComponentDoc } from '../../../shared/types.ts';
 import styles from '../../../shared/Documentation.module.css';
@@ -14,6 +14,14 @@ function SelectDemo() {
     <Select multiple aria-label="Участники" options={options} searchable allowClear defaultValue={['anna', 'vera']} placeholder="Выберите участников" />
     <Select multiple aria-label="Ограничение меток" options={options} searchable maxTagCount={1} defaultValue={['anna', 'vera']} />
     <Select multiple aria-label="Не больше двух участников" maxCount={2} searchable allowClear defaultValue={['anna', 'vera']} options={[...options, { value: 'guest', label: 'Даша' }]} />
+    <Select multiple aria-label="Свои метки" options={options} searchable defaultValue={['anna', 'vera']}
+      tagRender={(option, { disabled, removeLabel, onRemove }) => (
+        <Badge appearance="outline" icon={<Mark color={option.value === 'anna' ? '#73c991' : '#86a9ff'} />}>
+          {option.label}
+          <Button type="button" variant="ghosted" size="compact" disabled={disabled}
+            aria-label={removeLabel} icon={<Icon name="close" />} onClick={onRemove} />
+        </Badge>
+      )} />
     <Select aria-label="Недоступный выбор" options={options} disabled defaultValue="anna" />
     <Select aria-label="Подробные варианты" options={options}
       optionRender={option => <span>{option.label} <small>— {option.value}</small></span>} />

@@ -1,4 +1,4 @@
-import { useImperativeHandle } from 'react';
+import { Fragment, useImperativeHandle } from 'react';
 import type { ChangeEvent, FocusEvent, FormEvent, MouseEvent } from 'react';
 import { useSelect } from './useSelect.ts';
 import type { SelectAdapterProps } from './SelectAdapter.types.ts';
@@ -22,6 +22,7 @@ export function SelectAdapter(props: SelectAdapterProps) {
     removeContent = '×',
     maxTagCount,
     maxCount,
+    tagRender,
     open,
     defaultOpen,
     onOpenChange,
@@ -227,28 +228,44 @@ export function SelectAdapter(props: SelectAdapterProps) {
     >
       {multiple ? (
         <div {...slotProps.selection} data-slot="selection">
-          {visibleTags.map((option) => (
-            <span {...slotProps.tag} key={option.value} data-slot="tag">
-              <span {...slotProps.tagLabel} data-slot="tag-label">
-                {option.label}
+          {visibleTags.map((option) => {
+            const tagDisabled = Boolean(
+              disabled || option.disabled || (required && select.state.values.length === 1),
+            );
+            if (tagRender) {
+              return (
+                <Fragment key={option.value}>
+                  {tagRender(option, {
+                    disabled: tagDisabled,
+                    removeLabel: removeLabel(option),
+                    onRemove: () => {
+                      if (!tagDisabled) select.remove(option.value);
+                    },
+                  })}
+                </Fragment>
+              );
+            }
+            return (
+              <span {...slotProps.tag} key={option.value} data-slot="tag">
+                <span {...slotProps.tagLabel} data-slot="tag-label">
+                  {option.label}
+                </span>
+                <button
+                  {...slotProps.remove}
+                  type="button"
+                  data-slot="remove"
+                  aria-label={removeLabel(option)}
+                  disabled={tagDisabled}
+                  onClick={(event) => {
+                    slotProps.remove?.onClick?.(event);
+                    if (!event.defaultPrevented) select.remove(option.value);
+                  }}
+                >
+                  {removeContent}
+                </button>
               </span>
-              <button
-                {...slotProps.remove}
-                type="button"
-                data-slot="remove"
-                aria-label={removeLabel(option)}
-                disabled={
-                  disabled || option.disabled || (required && select.state.values.length === 1)
-                }
-                onClick={(event) => {
-                  slotProps.remove?.onClick?.(event);
-                  if (!event.defaultPrevented) select.remove(option.value);
-                }}
-              >
-                {removeContent}
-              </button>
-            </span>
-          ))}
+            );
+          })}
           {hiddenTagCount > 0 && (
             <span {...slotProps.tag} data-slot="tag" data-summary="">
               +{hiddenTagCount}

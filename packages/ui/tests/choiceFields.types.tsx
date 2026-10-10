@@ -31,6 +31,11 @@ const multiple = (
     removeContent={<span>×</span>}
     maxTagCount={2}
     maxCount={3}
+    tagRender={(option, { disabled, removeLabel, onRemove }) => (
+      <button type="button" disabled={disabled} aria-label={removeLabel} onClick={onRemove}>
+        {option.label}
+      </button>
+    )}
     slotProps={{
       selection: { className: 'selection' },
       tag: { className: 'tag' },
