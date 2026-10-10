@@ -18,15 +18,10 @@
         "maxTagCount": "Количество видимых меток при multiple; остальные показаны как +N. По умолчанию без ограничения; 0 скрывает все метки. Не меняет выбранные значения.",
         "maxCount": "Максимум выбранных значений при multiple. Целое неотрицательное число; по умолчанию без ограничения. При достижении лимита новые варианты недоступны; удаление доступно. Переданные значения не обрезаются.",
         "tagRender": "Заменяет всю видимую метку при multiple. Получает option и { disabled, removeLabel, onRemove }; onRemove соблюдает disabled и required. Свою кнопку задайте с type=button и доступным именем. Слоты tag/tagLabel/remove применяются только к стандартным меткам; +N остаётся стандартным.",
-        "searchable": "Совместимое включение поиска; showSearch имеет приоритет.",
-        "showSearch": "Boolean включает поиск; объект объединяет optionFilterProp (label, value или их массив), filterOption, filterSort, searchValue и onSearch. По умолчанию поиск по label. Настройки объекта имеют приоритет над одноимёнными старыми пропсами. Сортировка внутри групп сохраняет их порядок и исходные options.",
+        "showSearch": "Boolean включает поиск; объект задаёт optionFilterProp (label, value или их массив), filterOption, filterSort, searchValue, defaultSearchValue и onSearch. По умолчанию поиск по label; filterOption=false отключает локальную фильтрацию. searchValue управляется владельцем, defaultSearchValue действует при инициализации. Сортировка внутри групп сохраняет их порядок и исходные options.",
         "open": "Управляемое открытие списка; disabled принудительно скрывает список.",
         "defaultOpen": "Начальное открытие в неуправляемом режиме.",
         "onOpenChange": "Запрос изменения открытого состояния.",
-        "searchValue": "Управляемая поисковая строка.",
-        "defaultSearchValue": "Начальная поисковая строка в неуправляемом режиме.",
-        "onSearch": "Поисковая строка при вводе и сбросе после выбора, очистки или закрытия.",
-        "filterOption": "По умолчанию поиск по label; false отключает локальную фильтрацию, функция задаёт своё правило.",
         "loading": "Состояние загрузки результатов без блокировки существующих вариантов.",
         "loadingContent": "Содержимое статуса загрузки вместо пустого состояния.",
         "optionRender": "Рендерер содержимого варианта: option и active/selected/index. Не заменяет семантику и обработчики строки.",
@@ -37,24 +32,22 @@
       },
       "defaults": {
         "multiple": false,
-        "searchable": false,
         "allowClear": false,
         "disabled": false,
         "required": false,
         "invalid": false,
         "defaultOpen": false,
-        "defaultSearchValue": "",
-        "filterOption": true,
-        "loading": false
+        "loading": false,
+        "showSearch": false
       },
       "examples": [
         {
           "id": "basic",
-          "code": "import { Select } from '@dreadnought/ui/react';\nconst example = <Select aria-label='Исполнитель' options={[{ value: 'anna', label: 'Анна' }, { value: 'vera', label: 'Вера' }]} searchable allowClear />;"
+          "code": "import { Select } from '@dreadnought/ui/react';\nconst example = <Select aria-label='Исполнитель' options={[{ value: 'anna', label: 'Анна' }, { value: 'vera', label: 'Вера' }]} showSearch allowClear />;"
         },
         {
           "id": "remote-search",
-          "code": "import { Select } from '@dreadnought/ui/react';\nimport { useEffect, useState } from 'react';\nfunction Example() {\n  const [search, setSearch] = useState('');\n  const [options, setOptions] = useState<{ value: string; label: string }[]>([]);\n  const [loading, setLoading] = useState(false);\n  const [error, setError] = useState(false);\n  useEffect(() => {\n    const controller = new AbortController();\n    setLoading(true);\n    setError(false);\n    fetch('/api/people?q=' + encodeURIComponent(search), { signal: controller.signal })\n      .then(response => { if (!response.ok) throw new Error('Search failed'); return response.json(); })\n      .then(results => { if (!controller.signal.aborted) setOptions(results); })\n      .catch(() => { if (!controller.signal.aborted) { setOptions([]); setError(true); } })\n      .finally(() => { if (!controller.signal.aborted) setLoading(false); });\n    return () => controller.abort();\n  }, [search]);\n  return <Select aria-label='Исполнитель' options={options} searchable searchValue={search} onSearch={setSearch} filterOption={false} loading={loading} emptyContent={error ? 'Не удалось загрузить варианты' : 'Нет вариантов'} />;\n}"
+          "code": "import { Select } from '@dreadnought/ui/react';\nimport { useEffect, useState } from 'react';\nfunction Example() {\n  const [search, setSearch] = useState('');\n  const [options, setOptions] = useState<{ value: string; label: string }[]>([]);\n  const [loading, setLoading] = useState(false);\n  const [error, setError] = useState(false);\n  useEffect(() => {\n    const controller = new AbortController();\n    setLoading(true);\n    setError(false);\n    fetch('/api/people?q=' + encodeURIComponent(search), { signal: controller.signal })\n      .then(response => { if (!response.ok) throw new Error('Search failed'); return response.json(); })\n      .then(results => { if (!controller.signal.aborted) setOptions(results); })\n      .catch(() => { if (!controller.signal.aborted) { setOptions([]); setError(true); } })\n      .finally(() => { if (!controller.signal.aborted) setLoading(false); });\n    return () => controller.abort();\n  }, [search]);\n  return <Select aria-label='Исполнитель' options={options} showSearch={{ searchValue: search, onSearch: setSearch, filterOption: false }} loading={loading} emptyContent={error ? 'Не удалось загрузить варианты' : 'Нет вариантов'} />;\n}"
         }
       ]
     }

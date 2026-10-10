@@ -13,7 +13,7 @@
     "ref относится к первому бегунку; id, ARIA и обработчики — к бегункам, className/style — к root. При range второй id получает суффикс -end; tuple slotProps.thumb задаёт отдельные ID и доступные названия.",
     "Нажатие на шкалу двигает ближайший бегунок; при равном расстоянии — последний активный. У совпавшей пары нажатие со стороны меньших значений (слева или снизу) выбирает нижний, со стороны больших (справа или сверху) — верхний. Нажатие прямо на бегунок сохраняет его идентичность; клавиатура двигает только сфокусированный.",
     "renderThumb(thumbProps, value, index) вызывается для каждого бегунка, index 0 или 1. Передайте thumbProps одному div, сохраняя ref, ARIA и события. slotProps.thumb/field принимают общий объект или пару объектов.",
-    "name/form относятся к скрытым полям. range отправляет два значения с одним name, от нижнего к верхнему; используйте FormData.getAll(name). useSlider.thumbs содержит thumbProps, fieldProps и thumbRef каждого бегунка; одиночные thumbProps/fieldProps сохранены для совместимости и относятся к первому.",
+    "name/form относятся к скрытым полям. range отправляет два значения с одним name, от нижнего к верхнему; используйте FormData.getAll(name). useSlider.thumbs содержит thumbProps, fieldProps и thumbRef каждого бегунка; используйте thumbs и для одиночного бегунка.",
     "disabled и disabled fieldset блокируют ввод и отправку поля; отменённый reset и controlled reset не изменяют значение."
   ],
   "bindings": [
@@ -21,7 +21,7 @@
       "id": "react-logic", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/logic", "exportName": "useSlider",
       "defaults": { "min": 0, "max": 100, "step": 1, "disabled": false, "orientation": "horizontal" },
       "examples": [
-        { "id": "basic", "code": "import { useSlider } from '@dreadnought/react/logic';\nfunction Example() { const slider = useSlider({ name: 'volume', 'aria-label': 'Громкость' }); return <div {...slider.rootProps}><div ref={slider.railRef} /><div {...slider.thumbProps} /><input {...slider.fieldProps} /></div>; }" },
+        { "id": "basic", "code": "import { useSlider } from '@dreadnought/react/logic';\nfunction Example() { const slider = useSlider({ name: 'volume', 'aria-label': 'Громкость' }); return <div {...slider.rootProps}><div ref={slider.railRef} /><div {...slider.thumbs[0].thumbProps} /><input {...slider.thumbs[0].fieldProps} /></div>; }" },
         { "id": "range", "code": "import { useSlider } from '@dreadnought/react/logic';\nfunction Example() { const slider = useSlider({ range: true, defaultValue: [20, 80], name: 'price', slotProps: { thumb: [{ 'aria-label': 'Цена от' }, { 'aria-label': 'Цена до' }] } }); return <div {...slider.rootProps}><div ref={slider.railRef} />{slider.thumbs.map((thumb, index) => <div key={index}><div {...thumb.thumbProps} /><input {...thumb.fieldProps} /></div>)}</div>; }" }
       ]
     },

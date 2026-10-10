@@ -11,8 +11,8 @@ function Probe(props: UseSliderOptions) {
   const slider = useSlider(props);
   return (
     <>
-      <div {...slider.thumbProps} />
-      <input {...slider.fieldProps} />
+      <div {...slider.thumbs[0].thumbProps} />
+      <input {...slider.thumbs[0].fieldProps} />
       <output>{slider.progress}</output>
     </>
   );

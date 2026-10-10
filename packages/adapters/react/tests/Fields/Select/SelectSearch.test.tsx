@@ -30,18 +30,12 @@ it('uses showSearch configuration for filtering, sorting and keyboard selection'
   await user.keyboard('{Enter}');
   expect(input.value).toBe('Zoe');
 });
-it('keeps nested search controlled and gives nested settings precedence over legacy props', () => {
+it('keeps configured search controlled and can disable search', () => {
   const searches: string[] = [];
   const { rerender } = render(
     <SelectAdapter
       options={options}
       defaultOpen
-      searchable
-      searchValue="legacy"
-      filterOption
-      onSearch={() => {
-        throw new Error('legacy callback');
-      }}
       showSearch={{
         searchValue: 'remote',
         filterOption: false,
@@ -54,7 +48,7 @@ it('keeps nested search controlled and gives nested settings precedence over leg
   fireEvent.change(input, { target: { value: 'next' } });
   expect(searches).toEqual(['next']);
   expect(input.value).toBe('remote');
-  rerender(<SelectAdapter options={options} defaultOpen searchable showSearch={false} />);
+  rerender(<SelectAdapter options={options} defaultOpen showSearch={false} />);
   expect(input.readOnly).toBe(true);
   expect(input.getAttribute('aria-autocomplete')).toBe('none');
 });
@@ -81,10 +75,11 @@ it('keeps search caller-owned and does not locally discard remote results', () =
     <SelectAdapter
       options={options}
       defaultOpen
-      searchable
-      searchValue="remote"
-      filterOption={false}
-      onSearch={(next) => searches.push(next)}
+      showSearch={{
+        searchValue: 'remote',
+        filterOption: false,
+        onSearch: (next) => searches.push(next),
+      }}
     />,
   );
   const input = screen.getByRole('combobox') as HTMLInputElement;
@@ -97,9 +92,7 @@ it('keeps search caller-owned and does not locally discard remote results', () =
     <SelectAdapter
       options={options}
       defaultOpen
-      searchable
-      searchValue="next"
-      filterOption={false}
+      showSearch={{ searchValue: 'next', filterOption: false }}
     />,
   );
   expect(input.value).toBe('next');
@@ -112,11 +105,9 @@ it('opens and searches in a controlled integration then clears search after sele
     return (
       <SelectAdapter
         options={options}
-        searchable
         open={open}
         onOpenChange={setOpen}
-        searchValue={search}
-        onSearch={setSearch}
+        showSearch={{ searchValue: search, onSearch: setSearch }}
       />
     );
   }
@@ -194,23 +185,16 @@ it('reports outside dismissal without mutating controlled opening', () => {
 });
 
 it('reconciles active options when remote results change', () => {
-  const { rerender } = render(
-    <SelectAdapter options={options} defaultOpen defaultValue="a" filterOption={false} />,
-  );
+  const { rerender } = render(<SelectAdapter options={options} defaultOpen defaultValue="a" />);
   rerender(
-    <SelectAdapter
-      options={[{ value: 'c', label: 'Cora' }]}
-      defaultOpen
-      defaultValue="a"
-      filterOption={false}
-    />,
+    <SelectAdapter options={[{ value: 'c', label: 'Cora' }]} defaultOpen defaultValue="a" />,
   );
   const input = screen.getByRole('combobox') as HTMLInputElement;
   expect(input.value).toBe('a');
   expect(input.getAttribute('aria-activedescendant')).toBe(
     screen.getByRole('option', { name: 'Cora' }).id,
   );
-  rerender(<SelectAdapter options={[]} defaultOpen defaultValue="a" filterOption={false} />);
+  rerender(<SelectAdapter options={[]} defaultOpen defaultValue="a" />);
   expect(input.hasAttribute('aria-activedescendant')).toBe(false);
 });
 
@@ -229,9 +213,7 @@ it('emits one search reset when selecting with a caller-owned search', async () 
     <SelectAdapter
       options={options}
       defaultOpen
-      searchable
-      searchValue="Ann"
-      onSearch={(next) => searches.push(next)}
+      showSearch={{ searchValue: 'Ann', onSearch: (next) => searches.push(next) }}
     />,
   );
   await userEvent.click(screen.getByRole('option', { name: 'Anna' }));

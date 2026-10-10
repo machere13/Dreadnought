@@ -21,9 +21,8 @@ it('renders custom tags and removes them without clearing search or submitting',
     >
       <SelectAdapter
         multiple
-        searchable
         defaultOpen
-        defaultSearchValue="Вер"
+        showSearch={{ defaultSearchValue: 'Вер' }}
         options={options}
         defaultValue={['a', 'c']}
         name="people"

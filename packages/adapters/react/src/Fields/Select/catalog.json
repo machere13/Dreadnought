@@ -1,9 +1,18 @@
 {
   "componentId": "component:select",
   "parts": [
-    { "name": "selection", "description": "Метки выбранных значений и поле поиска при multiple." },
-    { "name": "tag", "description": "Выбранное значение при multiple." },
-    { "name": "tagLabel", "description": "Текст выбранного значения." },
+    {
+      "name": "selection",
+      "description": "Метки выбранных значений и поле поиска при multiple."
+    },
+    {
+      "name": "tag",
+      "description": "Выбранное значение при multiple."
+    },
+    {
+      "name": "tagLabel",
+      "description": "Текст выбранного значения."
+    },
     {
       "name": "remove",
       "description": "Кнопка удаления одного значения, недоступная для disabled и последнего required значения."
@@ -48,9 +57,9 @@
     "При multiple выбранные значения отображаются отдельными метками. Удаление метки сохраняет открытый список и поиск; disabled и последнее required значение не удаляются.",
     "Варианты имеют уникальное непустое value; disabled исключает выбор.",
     "Группы задаются как { label, options, disabled? }; допускается один уровень групп и смешивание с обычными вариантами. disabled группы отключает всех её детей. Поиск фильтрует варианты, а пустые группы скрываются.",
-    "Для серверного поиска задайте showSearch={ searchValue, onSearch, filterOption: false }, options и loading. Запрос и отмена устаревших ответов остаются в приложении. Старые searchable/searchValue/onSearch/filterOption поддерживаются; showSearch и заданные поля его объекта имеют приоритет.",
+    "Для серверного поиска задайте showSearch={{ searchValue, onSearch, filterOption: false }}, options и loading. Запрос и отмена устаревших ответов остаются в приложении.",
     "optionRender меняет содержимое строки, но label остаётся текстом для поля, формы и доступного имени; не вкладывайте интерактивные элементы.",
-    "open и searchValue управляются владельцем; defaultOpen/defaultSearchValue действуют только при инициализации. Выбор, очистка и закрытие запрашивают сброс поиска через onSearch.",
+    "open и showSearch.searchValue управляются владельцем; defaultOpen и showSearch.defaultSearchValue действуют только при инициализации. Выбор, очистка и закрытие запрашивают сброс поиска через showSearch.onSearch.",
     "loading показывает статус, скрывает emptyContent и не блокирует выбор уже загруженных вариантов. disabled скрывает popup независимо от open."
   ],
   "bindings": [
@@ -71,15 +80,10 @@
         "maxTagCount": "Количество видимых меток при multiple; остальные показаны как +N. По умолчанию без ограничения; 0 скрывает все метки. Не меняет выбранные значения.",
         "maxCount": "Максимум выбранных значений при multiple. Целое неотрицательное число; по умолчанию без ограничения. При достижении лимита новые варианты недоступны; удаление доступно. Переданные значения не обрезаются.",
         "tagRender": "Заменяет всю видимую метку при multiple. Получает option и { disabled, removeLabel, onRemove }; onRemove соблюдает disabled и required. Свою кнопку задайте с type=button и доступным именем. Слоты tag/tagLabel/remove применяются только к стандартным меткам; +N остаётся стандартным.",
-        "searchable": "Совместимое включение поиска; showSearch имеет приоритет.",
-        "showSearch": "Boolean включает поиск; объект объединяет optionFilterProp (label, value или их массив), filterOption, filterSort, searchValue и onSearch. По умолчанию поиск по label. Настройки объекта имеют приоритет над одноимёнными старыми пропсами. Сортировка внутри групп сохраняет их порядок и исходные options.",
+        "showSearch": "Boolean включает поиск; объект задаёт optionFilterProp (label, value или их массив), filterOption, filterSort, searchValue, defaultSearchValue и onSearch. По умолчанию поиск по label; filterOption=false отключает локальную фильтрацию. searchValue управляется владельцем, defaultSearchValue действует при инициализации. Сортировка внутри групп сохраняет их порядок и исходные options.",
         "open": "Управляемое открытие списка; disabled принудительно скрывает список.",
         "defaultOpen": "Начальное открытие в неуправляемом режиме.",
         "onOpenChange": "Запрос изменения открытого состояния.",
-        "searchValue": "Управляемая поисковая строка.",
-        "defaultSearchValue": "Начальная поисковая строка в неуправляемом режиме.",
-        "onSearch": "Поисковая строка при вводе и сбросе после выбора, очистки или закрытия.",
-        "filterOption": "По умолчанию поиск по label; false отключает локальную фильтрацию, функция задаёт своё правило.",
         "loading": "Состояние загрузки результатов без блокировки существующих вариантов.",
         "loadingContent": "Содержимое статуса загрузки вместо пустого состояния.",
         "optionRender": "Рендерер содержимого варианта: option и active/selected/index. Не заменяет семантику и обработчики строки.",
@@ -90,20 +94,18 @@
       },
       "defaults": {
         "multiple": false,
-        "searchable": false,
         "allowClear": false,
         "disabled": false,
         "required": false,
         "invalid": false,
         "defaultOpen": false,
-        "defaultSearchValue": "",
-        "filterOption": true,
-        "loading": false
+        "loading": false,
+        "showSearch": false
       },
       "examples": [
         {
           "id": "basic",
-          "code": "import { SelectAdapter } from '@dreadnought/react/unstyled';\nconst example = <SelectAdapter aria-label='Исполнитель' options={[{ value: 'anna', label: 'Анна' }, { value: 'vera', label: 'Вера' }]} searchable allowClear />;"
+          "code": "import { SelectAdapter } from '@dreadnought/react/unstyled';\nconst example = <SelectAdapter aria-label='Исполнитель' options={[{ value: 'anna', label: 'Анна' }, { value: 'vera', label: 'Вера' }]} showSearch allowClear />;"
         }
       ]
     }

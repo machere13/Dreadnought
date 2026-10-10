@@ -39,7 +39,7 @@ it('hides groups without matching options and keeps a global optionRender index'
     <SelectAdapter
       aria-label="Поиск"
       options={options}
-      searchable
+      showSearch
       defaultOpen
       optionRender={(option, state) => `${state.index}: ${option.label}`}
     />,

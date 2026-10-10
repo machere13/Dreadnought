@@ -39,8 +39,8 @@ it('keeps the final required selection when clear is requested', async () => {
   expect((screen.getByRole('combobox') as HTMLInputElement).value).toBe('Анна');
 });
 
-it('leaves Home and End to the searchable input rather than moving the active option', async () => {
-  render(<adapters.SelectAdapter searchable aria-label="Поиск" options={options} />);
+it('leaves Home and End to the showSearch input rather than moving the active option', async () => {
+  render(<adapters.SelectAdapter showSearch aria-label="Поиск" options={options} />);
   const input = screen.getByRole('combobox', { name: 'Поиск' });
   input.focus();
   await userEvent.keyboard('{ArrowDown}{ArrowDown}');
@@ -103,7 +103,7 @@ it('uses combobox/listbox semantics, skips disabled options and commits with Ent
 
 it('filters by search, preserves multiple choices and allows clearing', async () => {
   render(
-    <adapters.SelectAdapter multiple searchable allowClear aria-label="Люди" options={options} />,
+    <adapters.SelectAdapter multiple showSearch allowClear aria-label="Люди" options={options} />,
   );
   const input = screen.getByRole('combobox', { name: 'Люди' });
   await userEvent.type(input, 'ан');

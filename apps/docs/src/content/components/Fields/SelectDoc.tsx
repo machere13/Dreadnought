@@ -10,11 +10,11 @@ function SelectDemo() {
   const options = [{ value: 'anna', label: 'Анна' }, { value: 'boris', label: 'Борис', disabled: true }, { value: 'vera', label: 'Вера' }];
   return <div className={styles.demo}>
     <div className={styles.demoRow}>
-    <Select aria-label="Исполнитель" name="owner" options={options} placeholder="Выберите исполнителя" searchable allowClear value={value} onValueChange={setValue} />
-    <Select multiple aria-label="Участники" options={options} searchable allowClear defaultValue={['anna', 'vera']} placeholder="Выберите участников" />
-    <Select multiple aria-label="Ограничение меток" options={options} searchable maxTagCount={1} defaultValue={['anna', 'vera']} />
-    <Select multiple aria-label="Не больше двух участников" maxCount={2} searchable allowClear defaultValue={['anna', 'vera']} options={[...options, { value: 'guest', label: 'Даша' }]} />
-    <Select multiple aria-label="Свои метки" options={options} searchable defaultValue={['anna', 'vera']}
+    <Select aria-label="Исполнитель" name="owner" options={options} placeholder="Выберите исполнителя" showSearch allowClear value={value} onValueChange={setValue} />
+    <Select multiple aria-label="Участники" options={options} showSearch allowClear defaultValue={['anna', 'vera']} placeholder="Выберите участников" />
+    <Select multiple aria-label="Ограничение меток" options={options} showSearch maxTagCount={1} defaultValue={['anna', 'vera']} />
+    <Select multiple aria-label="Не больше двух участников" maxCount={2} showSearch allowClear defaultValue={['anna', 'vera']} options={[...options, { value: 'guest', label: 'Даша' }]} />
+    <Select multiple aria-label="Свои метки" options={options} showSearch defaultValue={['anna', 'vera']}
       tagRender={(option, { disabled, removeLabel, onRemove }) => (
         <Badge appearance="outline" icon={<Mark color={option.value === 'anna' ? '#73c991' : '#86a9ff'} />}>
           {option.label}
@@ -30,7 +30,7 @@ function SelectDemo() {
     <Select aria-label="Подробные варианты" options={options}
       optionRender={option => <span>{option.label} <small>— {option.value}</small></span>} />
     <Select aria-label="Загрузка вариантов" options={[]} loading loadingContent="Загружаем варианты…" placeholder="Откройте список" />
-    <Select aria-label="Выбор по командам" searchable placeholder="Выберите участника" options={[
+    <Select aria-label="Выбор по командам" showSearch placeholder="Выберите участника" options={[
       { label: 'Команда', options }, { label: 'Гости', options: [{ value: 'guest', label: 'Даша' }] },
     ]} />
     </div>

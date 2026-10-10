@@ -16,14 +16,14 @@ it.each([
   {
     name: 'Select',
     variants: [
-      { properties: [prop('options', false), prop('searchable')] },
-      { properties: [prop('options', false), prop('multiple', false), prop('searchable')] },
+      { properties: [prop('options', false), prop('showSearch')] },
+      { properties: [prop('options', false), prop('multiple', false), prop('showSearch')] },
     ],
-    defaults: { multiple: false, searchable: false },
+    defaults: { multiple: false, showSearch: false },
     expected: [
       'Contract 1, branch 1: required props: options.',
       'Contract 1, branch 2: required props: options, multiple.',
-      'Defaults: {"multiple":false,"searchable":false}',
+      'Defaults: {"multiple":false,"showSearch":false}',
     ],
   },
   {
@@ -64,7 +64,7 @@ it.each([
     expect(context.sources[0].apiSummary).toContain('Вариант API 1.2');
     expect(context.sources[0].apiSummary).toContain('href');
   }
-  const property = name === 'Input' ? 'required' : name === 'Select' ? 'searchable' : 'variant';
+  const property = name === 'Input' ? 'required' : name === 'Select' ? 'showSearch' : 'variant';
   expect(searchKnowledge(chunks, `${name} ${property}`, 1)[0].apiSummary)
     .toBe(context.sources[0].apiSummary);
 });

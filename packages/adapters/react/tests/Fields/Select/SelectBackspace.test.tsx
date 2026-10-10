@@ -31,7 +31,7 @@ it('removes the last value, including hidden custom tags, without closing the po
     <form>
       <SelectAdapter
         multiple
-        searchable
+        showSearch
         defaultOpen
         options={options}
         defaultValue={['a', 'c']}
@@ -55,10 +55,9 @@ it('edits search text before removing a tag', async () => {
   render(
     <SelectAdapter
       multiple
-      searchable
       defaultOpen
       options={options}
-      defaultSearchValue="Ve"
+      showSearch={{ defaultSearchValue: 'Ve' }}
       defaultValue={['a', 'c']}
     />,
   );

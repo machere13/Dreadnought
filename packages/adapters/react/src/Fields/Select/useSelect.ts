@@ -15,17 +15,16 @@ import { useAnchoredPopover } from '../../shared/useAnchoredPopover.ts';
 const empty: string[] = [];
 export function useSelect(props: SelectAdapterProps) {
   const search = typeof props.showSearch === 'object' ? props.showSearch : undefined;
-  const searchable =
-    props.showSearch !== undefined ? props.showSearch !== false : (props.searchable ?? false);
-  const searchValue = search?.searchValue ?? props.searchValue;
-  const onSearch = search?.onSearch ?? props.onSearch;
+  const searchable = Boolean(props.showSearch);
+  const searchValue = search?.searchValue;
+  const onSearch = search?.onSearch;
   const id = useId();
   const control = useRef<HTMLInputElement>(null);
   const native = useRef<HTMLSelectElement>(null);
   const root = useRef<HTMLDivElement>(null);
   const popup = useRef<HTMLDivElement>(null);
   const [expanded, setLocalExpanded] = useState(props.defaultOpen ?? false);
-  const [localQuery, setLocalQuery] = useState(props.defaultSearchValue ?? '');
+  const [localQuery, setLocalQuery] = useState(search?.defaultSearchValue ?? '');
   const query = searchValue ?? localQuery;
   const [active, setActive] = useState('');
   const [validationInvalid, setValidationInvalid] = useState(false);
@@ -47,7 +46,7 @@ export function useSelect(props: SelectAdapterProps) {
   current.current = { open, query, props, searchValue, onSearch };
   const state = getSelectState({
     ...props,
-    filterOption: search?.filterOption ?? props.filterOption,
+    filterOption: search?.filterOption,
     optionFilterProp: search?.optionFilterProp,
     filterSort: search?.filterSort,
     value,

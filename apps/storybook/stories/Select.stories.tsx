@@ -14,7 +14,7 @@ const meta = {
   argTypes: {
     disabled: { control: 'boolean' },
     invalid: { control: 'boolean' },
-    searchable: { control: 'boolean' },
+    showSearch: { control: 'boolean' },
     allowClear: { control: 'boolean' },
     options: { control: 'object' },
     slotProps: { table: { disable: true } },
@@ -23,7 +23,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
-export const Search: Story = { args: { searchable: true, allowClear: true } };
+export const Search: Story = { args: { showSearch: true, allowClear: true } };
 export const SearchFields: Story = {
   args: {
     showSearch: {
@@ -36,7 +36,7 @@ export const SearchFields: Story = {
 };
 export const Groups: Story = {
   args: {
-    searchable: true,
+    showSearch: true,
     defaultOpen: true,
     options: [
       { value: 'none', label: 'Без команды' },
@@ -47,15 +47,15 @@ export const Groups: Story = {
   },
 };
 export const Multiple: Story = {
-  args: { multiple: true, searchable: true, allowClear: true, defaultValue: ['anna', 'vera'] },
+  args: { multiple: true, showSearch: true, allowClear: true, defaultValue: ['anna', 'vera'] },
 };
 export const MultipleLongLabels: Story = {
-  args: { multiple: true, searchable: true, defaultValue: ['anna', 'long'] },
+  args: { multiple: true, showSearch: true, defaultValue: ['anna', 'long'] },
 };
 export const LimitedTags: Story = {
   args: {
     multiple: true,
-    searchable: true,
+    showSearch: true,
     allowClear: true,
     maxTagCount: 1,
     defaultValue: ['anna', 'vera', 'long'],
@@ -64,7 +64,7 @@ export const LimitedTags: Story = {
 export const LimitedSelection: Story = {
   args: {
     multiple: true,
-    searchable: true,
+    showSearch: true,
     allowClear: true,
     maxCount: 2,
     defaultValue: ['anna', 'vera'],
@@ -73,7 +73,7 @@ export const LimitedSelection: Story = {
 export const CustomTags: Story = {
   args: {
     multiple: true,
-    searchable: true,
+    showSearch: true,
     defaultValue: ['anna', 'vera'],
     tagRender: (option, { disabled, removeLabel, onRemove }) => (
       <Badge
@@ -96,7 +96,7 @@ export const CustomTags: Story = {
 };
 export const Disabled: Story = { args: { disabled: true, defaultValue: 'anna' } };
 export const Invalid: Story = { args: { invalid: true } };
-export const Empty: Story = { args: { options: [], searchable: true } };
+export const Empty: Story = { args: { options: [], showSearch: true } };
 export const Loading: Story = { args: { options: [], defaultOpen: true, loading: true } };
 export const RichOptions: Story = {
   args: {
@@ -128,12 +128,9 @@ function RemoteSearchDemo() {
     <Select
       aria-label="Поиск исполнителя"
       placeholder="Поиск с задержкой ответа"
-      searchable
       allowClear
       options={results}
-      filterOption={false}
-      searchValue={search}
-      onSearch={setSearch}
+      showSearch={{ filterOption: false, searchValue: search, onSearch: setSearch }}
       loading={loading}
     />
   );

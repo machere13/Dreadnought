@@ -76,11 +76,10 @@ it('preserves an open search when removing a tag from outside filtered results',
   render(
     <SelectAdapter
       multiple
-      searchable
       defaultOpen
       options={options}
       defaultValue={['a', 'c']}
-      defaultSearchValue="Вер"
+      showSearch={{ defaultSearchValue: 'Вер' }}
     />,
   );
   const input = screen.getByRole('combobox') as HTMLInputElement;

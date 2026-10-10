@@ -454,7 +454,5 @@ function useSliderImplementation(options: UseSliderOptions) {
     rootProps,
     marks: markBindings,
     thumbs,
-    thumbProps: thumbs[0].thumbProps,
-    fieldProps: thumbs[0].fieldProps,
   };
 }

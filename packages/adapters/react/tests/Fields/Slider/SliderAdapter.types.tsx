@@ -32,7 +32,11 @@ const validRange = (
 );
 function Logic() {
   const slider = useSlider({ min: -2, max: 2 });
-  return <div {...slider.thumbProps} />;
+  // @ts-expect-error Thumb bindings are exposed only through thumbs.
+  void slider.thumbProps;
+  // @ts-expect-error Field bindings are exposed only through thumbs.
+  void slider.fieldProps;
+  return <div {...slider.thumbs[0].thumbProps} />;
 }
 function RangeLogic() {
   const slider = useSlider({

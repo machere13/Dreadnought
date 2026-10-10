@@ -4,6 +4,23 @@ import { Checkbox, Radio, Select, type SelectOptionGroup } from '@dreadnought/ui
 const inputRef = createRef<HTMLInputElement>();
 const groupRef = createRef<HTMLFieldSetElement>();
 const options = [{ value: 'a', label: 'Первый' }];
+// @ts-expect-error Search is configured only through showSearch.
+const removedSearchable = <Select options={options} searchable />;
+// @ts-expect-error Search is configured only through showSearch.
+const removedSearchValue = <Select options={options} searchValue="a" />;
+// @ts-expect-error Search is configured only through showSearch.
+const removedDefaultSearchValue = <Select options={options} defaultSearchValue="a" />;
+// @ts-expect-error Search is configured only through showSearch.
+const removedOnSearch = <Select options={options} onSearch={() => {}} />;
+// @ts-expect-error Search is configured only through showSearch.
+const removedFilterOption = <Select options={options} filterOption={false} />;
+void [
+  removedSearchable,
+  removedSearchValue,
+  removedDefaultSearchValue,
+  removedOnSearch,
+  removedFilterOption,
+];
 const section: SelectOptionGroup = { label: 'Команда', options, disabled: false };
 const grouped = (
   <Select
@@ -58,18 +75,19 @@ const multiple = (
 const remote = (
   <Select
     options={options}
-    searchable
     open
-    searchValue="test"
-    filterOption={false}
     loading
     onOpenChange={(open) => {
       const result: boolean = open;
       void result;
     }}
-    onSearch={(search) => {
-      const result: string = search;
-      void result;
+    showSearch={{
+      searchValue: 'test',
+      filterOption: false,
+      onSearch: (search) => {
+        const result: string = search;
+        void result;
+      },
     }}
     optionRender={(option, state) => (
       <span>

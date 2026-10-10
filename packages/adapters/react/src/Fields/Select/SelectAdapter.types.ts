@@ -6,20 +6,16 @@ export type SelectAdapterProps = Omit<
   'value' | 'defaultValue' | 'onChange' | 'type' | 'multiple' | 'children' | 'readOnly' | 'size'
 > & {
   options: SelectCoreOptions['options'];
-  searchable?: boolean;
   showSearch?:
     | boolean
     | (Pick<SelectCoreOptions, 'filterOption' | 'optionFilterProp' | 'filterSort'> & {
         searchValue?: string;
+        defaultSearchValue?: string;
         onSearch?: (value: string) => void;
       });
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  searchValue?: string;
-  defaultSearchValue?: string;
-  onSearch?: (value: string) => void;
-  filterOption?: SelectCoreOptions['filterOption'];
   loading?: boolean;
   loadingContent?: ReactNode;
   optionRender?: (
