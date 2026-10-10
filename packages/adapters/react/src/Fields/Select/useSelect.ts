@@ -221,7 +221,12 @@ export function useSelect(props: SelectAdapterProps) {
       );
     }
   }
-  useAnchoredPopover(open, root, popup);
+  useAnchoredPopover(open, root, popup, root.current, true, {
+    placement: props.placement ?? 'bottomLeft',
+    autoAdjustOverflow: props.autoAdjustOverflow ?? true,
+    pointAtCenter: false,
+    arrow: false,
+  });
   useEffect(() => {
     const document = root.current?.ownerDocument;
     if (!open || !document) {

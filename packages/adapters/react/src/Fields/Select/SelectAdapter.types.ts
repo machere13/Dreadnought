@@ -1,11 +1,18 @@
 import type { ComponentPropsWithRef, ComponentPropsWithoutRef, ReactNode } from 'react';
-import type { SelectOption, SelectCoreOptions, VirtualWindowOptions } from '@dreadnought/core';
+import type {
+  SelectOption,
+  SelectCoreOptions,
+  TooltipPlacement,
+  VirtualWindowOptions,
+} from '@dreadnought/core';
 
 export type SelectAdapterProps = Omit<
   ComponentPropsWithRef<'input'>,
   'value' | 'defaultValue' | 'onChange' | 'type' | 'multiple' | 'children' | 'readOnly' | 'size'
 > & {
   options: SelectCoreOptions['options'];
+  placement?: Extract<TooltipPlacement, 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'>;
+  autoAdjustOverflow?: boolean;
   virtual?: boolean | Partial<Pick<VirtualWindowOptions, 'itemHeight' | 'height' | 'overscan'>>;
   showSearch?:
     | boolean

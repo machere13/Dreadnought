@@ -52,8 +52,15 @@ export function useAnchoredPopover(
         gap,
         arrowPadding,
       });
-      node.style.left = `${result.left}px`;
-      node.style.top = `${result.top}px`;
+      const clamp = matchAnchorWidth && tooltip.autoAdjustOverflow;
+      const left = clamp
+        ? Math.max(0, Math.min(result.left, viewport.clientWidth - box.width))
+        : result.left;
+      const top = clamp
+        ? Math.max(0, Math.min(result.top, viewport.clientHeight - box.height))
+        : result.top;
+      node.style.left = `${left}px`;
+      node.style.top = `${top}px`;
       node.style.setProperty(
         tooltip.arrowPositionProperty ?? '--dreadnought-tooltip-arrow-position',
         `${result.arrow}px`,

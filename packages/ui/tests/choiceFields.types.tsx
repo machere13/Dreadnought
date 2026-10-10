@@ -25,6 +25,8 @@ const section: SelectOptionGroup = { label: 'Команда', options, disabled:
 const grouped = (
   <Select
     virtual={{ itemHeight: 40, height: 256, overscan: 3 }}
+    placement="topRight"
+    autoAdjustOverflow={false}
     options={[section, ...options]}
     slotProps={{ group: { className: 'group' }, groupLabel: { className: 'label' } }}
   />
@@ -119,6 +121,8 @@ const invalidSingle = <Select options={options} value={['a']} />;
 const invalidMultiple = <Select multiple options={options} value="a" />;
 // @ts-expect-error Public ref is the input, not its wrapper.
 const invalidRef = <Select options={options} ref={createRef<HTMLDivElement>()} />;
+// @ts-expect-error Select supports top/bottom edge placements only.
+const invalidPlacement = <Select options={options} placement="left" />;
 void [
   grouped,
   single,
@@ -130,4 +134,5 @@ void [
   invalidSingle,
   invalidMultiple,
   invalidRef,
+  invalidPlacement,
 ];

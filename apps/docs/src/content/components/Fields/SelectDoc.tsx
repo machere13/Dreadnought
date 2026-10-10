@@ -33,6 +33,8 @@ function SelectDemo() {
         filterSort: (a, b) => a.label.localeCompare(b.label, 'ru') }} />
     <Select aria-label="Подробные варианты" options={options}
       optionRender={option => <span>{option.label} <small>— {option.value}</small></span>} />
+    <Select aria-label="Список сверху справа" options={options} placement="topRight"
+      autoAdjustOverflow={false} placeholder="Список сверху справа" />
     <Select aria-label="Загрузка вариантов" options={[]} loading loadingContent="Загружаем варианты…" placeholder="Откройте список" />
     <Select aria-label="10 000 участников" options={largeOptions} showSearch allowClear
       placeholder="10 000 участников" />

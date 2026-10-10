@@ -24,6 +24,8 @@ export const propertySummaries: Record<string, Record<string, string>> = {
     items: 'Пункты, подменю, группы и разделители. href создаёт ссылку.',
   },
   select: {
+    placement: 'Положение списка: bottomLeft, bottomRight, topLeft или topRight.',
+    autoAdjustOverflow: 'Меняет сторону и удерживает список в пределах экрана.',
     virtual: 'Виртуализация: true, false или { itemHeight, height, overscan }.',
     showSearch: 'Поиск и его настройки: поля, фильтр, сортировка и управляемая строка.',
     clearContent: 'Содержимое кнопки очистки.',

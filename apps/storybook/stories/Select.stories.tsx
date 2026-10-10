@@ -16,6 +16,11 @@ const meta = {
     invalid: { control: 'boolean' },
     showSearch: { control: 'boolean' },
     allowClear: { control: 'boolean' },
+    placement: {
+      control: 'select',
+      options: ['bottomLeft', 'bottomRight', 'topLeft', 'topRight'],
+    },
+    autoAdjustOverflow: { control: 'boolean' },
     options: { control: 'object' },
     slotProps: { table: { disable: true } },
   },
@@ -24,6 +29,16 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 export const Search: Story = { args: { showSearch: true, allowClear: true } };
+export const Placement: Story = {
+  args: { placement: 'topRight', defaultOpen: true, autoAdjustOverflow: false },
+  decorators: [
+    (Story) => (
+      <div style={{ padding: '160px 80px' }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
 export const VirtualList: Story = {
   args: {
     options: Array.from({ length: 10000 }, (_, index) => ({

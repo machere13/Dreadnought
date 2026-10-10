@@ -14,6 +14,8 @@ export function SelectAdapter(props: SelectAdapterProps) {
     multiple,
     showSearch,
     virtual,
+    placement,
+    autoAdjustOverflow,
     allowClear,
     invalid,
     emptyContent = 'Нет вариантов',
