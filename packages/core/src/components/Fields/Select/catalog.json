@@ -20,6 +20,8 @@
       "importPath": "@dreadnought/core",
       "exportName": "getSelectState",
       "propDescriptions": {
+        "optionFilterProp": "Поле label или value либо их массив (совпадение по любому полю). По умолчанию label; применяется при filterOption=true.",
+        "filterSort": "Сортирует отфильтрованные варианты внутри групп. Получает два варианта и { searchValue }; исходные options и порядок групп сохраняются.",
         "maxCount": "Максимум выбранных значений при multiple; целое неотрицательное число. При достижении лимита невыбранные варианты получают disabled. Переданные значения сохраняются."
       },
       "examples": [

@@ -18,7 +18,8 @@
         "maxTagCount": "Количество видимых меток при multiple; остальные показаны как +N. По умолчанию без ограничения; 0 скрывает все метки. Не меняет выбранные значения.",
         "maxCount": "Максимум выбранных значений при multiple. Целое неотрицательное число; по умолчанию без ограничения. При достижении лимита новые варианты недоступны; удаление доступно. Переданные значения не обрезаются.",
         "tagRender": "Заменяет всю видимую метку при multiple. Получает option и { disabled, removeLabel, onRemove }; onRemove соблюдает disabled и required. Свою кнопку задайте с type=button и доступным именем. Слоты tag/tagLabel/remove применяются только к стандартным меткам; +N остаётся стандартным.",
-        "searchable": "Фильтрация вариантов по тексту label.",
+        "searchable": "Совместимое включение поиска; showSearch имеет приоритет.",
+        "showSearch": "Boolean включает поиск; объект объединяет optionFilterProp (label, value или их массив), filterOption, filterSort, searchValue и onSearch. По умолчанию поиск по label. Настройки объекта имеют приоритет над одноимёнными старыми пропсами. Сортировка внутри групп сохраняет их порядок и исходные options.",
         "open": "Управляемое открытие списка; disabled принудительно скрывает список.",
         "defaultOpen": "Начальное открытие в неуправляемом режиме.",
         "onOpenChange": "Запрос изменения открытого состояния.",
@@ -32,7 +33,7 @@
         "allowClear": "Кнопка очистки выбора.",
         "invalid": "Состояние ошибки.",
         "emptyContent": "Содержимое пустого списка.",
-        "slotProps": "Слоты root/control/popup/option/clear/group/groupLabel/selection/tag/tagLabel/remove. Группы исчезают при отсутствии совпадений; поиск выполняется по label вариантов."
+        "slotProps": "Слоты root/control/popup/option/clear/group/groupLabel/selection/tag/tagLabel/remove. Группы исчезают при отсутствии совпадений; по умолчанию поиск выполняется по label вариантов."
       },
       "defaults": {
         "multiple": false,

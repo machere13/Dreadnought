@@ -6,6 +6,8 @@ export function getSelectState({
   maxCount,
   query = '',
   filterOption = true,
+  optionFilterProp = 'label',
+  filterSort,
   disabled = false,
   required = false,
   invalid = false,
@@ -49,21 +51,25 @@ export function getSelectState({
     throw new Error('Select option values must be nonempty and unique.');
   }
   const search = query.trim().toLocaleLowerCase();
-  const filteredOptions =
+  const fields = typeof optionFilterProp === 'string' ? [optionFilterProp] : optionFilterProp;
+  const matches =
     filterOption === false
       ? options
       : options.filter((option) =>
           typeof filterOption === 'function'
             ? filterOption(query, option)
-            : option.label.toLocaleLowerCase().includes(search),
+            : fields.some((field) => option[field].toLocaleLowerCase().includes(search)),
         );
-  const visible = new Set(filteredOptions.map((option) => option.value));
+  const visible = new Set(matches.map((option) => option.value));
   const filteredGroups = groups
     .map((group) => ({
       ...group,
-      options: group.options.filter((option) => visible.has(option.value)),
+      options: group.options
+        .filter((option) => visible.has(option.value))
+        .sort(filterSort ? (a, b) => filterSort(a, b, { searchValue: query }) : () => 0),
     }))
     .filter((group) => group.options.length);
+  const filteredOptions = filteredGroups.flatMap((group) => group.options);
   return {
     options,
     groups,

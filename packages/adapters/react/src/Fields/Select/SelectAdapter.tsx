@@ -11,7 +11,8 @@ export function SelectAdapter(props: SelectAdapterProps) {
     defaultValue,
     onValueChange,
     multiple,
-    searchable = false,
+    searchable: legacySearchable,
+    showSearch,
     allowClear,
     invalid,
     emptyContent = 'Нет вариантов',
@@ -45,6 +46,7 @@ export function SelectAdapter(props: SelectAdapterProps) {
     onBlur,
     ...inputProps
   } = props;
+  const { searchable } = select;
   useImperativeHandle(ref, () => select.control.current!);
   const display = select.state.selectedOptions.map((option) => option.label).join(', ');
   const visibleTags = select.state.selectedOptions.slice(

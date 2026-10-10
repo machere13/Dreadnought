@@ -21,6 +21,8 @@ export interface SelectCoreOptions {
   maxCount?: number;
   query?: string;
   filterOption?: boolean | ((query: string, option: SelectOption) => boolean);
+  optionFilterProp?: 'label' | 'value' | readonly ('label' | 'value')[];
+  filterSort?: (a: SelectOption, b: SelectOption, info: { searchValue: string }) => number;
   disabled?: boolean;
   required?: boolean;
   invalid?: boolean;

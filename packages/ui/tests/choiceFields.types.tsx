@@ -13,6 +13,13 @@ const grouped = (
 );
 const single = (
   <Select
+    showSearch={{
+      optionFilterProp: ['label', 'value'],
+      filterSort: (a, b, info) => a.label.localeCompare(b.label) + info.searchValue.length,
+      onSearch: (value: string) => {
+        void value;
+      },
+    }}
     ref={inputRef}
     options={options}
     value="a"

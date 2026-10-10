@@ -14,6 +14,11 @@ import { useAnchoredPopover } from '../../shared/useAnchoredPopover.ts';
 
 const empty: string[] = [];
 export function useSelect(props: SelectAdapterProps) {
+  const search = typeof props.showSearch === 'object' ? props.showSearch : undefined;
+  const searchable =
+    props.showSearch !== undefined ? props.showSearch !== false : (props.searchable ?? false);
+  const searchValue = search?.searchValue ?? props.searchValue;
+  const onSearch = search?.onSearch ?? props.onSearch;
   const id = useId();
   const control = useRef<HTMLInputElement>(null);
   const native = useRef<HTMLSelectElement>(null);
@@ -21,7 +26,7 @@ export function useSelect(props: SelectAdapterProps) {
   const popup = useRef<HTMLDivElement>(null);
   const [expanded, setLocalExpanded] = useState(props.defaultOpen ?? false);
   const [localQuery, setLocalQuery] = useState(props.defaultSearchValue ?? '');
-  const query = props.searchValue ?? localQuery;
+  const query = searchValue ?? localQuery;
   const [active, setActive] = useState('');
   const [validationInvalid, setValidationInvalid] = useState(false);
   const [value, setValue] = useFieldValue<SelectValue>(
@@ -38,10 +43,13 @@ export function useSelect(props: SelectAdapterProps) {
     props.form,
   );
   const open = (props.open ?? expanded) && !props.disabled;
-  const current = useRef({ open, query, props });
-  current.current = { open, query, props };
+  const current = useRef({ open, query, props, searchValue, onSearch });
+  current.current = { open, query, props, searchValue, onSearch };
   const state = getSelectState({
     ...props,
+    filterOption: search?.filterOption ?? props.filterOption,
+    optionFilterProp: search?.optionFilterProp,
+    filterSort: search?.filterSort,
     value,
     query: open ? query : '',
     invalid: props.invalid || validationInvalid,
@@ -72,11 +80,11 @@ export function useSelect(props: SelectAdapterProps) {
     if (next === snapshot.query) {
       return;
     }
-    if (snapshot.props.searchValue === undefined) {
+    if (snapshot.searchValue === undefined) {
       snapshot.query = next;
       setLocalQuery(next);
     }
-    snapshot.props.onSearch?.(next);
+    snapshot.onSearch?.(next);
   }
   function close() {
     setExpanded(false);
@@ -127,7 +135,7 @@ export function useSelect(props: SelectAdapterProps) {
     }
     const action = getComboboxKeyAction(event.key, {
       open,
-      searchable: props.searchable ?? false,
+      searchable,
       removeOnBackspace:
         props.multiple &&
         state.values.length > 0 &&
@@ -236,6 +244,7 @@ export function useSelect(props: SelectAdapterProps) {
     state,
     open,
     query,
+    searchable,
     activeValue,
     optionId,
     choose,

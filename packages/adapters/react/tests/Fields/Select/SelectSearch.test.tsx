@@ -9,6 +9,55 @@ const options = [
   { value: 'a', label: 'Anna' },
   { value: 'b', label: 'Boris', disabled: true },
 ];
+it('uses showSearch configuration for filtering, sorting and keyboard selection', async () => {
+  const user = userEvent.setup();
+  render(
+    <SelectAdapter
+      options={[...options, { value: 'aa', label: 'Zoe' }]}
+      showSearch={{
+        optionFilterProp: 'value',
+        filterSort: (a, b) => b.value.localeCompare(a.value),
+      }}
+    />,
+  );
+  const input = screen.getByRole('combobox') as HTMLInputElement;
+  await user.click(input);
+  await user.type(input, 'a');
+  expect(screen.getAllByRole('option').map((option) => option.textContent)).toEqual([
+    'Zoe',
+    'Anna',
+  ]);
+  await user.keyboard('{Enter}');
+  expect(input.value).toBe('Zoe');
+});
+it('keeps nested search controlled and gives nested settings precedence over legacy props', () => {
+  const searches: string[] = [];
+  const { rerender } = render(
+    <SelectAdapter
+      options={options}
+      defaultOpen
+      searchable
+      searchValue="legacy"
+      filterOption
+      onSearch={() => {
+        throw new Error('legacy callback');
+      }}
+      showSearch={{
+        searchValue: 'remote',
+        filterOption: false,
+        onSearch: (next) => searches.push(next),
+      }}
+    />,
+  );
+  const input = screen.getByRole('combobox') as HTMLInputElement;
+  expect(input.value).toBe('remote');
+  fireEvent.change(input, { target: { value: 'next' } });
+  expect(searches).toEqual(['next']);
+  expect(input.value).toBe('remote');
+  rerender(<SelectAdapter options={options} defaultOpen searchable showSearch={false} />);
+  expect(input.readOnly).toBe(true);
+  expect(input.getAttribute('aria-autocomplete')).toBe('none');
+});
 
 it('keeps opening caller-owned and reports keyboard requests', () => {
   const requests: boolean[] = [];

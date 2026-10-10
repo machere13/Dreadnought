@@ -24,6 +24,16 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 export const Search: Story = { args: { searchable: true, allowClear: true } };
+export const SearchFields: Story = {
+  args: {
+    showSearch: {
+      optionFilterProp: ['label', 'value'],
+      filterSort: (a, b) => a.label.localeCompare(b.label, 'ru'),
+    },
+    placeholder: 'Имя или код: anna',
+    allowClear: true,
+  },
+};
 export const Groups: Story = {
   args: {
     searchable: true,

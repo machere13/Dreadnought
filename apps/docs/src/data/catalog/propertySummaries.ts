@@ -24,6 +24,8 @@ export const propertySummaries: Record<string, Record<string, string>> = {
     items: 'Пункты, подменю, группы и разделители. href создаёт ссылку.',
   },
   select: {
+    showSearch: 'Поиск и его настройки: поля, фильтр, сортировка и управляемая строка.',
+    searchable: 'Включает поиск, если showSearch не задан.',
     clearContent: 'Содержимое кнопки очистки.',
     clearLabel: 'Доступное имя кнопки очистки.',
     indicator: 'Индикатор раскрытия списка.',

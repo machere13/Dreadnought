@@ -23,6 +23,10 @@ function SelectDemo() {
         </Badge>
       )} />
     <Select aria-label="Недоступный выбор" options={options} disabled defaultValue="anna" />
+    <Select aria-label="Поиск по имени или коду" options={options}
+      placeholder="Имя или код: anna" allowClear
+      showSearch={{ optionFilterProp: ['label', 'value'],
+        filterSort: (a, b) => a.label.localeCompare(b.label, 'ru') }} />
     <Select aria-label="Подробные варианты" options={options}
       optionRender={option => <span>{option.label} <small>— {option.value}</small></span>} />
     <Select aria-label="Загрузка вариантов" options={[]} loading loadingContent="Загружаем варианты…" placeholder="Откройте список" />
@@ -39,7 +43,7 @@ export const selectDoc: ComponentDoc = {
   title: 'Select',
   description: 'Выбор из списка: одиночный или множественный, с группами, поиском и очисткой. При multiple выбранные значения отображаются метками. Backspace в пустом поле удаляет последнее значение; при наличии текста редактирует поиск. Меню открывается поверх страницы и не расширяет её.',
   adapterDescription: 'Адаптер предоставляет разметку и поведение без оформления. Токены и CSS Modules подключает готовый компонент.',
-  footnote: 'В controlled-режиме обновляйте value, open и searchValue по событиям. Поиск сбрасывается при выборе, закрытии и очистке. Для серверного поиска задайте filterOption={false}; запросы и их отмену выполняет приложение. optionRender меняет содержимое, но поиск и доступное имя берутся из label. Не вкладывайте в варианты кнопки или ссылки.',
+  footnote: 'showSearch объединяет настройки поиска; optionFilterProp задаёт label, value или оба поля, filterSort сортирует внутри групп. В controlled-режиме обновляйте value, open и searchValue по событиям. Поиск сбрасывается при выборе, закрытии и очистке. Для серверного поиска задайте showSearch={{ filterOption: false }}; запросы и отмену выполняет приложение. optionRender не меняет доступное имя. Не вкладывайте в варианты кнопки или ссылки.',
   demo: <SelectDemo />,
 };
 

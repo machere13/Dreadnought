@@ -5,6 +5,40 @@ const options = [
   { value: 'a', label: 'Анна' },
   { value: 'b', label: 'Борис', disabled: true },
 ];
+it('searches the configured fields using OR matching', () => {
+  expect(
+    core.getSelectState({ options, query: ' B ', optionFilterProp: 'value' }).filteredOptions,
+  ).toEqual([options[1]]);
+  expect(
+    core.getSelectState({ options, query: 'анн', optionFilterProp: ['label', 'value'] })
+      .filteredOptions,
+  ).toEqual([options[0]]);
+  expect(
+    core.getSelectState({ options, query: 'b', optionFilterProp: ['label', 'value'] })
+      .filteredOptions,
+  ).toEqual([options[1]]);
+});
+it('sorts within groups without mutating native options or losing keyboard order', () => {
+  const entries = [
+    { label: 'Team', options: [...options].reverse() },
+    { value: 'c', label: 'Вера' },
+  ];
+  const queries: string[] = [];
+  const state = core.getSelectState({
+    options: entries,
+    query: 'raw',
+    filterOption: false,
+    filterSort: (a, b, info) => {
+      queries.push(info.searchValue);
+      return a.value.localeCompare(b.value);
+    },
+  });
+  expect(state.filteredOptions.map((option) => option.value)).toEqual(['a', 'b', 'c']);
+  expect(state.filteredGroups.flatMap((group) => group.options)).toEqual(state.filteredOptions);
+  expect(state.options.map((option) => option.value)).toEqual(['b', 'a', 'c']);
+  expect(queries).toEqual(['raw']);
+  expect(entries[0].options).toEqual([options[1], options[0]]);
+});
 it.each([-1, 1.5, NaN, Infinity])('rejects invalid maxCount %s', (maxCount) => {
   expect(() => core.getSelectState({ options, multiple: true, maxCount })).toThrow(/maxCount/);
 });

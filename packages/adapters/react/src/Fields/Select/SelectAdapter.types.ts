@@ -7,6 +7,12 @@ export type SelectAdapterProps = Omit<
 > & {
   options: SelectCoreOptions['options'];
   searchable?: boolean;
+  showSearch?:
+    | boolean
+    | (Pick<SelectCoreOptions, 'filterOption' | 'optionFilterProp' | 'filterSort'> & {
+        searchValue?: string;
+        onSearch?: (value: string) => void;
+      });
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
