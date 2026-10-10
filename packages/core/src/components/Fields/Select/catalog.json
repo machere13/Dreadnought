@@ -19,6 +19,9 @@
       "framework": null,
       "importPath": "@dreadnought/core",
       "exportName": "getSelectState",
+      "propDescriptions": {
+        "maxCount": "Максимум выбранных значений при multiple; целое неотрицательное число. При достижении лимита невыбранные варианты получают disabled. Переданные значения сохраняются."
+      },
       "examples": [
         {
           "id": "groups",

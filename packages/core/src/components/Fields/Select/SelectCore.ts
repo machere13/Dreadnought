@@ -18,6 +18,7 @@ export interface SelectCoreOptions {
   options: readonly (SelectOption | SelectOptionGroup)[];
   value?: SelectValue;
   multiple?: boolean;
+  maxCount?: number;
   query?: string;
   filterOption?: boolean | ((query: string, option: SelectOption) => boolean);
   disabled?: boolean;

@@ -30,6 +30,7 @@ const multiple = (
     removeLabel={(option) => `Remove ${option.label}`}
     removeContent={<span>×</span>}
     maxTagCount={2}
+    maxCount={3}
     slotProps={{
       selection: { className: 'selection' },
       tag: { className: 'tag' },

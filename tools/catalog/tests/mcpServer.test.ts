@@ -267,8 +267,9 @@ describe('generated catalog over MCP', () => {
       expect(search.isError).toBeUndefined();
       expect(replyPayload(search).result.items[0]).toMatchObject({kind: 'behavior', bindings: [{exportName: 'getSelectionValue', importPath: '@dreadnought/core'}]});
       const context = await client.callTool({name: 'dreadnought_context', arguments: {
-        components: ['getSelectionValue', 'getNextEnabledValue', 'readClipboard'], layer: 1, format: 'contract', maxBytes: 8192}});
+        components: ['getSelectionValue', 'getNextEnabledValue', 'readClipboard'], layer: 1, format: 'contract', maxBytes: 16384}});
       expect(context.isError).toBeUndefined();
+      expect(replyPayload(context).result.truncated).toBe(false);
       expect(replyPayload(context).result.items[0].contracts).toHaveLength(3);
       expect(replyPayload(context).result.items[2].contracts[0].parameters).toEqual([]);
       const overview = replyPayload(await client.callTool({name: 'dreadnought_get', arguments: {component: 'getSelectionValue'}}));

@@ -3,12 +3,19 @@ export function getSelectState({
   options: entries,
   value = null,
   multiple = false,
+  maxCount,
   query = '',
   filterOption = true,
   disabled = false,
   required = false,
   invalid = false,
 }: SelectCoreOptions): SelectCore {
+  if (maxCount !== undefined && (!Number.isSafeInteger(maxCount) || maxCount < 0)) {
+    throw new RangeError('maxCount must be a nonnegative safe integer.');
+  }
+  if (value !== null && (multiple ? !Array.isArray(value) : typeof value !== 'string')) {
+    throw new Error('Select value must match its multiple mode.');
+  }
   const groups: { label?: string; options: SelectOption[]; disabled?: boolean }[] = [];
   for (const entry of entries) {
     if ('options' in entry) {
@@ -27,16 +34,20 @@ export function getSelectState({
       }
     }
   }
+  const values: readonly string[] =
+    value === null ? [] : typeof value === 'string' ? [value] : [...new Set(value)];
+  if (multiple && maxCount !== undefined && values.length >= maxCount) {
+    for (const group of groups) {
+      group.options = group.options.map((option) =>
+        values.includes(option.value) ? option : { ...option, disabled: true },
+      );
+    }
+  }
   const options = groups.flatMap((group) => group.options);
   const unique = new Set(options.map((option) => option.value));
   if (unique.size !== options.length || unique.has('')) {
     throw new Error('Select option values must be nonempty and unique.');
   }
-  if (value !== null && (multiple ? !Array.isArray(value) : typeof value !== 'string')) {
-    throw new Error('Select value must match its multiple mode.');
-  }
-  const values: readonly string[] =
-    value === null ? [] : typeof value === 'string' ? [value] : [...new Set(value)];
   const search = query.trim().toLocaleLowerCase();
   const filteredOptions =
     filterOption === false

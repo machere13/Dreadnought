@@ -51,6 +51,15 @@ export const LimitedTags: Story = {
     defaultValue: ['anna', 'vera', 'long'],
   },
 };
+export const LimitedSelection: Story = {
+  args: {
+    multiple: true,
+    searchable: true,
+    allowClear: true,
+    maxCount: 2,
+    defaultValue: ['anna', 'vera'],
+  },
+};
 export const Disabled: Story = { args: { disabled: true, defaultValue: 'anna' } };
 export const Invalid: Story = { args: { invalid: true } };
 export const Empty: Story = { args: { options: [], searchable: true } };

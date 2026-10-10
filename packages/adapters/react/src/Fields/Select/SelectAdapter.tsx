@@ -21,6 +21,7 @@ export function SelectAdapter(props: SelectAdapterProps) {
     removeLabel = (option) => `Удалить ${option.label}`,
     removeContent = '×',
     maxTagCount,
+    maxCount,
     open,
     defaultOpen,
     onOpenChange,

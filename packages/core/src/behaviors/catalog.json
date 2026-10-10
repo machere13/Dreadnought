@@ -166,7 +166,7 @@
     "kind": "behavior",
     "name": "getSelectionValue",
     "family": "Behaviors",
-    "description": "Вычисляет одиночный или множественный выбор элементов. Действия select/deselect/toggle/clear; disabled, disabledValues и required. Для своего списка, переключателей или выбора строк.",
+    "description": "Вычисляет одиночный или множественный выбор элементов. Действия select/deselect/toggle/clear; disabled, disabledValues и required. maxCount — целый неотрицательный лимит множественного выбора: блокирует добавление, но не удаление, и не обрезает переданные значения. Для своего списка, переключателей или выбора строк.",
     "docsUrl": "/custom-components/#core-selection",
     "composesWith": ["behavior:get-next-enabled-value", "component:select", "component:checkbox", "component:accordion", "component:table"],
     "constraints": ["Чистая функция без React, DOM и собственного хранилища. Ключи — строки или числа; одиночное значение — ключ/null, множественное — массив. Возвращает новое значение, не изменяя вход, и удаляет дубликаты. disabled блокирует всё; disabledValues блокирует действия над указанными ключами и сохраняет их при clear (замена одиночного выбора другим доступным ключом разрешена). required запрещает снять последний выбранный ключ, но не заполняет пустой выбор автоматически. Проверка существования ключей, состояние, события, фокус и ARIA принадлежат вызывающему коду."],

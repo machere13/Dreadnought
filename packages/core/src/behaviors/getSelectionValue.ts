@@ -1,11 +1,13 @@
 export type SelectionKey = string | number;
 export type SelectionValue<T extends SelectionKey = SelectionKey> = T | null | readonly T[];
 export type SelectionAction<T extends SelectionKey = SelectionKey> =
-  { type: 'select' | 'deselect' | 'toggle'; value: T } | { type: 'clear' };
+  | { type: 'select' | 'deselect' | 'toggle'; value: T }
+  | { type: 'clear' };
 export interface SelectionOptions<T extends SelectionKey = SelectionKey> {
   disabled?: boolean;
   disabledValues?: readonly T[];
   required?: boolean;
+  maxCount?: number;
 }
 
 export function getSelectionValue<T extends SelectionKey>(
@@ -26,8 +28,11 @@ export function getSelectionValue<T extends SelectionKey>(
 export function getSelectionValue<T extends SelectionKey>(
   current: SelectionValue<T>,
   action: SelectionAction<T>,
-  { disabled = false, disabledValues = [], required = false }: SelectionOptions<T> = {},
+  { disabled = false, disabledValues = [], required = false, maxCount }: SelectionOptions<T> = {},
 ): T | null | T[] {
+  if (maxCount !== undefined && (!Number.isSafeInteger(maxCount) || maxCount < 0)) {
+    throw new RangeError('maxCount must be a nonnegative safe integer.');
+  }
   const multiple = Array.isArray(current);
   const values: T[] = multiple
     ? [...new Set(current as readonly T[])]
@@ -48,6 +53,9 @@ export function getSelectionValue<T extends SelectionKey>(
     }
   }
   if (required && values.length > 0 && next.length === 0) {
+    next = values;
+  }
+  if (multiple && maxCount !== undefined && next.length > maxCount && next.length > values.length) {
     next = values;
   }
   return multiple ? next : (next[0] ?? null);

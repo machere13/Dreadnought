@@ -5,6 +5,28 @@ const options = [
   { value: 'a', label: 'Анна' },
   { value: 'b', label: 'Борис', disabled: true },
 ];
+it.each([-1, 1.5, NaN, Infinity])('rejects invalid maxCount %s', (maxCount) => {
+  expect(() => core.getSelectState({ options, multiple: true, maxCount })).toThrow(/maxCount/);
+});
+it('disables only new choices at the limit without mutating input or dropping values', () => {
+  const entries = [{ label: 'Team', options }];
+  const state = core.getSelectState({
+    options: entries,
+    multiple: true,
+    value: ['missing'],
+    maxCount: 1,
+  });
+  expect(state.values).toEqual(['missing']);
+  expect(state.filteredGroups[0].options[0].disabled).toBe(true);
+  expect(state.options[0].disabled).toBe(true);
+  expect(options[0]).not.toHaveProperty('disabled');
+  const selected = core.getSelectState({ options, multiple: true, value: ['a'], maxCount: 1 });
+  expect(selected.options[0].disabled).not.toBe(true);
+  expect(selected.options[1].disabled).toBe(true);
+  expect(core.getSelectState({ options, value: 'a', maxCount: 0 }).options[0].disabled).not.toBe(
+    true,
+  );
+});
 it('filters grouped choices without losing their labels or selected values', () => {
   const grouped = [
     { label: 'Команда', options },

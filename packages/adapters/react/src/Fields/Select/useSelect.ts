@@ -87,6 +87,7 @@ export function useSelect(props: SelectAdapterProps) {
       getSelectionValue(props.multiple ? state.values : (state.values[0] ?? null), action, {
         disabled: props.disabled || control.current?.matches(':disabled'),
         required: props.required,
+        maxCount: props.maxCount,
         disabledValues: state.options
           .filter((option) => option.disabled)
           .map((option) => option.value),

@@ -3,6 +3,39 @@ import { describe, expect, it } from 'vitest';
 import * as core from '../../src/index.ts';
 
 describe('getSelectionValue', () => {
+  it.each([-1, 1.5, NaN, Infinity])('rejects invalid maxCount %s', (maxCount) => {
+    expect(() => core.getSelectionValue([], { type: 'clear' }, { maxCount })).toThrow(/maxCount/);
+  });
+  it('limits additions while allowing removal, clear and single replacement', () => {
+    const options = { maxCount: 2 };
+    expect(core.getSelectionValue(['a', 'b'], { type: 'select', value: 'c' }, options)).toEqual([
+      'a',
+      'b',
+    ]);
+    expect(core.getSelectionValue(['a', 'b'], { type: 'toggle', value: 'c' }, options)).toEqual([
+      'a',
+      'b',
+    ]);
+    expect(core.getSelectionValue(['a', 'b'], { type: 'toggle', value: 'a' }, options)).toEqual([
+      'b',
+    ]);
+    expect(core.getSelectionValue(['a'], { type: 'select', value: 'c' }, options)).toEqual([
+      'a',
+      'c',
+    ]);
+    expect(core.getSelectionValue(['a', 'a'], { type: 'select', value: 'c' }, options)).toEqual([
+      'a',
+      'c',
+    ]);
+    expect(
+      core.getSelectionValue(['a', 'b', 'c'], { type: 'deselect', value: 'b' }, options),
+    ).toEqual(['a', 'c']);
+    expect(core.getSelectionValue(['a', 'b'], { type: 'clear' }, options)).toEqual([]);
+    expect(
+      core.getSelectionValue<string>([], { type: 'select', value: 'a' }, { maxCount: 0 }),
+    ).toEqual([]);
+    expect(core.getSelectionValue('a', { type: 'select', value: 'b' }, { maxCount: 0 })).toBe('b');
+  });
   it('selects, deselects, toggles and clears a single value', () => {
     expect(core.getSelectionValue(null, { type: 'select', value: 'a' })).toBe('a');
     expect(core.getSelectionValue('a', { type: 'select', value: 'a' })).toBe('a');

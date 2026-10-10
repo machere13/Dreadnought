@@ -271,7 +271,7 @@ describe('public catalog', () => {
     expect(selection.parameters[1].variants).toBeDefined();
     expect(selection.parameters[1].variants.flatMap(variant => variant.properties.find(prop => prop.name === 'type')?.values ?? []))
       .toEqual(expect.arrayContaining(['select', 'deselect', 'toggle', 'clear']));
-    expect(selection.parameters[2].variants[0].properties.map(prop => prop.name)).toEqual(['disabled', 'disabledValues', 'required']);
+    expect(selection.parameters[2].variants[0].properties.map(prop => prop.name)).toEqual(['disabled', 'disabledValues', 'maxCount', 'required']);
     const navigation = describeContract(context, {importPath: '@dreadnought/core', exportName: 'getNextEnabledValue'})[0];
     expect(navigation.parameters[3].variants[0].properties).toContainEqual(expect.objectContaining({name: 'loop', type: 'boolean | undefined', optional: true}));
   });
