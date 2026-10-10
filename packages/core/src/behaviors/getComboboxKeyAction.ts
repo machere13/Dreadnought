@@ -5,10 +5,12 @@ export interface ComboboxKeyOptions {
   open: boolean;
   searchable?: boolean;
   openOnEnter?: boolean;
+  removeOnBackspace?: boolean;
 }
 export type ComboboxKeyAction =
   | { type: 'open'; preventDefault: true }
   | { type: 'select'; preventDefault: true }
+  | { type: 'remove-last'; preventDefault: true }
   | { type: 'close'; preventDefault: boolean }
   | { type: 'navigate'; direction: NavigationDirection; preventDefault: true };
 
@@ -17,6 +19,9 @@ export function getComboboxKeyAction(
   options: ComboboxKeyOptions,
 ): ComboboxKeyAction | undefined {
   const { open, searchable = true, openOnEnter = true } = options;
+  if (key === 'Backspace' && options.removeOnBackspace) {
+    return { type: 'remove-last', preventDefault: true };
+  }
   if (key === 'Escape') {
     return open ? { type: 'close', preventDefault: true } : undefined;
   }

@@ -88,10 +88,10 @@
     "kind": "behavior",
     "name": "getComboboxKeyAction",
     "family": "Behaviors",
-    "description": "Определяет действие клавиши в Combobox: open, close, select или navigate. Возвращает решение без выполнения действия и без DOM/React.",
+    "description": "Определяет действие клавиши в Combobox: open, close, select, navigate или remove-last. Backspace возвращает remove-last только при removeOnBackspace: true; доступность удаления проверяет владелец. Возвращает решение без выполнения действия и без DOM/React.",
     "docsUrl": "/custom-components/#core-keyboard",
     "composesWith": ["behavior:get-navigation-direction", "behavior:get-next-enabled-value", "behavior:get-selection-value", "behavior:get-disclosure-open", "component:select"],
-    "constraints": ["key и options.open обязательны. searchable и openOnEnter по умолчанию true. Escape закрывает только открытый список с preventDefault: true; Tab всегда запрашивает закрытие с preventDefault: false. Enter выбирает в открытом списке, открывает закрытый при openOnEnter: true; иначе не обрабатывается. В непоисковом режиме Space активирует, Home/End навигируют; в поисковом они остаются вводу. ArrowUp/ArrowDown дают previous/next. Прочие клавиши возвращают undefined. select не гарантирует наличие доступного пункта: коллекцию проверяет владелец. Нет проверки disabled, defaultPrevented, IME, модификаторов, состояния, DOM, фокуса или вызова preventDefault: адаптер проверяет событие и выполняет возвращённое решение."],
+    "constraints": ["key и options.open обязательны. searchable и openOnEnter по умолчанию true. Escape закрывает только открытый список с preventDefault: true; Tab всегда запрашивает закрытие с preventDefault: false. Enter выбирает в открытом списке, открывает закрытый при openOnEnter: true; иначе не обрабатывается. В непоисковом режиме Space активирует, Home/End навигируют; в поисковом они остаются вводу. ArrowUp/ArrowDown дают previous/next. Backspace возвращает remove-last с preventDefault: true только при removeOnBackspace: true; по умолчанию остаётся нативным. Прочие клавиши возвращают undefined. select и remove-last не гарантируют наличие доступного значения: коллекцию проверяет владелец. Нет проверки disabled, defaultPrevented, IME, модификаторов, состояния, DOM, фокуса или вызова preventDefault: адаптер проверяет событие и выполняет возвращённое решение."],
     "bindings": [{
       "id": "core", "layer": 1, "framework": null,
       "importPath": "@dreadnought/core", "exportName": "getComboboxKeyAction",

@@ -1,6 +1,15 @@
 import { expect, it } from 'vitest';
 import { getComboboxKeyAction } from '../../src/behaviors/getComboboxKeyAction.ts';
 
+it.each([true, false])('removes on Backspace only when permitted, open=%s', (open) => {
+  expect(getComboboxKeyAction('Backspace', { open })).toBeUndefined();
+  expect(getComboboxKeyAction('Backspace', { open, removeOnBackspace: false })).toBeUndefined();
+  expect(getComboboxKeyAction('Backspace', { open, removeOnBackspace: true })).toEqual({
+    type: 'remove-last',
+    preventDefault: true,
+  });
+});
+
 it.each([
   ['Escape', true, { type: 'close', preventDefault: true }],
   ['Escape', false, undefined],

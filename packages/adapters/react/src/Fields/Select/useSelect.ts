@@ -125,12 +125,26 @@ export function useSelect(props: SelectAdapterProps) {
     if (event.defaultPrevented || event.nativeEvent.isComposing || props.disabled) {
       return;
     }
-    const action = getComboboxKeyAction(event.key, { open, searchable: props.searchable ?? false });
+    const action = getComboboxKeyAction(event.key, {
+      open,
+      searchable: props.searchable ?? false,
+      removeOnBackspace:
+        props.multiple &&
+        state.values.length > 0 &&
+        event.currentTarget.value === '' &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.altKey,
+    });
     if (!action) {
       return;
     }
     if (action.preventDefault) {
       event.preventDefault();
+    }
+    if (action.type === 'remove-last') {
+      remove(state.values[state.values.length - 1]!);
+      return;
     }
     if (action.type === 'close') {
       close();
