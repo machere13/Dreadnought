@@ -1,4 +1,12 @@
-import { useCallback, useContext, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import type { ButtonHTMLAttributes } from 'react';
 import { getDisclosureOpen, getPopoverState } from '@dreadnought/core';
 import type { TooltipPlacement } from '@dreadnought/core';
@@ -43,7 +51,9 @@ export function usePopover({
     disabled,
   });
   const current = useRef({ open: state.open, controlled, disabled, onOpenChange });
-  current.current = { open: state.open, controlled, disabled, onOpenChange };
+  useLayoutEffect(() => {
+    current.current = { open: state.open, controlled, disabled, onOpenChange };
+  });
   const attach = useCallback((element: HTMLButtonElement | null) => {
     anchor.current = element;
     setAnchorElement(element);

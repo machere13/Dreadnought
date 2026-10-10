@@ -1,4 +1,12 @@
-import { useCallback, useContext, useEffect, useId, useRef, useState } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import type { DOMAttributes } from 'react';
 import { getDisclosureOpen, getTooltipState } from '@dreadnought/core';
 import type { TooltipPlacement } from '@dreadnought/core';
@@ -54,7 +62,9 @@ export function useTooltip({
     describedBy,
   });
   const currentOptions = useRef({ open: state.open, controlled, disabled, onOpenChange });
-  currentOptions.current = { open: state.open, controlled, disabled, onOpenChange };
+  useLayoutEffect(() => {
+    currentOptions.current = { open: state.open, controlled, disabled, onOpenChange };
+  });
   useAnchoredPopover(state.open, anchor, popup, anchorElement, false, {
     placement,
     arrow: arrow !== false,

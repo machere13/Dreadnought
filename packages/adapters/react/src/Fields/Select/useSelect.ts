@@ -54,7 +54,9 @@ export function useSelect(props: SelectAdapterProps) {
   }
   const open = (props.open ?? expanded) && !props.disabled;
   const current = useRef({ open, query, props, searchValue, onSearch });
-  current.current = { open, query, props, searchValue, onSearch };
+  useLayoutEffect(() => {
+    current.current = { open, query, props, searchValue, onSearch };
+  });
   const state = useMemo(
     () =>
       getSelectState({

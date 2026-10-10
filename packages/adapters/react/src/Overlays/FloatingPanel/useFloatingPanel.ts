@@ -30,7 +30,9 @@ export function useFloatingPanel({
     disabled,
   });
   const current = useRef({ open: state.open, controlled, disabled, onOpenChange });
-  current.current = { open: state.open, controlled, disabled, onOpenChange };
+  useLayoutEffect(() => {
+    current.current = { open: state.open, controlled, disabled, onOpenChange };
+  });
   const attachTrigger = useCallback((node: HTMLButtonElement | null) => {
     trigger.current = node;
   }, []);

@@ -38,7 +38,9 @@ export function useModal({
     disabled,
   });
   const current = useRef({ open: state.open, controlled, disabled, onOpenChange });
-  current.current = { open: state.open, controlled, disabled, onOpenChange };
+  useLayoutEffect(() => {
+    current.current = { open: state.open, controlled, disabled, onOpenChange };
+  });
   const attach = useCallback((node: HTMLButtonElement | null) => {
     trigger.current = node;
   }, []);
