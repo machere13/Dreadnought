@@ -13,7 +13,7 @@ export function ApiTable({ component, label, rows, groups = [] }: {
   groups?: readonly ApiGroup[];
 }) {
   return <div className={styles.tableScroll}>
-    <Table bordered className={styles.apiTable} aria-label={label}>
+    <Table bordered size="small" className={styles.apiTable} aria-label={label}>
       <Table.Head>
         <Table.Row>
           <Table.HeaderCell scope="col">Свойство</Table.HeaderCell>

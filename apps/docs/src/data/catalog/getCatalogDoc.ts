@@ -1,5 +1,5 @@
 import data from './generated/catalog-docs.json';
-import { propertySummaries } from './propertySummaries.ts';
+import { commonPropertySummaries, propertySummaries } from './propertySummaries.ts';
 
 export type ApiRow = readonly [name: string, values: string, fallback: string, meaning: string];
 export type ApiGroup = { title: string; rows: readonly ApiRow[] };
@@ -28,7 +28,10 @@ export function getCatalogDoc(component: string): CatalogDoc {
   if (!doc) throw new Error(`Компонент отсутствует в каталоге: ${component}. Запустите сборку документации.`);
   const apiRows = doc.apiRows.map((row): ApiRow => {
     const [name, values, fallback, description] = apiRow(row, component);
-    const meaning = propertySummaries[component]?.[name] ?? description;
+    const meaning = propertySummaries[component]?.[name]
+      ?? (description === 'Свойство компонента'
+        ? commonPropertySummaries[name.split('.').at(-1)!] ?? description
+        : description);
     return [name, values, fallback, meaning];
   });
   const apiGroups = doc.apiGroups?.map(group => ({

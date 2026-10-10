@@ -157,7 +157,17 @@
 
 .layerExamples { display: grid; gap: calc(var(--dreadnought-spacing-x4) * 2); }
 
-.layerExamples > div { min-width: 0; }
+.layerExamples > div,
+.startExamples > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--dreadnought-spacing-x4);
+  min-width: 0;
+}
+
+.layerExamples .bodyText,
+.startExamples .bodyText { margin: 0; }
 
 .subheading { margin: 0; color: var(--dreadnought-color-text-primary); font-size: var(--dreadnought-font-size-h6); }
 
@@ -195,8 +205,6 @@
 .overviewAction { display: inline-flex; }
 
 .startExamples { display: grid; gap: calc(var(--dreadnought-spacing-x4) * 2); margin-block-start: calc(var(--dreadnought-spacing-x4) * 2); }
-
-.startExamples > div { min-width: 0; }
 
 .startExamples .bodyText code { font-family: var(--dreadnought-font-family-monospace); overflow-wrap: anywhere; }
 

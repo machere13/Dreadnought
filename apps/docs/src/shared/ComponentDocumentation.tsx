@@ -54,7 +54,7 @@ export function ComponentDocumentation({
           <div className={styles.layerExamples}>
             <div>
               <h3 className={styles.subheading}>Свои стили — адаптер</h3>
-              <p className={styles.bodyText}>{doc.adapterDescription}</p>
+              {doc.adapterDescription && <p className={styles.bodyText}>{doc.adapterDescription}</p>}
               <div data-knowledge-exclude>
                 <CodeBlock code={doc.adapterCode} language="tsx" copyLabels={copyLabels} />
               </div>
@@ -64,7 +64,7 @@ export function ComponentDocumentation({
                 <h3 id={`${component}-logic`} className={styles.subheading}>
                   Своя разметка — логика
                 </h3>
-                <p className={styles.bodyText}>{doc.logicDescription}</p>
+                {doc.logicDescription && <p className={styles.bodyText}>{doc.logicDescription}</p>}
                 <div data-knowledge-exclude>
                   <CodeBlock code={doc.logicCode} language="tsx" copyLabels={copyLabels} />
                 </div>
@@ -98,14 +98,14 @@ export function ComponentDocumentation({
               />
             </div>
           ))}
-          <p
+          {doc.footnote && <p
             data-knowledge
             data-knowledge-id={`${component}-api`}
             data-knowledge-title={`${doc.title}: примечания`}
             className={styles.footnote}
           >
             {doc.footnote}
-          </p>
+          </p>}
         </section>
       </article>
     </div>
