@@ -79,3 +79,24 @@ export function getExport(context, importPath, name) {
   if (!symbol) throw new Error(`Missing public export: ${importPath} → ${name}`);
   return symbol.flags & ts.SymbolFlags.Alias ? context.checker.getAliasedSymbol(symbol) : symbol;
 }
+
+export function assertCoreCoverage(context, metadata) {
+  const source = context.program.getSourceFile(context.entries.get('@dreadnought/core'));
+  const module = source && context.checker.getSymbolAtLocation(source);
+  if (!module) throw new Error('Missing core public entry');
+  const covered = new Set(metadata.flatMap(entry => entry.bindings
+    .filter(binding => binding.importPath === '@dreadnought/core'
+      && binding.layer === 1 && binding.framework === null)
+    .map(binding => binding.exportName)));
+  const missing = context.checker.getExportsOfModule(module)
+    .filter(symbol => {
+      const target = symbol.flags & ts.SymbolFlags.Alias
+        ? context.checker.getAliasedSymbol(symbol) : symbol;
+      return (target.flags & ts.SymbolFlags.Value) && !covered.has(symbol.name);
+    })
+    .map(symbol => symbol.name)
+    .sort();
+  if (missing.length) {
+    throw new Error(`Core exports missing from catalog: ${missing.join(', ')}`);
+  }
+}

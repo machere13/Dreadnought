@@ -1,5 +1,17 @@
 [
   {
+    "id": "behavior:get-text-field-state", "kind": "behavior", "name": "getTextFieldState", "family": "Behaviors",
+    "description": "Нормализует disabled, readOnly, required и invalid для собственного текстового поля без DOM и фреймворка.",
+    "docsUrl": "/custom-components/#core-parts",
+    "composesWith": ["component:input", "component:textarea"],
+    "constraints": ["Все четыре флага по умолчанию false. Принимает объект options, возвращает новый объект состояния. Не хранит значение, не валидирует текст, не обрабатывает события и не устанавливает HTML/ARIA-атрибуты: это задачи адаптера."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "getTextFieldState",
+      "defaults": {"disabled": false, "readOnly": false, "required": false, "invalid": false},
+      "examples": [{"id": "state", "code": "import { getTextFieldState } from '@dreadnought/core';\nconst state = getTextFieldState({ readOnly: true, required: true });"}]
+    }]
+  },
+  {
     "id": "behavior:get-virtual-window", "kind": "behavior", "name": "getVirtualWindow", "family": "Behaviors",
     "description": "Рассчитывает видимое окно списка с фиксированной высотой строк без DOM и фреймворка.",
     "docsUrl": "/components/select/#select-api", "composesWith": ["component:select"],

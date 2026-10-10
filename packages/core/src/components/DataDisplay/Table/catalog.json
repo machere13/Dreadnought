@@ -18,6 +18,18 @@
       "examples": [{ "id": "multiple-sort", "code": "import { sortTableRowsBy } from '@dreadnought/core';\nconst rows = [{ team: 'Design', age: 29 }, { team: 'Design', age: 25 }];\nconst sorted = sortTableRowsBy(rows, [{ compare: (a, b) => a.team.localeCompare(b.team), order: 'ascend' }, { compare: (a, b) => a.age - b.age, order: 'descend' }]);" }]
     },
     {
+      "id": "core-filter", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "filterTableRows",
+      "description": "Фильтрует строки: разные фильтры соединяются через И, значения внутри одного фильтра — через ИЛИ. Пустой values не ограничивает результат. Возвращает новый массив с исходными объектами в прежнем порядке; входные данные не изменяет. Предикаты задаёт вызывающий код, их ошибки не поглощаются. DOM, состояние фильтров и загрузка данных не входят в функцию.",
+      "examples": [{"id": "filter", "code": "import { filterTableRows } from '@dreadnought/core';\nconst rows = [{ name: 'Anna', team: 'Design' }, { name: 'Boris', team: 'Engineering' }];\nconst filtered = filterTableRows(rows, [{ values: ['Design'], predicate: (value, row) => row.team === value }]);"}]
+    },
+    {
+      "id": "core-pagination", "layer": 1, "framework": null,
+      "importPath": "@dreadnought/core", "exportName": "paginateTableRows",
+      "description": "Возвращает срез строк одной страницы; номер страницы начинается с 1. Возвращает новый массив с исходными объектами, вход не меняет. Номер страницы и размер должны быть положительными целыми числами: функция их не проверяет и не ограничивает. Страница за концом массива пуста. Не считает число страниц, не хранит состояние и не загружает данные; для состояния пагинации используйте getPaginationState.",
+      "examples": [{"id": "pagination", "code": "import { filterTableRows, paginateTableRows } from '@dreadnought/core';\nconst rows = [{ id: 1, active: true }, { id: 2, active: false }, { id: 3, active: true }];\nconst filtered = filterTableRows(rows, [{ values: ['active'], predicate: (_value, row) => row.active }]);\nconst page = paginateTableRows(filtered, 1, 10);"}]
+    },
+    {
       "id": "core-headers",
       "layer": 1,
       "framework": null,
