@@ -3,6 +3,7 @@ import type { ComponentPropsWithRef, ComponentPropsWithoutRef } from 'react';
 import { forwardTabsRef } from './forwardTabsRef.ts';
 import { useTabsOverflow } from './useTabsOverflow.ts';
 import { TabsOverflowMenu } from './TabsOverflowMenu.tsx';
+import { useTabsContext } from './TabsContext.tsx';
 
 export type TabsListAdapterProps = ComponentPropsWithRef<'div'> & {
   moreLabel?: string;
@@ -22,6 +23,7 @@ export function TabsListAdapter({
   slotProps = {},
   ...props
 }: TabsListAdapterProps) {
+  const { orientation } = useTabsContext();
   const listRef = useRef<HTMLDivElement>(null);
   const setRef = useCallback(
     (element: HTMLDivElement | null) => {
@@ -35,12 +37,12 @@ export function TabsListAdapter({
   const { hiddenTabs, revealTab, measure } = useTabsOverflow(listRef);
 
   return (
-    <div {...slotProps.container} data-slot="list-container">
+    <div {...slotProps.container} data-slot="list-container" data-orientation={orientation}>
       <div
         {...props}
         ref={setRef}
         role="tablist"
-        aria-orientation="horizontal"
+        aria-orientation={orientation}
         data-slot="list"
         onScroll={(event) => {
           onScroll?.(event);

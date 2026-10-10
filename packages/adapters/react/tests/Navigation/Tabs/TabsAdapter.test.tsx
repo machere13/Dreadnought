@@ -8,9 +8,15 @@ import { TabsAdapter } from '../../../src/unstyled.ts';
 
 afterEach(cleanup);
 
-function Sample({ onValueChange }: { onValueChange?: (value: string) => void }) {
+function Sample({
+  onValueChange,
+  orientation,
+}: {
+  onValueChange?: (value: string) => void;
+  orientation?: 'horizontal' | 'vertical';
+}) {
   return (
-    <TabsAdapter defaultValue="a" onValueChange={onValueChange}>
+    <TabsAdapter defaultValue="a" onValueChange={onValueChange} orientation={orientation}>
       <TabsAdapter.List aria-label="Sections">
         <TabsAdapter.Tab value="a">A</TabsAdapter.Tab>
         <TabsAdapter.Tab value="b" disabled>
@@ -26,6 +32,54 @@ function Sample({ onValueChange }: { onValueChange?: (value: string) => void }) 
 }
 
 describe('TabsAdapter', () => {
+  it('uses vertical arrows, skips disabled tabs and leaves horizontal arrows alone', () => {
+    render(<Sample orientation="vertical" />);
+    expect(screen.getByRole('tablist').getAttribute('aria-orientation')).toBe('vertical');
+    const first = screen.getByRole('tab', { name: 'A' });
+    const last = screen.getByRole('tab', { name: 'C' });
+    first.focus();
+    expect(fireEvent.keyDown(first, { key: 'ArrowRight' })).toBe(true);
+    expect(first.getAttribute('aria-selected')).toBe('true');
+    expect(fireEvent.keyDown(first, { key: 'ArrowDown' })).toBe(false);
+    expect(document.activeElement).toBe(last);
+    expect(last.getAttribute('aria-selected')).toBe('true');
+    fireEvent.keyDown(last, { key: 'ArrowDown' });
+    expect(document.activeElement).toBe(first);
+    fireEvent.keyDown(first, { key: 'ArrowUp' });
+    expect(document.activeElement).toBe(last);
+    fireEvent.keyDown(last, { key: 'Home' });
+    expect(document.activeElement).toBe(first);
+    fireEvent.keyDown(first, { key: 'End' });
+    expect(document.activeElement).toBe(last);
+  });
+
+  it('changes orientation without losing selection or lazy panel state', () => {
+    function Example({ orientation }: { orientation: 'horizontal' | 'vertical' }) {
+      return (
+        <TabsAdapter defaultValue="a" orientation={orientation}>
+          <TabsAdapter.List aria-label="Sections">
+            <TabsAdapter.Tab value="a">A</TabsAdapter.Tab>
+            <TabsAdapter.Tab value="b">B</TabsAdapter.Tab>
+          </TabsAdapter.List>
+          <TabsAdapter.Panel value="a" mountPolicy="lazy">
+            Alpha
+          </TabsAdapter.Panel>
+          <TabsAdapter.Panel value="b" mountPolicy="lazy">
+            <input aria-label="Draft" />
+          </TabsAdapter.Panel>
+        </TabsAdapter>
+      );
+    }
+    const { rerender } = render(<Example orientation="horizontal" />);
+    fireEvent.click(screen.getByRole('tab', { name: 'B' }));
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Draft text' } });
+    rerender(<Example orientation="vertical" />);
+    expect(screen.getByRole('tab', { name: 'B' }).getAttribute('aria-selected')).toBe('true');
+    expect((screen.getByRole('textbox') as HTMLInputElement).value).toBe('Draft text');
+    fireEvent.keyDown(screen.getByRole('tab', { name: 'B' }), { key: 'ArrowUp' });
+    expect(screen.getByRole('tab', { name: 'A' }).getAttribute('aria-selected')).toBe('true');
+  });
+
   it('connects a named tablist, selected tab and matching panel', () => {
     render(<Sample />);
     const tab = screen.getByRole('tab', { name: 'A' });

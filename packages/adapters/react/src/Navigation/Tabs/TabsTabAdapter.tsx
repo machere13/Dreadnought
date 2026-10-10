@@ -33,7 +33,9 @@ export function TabsTabAdapter({
     if (event.defaultPrevented || event.nativeEvent.isComposing) {
       return;
     }
-    const targetDirection = getNavigationDirection(event.key, { orientation: 'horizontal' });
+    const targetDirection = getNavigationDirection(event.key, {
+      orientation: context.orientation,
+    });
     if (targetDirection === undefined) {
       return;
     }

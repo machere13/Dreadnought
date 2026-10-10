@@ -35,11 +35,21 @@ beforeEach(() => {
   );
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function () {
     if (this.getAttribute('data-slot') === 'list') {
-      return rect(0, width);
+      return this.getAttribute('aria-orientation') === 'vertical'
+        ? { ...rect(0, 100), top: 0, bottom: width, height: width }
+        : rect(0, width);
     }
     if (this.getAttribute('role') === 'tab') {
       const list = this.closest('[role="tablist"]')!;
       const index = [...list.querySelectorAll('[role="tab"]')].indexOf(this);
+      if (list.getAttribute('aria-orientation') === 'vertical') {
+        return {
+          ...rect(0, 100),
+          top: index * 100 - list.scrollTop,
+          bottom: (index + 1) * 100 - list.scrollTop,
+          height: 100,
+        };
+      }
       return rect(index * 100 - list.scrollLeft, (index + 1) * 100 - list.scrollLeft);
     }
     return rect(0, 44);
@@ -48,6 +58,15 @@ beforeEach(() => {
     return this.getAttribute('data-slot') === 'list' ? width : 800;
   });
   vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockImplementation(function () {
+    if (this.getAttribute('aria-orientation') === 'vertical') return 100;
+    return this.getAttribute('data-slot') === 'list'
+      ? this.querySelectorAll('[role="tab"]').length * 100
+      : 0;
+  });
+  vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockImplementation(function () {
+    return this.getAttribute('data-slot') === 'list' ? width : 800;
+  });
+  vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockImplementation(function () {
     return this.getAttribute('data-slot') === 'list'
       ? this.querySelectorAll('[role="tab"]').length * 100
       : 0;
@@ -85,14 +104,16 @@ function Sample({
   value,
   onValueChange,
   last = true,
+  orientation,
 }: {
   value?: string;
   onValueChange?: (value: string) => void;
   last?: boolean;
+  orientation?: 'horizontal' | 'vertical';
 }) {
   const selection = value === undefined ? { defaultValue: 'a' } : { value };
   return (
-    <TabsAdapter {...selection} onValueChange={onValueChange}>
+    <TabsAdapter {...selection} onValueChange={onValueChange} orientation={orientation}>
       <TabsAdapter.List aria-label="Sections" moreLabel="More sections">
         <TabsAdapter.Tab value="a">A</TabsAdapter.Tab>
         <TabsAdapter.Tab value="b" disabled>
@@ -110,6 +131,31 @@ function Sample({
 }
 
 describe('Tabs overflow', () => {
+  it('selects a hidden vertical tab and reveals it along the vertical axis', () => {
+    render(<Sample orientation="vertical" />);
+    fireEvent.click(screen.getByRole('button', { name: 'More sections' }));
+    expect(screen.getAllByRole('menuitemradio').map((item) => item.textContent)).toEqual([
+      'B',
+      'C',
+      'D',
+    ]);
+    fireEvent.click(screen.getByRole('menuitemradio', { name: 'D' }));
+    expect(screen.getByRole('tablist').scrollTop).toBe(300);
+    expect(screen.getByRole('tablist').scrollLeft).toBe(0);
+    expect(document.activeElement).toBe(screen.getByRole('tab', { name: 'D' }));
+  });
+
+  it('remeasures vertical overflow after resizing and reveals controlled selection', () => {
+    const { rerender } = render(<Sample orientation="vertical" value="d" />);
+    const list = screen.getByRole('tablist');
+    expect(list.scrollTop).toBe(300);
+    rerender(<Sample orientation="vertical" value="a" />);
+    expect(list.scrollTop).toBe(0);
+    width = 500;
+    act(() => resizeCallbacks.forEach((callback) => callback()));
+    expect(screen.queryByRole('button', { name: 'More sections' })).toBeNull();
+  });
+
   it('positions its menu and follows resize in the iframe document', () => {
     const frame = document.createElement('iframe');
     document.body.append(frame);

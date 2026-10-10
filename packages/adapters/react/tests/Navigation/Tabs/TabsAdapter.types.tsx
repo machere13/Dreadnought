@@ -1,5 +1,13 @@
 import { TabsAdapter } from '@dreadnought/react/unstyled';
 
+<TabsAdapter defaultValue="a" orientation="vertical">
+  Content
+</TabsAdapter>;
+// @ts-expect-error Only horizontal and vertical are supported.
+<TabsAdapter defaultValue="a" orientation="diagonal">
+  Content
+</TabsAdapter>;
+
 <TabsAdapter.Panel value="a" mountPolicy="lazy">
   Lazy
 </TabsAdapter.Panel>;

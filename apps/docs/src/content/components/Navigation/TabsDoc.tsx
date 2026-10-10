@@ -4,11 +4,14 @@ import { Input, Tabs } from '@dreadnought/ui/react';
 import type { ComponentDoc } from '../../../shared/types.ts';
 import styles from '../../../shared/Documentation.module.css';
 
-function TabsDemo() {
+function TabsDemo({ orientation = 'horizontal' }: { orientation?: 'horizontal' | 'vertical' }) {
   return (
     <div className={styles.demo}>
-      <Tabs defaultValue="ready">
-        <Tabs.List aria-label="Уровень библиотеки">
+      {orientation === 'vertical' && <h3>Вертикальные вкладки</h3>}
+      <Tabs defaultValue="ready" orientation={orientation}>
+        <Tabs.List
+          aria-label={orientation === 'vertical' ? 'Вертикальные разделы' : 'Уровень библиотеки'}
+        >
           <Tabs.Tab value="ready">Компонент</Tabs.Tab>
           <Tabs.Tab value="adapter">Адаптер</Tabs.Tab>
           <Tabs.Tab value="logic">Логика</Tabs.Tab>
@@ -58,17 +61,20 @@ export const tabsDoc: ComponentDoc = {
     <>
       Для каждого <code>Tabs.Tab</code> нужна одна <code>Tabs.Panel</code> с тем же значением. Дайте{' '}
       <code>Tabs.List</code> доступное имя. Стрелки, Home и End переключают доступные вкладки.{' '}
-      <code>mountPolicy</code> панели: <code>eager</code> создаёт содержимое сразу,{' '}
-      <code>lazy</code> — при первом открытии и сохраняет, <code>unmount</code> — удаляет при
-      закрытии. По умолчанию <code>eager</code>; оболочка остаётся во всех режимах. При unmount
-      очищаются эффекты и локальное состояние, но внешнее состояние сохраняется. Сохранение
-      содержимого не приостанавливает эффекты. Меню переполнения настраивается через{' '}
-      <code>moreLabel</code> и <code>slotProps</code> списка.
+      <code>orientation="vertical"</code> располагает список слева и использует ↑↓ вместо ←→. Чтобы
+      скрывать вкладки, не помещающиеся по высоте, ограничьте высоту через{' '}
+      <code>Tabs.List slotProps.container.style.maxHeight</code>. <code>mountPolicy</code> панели:{' '}
+      <code>eager</code> создаёт содержимое сразу, <code>lazy</code> — при первом открытии и
+      сохраняет, <code>unmount</code> — удаляет при закрытии. По умолчанию <code>eager</code>;
+      оболочка остаётся во всех режимах. При unmount очищаются эффекты и локальное состояние, но
+      внешнее состояние сохраняется. Сохранение содержимого не приостанавливает эффекты. Меню
+      переполнения настраивается через <code>moreLabel</code> и <code>slotProps</code> списка.
     </>
   ),
   demo: (
     <>
       <TabsDemo />
+      <TabsDemo orientation="vertical" />
       <TabsLifecycleDemo />
     </>
   ),

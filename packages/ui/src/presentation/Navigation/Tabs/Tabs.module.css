@@ -5,6 +5,19 @@
     max-width: 100%;
   }
 
+  .root[data-orientation='vertical'] {
+    display: grid;
+    grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--dreadnought-tabs-panel-padding-block);
+    min-height: 0;
+  }
+
+  .root[data-orientation='vertical'] > .panel {
+    padding-block: 0;
+    min-width: 0;
+  }
+
   .listContainer {
     display: inline-flex;
     box-sizing: border-box;
@@ -27,6 +40,20 @@
 
   .list::-webkit-scrollbar {
     display: none;
+  }
+
+  .listContainer[data-orientation='vertical'] {
+    flex-direction: column;
+    min-height: 0;
+    max-height: 100%;
+  }
+
+  .list[aria-orientation='vertical'] {
+    flex-direction: column;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-block: contain;
   }
 
   .tab,

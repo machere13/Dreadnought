@@ -47,8 +47,23 @@ void rootClass;
 void component;
 void tabsPresentation;
 void Tabs;
+const verticalTabs: ComponentProps<typeof Tabs> = {
+  defaultValue: 'a',
+  orientation: 'vertical',
+  children: 'Content',
+};
+const invalidTabs: ComponentProps<typeof Tabs> = {
+  defaultValue: 'a',
+  // @ts-expect-error Ready Tabs do not accept unsupported orientations.
+  orientation: 'diagonal',
+  children: 'Content',
+};
+void [verticalTabs, invalidTabs];
 const lazyTabsPanel: ComponentProps<typeof Tabs.Panel> = { value: 'a', mountPolicy: 'lazy' };
-const resetAccordionPanel: ComponentProps<typeof Accordion.Panel> = { children: 'Content', mountPolicy: 'unmount' };
+const resetAccordionPanel: ComponentProps<typeof Accordion.Panel> = {
+  children: 'Content',
+  mountPolicy: 'unmount',
+};
 // @ts-expect-error Ready panels only accept the supported mount policies.
 const invalidTabsPanel: ComponentProps<typeof Tabs.Panel> = { value: 'a', mountPolicy: 'destroy' };
 void [lazyTabsPanel, resetAccordionPanel, invalidTabsPanel];

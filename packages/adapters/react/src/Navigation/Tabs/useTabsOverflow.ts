@@ -4,7 +4,11 @@ import { useTabsContext } from './TabsContext.tsx';
 import type { RegisteredTab } from './TabsContext.tsx';
 
 export function useTabsOverflow(listRef: RefObject<HTMLDivElement | null>) {
-  const { value, orderedTabs } = useTabsContext();
+  const { value, orderedTabs, orientation } = useTabsContext();
+  const vertical = orientation === 'vertical';
+  const start = vertical ? 'top' : 'left';
+  const end = vertical ? 'bottom' : 'right';
+  const scroll = vertical ? 'scrollTop' : 'scrollLeft';
   const [hiddenTabs, setHiddenTabs] = useState<RegisteredTab[]>([]);
 
   const revealTab = useCallback(
@@ -15,13 +19,13 @@ export function useTabsOverflow(listRef: RefObject<HTMLDivElement | null>) {
       }
       const viewport = list.getBoundingClientRect();
       const tab = element.getBoundingClientRect();
-      if (tab.left < viewport.left) {
-        list.scrollLeft += tab.left - viewport.left;
-      } else if (tab.right > viewport.right) {
-        list.scrollLeft += tab.right - viewport.right;
+      if (tab[start] < viewport[start]) {
+        list[scroll] += tab[start] - viewport[start];
+      } else if (tab[end] > viewport[end]) {
+        list[scroll] += tab[end] - viewport[end];
       }
     },
-    [listRef],
+    [listRef, start, end, scroll],
   );
 
   const measure = useCallback(() => {
@@ -30,19 +34,21 @@ export function useTabsOverflow(listRef: RefObject<HTMLDivElement | null>) {
       return;
     }
     const viewport = list.getBoundingClientRect();
-    const next =
-      list.scrollWidth <= list.clientWidth
-        ? []
-        : orderedTabs().filter(({ element }) => {
-            if (!list.contains(element)) {
-              return false;
-            }
-            const tab = element.getBoundingClientRect();
-            return (
-              Math.round(tab.left) < Math.round(viewport.left) ||
-              Math.round(tab.right) > Math.round(viewport.right)
-            );
-          });
+    const fits = vertical
+      ? list.scrollHeight <= list.clientHeight
+      : list.scrollWidth <= list.clientWidth;
+    const next = fits
+      ? []
+      : orderedTabs().filter(({ element }) => {
+          if (!list.contains(element)) {
+            return false;
+          }
+          const tab = element.getBoundingClientRect();
+          return (
+            Math.round(tab[start]) < Math.round(viewport[start]) ||
+            Math.round(tab[end]) > Math.round(viewport[end])
+          );
+        });
     setHiddenTabs((previous) =>
       previous.length === next.length &&
       previous.every(
@@ -54,7 +60,7 @@ export function useTabsOverflow(listRef: RefObject<HTMLDivElement | null>) {
         ? previous
         : next,
     );
-  }, [listRef, orderedTabs]);
+  }, [listRef, orderedTabs, vertical, start, end]);
 
   useLayoutEffect(() => {
     const selected = orderedTabs().find((tab) => tab.value === value);

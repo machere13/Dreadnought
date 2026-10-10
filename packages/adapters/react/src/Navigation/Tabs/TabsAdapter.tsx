@@ -14,12 +14,16 @@ export type TabsAdapterProps = Omit<
   ComponentPropsWithRef<'div'>,
   'defaultValue' | 'onChange' | 'children'
 > &
-  UseTabsOptions & { children: ReactNode };
+  UseTabsOptions & {
+    children: ReactNode;
+    orientation?: 'horizontal' | 'vertical';
+  };
 
 function TabsRootAdapter({
   value,
   defaultValue,
   onValueChange,
+  orientation = 'horizontal',
   children,
   ref,
   ...rootProps
@@ -54,6 +58,7 @@ function TabsRootAdapter({
   return (
     <TabsContext.Provider
       value={{
+        orientation,
         value: selection.value,
         setValue: selection.setValue,
         tabId,
@@ -64,7 +69,7 @@ function TabsRootAdapter({
         navigate,
       }}
     >
-      <div {...rootProps} ref={ref} data-ui="tabs">
+      <div {...rootProps} ref={ref} data-ui="tabs" data-orientation={orientation}>
         {children}
       </div>
     </TabsContext.Provider>

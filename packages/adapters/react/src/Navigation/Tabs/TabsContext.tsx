@@ -8,6 +8,7 @@ export interface RegisteredTab extends TabItem {
 }
 
 export interface TabsContextValue {
+  orientation: 'horizontal' | 'vertical';
   value: string;
   setValue: (next: string) => void;
   tabId: (value: string) => string;

@@ -488,11 +488,24 @@ describe('documentation pages', () => {
     expect(screen.getByRole('link', { name: 'Tabs' }).getAttribute('href')).toBe('/components/tabs/');
     expect(screen.getByRole('heading', { name: 'Tabs', level: 1 })).toBeTruthy();
     expect(screen.getByRole('rowheader', { name: 'defaultValue' })).toBeTruthy();
-    expect(screen.getByRole('tablist', { name: 'Уровень библиотеки' })).toBeTruthy();
-    expect(screen.getByRole('tab', { name: 'Компонент' }).getAttribute('aria-selected')).toBe('true');
-    fireEvent.click(screen.getByRole('tab', { name: 'Адаптер' }));
-    expect(screen.getByRole('tab', { name: 'Адаптер' }).getAttribute('aria-selected')).toBe('true');
-    expect(screen.getByRole('tabpanel', { name: 'Адаптер' }).textContent).toContain('Разметка и поведение без готовых стилей.');
+    const list = screen.getByRole('tablist', { name: 'Уровень библиотеки' });
+    const tabs = within(list);
+    expect(tabs.getByRole('tab', { name: 'Компонент' }).getAttribute('aria-selected')).toBe(
+      'true',
+    );
+    fireEvent.click(tabs.getByRole('tab', { name: 'Адаптер' }));
+    const selected = tabs.getByRole('tab', { name: 'Адаптер' });
+    expect(selected.getAttribute('aria-selected')).toBe('true');
+    const panel = document.getElementById(selected.getAttribute('aria-controls')!);
+    expect(panel?.textContent).toContain('Разметка и поведение без готовых стилей.');
+    const vertical = screen.getByRole('tablist', { name: 'Вертикальные разделы' });
+    expect(vertical.getAttribute('aria-orientation')).toBe('vertical');
+    fireEvent.keyDown(within(vertical).getByRole('tab', { name: 'Компонент' }), {
+      key: 'ArrowDown',
+    });
+    expect(within(vertical).getByRole('tab', { name: 'Адаптер' }).getAttribute('aria-selected')).toBe(
+      'true',
+    );
   });
 
   it('documents Accordion and opens the live FAQ', () => {

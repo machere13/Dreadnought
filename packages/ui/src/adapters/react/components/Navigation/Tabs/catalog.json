@@ -9,11 +9,12 @@
       "exportName": "Tabs",
       "description": "Разделы с клавиатурной навигацией и меню вкладок при переполнении; mountPolicy панели задаёт создание и сохранение содержимого.",
       "propertyDescriptions": {
+        "orientation": "horizontal располагает вкладки сверху; vertical слева, с навигацией ↑↓. Для меню переполнения ограничьте высоту container списка.",
         "defaultValue": "Начальная вкладка.",
         "value": "Текущая вкладка в управляемом режиме.",
         "onValueChange": "Уведомление о смене вкладки."
       },
-      "defaults": {},
+      "defaults": { "orientation": "horizontal" },
       "examples": [
         {
           "id": "basic",
@@ -27,9 +28,7 @@
       "framework": "react",
       "importPath": "@dreadnought/ui/react",
       "exportName": "Tabs",
-      "propertyPath": [
-        "List"
-      ],
+      "propertyPath": ["List"],
       "propertyDescriptions": {
         "aria-label": "Доступное имя списка вкладок.",
         "moreLabel": "Доступное имя кнопки и меню скрытых вкладок; по умолчанию Ещё вкладки.",
@@ -42,9 +41,7 @@
       "framework": "react",
       "importPath": "@dreadnought/ui/react",
       "exportName": "Tabs",
-      "propertyPath": [
-        "Tab"
-      ],
+      "propertyPath": ["Tab"],
       "propertyDescriptions": {
         "value": "Уникальное значение вкладки.",
         "disabled": "Исключает вкладку из навигации."
@@ -56,18 +53,18 @@
       "framework": "react",
       "importPath": "@dreadnought/ui/react",
       "exportName": "Tabs",
-      "propertyPath": [
-        "Panel"
-      ],
+      "propertyPath": ["Panel"],
       "propertyDescriptions": {
         "value": "Связывает панель с вкладкой.",
         "mountPolicy": "eager по умолчанию; lazy создаёт children при первом открытии и сохраняет; unmount удаляет при закрытии и сбрасывает локальное состояние."
       },
       "defaults": { "mountPolicy": "eager" },
-      "examples": [{
-        "id": "lifecycle",
-        "code": "import { Tabs, Input } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Tabs defaultValue=\"overview\"><Tabs.List aria-label=\"Разделы\"><Tabs.Tab value=\"overview\">Обзор</Tabs.Tab><Tabs.Tab value=\"form\">Форма</Tabs.Tab></Tabs.List><Tabs.Panel value=\"overview\">Обзор</Tabs.Panel><Tabs.Panel value=\"form\" mountPolicy=\"lazy\"><Input aria-label=\"Имя\" /></Tabs.Panel></Tabs>;\n}"
-      }]
+      "examples": [
+        {
+          "id": "lifecycle",
+          "code": "import { Tabs, Input } from '@dreadnought/ui/react';\nexport function Example() {\n  return <Tabs defaultValue=\"overview\"><Tabs.List aria-label=\"Разделы\"><Tabs.Tab value=\"overview\">Обзор</Tabs.Tab><Tabs.Tab value=\"form\">Форма</Tabs.Tab></Tabs.List><Tabs.Panel value=\"overview\">Обзор</Tabs.Panel><Tabs.Panel value=\"form\" mountPolicy=\"lazy\"><Input aria-label=\"Имя\" /></Tabs.Panel></Tabs>;\n}"
+        }
+      ]
     }
   ]
 }

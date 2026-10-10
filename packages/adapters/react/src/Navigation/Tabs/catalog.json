@@ -22,6 +22,10 @@
       "importPath": "@dreadnought/react/unstyled",
       "exportName": "TabsAdapter",
       "description": "Доступная разметка и поведение без готового оформления.",
+      "propertyDescriptions": {
+        "orientation": "horizontal использует ←→; vertical использует ↑↓ и измеряет переполнение по высоте."
+      },
+      "defaults": { "orientation": "horizontal" },
       "examples": [
         {
           "id": "basic",
@@ -35,9 +39,7 @@
       "framework": "react",
       "importPath": "@dreadnought/react/unstyled",
       "exportName": "TabsAdapter",
-      "propertyPath": [
-        "List"
-      ],
+      "propertyPath": ["List"],
       "propertyDescriptions": {
         "aria-label": "Доступное имя списка вкладок.",
         "moreLabel": "Доступное имя кнопки и меню скрытых вкладок; по умолчанию Ещё вкладки.",
@@ -50,9 +52,7 @@
       "framework": "react",
       "importPath": "@dreadnought/react/unstyled",
       "exportName": "TabsAdapter",
-      "propertyPath": [
-        "Tab"
-      ],
+      "propertyPath": ["Tab"],
       "propertyDescriptions": {
         "value": "Уникальное значение вкладки.",
         "disabled": "Исключает вкладку из навигации."
@@ -64,9 +64,7 @@
       "framework": "react",
       "importPath": "@dreadnought/react/unstyled",
       "exportName": "TabsAdapter",
-      "propertyPath": [
-        "Panel"
-      ],
+      "propertyPath": ["Panel"],
       "propertyDescriptions": {
         "value": "Связывает панель с вкладкой.",
         "mountPolicy": "eager создаёт children сразу; lazy при первом открытии и сохраняет; unmount удаляет при закрытии. Оболочка панели остаётся."
