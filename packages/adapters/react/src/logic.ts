@@ -60,6 +60,10 @@ export type {
   FloatingPanelTriggerProps,
 } from './Overlays/FloatingPanel/index.ts';
 export { useUpload } from './Fields/Upload/useUpload.ts';
+export { useDatePicker } from './Fields/DatePicker/useDatePicker.ts';
+export type {
+  UseDatePickerOptions, UseDatePickerResult, DatePickerRange, DatePickerValue,
+} from './Fields/DatePicker/datePicker.types.ts';
 export type {
   UploadHandler, UploadItem, UseUploadOptions, UseUploadResult,
 } from './Fields/Upload/upload.types.ts';
