@@ -49,6 +49,23 @@
     resize: var(--dreadnought-text-area-resize);
   }
 
+  .textArea.compact,
+  :global([data-ui='text-area-field']):has(> .textArea.compact) {
+    --dreadnought-text-area-min-height: var(--dreadnought-size-control-compact-min-height);
+    --dreadnought-text-area-padding-y: var(--dreadnought-spacing-x1);
+    --dreadnought-text-area-padding-x: var(--dreadnought-spacing-x2);
+  }
+
+  .textArea.filled {
+    background: var(--dreadnought-color-surface-subtle);
+    border-color: transparent;
+  }
+
+  .textArea.borderless {
+    background: transparent;
+    border-color: transparent;
+  }
+
   .textArea[data-min-rows] {
     min-height: calc(
       var(--dreadnought-text-area-min-rows) * 1lh + 2 * var(--dreadnought-text-area-padding-y) + 2 *

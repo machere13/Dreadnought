@@ -8,6 +8,8 @@
       "importPath": "@dreadnought/ui/react",
       "exportName": "Input",
       "propertyDescriptions": {
+        "controlSize": "Визуальный размер: default или compact. Не меняет нативный size.",
+        "variant": "Оформление: outlined, filled или borderless.",
         "prefix": "Текст, иконка или другой элемент перед полем.",
         "suffix": "Текст, иконка или другой элемент после поля.",
         "allowClear": "Кнопка очистки через обычный onChange; скрыта для пустого, disabled и readOnly поля.",
@@ -23,7 +25,12 @@
         "max": "Нативная верхняя граница числового поля.",
         "step": "Нативный шаг; по умолчанию 1. any отключает кнопки шага."
       },
+      "defaults": { "controlSize": "default", "variant": "outlined" },
       "examples": [
+        {
+          "id": "appearance",
+          "code": "import { Input } from '@dreadnought/ui/react';\nconst example = <Input aria-label='Поиск' controlSize='compact' variant='filled' />;"
+        },
         {
           "id": "affixes",
           "code": "import { Input, Icon } from '@dreadnought/ui/react';\nconst example = <Input aria-label='Поиск' prefix={<Icon name='search' />} suffix='⌘ K' allowClear clearLabel='Очистить' showCount maxLength={30} />;"

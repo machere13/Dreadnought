@@ -9,6 +9,8 @@
       "exportName": "TextArea",
       "description": "Многострочное текстовое поле с автоматической высотой и ограничением числа строк.",
       "propertyDescriptions": {
+        "controlSize": "Визуальный размер: default или compact.",
+        "variant": "Оформление: outlined, filled или borderless.",
         "rows": "Начальная высота в строках.",
         "minRows": "Минимальная высота.",
         "maxRows": "Максимальная высота.",
@@ -22,12 +24,18 @@
         "showCount": "Показывает длину текста и maxLength, если задан."
       },
       "defaults": {
+        "controlSize": "default",
+        "variant": "outlined",
         "rows": 2,
         "autoSize": false,
         "allowClear": false,
         "showCount": false
       },
       "examples": [
+        {
+          "id": "appearance",
+          "code": "import { TextArea } from '@dreadnought/ui/react';\nconst example = <TextArea aria-label='Заметки' controlSize='compact' variant='filled' autoSize />;"
+        },
         {
           "id": "clear-count",
           "code": "import { TextArea } from '@dreadnought/ui/react';\nexport function Example() {\n  return <TextArea aria-label=\"Заметки\" allowClear clearLabel=\"Очистить заметки\" showCount maxLength={200} autoSize maxRows={8} />;\n}"

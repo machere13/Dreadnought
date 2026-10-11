@@ -6,6 +6,8 @@ const meta = {
   component: Input,
   args: { placeholder: 'Введите текст' },
   argTypes: {
+    controlSize: { control: 'select', options: ['default', 'compact'] },
+    variant: { control: 'select', options: ['outlined', 'filled', 'borderless'] },
     type: {
       control: 'select',
       options: ['text', 'email', 'password', 'search', 'tel', 'url', 'number'],
@@ -24,6 +26,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+export const Compact: Story = { args: { controlSize: 'compact' } };
+export const Filled: Story = { args: { variant: 'filled' } };
+export const Borderless: Story = { args: { variant: 'borderless' } };
 export const Affixes: Story = {
   args: { prefix: <Icon name="search" />, suffix: '⌘ K', allowClear: true, clearLabel: 'Очистить' },
 };

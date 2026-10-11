@@ -6,6 +6,14 @@ import styles from '../../../shared/Documentation.module.css';
 
 function InputDemo() {
   return <div className={`${styles.demo} ${styles.fieldDemo}`}>
+    <Input
+      aria-label="Компактное заполненное поле"
+      controlSize="compact"
+      variant="filled"
+      placeholder="Компактное заполненное поле"
+      allowClear
+    />
+    <Input aria-label="Поле без рамки" variant="borderless" placeholder="Без рамки" />
     <label htmlFor="demo-search">Поиск</label>
     <Input id="demo-search" prefix={<Icon name="search" />} suffix="⌘ K" allowClear clearLabel="Очистить поиск" placeholder="Поиск документов" />
     <label htmlFor="demo-name">Название</label>

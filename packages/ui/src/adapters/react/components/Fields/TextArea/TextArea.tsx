@@ -3,10 +3,26 @@ import type { ComponentPropsWithRef, CSSProperties } from 'react';
 import { TextAreaAdapter } from '@dreadnought/react/unstyled';
 import { Icon } from '../../DataDisplay/Icon/Icon.tsx';
 
-export type TextAreaProps = ComponentPropsWithRef<typeof TextAreaAdapter>;
+export type TextAreaProps = ComponentPropsWithRef<typeof TextAreaAdapter> & {
+  controlSize?: 'default' | 'compact';
+  variant?: 'outlined' | 'filled' | 'borderless';
+};
 
-export function TextArea({ className, style, ...props }: TextAreaProps) {
-  const classes = [textAreaPresentation.root, className].filter(Boolean).join(' ');
+export function TextArea({
+  className,
+  style,
+  controlSize = 'default',
+  variant = 'outlined',
+  ...props
+}: TextAreaProps) {
+  const classes = [
+    textAreaPresentation.root,
+    textAreaPresentation.sizes[controlSize],
+    textAreaPresentation.variants[variant],
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
   const bounds = {
     ...style,
     '--dreadnought-text-area-min-rows':

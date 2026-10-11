@@ -4,10 +4,25 @@ import { InputAdapter } from '@dreadnought/react/unstyled';
 import { Icon } from '../../DataDisplay/Icon/Icon.tsx';
 import { Button } from '../../Controls/Button/Button.tsx';
 
-export type InputProps = ComponentPropsWithRef<typeof InputAdapter>;
+export type InputProps = ComponentPropsWithRef<typeof InputAdapter> & {
+  controlSize?: 'default' | 'compact';
+  variant?: 'outlined' | 'filled' | 'borderless';
+};
 
-export function Input({ className, ...props }: InputProps) {
-  const classes = [inputPresentation.root, className].filter(Boolean).join(' ');
+export function Input({
+  className,
+  controlSize = 'default',
+  variant = 'outlined',
+  ...props
+}: InputProps) {
+  const classes = [
+    inputPresentation.root,
+    inputPresentation.sizes[controlSize],
+    inputPresentation.variants[variant],
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
   return (
     <InputAdapter
       {...props}

@@ -12,6 +12,8 @@ const meta = {
   component: Select,
   args: { options, 'aria-label': 'Исполнитель', placeholder: 'Выберите исполнителя' },
   argTypes: {
+    controlSize: { control: 'select', options: ['default', 'compact'] },
+    variant: { control: 'select', options: ['outlined', 'filled', 'borderless'] },
     disabled: { control: 'boolean' },
     invalid: { control: 'boolean' },
     showSearch: { control: 'boolean' },
@@ -28,6 +30,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
+export const Compact: Story = { args: { controlSize: 'compact' } };
+export const Filled: Story = { args: { variant: 'filled' } };
+export const Borderless: Story = { args: { variant: 'borderless' } };
 export const Search: Story = { args: { showSearch: true, allowClear: true } };
 export const Placement: Story = {
   args: { placement: 'topRight', defaultOpen: true, autoAdjustOverflow: false },

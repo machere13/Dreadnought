@@ -8,6 +8,17 @@ function TextAreaDemo() {
   return <div className={`${styles.demo} ${styles.fieldDemo}`}>
     <label htmlFor="demo-notes">Заметки</label>
     <TextArea id="demo-notes" name="demo-notes" rows={3} autoSize maxRows={8} allowClear showCount maxLength={200} clearLabel="Очистить заметки" placeholder="Введите текст…" />
+    <TextArea
+      aria-label="Компактные заметки"
+      controlSize="compact"
+      variant="filled"
+      autoSize
+      maxRows={4}
+      allowClear
+      showCount
+      placeholder="Компактное заполненное поле"
+    />
+    <TextArea aria-label="Заметки без рамки" variant="borderless" rows={2} placeholder="Без рамки" />
   </div>;
 }
 

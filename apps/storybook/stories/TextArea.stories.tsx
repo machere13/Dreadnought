@@ -6,6 +6,8 @@ const meta = {
   component: TextArea,
   args: { rows: 4, placeholder: 'Введите текст' },
   argTypes: {
+    controlSize: { control: 'select', options: ['default', 'compact'] },
+    variant: { control: 'select', options: ['outlined', 'filled', 'borderless'] },
     rows: { control: { type: 'number', min: 1, step: 1 } },
     minRows: { control: { type: 'number', min: 1, step: 1 } },
     maxRows: { control: { type: 'number', min: 1, step: 1 } },
@@ -23,6 +25,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+export const Compact: Story = { args: { controlSize: 'compact' } };
+export const Filled: Story = { args: { variant: 'filled' } };
+export const Borderless: Story = { args: { variant: 'borderless' } };
 export const AutoSize: Story = { args: { autoSize: true, rows: 2, maxRows: 6 } };
 export const Disabled: Story = { args: { disabled: true } };
 export const ClearAndCount: Story = {

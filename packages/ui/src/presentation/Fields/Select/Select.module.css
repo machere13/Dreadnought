@@ -15,6 +15,20 @@
     color: var(--dreadnought-select-text);
     cursor: pointer;
   }
+  .root.compact {
+    --dreadnought-select-min-height: var(--dreadnought-size-control-compact-min-height);
+    --dreadnought-select-padding-y: var(--dreadnought-spacing-x1);
+    --dreadnought-select-padding-x: var(--dreadnought-spacing-x2);
+    --dreadnought-select-gap: var(--dreadnought-spacing-x1);
+  }
+  .root.filled {
+    background: var(--dreadnought-color-surface-subtle);
+    border-color: transparent;
+  }
+  .root.borderless {
+    background: transparent;
+    border-color: transparent;
+  }
   .root [data-slot='control'] {
     width: 100%;
     min-width: 0;
@@ -61,6 +75,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .root.compact [data-slot='tag'] {
+    padding-block: 0;
   }
   .root [data-slot='indicator'] {
     display: inline-flex;

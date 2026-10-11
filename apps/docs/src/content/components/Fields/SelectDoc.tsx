@@ -14,6 +14,15 @@ function SelectDemo() {
   const options = [{ value: 'anna', label: 'Анна' }, { value: 'boris', label: 'Борис', disabled: true }, { value: 'vera', label: 'Вера' }];
   return <div className={styles.demo}>
     <div className={styles.demoRow}>
+    <Select
+      aria-label="Компактный выбор"
+      controlSize="compact"
+      variant="filled"
+      options={options}
+      placeholder="Компактное заполненное поле"
+      allowClear
+    />
+    <Select aria-label="Выбор без рамки" variant="borderless" options={options} placeholder="Без рамки" />
     <Select aria-label="Исполнитель" name="owner" options={options} placeholder="Выберите исполнителя" showSearch allowClear value={value} onValueChange={setValue} />
     <Select multiple aria-label="Участники" options={options} showSearch allowClear defaultValue={['anna', 'vera']} placeholder="Выберите участников" />
     <Select multiple aria-label="Ограничение меток" options={options} showSearch maxTagCount={1} defaultValue={['anna', 'vera']} />

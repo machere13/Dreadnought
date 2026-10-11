@@ -13,6 +13,26 @@
     color: var(--dreadnought-input-text);
   }
 
+  .input.compact {
+    --dreadnought-input-min-height: var(--dreadnought-size-control-compact-min-height);
+    --dreadnought-input-padding-y: var(--dreadnought-spacing-x1);
+    --dreadnought-input-padding-x: var(--dreadnought-spacing-x2);
+  }
+
+  .input.filled {
+    --dreadnought-input-bg: var(--dreadnought-color-surface-subtle);
+    border-color: transparent;
+  }
+
+  .input.borderless {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  .input.borderless [data-slot='control']:is(:-webkit-autofill, :autofill) {
+    --dreadnought-input-bg: var(--dreadnought-color-surface-canvas);
+  }
+
   .input [data-slot='control'] {
     flex: 1;
     min-width: 0;
