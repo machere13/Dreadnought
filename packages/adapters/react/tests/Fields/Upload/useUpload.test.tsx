@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+import { StrictMode, useEffect, useRef } from 'react';
 import { act, cleanup, renderHook } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import { useUpload } from '../../../src/logic.ts';
@@ -10,6 +10,41 @@ afterEach(() => {
 });
 
 const file = () => new File(['x'], 'x.txt', { type: 'text/plain' });
+it('leaves mount-effect uploads recoverable after StrictMode replay', async () => {
+  const pending = deferred();
+  let signal!: AbortSignal;
+  const { result } = renderHook(
+    () => {
+      const upload = useUpload({
+        autoUpload: true,
+        upload: (_file, context) => {
+          signal = context.signal;
+          return signal.aborted ? Promise.resolve() : pending.promise;
+        },
+      });
+      const initialized = useRef(false);
+      useEffect(() => {
+        if (initialized.current) return;
+        initialized.current = true;
+        upload.add([file()]);
+      }, []);
+      return upload;
+    },
+    { wrapper: StrictMode },
+  );
+  expect(signal.aborted).toBe(true);
+  expect(result.current.items[0].status).toBe('canceled');
+  let task!: Promise<void>;
+  act(() => {
+    task = result.current.retry(result.current.items[0].id);
+  });
+  expect(signal.aborted).toBe(false);
+  await act(async () => {
+    pending.resolve();
+    await task;
+  });
+  expect(result.current.items[0].status).toBe('success');
+});
 function deferred() {
   let resolve!: () => void;
   let reject!: (error?: unknown) => void;

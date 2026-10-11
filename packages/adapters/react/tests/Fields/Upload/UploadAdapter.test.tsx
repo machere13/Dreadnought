@@ -105,6 +105,68 @@ it('does not steal outside focus after external removal', () => {
   expect(document.activeElement).toBe(outside);
 });
 
+it('does not restore stale row focus after the user blurs onto the page', () => {
+  render(<Example />);
+  act(() => model.add([file()]));
+  const remove = screen.getByRole('button', { name: 'Удалить x.txt' });
+  remove.focus();
+  remove.blur();
+  act(() => model.clear());
+  expect(document.activeElement).toBe(document.body);
+});
+
+it.each(['success', 'error'])('does not move focus on background %s', async (status) => {
+  let finish!: () => void;
+  function Sending() {
+    model = useUpload({
+      upload: () =>
+        new Promise<void>((resolve, reject) => {
+          finish = () => (status === 'success' ? resolve() : reject(new Error('failed')));
+        }),
+    });
+    return <UploadAdapter upload={model} label="Файл" />;
+  }
+  render(<Sending />);
+  act(() => model.add([file()]));
+  let task!: Promise<void>;
+  act(() => {
+    task = model.start(model.items[0].id);
+  });
+  screen.getByRole('button', { name: 'Отменить x.txt' }).focus();
+  await act(async () => {
+    finish();
+    await task;
+  });
+  expect(document.activeElement).toBe(document.body);
+  expect(model.items[0].status).toBe(status);
+});
+
+it('forgets a disappeared action before a later external removal', async () => {
+  let finish!: () => void;
+  function Sending() {
+    model = useUpload({
+      upload: () =>
+        new Promise<void>((resolve) => {
+          finish = resolve;
+        }),
+    });
+    return <UploadAdapter upload={model} label="Файл" />;
+  }
+  render(<Sending />);
+  act(() => model.add([file()]));
+  let task!: Promise<void>;
+  act(() => {
+    task = model.start(model.items[0].id);
+  });
+  screen.getByRole('button', { name: 'Отменить x.txt' }).focus();
+  await act(async () => {
+    finish();
+    await task;
+  });
+  act(() => model.clear());
+  expect(document.activeElement).toBe(document.body);
+});
+
 it('shows safe errors and does not announce each progress update', async () => {
   let report!: (value: number) => void;
   let reject!: (error: unknown) => void;

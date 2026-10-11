@@ -36,12 +36,13 @@ export function UploadAdapter({
   onDragLeave,
   onDragOver,
   onFocusCapture,
+  onBlurCapture,
   ...props
 }: UploadAdapterProps) {
   const root = useRef<HTMLDivElement>(null);
   const depth = useRef(0);
   const [dragging, setDragging] = useState(false);
-  const focused = useRef<{ element: HTMLElement; index: number } | null>(null);
+  const focused = useRef<{ id: string; element: HTMLElement; index: number } | null>(null);
   useImperativeHandle(ref, () => root.current!);
 
   function resetDrag() {
@@ -57,6 +58,7 @@ export function UploadAdapter({
     const previous = focused.current;
     if (!previous || previous.element.isConnected || !root.current) return;
     focused.current = null;
+    if (upload.items.some((item) => item.id === previous.id)) return;
     const document = root.current.ownerDocument;
     if (document.activeElement && document.activeElement !== document.body) return;
     const rows = root.current.querySelectorAll<HTMLElement>('[data-upload-id]');
@@ -95,10 +97,15 @@ export function UploadAdapter({
         const row = (event.target as HTMLElement).closest<HTMLElement>('[data-upload-id]');
         focused.current = row
           ? {
+              id: row.dataset.uploadId!,
               element: event.target as HTMLElement,
               index: upload.items.findIndex((item) => item.id === row.dataset.uploadId),
             }
           : null;
+      }}
+      onBlurCapture={(event) => {
+        onBlurCapture?.(event);
+        if ((event.target as HTMLElement).isConnected) focused.current = null;
       }}
       onDragEnter={(event) => {
         onDragEnter?.(event);

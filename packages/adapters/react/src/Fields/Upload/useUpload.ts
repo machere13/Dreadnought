@@ -55,11 +55,21 @@ export function useUpload(options: UseUploadOptions = {}): UseUploadResult {
   });
   useLayoutEffect(() => {
     mounted.current = true;
+    setView(current.current);
     return () => {
       mounted.current = false;
       cancelPicker();
       const controllers = [...active.current.values()];
       active.current.clear();
+      publish({
+        ...current.current,
+        picking: false,
+        items: current.current.items.map((item) =>
+          item.status === 'uploading'
+            ? { ...item, ...getUploadItemState(item, { type: 'cancel' }) }
+            : item,
+        ),
+      });
       controllers.forEach((controller) => controller.abort());
     };
   }, []);

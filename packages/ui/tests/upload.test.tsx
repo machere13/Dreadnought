@@ -5,6 +5,21 @@ import { Upload } from '../src/adapters/react/components/Fields/Upload/Upload.ts
 
 afterEach(cleanup);
 
+it('keeps a long filename out of the visible start action but preserves its accessible name', () => {
+  const name = `${'a'.repeat(200)}.txt`;
+  function Example() {
+    const upload = useUpload({ upload: async () => {} });
+    return <Upload upload={upload} label="Выбрать" dropzone data-testid="upload" />;
+  }
+  render(<Example />);
+  fireEvent.drop(screen.getByTestId('upload'), {
+    dataTransfer: { types: ['Files'], files: [new File(['x'], name)] },
+  });
+  const start = screen.getByRole('button', { name: `Загрузить ${name}` });
+  expect(start.textContent).toBe('Загрузить');
+  expect(screen.getByText(name)).toBeTruthy();
+});
+
 it('uses library buttons and icons for file actions', () => {
   function Example() {
     const upload = useUpload();

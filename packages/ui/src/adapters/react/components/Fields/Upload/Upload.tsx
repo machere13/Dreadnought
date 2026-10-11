@@ -11,8 +11,8 @@ export type UploadProps = Omit<UploadAdapterProps, 'renderAction' | 'renderProgr
 function UploadAction({ action, label, disabled, onClick }: UploadActionRenderProps) {
   if (action === 'pick' || action === 'start') {
     return (
-      <Button type="button" size="compact" disabled={disabled} onClick={onClick}>
-        {label}
+      <Button type="button" size="compact" aria-label={label} disabled={disabled} onClick={onClick}>
+        {action === 'start' ? 'Загрузить' : label}
       </Button>
     );
   }
