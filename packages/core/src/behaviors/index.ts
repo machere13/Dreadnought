@@ -66,3 +66,13 @@ export { getContentMountState } from './getContentMountState.ts';
 export type { ContentMountPolicy, ContentMountOptions } from './getContentMountState.ts';
 export { getVirtualWindow } from './getVirtualWindow.ts';
 export type { VirtualWindowOptions } from './getVirtualWindow.ts';
+export { getUploadSelection } from './getUploadSelection.ts';
+export { getUploadItemState } from './getUploadItemState.ts';
+export type {
+  UploadFileMetadata,
+  UploadConstraints,
+  UploadStatus,
+  UploadItemState,
+  UploadEvent,
+  UploadRejection,
+} from './upload.types.ts';

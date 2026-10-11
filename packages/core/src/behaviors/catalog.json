@@ -1,5 +1,19 @@
 [
   {
+    "id": "behavior:get-upload-selection", "kind": "behavior", "name": "getUploadSelection", "family": "Behaviors",
+    "description": "Проверяет метаданные файлов, MIME/расширения, размер и количество без DOM и React.",
+    "docsUrl": "/components/upload/#upload-api",
+    "constraints": ["multiple=false по умолчанию, существующий файл не заменяется. maxSize в байтах включительно, maxCount положительный. Неподходящие файлы не занимают места. Проверка метаданных не заменяет серверную проверку содержимого."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getUploadSelection", "examples": [{ "id": "selection", "code": "import { getUploadSelection } from '@dreadnought/core';\nconst selection = getUploadSelection([{ name: 'report.pdf', size: 100, type: 'application/pdf' }], 0, { accept: '.pdf', maxSize: 1024 });" }] }]
+  },
+  {
+    "id": "behavior:get-upload-item-state", "kind": "behavior", "name": "getUploadItemState", "family": "Behaviors",
+    "description": "Чистые переходы ready/uploading/success/error/canceled для собственной загрузки файлов.",
+    "docsUrl": "/components/upload/#upload-api",
+    "constraints": ["Progress от 0 до 100, монотонный; 100 не означает успех до события success. start только ready, retry только error/canceled. Поздние события вне uploading игнорируются. Токены попыток, сеть и AbortSignal принадлежат адаптеру."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getUploadItemState", "examples": [{ "id": "state", "code": "import { getUploadItemState } from '@dreadnought/core';\nconst sending = getUploadItemState({ status: 'ready' }, { type: 'start' });\nconst canceled = getUploadItemState(sending, { type: 'cancel' });" }] }]
+  },
+  {
     "id": "behavior:create-form-state",
     "kind": "behavior",
     "name": "createFormState",
