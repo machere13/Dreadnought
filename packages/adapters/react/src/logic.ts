@@ -3,6 +3,8 @@ export { useToolbarItem } from './Controls/Toolbar/useToolbarItem.ts';
 export type { UseToolbarItemOptions, ToolbarItemProps } from './Controls/Toolbar/useToolbarItem.ts';
 export type { UseButtonOptions } from './Controls/Button/useButton.ts';
 export { useInput } from './Fields/Input/useInput.ts';
+export { useForm } from './Fields/Form/useForm.ts';
+export type { UseFormOptions, UseFormResult } from './Fields/Form/form.types.ts';
 export { useSlider } from './Fields/Slider/useSlider.ts';
 export type {
   SliderOptions,
