@@ -16,6 +16,8 @@ export const Ready = (
   </Switch>
 );
 export const Plain = <SwitchAdapter aria-label="Alerts" checked={false} onChange={() => {}} />;
+export const Saving = <Switch loading aria-label="Alerts" />;
+export const PlainSaving = <SwitchAdapter loading aria-label="Alerts" />;
 // @ts-expect-error a switch has only two states
 export const Mixed = <Switch indeterminate />;
 // @ts-expect-error checked is boolean

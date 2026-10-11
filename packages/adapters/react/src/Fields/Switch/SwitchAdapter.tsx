@@ -6,6 +6,7 @@ export type SwitchAdapterProps = Omit<
   'type' | 'role' | 'aria-checked'
 > & {
   invalid?: boolean;
+  loading?: boolean;
   slotProps?: {
     label?: ComponentPropsWithoutRef<'label'>;
     indicator?: ComponentPropsWithoutRef<'span'>;
@@ -17,6 +18,7 @@ export function SwitchAdapter({
   className,
   style,
   invalid,
+  loading = false,
   slotProps = {},
   ...props
 }: SwitchAdapterProps) {
@@ -29,6 +31,7 @@ export function SwitchAdapter({
       data-ui="switch"
       data-disabled={state.disabled ? '' : undefined}
       data-invalid={state.invalid ? '' : undefined}
+      data-loading={loading ? '' : undefined}
     >
       <input
         {...props}
@@ -36,6 +39,16 @@ export function SwitchAdapter({
         role="switch"
         data-slot="control"
         aria-invalid={state.invalid || props['aria-invalid'] || undefined}
+        aria-busy={loading || props['aria-busy'] || undefined}
+        aria-disabled={loading || props['aria-disabled'] || undefined}
+        onClickCapture={(event) => {
+          if (loading) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+          }
+          props.onClickCapture?.(event);
+        }}
       />
       <span {...slotProps.indicator} data-slot="indicator" aria-hidden="true" />
       {children != null && <span data-slot="label">{children}</span>}

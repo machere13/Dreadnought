@@ -6,6 +6,68 @@ import * as adapters from '../../../src/unstyled.ts';
 
 afterEach(cleanup);
 
+it('blocks activation while loading without losing focus or form values', async () => {
+  let changes = 0;
+  const { rerender } = render(
+    <form>
+      <adapters.SwitchAdapter
+        name="alerts"
+        value="yes"
+        defaultChecked
+        loading
+        onChange={() => changes++}
+      >
+        Alerts
+      </adapters.SwitchAdapter>
+    </form>,
+  );
+  const input = screen.getByRole('switch') as HTMLInputElement;
+  await userEvent.tab();
+  expect(document.activeElement).toBe(input);
+  expect(input.getAttribute('aria-busy')).toBe('true');
+  expect(input.getAttribute('aria-disabled')).toBe('true');
+  await userEvent.click(screen.getByText('Alerts'));
+  expect(input.checked).toBe(true);
+  await userEvent.keyboard(' ');
+  expect(changes).toBe(0);
+  expect(input.checked).toBe(true);
+  expect(new FormData(input.form!).get('alerts')).toBe('yes');
+  rerender(
+    <form>
+      <adapters.SwitchAdapter name="alerts" value="yes" defaultChecked onChange={() => changes++}>
+        Alerts
+      </adapters.SwitchAdapter>
+    </form>,
+  );
+  expect(screen.getByRole('switch')).toBe(input);
+  expect(input.hasAttribute('aria-busy')).toBe(false);
+  await userEvent.click(input);
+  expect(input.checked).toBe(false);
+  expect(changes).toBe(1);
+});
+
+it('keeps controlled updates caller-owned while loading and after completion', async () => {
+  let changes = 0;
+  const { rerender } = render(
+    <adapters.SwitchAdapter
+      aria-label="Alerts"
+      checked={false}
+      loading
+      onChange={() => changes++}
+    />,
+  );
+  await userEvent.click(screen.getByRole('switch'));
+  expect(changes).toBe(0);
+  rerender(
+    <adapters.SwitchAdapter aria-label="Alerts" checked loading onChange={() => changes++} />,
+  );
+  expect((screen.getByRole('switch') as HTMLInputElement).checked).toBe(true);
+  rerender(<adapters.SwitchAdapter aria-label="Alerts" checked onChange={() => changes++} />);
+  await userEvent.click(screen.getByRole('switch'));
+  expect(changes).toBe(1);
+  expect((screen.getByRole('switch') as HTMLInputElement).checked).toBe(true);
+});
+
 it('exposes a labelled native switch and toggles with Space', async () => {
   const ref = createRef<HTMLInputElement>();
   render(<adapters.SwitchAdapter ref={ref}>Уведомления</adapters.SwitchAdapter>);

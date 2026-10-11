@@ -11,6 +11,7 @@ function SwitchDemo() {
     <Switch checked={checked} onChange={event => setChecked(event.currentTarget.checked)}>Получать уведомления</Switch>
     <Switch defaultChecked>Автосохранение</Switch>
     <Switch disabled>Недоступная настройка</Switch>
+    <Switch loading defaultChecked>Сохранение настройки</Switch>
   </div>;
 }
 

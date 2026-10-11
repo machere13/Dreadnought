@@ -17,6 +17,7 @@
     cursor: inherit;
   }
   .root [data-slot='indicator'] {
+    position: relative;
     display: flex;
     align-items: center;
     flex: none;
@@ -44,6 +45,23 @@
   }
   .root:has(input:checked) [data-slot='indicator']::before {
     background: var(--dreadnought-switch-checked-thumb-bg);
+  }
+  .root[data-loading] {
+    cursor: wait;
+  }
+  .root[data-loading] [data-slot='indicator']::before {
+    visibility: hidden;
+  }
+  .root [data-slot='indicator'] > [data-ui='loader'] {
+    position: absolute;
+    inset-inline-start: var(--dreadnought-switch-padding);
+    --dreadnought-loader-small-size: var(--dreadnought-switch-thumb-size);
+    --dreadnought-loader-fg: var(--dreadnought-switch-thumb-bg);
+  }
+  .root:has(input:checked) [data-slot='indicator'] > [data-ui='loader'] {
+    inset-inline-start: auto;
+    inset-inline-end: var(--dreadnought-switch-padding);
+    --dreadnought-loader-fg: var(--dreadnought-switch-checked-thumb-bg);
   }
   .root:has(input:focus-visible) [data-slot='indicator'] {
     outline: var(--dreadnought-switch-focus-width) solid var(--dreadnought-switch-focus);
