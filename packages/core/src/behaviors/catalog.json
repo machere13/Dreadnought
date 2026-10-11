@@ -1,5 +1,187 @@
 [
   {
+    "id": "behavior:create-form-state",
+    "kind": "behavior",
+    "name": "createFormState",
+    "family": "Behaviors",
+    "description": "Создаёт независимое состояние формы из начальных значений.",
+    "docsUrl": "/components/form/#form-api",
+    "constraints": [
+      "Чистая функция без React/DOM. Собственные строковые ключи initialValues; значения не мутируются. Объекты сравниваются по ссылке; неизвестный ключ вызывает TypeError."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "createFormState",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { createFormState } from '@dreadnought/core';\nconst state = createFormState({ name: '' });"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "behavior:set-form-value",
+    "kind": "behavior",
+    "name": "setFormValue",
+    "family": "Behaviors",
+    "description": "Меняет значение поля, очищает ошибки старого снимка и увеличивает ревизию.",
+    "docsUrl": "/components/form/#form-api",
+    "constraints": [
+      "Чистая функция без React/DOM. Собственные строковые ключи initialValues; значения не мутируются. Объекты сравниваются по ссылке; неизвестный ключ вызывает TypeError."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "setFormValue",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { createFormState, setFormValue } from '@dreadnought/core';\nconst state = setFormValue(createFormState({ name: '' }), 'name', 'Ada');"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "behavior:set-form-touched",
+    "kind": "behavior",
+    "name": "setFormTouched",
+    "family": "Behaviors",
+    "description": "Отмечает одно или все поля посещёнными.",
+    "docsUrl": "/components/form/#form-api",
+    "constraints": [
+      "Чистая функция без React/DOM. Собственные строковые ключи initialValues; значения не мутируются. Объекты сравниваются по ссылке; неизвестный ключ вызывает TypeError."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "setFormTouched",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { createFormState, setFormTouched } from '@dreadnought/core';\nconst state = setFormTouched(createFormState({ name: '' }), 'name');"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "behavior:set-form-error",
+    "kind": "behavior",
+    "name": "setFormError",
+    "family": "Behaviors",
+    "description": "Устанавливает или снимает ошибку поля, инвалидирует старую проверку.",
+    "docsUrl": "/components/form/#form-api",
+    "constraints": [
+      "Чистая функция без React/DOM. Собственные строковые ключи initialValues; значения не мутируются. Объекты сравниваются по ссылке; неизвестный ключ вызывает TypeError."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "setFormError",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { createFormState, setFormError } from '@dreadnought/core';\nconst state = setFormError(createFormState({ name: '' }), 'name', 'Required');"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "behavior:reset-form-state",
+    "kind": "behavior",
+    "name": "resetFormState",
+    "family": "Behaviors",
+    "description": "Сбрасывает форму и при необходимости заменяет начальные значения.",
+    "docsUrl": "/components/form/#form-api",
+    "constraints": [
+      "Чистая функция без React/DOM. Собственные строковые ключи initialValues; значения не мутируются. Объекты сравниваются по ссылке; неизвестный ключ вызывает TypeError."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "resetFormState",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { createFormState, resetFormState } from '@dreadnought/core';\nconst state = resetFormState(createFormState({ name: '' }), { name: 'Ada' });"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "behavior:get-form-state",
+    "kind": "behavior",
+    "name": "getFormState",
+    "family": "Behaviors",
+    "description": "Вычисляет dirty через Object.is относительно начальных значений.",
+    "docsUrl": "/components/form/#form-api",
+    "constraints": [
+      "Чистая функция без React/DOM. Собственные строковые ключи initialValues; значения не мутируются. Объекты сравниваются по ссылке; неизвестный ключ вызывает TypeError."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "getFormState",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { createFormState, getFormState } from '@dreadnought/core';\nconst state = getFormState(createFormState({ name: '' }));"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "behavior:get-form-validation-state",
+    "kind": "behavior",
+    "name": "getFormValidationState",
+    "family": "Behaviors",
+    "description": "Принимает только актуальную ревизию результатов проверки.",
+    "docsUrl": "/components/form/#form-api",
+    "constraints": [
+      "Чистая функция без React/DOM. Собственные строковые ключи initialValues; значения не мутируются. Объекты сравниваются по ссылке; неизвестный ключ вызывает TypeError."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "getFormValidationState",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { createFormState, getFormValidationState } from '@dreadnought/core';\nconst initial = createFormState({ name: '' });\nconst result = getFormValidationState(initial, { revision: 0, errors: {}, failures: {} });"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "behavior:get-text-field-state", "kind": "behavior", "name": "getTextFieldState", "family": "Behaviors",
     "description": "Нормализует disabled, readOnly, required и invalid для собственного текстового поля без DOM и фреймворка.",
     "docsUrl": "/custom-components/#core-parts",
