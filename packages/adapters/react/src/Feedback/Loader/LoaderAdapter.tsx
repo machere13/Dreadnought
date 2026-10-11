@@ -1,4 +1,5 @@
 import type { ComponentPropsWithRef, ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { getLoaderState } from '@dreadnought/core';
 
 export type LoaderSlotClassNames = Partial<
@@ -6,6 +7,7 @@ export type LoaderSlotClassNames = Partial<
 >;
 export type LoaderAdapterProps = ComponentPropsWithRef<'div'> & {
   loading?: boolean;
+  delay?: number;
   label?: string;
   indicator?: ReactNode;
   showLabel?: boolean;
@@ -14,6 +16,7 @@ export type LoaderAdapterProps = ComponentPropsWithRef<'div'> & {
 
 export function LoaderAdapter({
   loading = true,
+  delay = 0,
   label = 'Loading',
   indicator,
   showLabel = false,
@@ -21,6 +24,16 @@ export function LoaderAdapter({
   slotClassNames,
   ...props
 }: LoaderAdapterProps) {
+  const wait = Number.isFinite(delay) ? Math.min(Math.max(0, delay), 2147483647) : 0;
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    setReady(false);
+    if (!loading || wait === 0) {
+      return;
+    }
+    const timer = setTimeout(() => setReady(true), wait);
+    return () => clearTimeout(timer);
+  }, [loading, wait]);
   const state = getLoaderState({ loading });
   const overlay = children != null;
   return (
@@ -36,7 +49,7 @@ export function LoaderAdapter({
           {children}
         </div>
       )}
-      {loading && (
+      {loading && (wait === 0 || ready) && (
         <div
           {...state.indicatorProps}
           data-slot="indicator"

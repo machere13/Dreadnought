@@ -8,6 +8,7 @@
       "importPath": "@dreadnought/react/unstyled",
       "exportName": "LoaderAdapter",
       "propertyDescriptions": {
+        "delay": "Задержка индикатора в миллисекундах. Контент блокируется сразу; быстрый запрос не показывает индикатор. Изменение delay перезапускает ожидание; 0 показывает сразу.",
         "loading": "Показывает загрузку и блокирует вложенное содержимое.",
         "label": "Доступное имя индикатора.",
         "showLabel": "Отображает подпись.",
@@ -16,11 +17,16 @@
         "slotClassNames": "Классы частей компонента."
       },
       "defaults": {
+        "delay": 0,
         "loading": true,
         "label": "Loading",
         "showLabel": false
       },
       "examples": [
+        {
+          "id": "delayed",
+          "code": "import { LoaderAdapter } from '@dreadnought/react/unstyled';\nconst example = <LoaderAdapter loading delay={200} label='Загрузка' indicator={<span>…</span>}><button>Сохранить</button></LoaderAdapter>;"
+        },
         {
           "id": "basic",
           "code": "import { LoaderAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <LoaderAdapter label=\"Загрузка\" indicator={<span>…</span>} />; }"

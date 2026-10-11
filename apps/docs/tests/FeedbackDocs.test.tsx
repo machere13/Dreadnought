@@ -1,8 +1,11 @@
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
-import { afterEach, expect, it } from 'vitest';
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import { afterEach, expect, it, vi } from 'vitest';
 import { DocsPage } from './helpers/DocsPage.tsx';
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 it('documents Progress with a real editable value and a Feedback link', () => {
   render(<DocsPage section="progress" />);
   expect(document.getElementById('progress-api')).toBeTruthy();
@@ -22,10 +25,18 @@ it('shows a real toast from the documentation demo', () => {
   expect(viewport.queryByRole('status')).toBeNull();
 });
 it('toggles the loader over actual documentation content', () => {
+  vi.useFakeTimers();
   render(<DocsPage section="loader" />);
   expect(document.getElementById('loader-api')).toBeTruthy();
   fireEvent.click(screen.getByRole('button', { name: 'Начать загрузку' }));
+  const content = screen.getByText('Открыть проект').closest('[data-slot="content"]');
+  expect(content?.hasAttribute('inert')).toBe(true);
+  expect(screen.queryByRole('status', { name: 'Загрузка данных' })).toBeNull();
+  act(() => vi.advanceTimersByTime(199));
+  expect(screen.queryByRole('status', { name: 'Загрузка данных' })).toBeNull();
+  act(() => vi.advanceTimersByTime(1));
   expect(screen.getByRole('status', { name: 'Загрузка данных' })).toBeTruthy();
   fireEvent.click(screen.getByRole('button', { name: 'Завершить загрузку' }));
   expect(screen.queryByRole('status', { name: 'Загрузка данных' })).toBeNull();
+  expect(content?.hasAttribute('inert')).toBe(false);
 });

@@ -4,6 +4,8 @@
     "noEmit": true
   },
   "include": [
+    "packages/ui/tests/loader.types.tsx",
+    "packages/ui/tests/fieldAppearance.types.tsx",
     "packages/ui/tests/adapters/react/components/Surfaces/Card/Card.types.tsx",
     "packages/ui/tests/table.types.tsx",
     "packages/ui/tests/menu.types.tsx",

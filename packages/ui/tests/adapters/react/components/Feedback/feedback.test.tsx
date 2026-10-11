@@ -1,8 +1,19 @@
-import { cleanup, render, screen } from '@testing-library/react';
-import { afterEach, expect, it } from 'vitest';
+import { act, cleanup, render, screen } from '@testing-library/react';
+import { afterEach, expect, it, vi } from 'vitest';
 import * as ui from '@dreadnought/ui/react';
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
+it('forwards delay without leaking it to the DOM and preserves the custom indicator', () => {
+  vi.useFakeTimers();
+  render(<ui.Loader delay={200} indicator={<span>Custom</span>} />);
+  expect(document.querySelector('[data-ui="loader"]')?.hasAttribute('delay')).toBe(false);
+  expect(screen.queryByRole('status')).toBeNull();
+  act(() => vi.advanceTimersByTime(200));
+  expect(screen.getByRole('status').textContent).toBe('Custom');
+});
 it('renders a themed toast with a status icon inside a positioned viewport', () => {
   expect(ui).toHaveProperty('Toast');
   expect(ui).toHaveProperty('ToastViewport');
