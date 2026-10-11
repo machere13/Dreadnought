@@ -2,6 +2,10 @@ import type { ComponentPropsWithRef, ReactNode } from 'react';
 import type { TableSortOrder } from '@dreadnought/core';
 import type { TooltipAdapterProps } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
 import type { LoaderAdapterProps } from '../../Feedback/Loader/LoaderAdapter.tsx';
+import type {
+  PaginationAdapterProps,
+  PaginationDisplayOptions,
+} from '../../Navigation/Pagination/PaginationAdapter.tsx';
 
 export type TableRowKey = string | number;
 export type TableFilterValue = string | number;
@@ -56,7 +60,7 @@ export type TableColumn<RecordType extends object> = {
   filterMultiple?: boolean;
 };
 
-export type TablePagination = {
+export type TablePagination = PaginationDisplayOptions & {
   total?: number;
   current?: number;
   defaultCurrent?: number;
@@ -115,6 +119,7 @@ export type TableDataAdapterProps<RecordType extends object> = Omit<
     tooltip?: Omit<TooltipAdapterProps, 'children' | 'content'>;
     loader?: Omit<LoaderAdapterProps, 'children' | 'loading'>;
     filter?: TableFilterSlots;
+    renderPagination?: (props: PaginationAdapterProps) => ReactNode;
   };
   onChange?: (
     pagination: { current: number; pageSize: number },

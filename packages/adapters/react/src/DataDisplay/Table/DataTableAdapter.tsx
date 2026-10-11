@@ -1,6 +1,7 @@
 import { useId, useImperativeHandle, useMemo } from 'react';
 import type { CSSProperties } from 'react';
 import { PaginationAdapter } from '../../Navigation/Pagination/PaginationAdapter.tsx';
+import type { PaginationAdapterProps } from '../../Navigation/Pagination/PaginationAdapter.tsx';
 import { LoaderAdapter } from '../../Feedback/Loader/LoaderAdapter.tsx';
 import { TableHead } from './TableHead.tsx';
 import { TableBody } from './TableBody.tsx';
@@ -63,6 +64,25 @@ export function DataTableAdapter<RecordType extends object>({
     ...(scroll?.x ? { minWidth: scroll.x } : {}),
   } as CSSProperties;
   const footer = summary?.(state.rows);
+  const paginationProps: PaginationAdapterProps & { 'data-slot': string } = {
+    simple: true,
+    showSizeChanger: pagination ? pagination.showSizeChanger : undefined,
+    pageSizeOptions: pagination ? pagination.pageSizeOptions : undefined,
+    showQuickJumper: pagination ? pagination.showQuickJumper : undefined,
+    showTotal: pagination ? pagination.showTotal : undefined,
+    total: state.total,
+    current: state.currentPage,
+    pageSize: state.pageSize,
+    onChange: state.changePage,
+    'aria-label': 'Страницы таблицы',
+    'data-slot': 'pagination',
+  };
+  const showPagination =
+    pagination !== false &&
+    (state.pageCount > 1 ||
+      pagination?.showSizeChanger ||
+      pagination?.showQuickJumper ||
+      pagination?.showTotal);
 
   const table = (
     <table
@@ -124,17 +144,12 @@ export function DataTableAdapter<RecordType extends object>({
           data-slot="loading"
         />
       )}
-      {pagination !== false && state.pageCount > 1 && (
-        <PaginationAdapter
-          simple
-          total={state.total}
-          current={state.currentPage}
-          pageSize={state.pageSize}
-          onChange={state.changePage}
-          aria-label="Страницы таблицы"
-          data-slot="pagination"
-        />
-      )}
+      {showPagination &&
+        (slotProps?.renderPagination ? (
+          slotProps.renderPagination(paginationProps)
+        ) : (
+          <PaginationAdapter {...paginationProps} />
+        ))}
     </div>
   );
 }

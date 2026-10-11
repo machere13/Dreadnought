@@ -1,9 +1,30 @@
 import { createRef, type CSSProperties } from 'react';
-import { cleanup, render, screen } from '@testing-library/react';
-import { afterEach, expect, it } from 'vitest';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, expect, it, vi } from 'vitest';
 import * as ui from '../../../../../../src/adapters/react/index.ts';
 
 afterEach(cleanup);
+
+it('uses themed Select and Input in standalone and Table pagination', () => {
+  const changed = vi.fn();
+  const view = render(
+    <ui.Pagination total={100} showSizeChanger showQuickJumper onChange={changed} />,
+  );
+  expect(screen.getByRole('combobox').closest('[data-ui="select"]')!.className).not.toBe('');
+  expect(screen.getByRole('textbox').closest('[data-ui="input"]')!.className).not.toBe('');
+  fireEvent.click(screen.getByRole('combobox'));
+  fireEvent.click(screen.getByRole('option', { name: '20 / стр.' }));
+  expect(changed).toHaveBeenCalledExactlyOnceWith(1, 20);
+  view.rerender(
+    <ui.Table
+      columns={[{ key: 'name', title: 'Name', dataIndex: 'name' }]}
+      dataSource={[{ key: 1, name: 'Anna' }]}
+      pagination={{ showSizeChanger: true, showQuickJumper: true }}
+    />,
+  );
+  expect(screen.getByRole('combobox').closest('[data-ui="select"]')!.className).not.toBe('');
+  expect(screen.getByRole('textbox').closest('[data-ui="input"]')!.className).not.toBe('');
+});
 
 it('merges themed slots, native nav properties and local tokens', () => {
   const ref = createRef<HTMLElement>();

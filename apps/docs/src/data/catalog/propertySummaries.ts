@@ -54,7 +54,7 @@ export const propertySummaries: Record<string, Record<string, string>> = {
     pagination: 'Пагинация; false отключает её.',
     processing: 'Локальная обработка данных или показ готовой серверной страницы.',
     rowSelection: 'Выбор строк по устойчивым ключам.',
-    slotProps: 'Настройки Tooltip, Loader и элементов фильтра.',
+    slotProps: 'Настройки Tooltip, Loader, фильтров и отрисовки пагинации.',
     summary: 'Итоги по строкам текущей страницы.',
     locale: 'Текст пустого состояния.',
     rowHoverable: 'Подсвечивать строку при наведении.',

@@ -20,6 +20,7 @@ import { loaderPresentation } from '#presentation/Feedback/Loader/loaderPresenta
 import { Icon } from '../Icon/index.ts';
 import { Input } from '../../Fields/Input/index.ts';
 import { Button } from '../../Controls/Button/index.ts';
+import { Pagination } from '../../Navigation/Pagination/index.ts';
 
 function classes(library: string, consumer?: string) {
   return [library, consumer].filter(Boolean).join(' ');
@@ -97,6 +98,8 @@ function TableRoot<RecordType extends object>({
           filter: filterSlots,
           tooltip: tooltipSlots,
           loader: loaderSlots,
+          renderPagination:
+            props.slotProps?.renderPagination ?? ((pageProps) => <Pagination {...pageProps} />),
         }}
         expandable={expandable}
       />

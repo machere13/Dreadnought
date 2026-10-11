@@ -94,6 +94,8 @@ export * from './Feedback/Progress/index.ts';
 export { PaginationAdapter } from './Navigation/Pagination/index.ts';
 export type {
   PaginationAdapterProps,
+  PaginationControlSlots,
+  PaginationDisplayOptions,
   PaginationSlotClassNames,
 } from './Navigation/Pagination/index.ts';
 export * from './DataDisplay/MarkdownPreview/index.ts';

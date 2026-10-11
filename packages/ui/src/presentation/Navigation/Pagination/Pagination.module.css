@@ -38,6 +38,12 @@
   .summary {
     font-variant-numeric: tabular-nums;
   }
+  .root > [data-slot='size-changer'] {
+    width: var(--dreadnought-pagination-size-changer-width);
+  }
+  .root > [data-slot='quick-jumper'] {
+    width: var(--dreadnought-pagination-quick-jumper-width);
+  }
   .ellipsis {
     padding-inline: var(--dreadnought-pagination-padding);
   }

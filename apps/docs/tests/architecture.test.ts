@@ -6,15 +6,20 @@ import ts from 'typescript';
 import { expect, it } from 'vitest';
 
 const root = fileURLToPath(new URL('../src/', import.meta.url));
+const sources = new Map<string, ts.SourceFile>();
 
 function dependencies(entry: string, visited = new Set<string>()) {
   const file = path.resolve(root, entry);
   if (visited.has(file)) return visited;
   visited.add(file);
   if (!/\.(tsx?|astro)$/.test(file)) return visited;
-  const text = readFileSync(file, 'utf8');
-  const source = file.endsWith('.astro') ? text.split('---')[1] : text;
-  const ast = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  let ast = sources.get(file);
+  if (!ast) {
+    const text = readFileSync(file, 'utf8');
+    const source = file.endsWith('.astro') ? text.split('---')[1] : text;
+    ast = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+    sources.set(file, ast);
+  }
   for (const node of ast.statements) {
     if (!ts.isImportDeclaration(node) && !ts.isExportDeclaration(node)) continue;
     if (ts.isImportDeclaration(node) && node.importClause?.isTypeOnly) continue;

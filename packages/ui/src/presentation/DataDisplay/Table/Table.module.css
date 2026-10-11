@@ -217,7 +217,7 @@
   }
   [data-slot='table-container']:has(> .root, > [data-slot='scroll-container'] > .root)
     > [data-slot='pagination']
-    button {
+    > button {
     border: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border);
     border-radius: var(--dreadnought-table-header-radius);
     padding: var(--dreadnought-table-cell-padding-block-small)
@@ -228,7 +228,7 @@
   }
   [data-slot='table-container']:has(> .root, > [data-slot='scroll-container'] > .root)
     > [data-slot='pagination']
-    button:disabled {
+    > button:disabled {
     opacity: var(--dreadnought-opacity-disabled);
     cursor: not-allowed;
   }

@@ -117,12 +117,12 @@ export function useDataTableState<RecordType extends object>({
 
   function publishChange(
     action: 'sort' | 'filter' | 'paginate',
-    requestedPage: number,
+    requestedPagination: { current: number; pageSize: number },
     requestedFilters: TableChangeFilters,
     requestedSorter: TableChangeSorter,
     requestedSorters = resolveSorters(columns, sortersRef.current),
   ) {
-    onChange?.({ current: requestedPage, pageSize }, requestedFilters, requestedSorter, {
+    onChange?.(requestedPagination, requestedFilters, requestedSorter, {
       action,
       sorters: requestedSorters,
       currentDataSource: manual
@@ -144,23 +144,24 @@ export function useDataTableState<RecordType extends object>({
     }
     publishChange(
       'sort',
-      currentPage,
+      { current: currentPage, pageSize },
       resolveFilters(columns, filtersRef.current),
       requestedSorter,
       resolveSorters(columns, requestedSorters, requestedSorter),
     );
   }
-  function changePage(requestedPage: number) {
+  function changePage(requestedPage: number, requestedPageSize = pageSize) {
     if (pagination === false) {
       return;
     }
-    if (pagination?.current === undefined) {
-      setLocalPage({ current: requestedPage, pageSize });
-    }
-    pagination?.onChange?.(requestedPage, pageSize);
+    setLocalPage((previous) => ({
+      current: pagination?.current === undefined ? requestedPage : previous.current,
+      pageSize: pagination?.pageSize === undefined ? requestedPageSize : previous.pageSize,
+    }));
+    pagination?.onChange?.(requestedPage, requestedPageSize);
     publishChange(
       'paginate',
-      requestedPage,
+      { current: requestedPage, pageSize: requestedPageSize },
       resolveFilters(columns, filtersRef.current),
       getChangeSorter(),
     );
@@ -178,7 +179,7 @@ export function useDataTableState<RecordType extends object>({
     }
     publishChange(
       'filter',
-      1,
+      { current: 1, pageSize },
       resolveFilters(columns, filtersRef.current, { columnKey: column.key, values }),
       getChangeSorter(),
     );

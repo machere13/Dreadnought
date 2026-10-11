@@ -11,7 +11,13 @@
         "total": "Число записей.",
         "current": "Управляемая страница; отображается до принятия следующего запроса владельцем.",
         "defaultCurrent": "Начальная неуправляемая страница.",
-        "pageSize": "Число записей на странице.",
+        "pageSize": "Управляемое число записей на странице.",
+        "defaultPageSize": "Начальный неуправляемый размер страницы; 10.",
+        "showSizeChanger": "Выбор размера через Select; смена размера запрашивает страницу 1 одним onChange.",
+        "pageSizeOptions": "Положительные безопасные целые; по умолчанию [10,20,50,100]. Текущий размер всегда доступен.",
+        "showQuickJumper": "Input для номера страницы: Enter применяет, неверный ввод игнорируется, превышение ограничивается последней страницей.",
+        "showTotal": "true показывает диапазон; функция(total, [start,end]) возвращает собственную подпись. Пустой диапазон [0,0].",
+        "slotProps": "renderSizeChanger(props) / renderQuickJumper(props) заменяют оформленные Select/Input; сохраняйте переданные значения и обработчики.",
         "onChange": "Запрос изменения: (page, pageSize).",
         "simple": "Стрелки и подпись текущая / всего вместо номеров.",
         "disabled": "Блокирует переходы.",
@@ -19,11 +25,18 @@
       },
       "defaults": {
         "defaultCurrent": 1,
-        "pageSize": 10,
+        "defaultPageSize": 10,
+        "showSizeChanger": false,
+        "showQuickJumper": false,
+        "showTotal": false,
         "disabled": false,
         "simple": false
       },
       "examples": [
+        {
+          "id": "options",
+          "code": "import { Pagination } from '@dreadnought/ui/react';\nconst example = <Pagination total={240} defaultPageSize={20} showSizeChanger pageSizeOptions={[10,20,50]} showQuickJumper showTotal />;"
+        },
         {
           "id": "basic",
           "code": "import { Pagination } from '@dreadnought/ui/react';\nexport function Example() { return <Pagination total={200} defaultCurrent={10} />; }"
