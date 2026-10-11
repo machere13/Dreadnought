@@ -277,6 +277,7 @@ describe('default theme', () => {
       "@import './components/Controls/Toolbar/index.css';",
       "@import './components/Fields/Input/index.css';",
       "@import './components/Fields/Form/index.css';",
+      "@import './components/Fields/Upload/index.css';",
       "@import './components/Fields/Slider/index.css';",
       "@import './components/Fields/TextArea/index.css';",
       "@import './components/Fields/MarkdownEditor/index.css';",

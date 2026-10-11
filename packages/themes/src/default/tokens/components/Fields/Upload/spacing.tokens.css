@@ -1,0 +1,6 @@
+:root {
+  --dreadnought-upload-gap: var(--dreadnought-spacing-x3);
+  --dreadnought-upload-detail-gap: var(--dreadnought-spacing-x1);
+  --dreadnought-upload-padding: var(--dreadnought-spacing-x4);
+  --dreadnought-upload-radius: var(--dreadnought-border-radius-x1);
+}

@@ -13,6 +13,11 @@
     "multiple=false не заменяет существующий файл. Все сохранённые статусы занимают место до remove/clear. clear отменяет и системный picker."
   ],
   "bindings": [{
+    "id": "react-adapter", "layer": 2, "framework": "react",
+    "importPath": "@dreadnought/react/unstyled", "exportName": "UploadAdapter",
+    "propertyDescriptions": { "upload": "Модель useUpload.", "label": "Доступное название выбора файлов.", "dropzone": "Перетаскивание в дополнение к клавиатурной кнопке.", "renderAction": "Одна native button с предоставленными onClick/disabled/label.", "renderProgress": "Представление прогресса записи." },
+    "examples": [{ "id": "selection", "code": "import { useUpload } from '@dreadnought/react/logic';\nimport { UploadAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  const upload = useUpload({ multiple: true });\n  return <UploadAdapter upload={upload} label=\"Прикрепить файлы\" dropzone />;\n}" }]
+  }, {
     "id": "react-logic", "layer": 2, "framework": "react",
     "importPath": "@dreadnought/react/logic", "exportName": "useUpload",
     "defaults": { "multiple": false, "autoUpload": false, "disabled": false },

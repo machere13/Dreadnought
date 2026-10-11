@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-upload-background: var(--dreadnought-color-surface-panel);
+  --dreadnought-upload-hover-background: var(--dreadnought-color-surface-default);
+  --dreadnought-upload-border: var(--dreadnought-color-border-subtle);
+  --dreadnought-upload-active-border: var(--dreadnought-color-focus-ring);
+  --dreadnought-upload-muted-color: var(--dreadnought-color-text-placeholder);
+  --dreadnought-upload-error-color: var(--dreadnought-color-status-error);
+}

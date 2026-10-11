@@ -1,0 +1,81 @@
+@layer dreadnought {
+  .upload {
+    display: grid;
+    gap: var(--dreadnought-upload-gap);
+    min-width: 0;
+  }
+
+  .upload [data-slot='dropzone'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--dreadnought-upload-gap);
+  }
+
+  .upload[data-dropzone] [data-slot='dropzone'] {
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--dreadnought-upload-padding);
+    border: 1px dashed var(--dreadnought-upload-border);
+    border-radius: var(--dreadnought-upload-radius);
+    background: var(--dreadnought-upload-background);
+    text-align: center;
+  }
+
+  .upload[data-dragging] [data-slot='dropzone'] {
+    border-color: var(--dreadnought-upload-active-border);
+    background: var(--dreadnought-upload-hover-background);
+  }
+
+  .upload[data-disabled] [data-slot='dropzone'] {
+    opacity: 0.6;
+  }
+
+  .upload [data-slot='list'] {
+    display: grid;
+    gap: var(--dreadnought-upload-gap);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .upload [data-slot='item'] {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--dreadnought-upload-gap);
+    padding: var(--dreadnought-upload-gap);
+    border: 1px solid var(--dreadnought-upload-border);
+    border-radius: var(--dreadnought-upload-radius);
+  }
+
+  .upload [data-slot='file'] {
+    display: grid;
+    gap: var(--dreadnought-upload-detail-gap);
+    flex: 1 1 12rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .upload [data-slot='status'] {
+    color: var(--dreadnought-upload-muted-color);
+  }
+  .upload [data-state='error'] [data-slot='status'],
+  .upload [data-slot='rejections'] {
+    color: var(--dreadnought-upload-error-color);
+  }
+
+  .upload [data-slot='actions'] {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--dreadnought-upload-detail-gap);
+  }
+
+  .upload [data-slot='rejections'] {
+    overflow-wrap: anywhere;
+  }
+  .upload [data-slot='rejections'] p {
+    margin: 0;
+  }
+}

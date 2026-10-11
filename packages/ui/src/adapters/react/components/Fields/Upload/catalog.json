@@ -1,0 +1,9 @@
+{
+  "componentId": "component:upload",
+  "bindings": [{
+    "id": "react-ui", "layer": 3, "framework": "react", "importPath": "@dreadnought/ui/react", "exportName": "Upload",
+    "propertyDescriptions": { "upload": "Модель useUpload.", "label": "Текст кнопки выбора файлов.", "dropzone": "Область перетаскивания в дополнение к кнопке выбора." },
+    "examples": [{ "id": "selection", "code": "import { useUpload } from '@dreadnought/react/logic';\nimport { Upload } from '@dreadnought/ui/react';\nexport function Example() {\n  const upload = useUpload({ accept: '.pdf', multiple: true, maxCount: 3 });\n  return <Upload upload={upload} label=\"Выбрать документы\" dropzone />;\n}" }]
+  }],
+  "parts": ["dropzone", "list", "item", "name", "status", "actions", "rejections"]
+}
