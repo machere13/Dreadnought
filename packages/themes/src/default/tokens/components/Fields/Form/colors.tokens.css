@@ -1,0 +1,4 @@
+:root {
+  --dreadnought-form-help-color: var(--dreadnought-color-text-placeholder);
+  --dreadnought-form-error-color: var(--dreadnought-color-status-error);
+}

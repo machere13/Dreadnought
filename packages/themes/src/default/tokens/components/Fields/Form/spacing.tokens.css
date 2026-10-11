@@ -1,0 +1,4 @@
+:root {
+  --dreadnought-form-gap: var(--dreadnought-spacing-x4);
+  --dreadnought-form-field-gap: var(--dreadnought-spacing-x2);
+}

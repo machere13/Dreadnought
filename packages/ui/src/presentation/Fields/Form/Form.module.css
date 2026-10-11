@@ -1,0 +1,26 @@
+@layer dreadnought {
+  .form {
+    display: grid;
+    gap: var(--dreadnought-form-gap);
+    min-width: 0;
+  }
+
+  .field {
+    display: grid;
+    gap: var(--dreadnought-form-field-gap);
+    min-width: 0;
+  }
+
+  .field > [data-slot='label'] {
+    font-weight: 500;
+  }
+
+  .field > [data-slot='help'] {
+    color: var(--dreadnought-form-help-color);
+  }
+
+  .field > [data-slot='error'],
+  .field [data-slot='required'] {
+    color: var(--dreadnought-form-error-color);
+  }
+}
