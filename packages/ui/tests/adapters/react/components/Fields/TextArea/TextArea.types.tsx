@@ -3,6 +3,13 @@ import { TextArea } from '@dreadnought/ui/react';
 
 <TextArea ref={createRef<HTMLTextAreaElement>()} rows={4} />;
 <TextArea rows={4} minRows={2} maxRows={8} autoSize />;
+<TextArea
+  allowClear
+  showCount
+  maxLength={200}
+  clearLabel="Clear notes"
+  clearContent={<span>×</span>}
+/>;
 
 // @ts-expect-error Only textarea refs are accepted.
 <TextArea ref={createRef<HTMLInputElement>()} />;

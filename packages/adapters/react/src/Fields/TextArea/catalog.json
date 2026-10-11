@@ -1,5 +1,14 @@
 {
   "componentId": "component:textarea",
+  "parts": [
+    { "name": "clear", "description": "Кнопка очистки непустого редактируемого поля." },
+    { "name": "count", "description": "Длина текста, согласованная с нативным maxLength." }
+  ],
+  "constraints": [
+    "className, style и ref относятся к нативному textarea, а не обёртке.",
+    "allowClear вызывает input/onChange с пустой строкой и возвращает фокус полю. Управляемый владелец может отклонить изменение. disabled и readOnly запрещают очистку.",
+    "showCount считает UTF-16 единицы, как нативный maxLength, учитывает ввод и reset; не обрезает переданный value."
+  ],
   "bindings": [
     {
       "id": "react-logic",
@@ -7,7 +16,7 @@
       "framework": "react",
       "importPath": "@dreadnought/react/logic",
       "exportName": "useTextArea",
-      "description": "Управляет состоянием; при своей разметке семантику и клавиатурное поведение нужно реализовать отдельно.",
+      "description": "Возвращает textAreaProps, textAreaRef, state, count и clearButtonProps. При своей разметке кнопку очистки и счётчик разместите самостоятельно.",
       "examples": [
         {
           "id": "custom",

@@ -1,6 +1,7 @@
 import { textAreaPresentation } from '#presentation/Fields/TextArea/textAreaPresentation.ts';
 import type { ComponentPropsWithRef, CSSProperties } from 'react';
 import { TextAreaAdapter } from '@dreadnought/react/unstyled';
+import { Icon } from '../../DataDisplay/Icon/Icon.tsx';
 
 export type TextAreaProps = ComponentPropsWithRef<typeof TextAreaAdapter>;
 
@@ -14,5 +15,12 @@ export function TextArea({ className, style, ...props }: TextAreaProps) {
         : undefined,
     '--dreadnought-text-area-max-rows': props.autoSize ? undefined : props.maxRows,
   } as CSSProperties;
-  return <TextAreaAdapter {...props} style={bounds} className={classes} />;
+  return (
+    <TextAreaAdapter
+      {...props}
+      clearContent={props.clearContent ?? <Icon name="close-circle" />}
+      style={bounds}
+      className={classes}
+    />
+  );
 }

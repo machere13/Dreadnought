@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import postcss from 'postcss';
@@ -6,6 +6,27 @@ import { afterEach, expect, it } from 'vitest';
 import { TextArea } from '@dreadnought/ui/react';
 
 afterEach(cleanup);
+
+it('renders an icon-only clear button and updates the count', () => {
+  render(
+    <TextArea
+      aria-label="Notes"
+      defaultValue="Note"
+      allowClear
+      showCount
+      maxLength={20}
+      clearLabel="Clear notes"
+    />,
+  );
+  const button = screen.getByRole('button', { name: 'Clear notes' });
+  expect(button.textContent).toBe('');
+  expect(button.querySelector('svg')).not.toBeNull();
+  expect(screen.getByText('4 / 20')).toBeTruthy();
+  fireEvent.click(button);
+  expect((screen.getByRole('textbox') as HTMLTextAreaElement).value).toBe('');
+  expect(screen.getByText('0 / 20')).toBeTruthy();
+  expect(screen.queryByRole('button')).toBeNull();
+});
 
 it('focuses with one border and keeps the error border while focused', () => {
   const css = postcss.parse(

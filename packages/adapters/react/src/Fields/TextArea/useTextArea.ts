@@ -3,8 +3,11 @@ import type { TextAreaCore } from '@dreadnought/core';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import type { InputEvent, RefCallback, TextareaHTMLAttributes } from 'react';
 import { resizeTextArea } from './resizeTextArea.ts';
+import { useTextFieldExtras } from '../../shared/useTextFieldExtras.ts';
+import type { FieldExtrasOptions } from '../../shared/useTextFieldExtras.ts';
 
-export interface UseTextAreaOptions extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+export interface UseTextAreaOptions
+  extends TextareaHTMLAttributes<HTMLTextAreaElement>, FieldExtrasOptions {
   invalid?: boolean;
   minRows?: number;
   maxRows?: number;
@@ -22,11 +25,16 @@ export function useTextArea({
   autoSize,
   onInput,
   style,
+  allowClear = false,
+  showCount = false,
+  clearLabel = 'Clear input',
   ...rest
 }: UseTextAreaOptions = {}): {
   textAreaProps: TextareaHTMLAttributes<HTMLTextAreaElement>;
   textAreaRef: RefCallback<HTMLTextAreaElement>;
   state: TextAreaCore;
+  clearButtonProps: ReturnType<typeof useTextFieldExtras>['clearButtonProps'];
+  count: number;
 } {
   const state = getTextAreaState({
     disabled,
@@ -39,9 +47,20 @@ export function useTextArea({
     autoSize,
   });
   const [element, setElement] = useState<HTMLTextAreaElement | null>(null);
+  const control = useRef<HTMLTextAreaElement>(null);
+  const { clearButtonProps, count } = useTextFieldExtras(control, {
+    value: rest.value,
+    defaultValue: rest.defaultValue,
+    disabled,
+    readOnly,
+    allowClear,
+    showCount,
+    clearLabel,
+  });
   const currentState = useRef(state);
   const wasAutoSized = useRef(false);
   const textAreaRef = useCallback((node: HTMLTextAreaElement | null) => {
+    control.current = node;
     setElement(node);
   }, []);
 
@@ -108,5 +127,5 @@ export function useTextArea({
     onInput: handleInput,
   };
 
-  return { textAreaProps, textAreaRef, state };
+  return { textAreaProps, textAreaRef, state, clearButtonProps, count };
 }

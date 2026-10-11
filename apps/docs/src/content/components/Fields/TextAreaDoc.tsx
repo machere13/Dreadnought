@@ -7,7 +7,7 @@ import styles from '../../../shared/Documentation.module.css';
 function TextAreaDemo() {
   return <div className={`${styles.demo} ${styles.fieldDemo}`}>
     <label htmlFor="demo-notes">Заметки</label>
-    <TextArea id="demo-notes" name="demo-notes" rows={3} autoSize maxRows={8} placeholder="Введите текст…" />
+    <TextArea id="demo-notes" name="demo-notes" rows={3} autoSize maxRows={8} allowClear showCount maxLength={200} clearLabel="Очистить заметки" placeholder="Введите текст…" />
   </div>;
 }
 

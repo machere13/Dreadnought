@@ -1,4 +1,42 @@
 @layer dreadnought {
+  :global([data-ui='text-area-field']):has(> .textArea) {
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+  }
+
+  :global([data-ui='text-area-field']):has(> .textArea) > [data-slot='clear'] {
+    position: absolute;
+    inset-block-start: var(--dreadnought-text-area-padding-y);
+    inset-inline-end: var(--dreadnought-text-area-padding-x);
+    display: inline-flex;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--dreadnought-text-area-text);
+    cursor: pointer;
+  }
+
+  :global([data-ui='text-area-field']):has(> .textArea) > [data-slot='clear']:focus-visible {
+    outline: var(--dreadnought-text-area-border-width) solid
+      var(--dreadnought-text-area-border-focus);
+    outline-offset: 2px;
+  }
+
+  :global([data-ui='text-area-field']):has(> .textArea) > [data-slot='count'] {
+    justify-self: end;
+    margin-block-start: var(--dreadnought-text-area-padding-y);
+    color: var(--dreadnought-text-area-placeholder-text);
+    font-size: 0.8em;
+  }
+
+  :global([data-ui='text-area-field']):has(> [data-slot='clear']) > .textArea {
+    padding-inline-end: calc(
+      var(--dreadnought-icon-size) + 2 * var(--dreadnought-text-area-padding-x)
+    );
+  }
+
   .textArea {
     box-sizing: border-box;
     min-height: var(--dreadnought-text-area-min-height);

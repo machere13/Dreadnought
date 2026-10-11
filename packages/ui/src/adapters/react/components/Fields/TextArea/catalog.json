@@ -15,13 +15,23 @@
         "autoSize": "Подстраивает высоту под текст.",
         "invalid": "Помечает поле ошибочным.",
         "disabled": "Отключает поле.",
-        "readOnly": "Запрещает редактирование."
+        "readOnly": "Запрещает редактирование.",
+        "allowClear": "Показывает кнопку очистки непустого поля.",
+        "clearLabel": "Доступное имя кнопки очистки.",
+        "clearContent": "Содержимое кнопки очистки; по умолчанию иконка.",
+        "showCount": "Показывает длину текста и maxLength, если задан."
       },
       "defaults": {
         "rows": 2,
-        "autoSize": false
+        "autoSize": false,
+        "allowClear": false,
+        "showCount": false
       },
       "examples": [
+        {
+          "id": "clear-count",
+          "code": "import { TextArea } from '@dreadnought/ui/react';\nexport function Example() {\n  return <TextArea aria-label=\"Заметки\" allowClear clearLabel=\"Очистить заметки\" showCount maxLength={200} autoSize maxRows={8} />;\n}"
+        },
         {
           "id": "basic",
           "code": "import { TextArea } from '@dreadnought/ui/react';\nexport function Example() {\n  return <><label htmlFor=\"notes\">Заметки</label><TextArea id=\"notes\" name=\"notes\" rows={3} autoSize maxRows={8} /></>;\n}"

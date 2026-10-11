@@ -1,18 +1,18 @@
 import { getInputState, getNavigationDirection } from '@dreadnought/core';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import type { InputHTMLAttributes, KeyboardEvent } from 'react';
+import { useTextFieldExtras } from '../../shared/useTextFieldExtras.ts';
+import type { FieldExtrasOptions } from '../../shared/useTextFieldExtras.ts';
 
 export type TextInputType = 'text' | 'email' | 'password' | 'search' | 'tel' | 'url';
 export type InputType = TextInputType | 'number';
 
-export interface UseInputOptions extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
+export interface UseInputOptions
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>, FieldExtrasOptions {
   type?: InputType;
   invalid?: boolean;
   passwordVisibilityLabels?: { show: string; hide: string };
   stepButtonLabels?: { decrease: string; increase: string };
-  allowClear?: boolean;
-  clearLabel?: string;
-  showCount?: boolean;
 }
 
 export function useInput({
@@ -30,27 +30,14 @@ export function useInput({
 }: UseInputOptions = {}) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const control = useRef<HTMLInputElement>(null);
-  const [uncontrolledValue, setUncontrolledValue] = useState(String(rest.defaultValue ?? ''));
-  const value = rest.value === undefined ? uncontrolledValue : String(rest.value);
-  useLayoutEffect(() => {
-    const node = control.current;
-    if (!node || (!allowClear && !showCount)) return;
-    const form = node.form;
-    let active = true;
-    const update = () => setUncontrolledValue(node.value);
-    const reset = (event: Event) => {
-      queueMicrotask(() => {
-        if (active && !event.defaultPrevented && node.form === form) update();
-      });
-    };
-    update();
-    node.addEventListener('input', update);
-    form?.addEventListener('reset', reset);
-    return () => {
-      active = false;
-      node.removeEventListener('input', update);
-      form?.removeEventListener('reset', reset);
-    };
+  const { clearButtonProps, count } = useTextFieldExtras(control, {
+    value: rest.value,
+    defaultValue: rest.defaultValue,
+    disabled,
+    readOnly,
+    allowClear,
+    showCount,
+    clearLabel,
   });
   const state = getInputState({ disabled, readOnly, required, invalid });
   const isPassword = type === 'password';
@@ -118,26 +105,6 @@ export function useInput({
       }
     : undefined;
 
-  const clearButtonProps =
-    allowClear && value && !state.disabled && !state.readOnly
-      ? {
-          type: 'button' as const,
-          'aria-label': clearLabel,
-          onClick: () => {
-            const node = control.current;
-            if (!node || node.matches(':disabled') || node.readOnly || !node.value) return;
-            Object.getOwnPropertyDescriptor(Object.getPrototypeOf(node), 'value')!.set!.call(
-              node,
-              '',
-            );
-            node.dispatchEvent(
-              new node.ownerDocument.defaultView!.Event('input', { bubbles: true }),
-            );
-            node.focus({ preventScroll: true });
-          },
-        }
-      : undefined;
-
   const stepButtonProps = canStep
     ? {
         decrease: {
@@ -166,6 +133,6 @@ export function useInput({
     stepButtonProps,
     isPasswordVisible: isPassword && passwordVisible,
     clearButtonProps,
-    count: value.length,
+    count,
   };
 }
