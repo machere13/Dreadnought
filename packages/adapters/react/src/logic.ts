@@ -59,3 +59,7 @@ export type {
   UseFloatingPanelOptions,
   FloatingPanelTriggerProps,
 } from './Overlays/FloatingPanel/index.ts';
+export { useUpload } from './Fields/Upload/useUpload.ts';
+export type {
+  UploadHandler, UploadItem, UseUploadOptions, UseUploadResult,
+} from './Fields/Upload/upload.types.ts';

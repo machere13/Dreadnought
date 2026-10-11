@@ -1,0 +1,28 @@
+{
+  "id": "component:upload", "kind": "component", "name": "Upload", "family": "Fields",
+  "description": "Выбор и отправка файлов с ограничениями, отменой, повтором и прогрессом.",
+  "docsUrl": "/components/upload/#upload-api",
+  "states": ["ready", "uploading", "success", "error", "canceled", "disabled"],
+  "composesWith": ["behavior:get-upload-selection", "behavior:get-upload-item-state", "action:pick-files", "component:form"],
+  "constraints": [
+    "useUpload владеет списком File. Нет внешних fileList/defaultFileList; Upload принимает модель hook.",
+    "Без upload работает выбор файлов для Form. autoUpload по умолчанию false; true требует upload.",
+    "upload(file,{signal,onProgress}) возвращает Promise<void>. Progress 0–100, монотонный, не означает успех до resolve; без progress состояние неопределённое.",
+    "cancel/remove/clear/unmount инвалидируют попытку до abort; поздние ответы игнорируются. Отмена не гарантирует удаления файла на сервере.",
+    "accept и maxSize проверяют метаданные, не безопасность содержимого. Сервер обязан повторить проверку.",
+    "multiple=false не заменяет существующий файл. Все сохранённые статусы занимают место до remove/clear. clear отменяет и системный picker."
+  ],
+  "bindings": [{
+    "id": "react-logic", "layer": 2, "framework": "react",
+    "importPath": "@dreadnought/react/logic", "exportName": "useUpload",
+    "defaults": { "multiple": false, "autoUpload": false, "disabled": false },
+    "propertyDescriptions": {
+      "accept": "Расширения, точные MIME и семейства MIME через запятую.",
+      "maxCount": "Максимальное число сохранённых файлов.",
+      "maxSize": "Максимальный размер файла в байтах включительно.",
+      "upload": "Функция отправки файла, получает AbortSignal и onProgress.",
+      "autoUpload": "Запуск отправки сразу после принятия файла."
+    },
+    "examples": [{ "id": "selection", "code": "import { useUpload } from '@dreadnought/react/logic';\nexport function Example() {\n  const upload = useUpload({ accept: '.pdf', multiple: true, maxCount: 3 });\n  return <button type=\"button\" onClick={() => { void upload.pick(); }}>Выбрать документы</button>;\n}" }]
+  }]
+}
