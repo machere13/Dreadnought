@@ -1,9 +1,14 @@
 {
   "componentId": "component:input",
-  "states": [
-    "passwordVisible"
-  ],
+  "states": ["passwordVisible"],
   "parts": [
+    { "name": "prefix", "description": "Содержимое перед полем." },
+    { "name": "suffix", "description": "Содержимое после поля и служебных кнопок." },
+    { "name": "clear", "description": "Кнопка очистки непустого редактируемого поля." },
+    {
+      "name": "count",
+      "description": "Счётчик UTF-16 единиц, согласованный с нативным maxLength."
+    },
     {
       "name": "root",
       "description": "Обёртка поля; className и style относятся к ней."
@@ -35,7 +40,10 @@
     "При использовании useInput передайте inputProps вместе с ref полю; visibilityButtonProps и stepButtonProps связывают дополнительные кнопки.",
     "При type=number шаг задают нативные min, max и step; кнопки и ArrowUp/ArrowDown используют stepUp/stepDown. Пустое поле остаётся пустым до ввода или шага; value и onChange сохраняют нативный контракт.",
     "step=any разрешает произвольные значения без кнопок и собственного обработчика шага. Нет форматирования чисел, локализованного парсинга, длинного удержания или анимации.",
-    "Управляемый value требует обработчика onChange либо readOnly."
+    "Управляемый value требует обработчика onChange либо readOnly.",
+    "allowClear вызывает обычные input/onChange с пустой строкой; контролируемый владелец может отклонить изменение. Кнопка не отправляет форму и возвращает фокус input. clearLabel задаёт доступное имя.",
+    "showCount использует UTF-16 длину, как нативный maxLength; не обрезает переданное value. Учитывает ввод и нативный reset. При useInput передайте clearButtonProps кнопке и используйте count при showCount=true.",
+    "prefix и suffix принимают содержимое, включая интерактивные элементы. Они не заменяют label; для декоративных иконок используйте aria-hidden."
   ],
   "bindings": [
     {
@@ -65,6 +73,12 @@
       "importPath": "@dreadnought/react/unstyled",
       "exportName": "InputAdapter",
       "propertyDescriptions": {
+        "prefix": "Содержимое перед input.",
+        "suffix": "Содержимое после input и служебных кнопок.",
+        "allowClear": "Кнопка очистки непустого редактируемого поля через onChange.",
+        "clearLabel": "Доступное имя кнопки очистки.",
+        "clearContent": "Содержимое кнопки очистки без оформления.",
+        "showCount": "Показ UTF-16 длины; с maxLength отображается count / maxLength.",
         "passwordVisibilityContent": "Содержимое кнопки показа и скрытия пароля.",
         "stepButtonLabels": "Доступные названия кнопок decrease и increase для number.",
         "renderStepButton": "Рендер кнопки шага; передайте все полученные свойства одному button или Button."

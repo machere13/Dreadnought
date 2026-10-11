@@ -91,7 +91,22 @@
     color: var(--dreadnought-input-placeholder-text);
   }
 
-  .input [data-slot='visibility-toggle'] {
+  .input [data-slot='prefix'],
+  .input [data-slot='suffix'],
+  .input [data-slot='count'] {
+    display: inline-flex;
+    align-items: center;
+    flex: none;
+  }
+
+  .input [data-slot='count'] {
+    color: var(--dreadnought-input-placeholder-text);
+    white-space: nowrap;
+    font-size: 0.8em;
+  }
+
+  .input [data-slot='visibility-toggle'],
+  .input [data-slot='clear'] {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -102,6 +117,11 @@
     color: inherit;
     font: inherit;
     cursor: var(--dreadnought-input-toggle-cursor);
+  }
+
+  .input [data-slot='clear']:focus-visible {
+    outline: var(--dreadnought-input-border-width) solid var(--dreadnought-input-border-focus);
+    outline-offset: 2px;
   }
 
   .input:focus-within:not([data-invalid]) {

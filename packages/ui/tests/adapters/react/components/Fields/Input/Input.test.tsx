@@ -8,6 +8,26 @@ import { Input } from '@dreadnought/ui/react';
 
 afterEach(cleanup);
 
+it('uses a library icon to clear an affixed field with a count', async () => {
+  render(
+    <Input
+      aria-label="Search"
+      prefix="Find"
+      suffix="items"
+      defaultValue="test"
+      allowClear
+      showCount
+      clearLabel="Очистить"
+    />,
+  );
+  const clear = screen.getByRole('button', { name: 'Очистить' });
+  expect(clear.querySelector('svg')).not.toBeNull();
+  expect(clear.textContent).toBe('');
+  await userEvent.click(clear);
+  expect(screen.getByText('0')).toBeTruthy();
+  expect((screen.getByRole('textbox') as HTMLInputElement).value).toBe('');
+});
+
 it('renders compact library Buttons for numerical steps', async () => {
   render(
     <Input

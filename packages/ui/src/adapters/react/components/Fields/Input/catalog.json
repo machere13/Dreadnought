@@ -8,6 +8,12 @@
       "importPath": "@dreadnought/ui/react",
       "exportName": "Input",
       "propertyDescriptions": {
+        "prefix": "Текст, иконка или другой элемент перед полем.",
+        "suffix": "Текст, иконка или другой элемент после поля.",
+        "allowClear": "Кнопка очистки через обычный onChange; скрыта для пустого, disabled и readOnly поля.",
+        "clearLabel": "Доступное имя кнопки очистки.",
+        "clearContent": "Содержимое очистки; по умолчанию библиотечная иконка close-circle.",
+        "showCount": "Счётчик UTF-16 единиц, согласованный с нативным maxLength.",
         "type": "Тип поля; password добавляет переключатель видимости, number — кнопки шага.",
         "invalid": "Состояние ошибки.",
         "passwordVisibilityLabels": "Доступные названия кнопки показа и скрытия пароля.",
@@ -18,6 +24,10 @@
         "step": "Нативный шаг; по умолчанию 1. any отключает кнопки шага."
       },
       "examples": [
+        {
+          "id": "affixes",
+          "code": "import { Input, Icon } from '@dreadnought/ui/react';\nconst example = <Input aria-label='Поиск' prefix={<Icon name='search' />} suffix='⌘ K' allowClear clearLabel='Очистить' showCount maxLength={30} />;"
+        },
         {
           "id": "password",
           "code": "import { Input } from '@dreadnought/ui/react';\nconst example = <Input type='password' aria-label='Пароль' passwordVisibilityLabels={{ show: 'Показать пароль', hide: 'Скрыть пароль' }} />;"

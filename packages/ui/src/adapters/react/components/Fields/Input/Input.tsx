@@ -11,6 +11,7 @@ export function Input({ className, ...props }: InputProps) {
   return (
     <InputAdapter
       {...props}
+      clearContent={props.clearContent ?? <Icon name="close-circle" />}
       passwordVisibilityContent={
         props.passwordVisibilityContent ?? {
           show: <Icon name="eye" />,

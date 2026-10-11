@@ -1,4 +1,4 @@
-import { Input } from '@dreadnought/ui/react';
+import { Input, Icon } from '@dreadnought/ui/react';
 import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc.ts';
 import type { ComponentDoc } from '../../../shared/types.ts';
 import { ComponentPage } from '../../../shared/ComponentPage.tsx';
@@ -6,6 +6,10 @@ import styles from '../../../shared/Documentation.module.css';
 
 function InputDemo() {
   return <div className={`${styles.demo} ${styles.fieldDemo}`}>
+    <label htmlFor="demo-search">Поиск</label>
+    <Input id="demo-search" prefix={<Icon name="search" />} suffix="⌘ K" allowClear clearLabel="Очистить поиск" placeholder="Поиск документов" />
+    <label htmlFor="demo-name">Название</label>
+    <Input id="demo-name" defaultValue="Dreadnought" showCount maxLength={30} allowClear clearLabel="Очистить название" />
     <label htmlFor="demo-email">Электронная почта</label>
     <Input id="demo-email" type="email" name="demo-email" autoComplete="off" placeholder="name@example.com" />
     <label htmlFor="demo-password">Пароль</label>

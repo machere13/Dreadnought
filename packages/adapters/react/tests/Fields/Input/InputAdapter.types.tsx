@@ -2,6 +2,7 @@ import { createRef } from 'react';
 import { InputAdapter } from '@dreadnought/react/unstyled';
 
 <InputAdapter ref={createRef<HTMLInputElement>()} type="email" />;
+<InputAdapter prefix={<span>₽</span>} suffix="руб." allowClear showCount clearContent="Clear" />;
 
 <InputAdapter
   type="number"
