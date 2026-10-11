@@ -1,0 +1,8 @@
+@layer dreadnought {
+  .dreadnought-text-date-picker {
+    font-family: var(--dreadnought-font-family-ui);
+    font-size: var(--dreadnought-datepicker-font-size);
+    font-weight: var(--dreadnought-datepicker-font-weight);
+    line-height: var(--dreadnought-datepicker-line-height);
+  }
+}

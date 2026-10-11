@@ -1,0 +1,98 @@
+@layer dreadnought {
+  .root {
+    display: inline-block;
+    max-width: 100%;
+  }
+  .fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dreadnought-datepicker-gap);
+    align-items: start;
+  }
+  .fields > [data-slot='field'] {
+    flex: 1;
+    min-width: 0;
+  }
+  .field {
+    width: 100%;
+  }
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: var(--dreadnought-datepicker-gap);
+  }
+  .popup {
+    box-sizing: border-box;
+    width: var(--dreadnought-datepicker-popup-width);
+    max-width: calc(100vw - var(--dreadnought-datepicker-padding) * 2);
+    max-height: calc(100vh - var(--dreadnought-datepicker-padding) * 2);
+    overflow: auto;
+    padding: var(--dreadnought-datepicker-padding);
+    border: var(--dreadnought-datepicker-border-width) solid var(--dreadnought-datepicker-border);
+    border-radius: var(--dreadnought-datepicker-radius);
+    background: var(--dreadnought-datepicker-bg);
+    color: var(--dreadnought-datepicker-text);
+    font: inherit;
+    gap: var(--dreadnought-datepicker-gap);
+  }
+  .header {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) calc(var(--dreadnought-datepicker-day-size) * 3) auto;
+    gap: var(--dreadnought-datepicker-gap);
+    align-items: center;
+    margin-block-end: var(--dreadnought-datepicker-padding);
+  }
+  .header [data-ui='input'],
+  .header [data-ui='select'] {
+    width: 100%;
+    min-width: 0;
+  }
+  .popup [data-slot='month-status'] {
+    display: block;
+    margin-block-end: var(--dreadnought-datepicker-gap);
+  }
+  .grid [role='row'] {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+  .grid [role='columnheader'] {
+    color: var(--dreadnought-datepicker-muted);
+    text-align: center;
+    padding-block: var(--dreadnought-datepicker-gap);
+  }
+  .grid [role='gridcell'] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+  }
+  .day {
+    width: var(--dreadnought-datepicker-day-size);
+    min-width: 0;
+    --dreadnought-button-padding-x: 0;
+    --dreadnought-button-padding-y: 0;
+  }
+  .grid [data-range] {
+    background: var(--dreadnought-datepicker-range);
+  }
+  .grid [data-preview] {
+    background: var(--dreadnought-datepicker-preview);
+  }
+  .grid [data-outside] {
+    opacity: var(--dreadnought-opacity-disabled);
+  }
+  .grid [data-selected] .day {
+    --dreadnought-button-ghosted-bg: var(--dreadnought-datepicker-selected);
+    --dreadnought-button-ghosted-bg-hover: var(--dreadnought-datepicker-selected);
+    --dreadnought-button-ghosted-fg: var(--dreadnought-datepicker-selected-text);
+  }
+  .grid [data-today] .day {
+    text-decoration: underline;
+    text-underline-offset: var(--dreadnought-datepicker-gap);
+  }
+  .error {
+    display: block;
+    color: var(--dreadnought-datepicker-error);
+    margin-block-start: var(--dreadnought-datepicker-gap);
+  }
+}

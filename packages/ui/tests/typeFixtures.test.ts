@@ -10,6 +10,9 @@ it('includes the public Drawer contract fixture in standard typechecking', () =>
   expect(error).toBeUndefined();
   const parsed = ts.parseJsonConfigFileContent(config, ts.sys, path.dirname(configPath));
   expect(parsed.errors).toEqual([]);
+  expect(parsed.fileNames.map(file => path.resolve(file))).toContain(
+    fileURLToPath(new URL('./datepicker.types.tsx', import.meta.url)),
+  );
   expect(parsed.fileNames.map((file) => path.resolve(file))).toContain(
     fileURLToPath(new URL('./drawer.types.tsx', import.meta.url)),
   );

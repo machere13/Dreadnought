@@ -37,3 +37,4 @@ export * from './Navigation/Pagination/index.ts';
 export * from './DataDisplay/MarkdownPreview/index.ts';
 export * from './Overlays/FloatingPanel/index.ts';
 export * from './Fields/Upload/index.ts';
+export * from './Fields/DatePicker/index.ts';

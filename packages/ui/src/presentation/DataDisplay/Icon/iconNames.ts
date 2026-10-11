@@ -1,4 +1,7 @@
 export type IconName =
+  | 'calendar'
+  | 'left'
+  | 'right'
   | 'eye'
   | 'eye-off'
   | 'search'

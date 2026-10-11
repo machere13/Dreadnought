@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "packages/ui/tests/datepicker.types.tsx",
     "packages/ui/tests/toastQueue.types.tsx",
     "packages/ui/tests/loader.types.tsx",
     "packages/ui/tests/fieldAppearance.types.tsx",

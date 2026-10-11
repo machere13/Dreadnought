@@ -7,6 +7,7 @@ import type {
 
 import type { ComponentPropsWithRef, ComponentPropsWithoutRef, ReactNode, Ref } from 'react';
 import type { TooltipPlacement } from '@dreadnought/core';
+export type { CalendarDate } from '@dreadnought/core';
 
 export type DatePickerRange = readonly [CalendarDate, CalendarDate];
 export type DatePickerValue = CalendarDate | DatePickerRange | null;

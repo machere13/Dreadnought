@@ -1,0 +1,11 @@
+:root {
+  --dreadnought-datepicker-bg: var(--dreadnought-color-surface-panel);
+  --dreadnought-datepicker-text: var(--dreadnought-color-text-primary);
+  --dreadnought-datepicker-muted: var(--dreadnought-color-text-placeholder);
+  --dreadnought-datepicker-border: var(--dreadnought-color-border-subtle);
+  --dreadnought-datepicker-selected: var(--dreadnought-color-action-primary);
+  --dreadnought-datepicker-selected-text: var(--dreadnought-color-text-on-action-primary);
+  --dreadnought-datepicker-range: var(--dreadnought-color-surface-selected);
+  --dreadnought-datepicker-preview: var(--dreadnought-color-surface-hover);
+  --dreadnought-datepicker-error: var(--dreadnought-color-status-error);
+}

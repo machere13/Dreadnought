@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-datepicker-font-size: var(--dreadnought-font-size-body-2);
+  --dreadnought-datepicker-font-weight: var(--dreadnought-font-weight-body-2);
+  --dreadnought-datepicker-line-height: var(--dreadnought-line-height-body-2);
+}

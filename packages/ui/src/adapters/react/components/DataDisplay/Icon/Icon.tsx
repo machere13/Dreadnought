@@ -1,4 +1,7 @@
 import {
+  CalendarOutlined,
+  LeftOutlined,
+  RightOutlined,
   CheckCircleOutlined,
   CheckOutlined,
   CloseCircleOutlined,
@@ -36,6 +39,9 @@ import { iconPresentation } from '#presentation/DataDisplay/Icon/iconPresentatio
 import type { IconName } from '@dreadnought/ui';
 
 const icons = {
+  calendar: CalendarOutlined,
+  left: LeftOutlined,
+  right: RightOutlined,
   eye: EyeOutlined,
   'eye-off': EyeInvisibleOutlined,
   search: SearchOutlined,

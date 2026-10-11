@@ -1,0 +1,8 @@
+:root {
+  --dreadnought-datepicker-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-datepicker-padding: var(--dreadnought-spacing-x3);
+  --dreadnought-datepicker-popup-width: var(--dreadnought-size-x5);
+  --dreadnought-datepicker-day-size: var(--dreadnought-size-control-compact-min-height);
+  --dreadnought-datepicker-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-datepicker-border-width: var(--dreadnought-border-width-outline);
+}

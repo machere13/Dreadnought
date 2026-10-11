@@ -112,3 +112,4 @@ export type { DatePickerAdapterProps, DatePickerActionProps, DatePickerFieldProp
 export type {
   UploadAdapterProps, UploadActionRenderProps, UploadSlotClassNames,
 } from './Fields/Upload/upload.types.ts';
+export type { CalendarDate, DatePickerRange, DatePickerValue } from './Fields/DatePicker/datePicker.types.ts';
