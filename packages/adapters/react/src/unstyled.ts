@@ -106,6 +106,9 @@ export type { TreeAdapterProps } from './Navigation/Tree/index.ts';
 export { FloatingPanelAdapter } from './Overlays/FloatingPanel/index.ts';
 export type { FloatingPanelAdapterProps, FloatingPanelControls } from './Overlays/FloatingPanel/index.ts';
 export { UploadAdapter } from './Fields/Upload/UploadAdapter.tsx';
+export { DatePickerAdapter } from './Fields/DatePicker/DatePickerAdapter.tsx';
+export type { DatePickerAdapterProps, DatePickerActionProps, DatePickerFieldProps,
+  DatePickerMonthSelectProps, DatePickerSlotClassNames } from './Fields/DatePicker/datePicker.types.ts';
 export type {
   UploadAdapterProps, UploadActionRenderProps, UploadSlotClassNames,
 } from './Fields/Upload/upload.types.ts';
