@@ -1,0 +1,219 @@
+[
+  {
+    "id": "domain:parse-calendar-date",
+    "kind": "domain",
+    "name": "parseCalendarDate",
+    "family": "Calendar",
+    "description": "Разбор календарной даты ISO.",
+    "docsUrl": "/components/datepicker/#datepicker-logic",
+    "constraints": [
+      "Чистые календарные даты YYYY-MM-DD, годы 0001–9999, без времени и часового пояса. Вход не изменяется.",
+      "Границы включительны. Диапазон проверяет только конечные даты; disabledDate получает from при выборе второй даты."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "parseCalendarDate",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { parseCalendarDate } from '@dreadnought/core';\nconst parts = parseCalendarDate('2026-10-12');"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "domain:assert-calendar-date",
+    "kind": "domain",
+    "name": "assertCalendarDate",
+    "family": "Calendar",
+    "description": "Проверка календарной даты ISO.",
+    "docsUrl": "/components/datepicker/#datepicker-logic",
+    "constraints": [
+      "Чистые календарные даты YYYY-MM-DD, годы 0001–9999, без времени и часового пояса. Вход не изменяется.",
+      "Границы включительны. Диапазон проверяет только конечные даты; disabledDate получает from при выборе второй даты."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "assertCalendarDate",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { assertCalendarDate } from '@dreadnought/core';\nassertCalendarDate('2026-10-12');"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "domain:add-calendar-days",
+    "kind": "domain",
+    "name": "addCalendarDays",
+    "family": "Calendar",
+    "description": "Сдвиг даты на дни.",
+    "docsUrl": "/components/datepicker/#datepicker-logic",
+    "constraints": [
+      "Чистые календарные даты YYYY-MM-DD, годы 0001–9999, без времени и часового пояса. Вход не изменяется.",
+      "Границы включительны. Диапазон проверяет только конечные даты; disabledDate получает from при выборе второй даты."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "addCalendarDays",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { addCalendarDays } from '@dreadnought/core';\nconst next = addCalendarDays('2026-10-12', 1);"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "domain:add-calendar-months",
+    "kind": "domain",
+    "name": "addCalendarMonths",
+    "family": "Calendar",
+    "description": "Сдвиг месяца с ограничением дня.",
+    "docsUrl": "/components/datepicker/#datepicker-logic",
+    "constraints": [
+      "Чистые календарные даты YYYY-MM-DD, годы 0001–9999, без времени и часового пояса. Вход не изменяется.",
+      "Границы включительны. Диапазон проверяет только конечные даты; disabledDate получает from при выборе второй даты."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "addCalendarMonths",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { addCalendarMonths } from '@dreadnought/core';\nconst next = addCalendarMonths('2026-01-31', 1);"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "domain:get-calendar-grid",
+    "kind": "domain",
+    "name": "getCalendarGrid",
+    "family": "Calendar",
+    "description": "Сетка месяца: 42 ячейки.",
+    "docsUrl": "/components/datepicker/#datepicker-logic",
+    "constraints": [
+      "Чистые календарные даты YYYY-MM-DD, годы 0001–9999, без времени и часового пояса. Вход не изменяется.",
+      "Границы включительны. Диапазон проверяет только конечные даты; disabledDate получает from при выборе второй даты."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "getCalendarGrid",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { getCalendarGrid } from '@dreadnought/core';\nconst cells = getCalendarGrid('2026-10-01', 1);"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "domain:is-calendar-date-allowed",
+    "kind": "domain",
+    "name": "isCalendarDateAllowed",
+    "family": "Calendar",
+    "description": "Проверка границ и запрета даты.",
+    "docsUrl": "/components/datepicker/#datepicker-logic",
+    "constraints": [
+      "Чистые календарные даты YYYY-MM-DD, годы 0001–9999, без времени и часового пояса. Вход не изменяется.",
+      "Границы включительны. Диапазон проверяет только конечные даты; disabledDate получает from при выборе второй даты."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "isCalendarDateAllowed",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { isCalendarDateAllowed } from '@dreadnought/core';\nconst allowed = isCalendarDateAllowed('2026-10-12', { minDate: '2026-01-01' });"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "domain:get-next-calendar-date",
+    "kind": "domain",
+    "name": "getNextCalendarDate",
+    "family": "Calendar",
+    "description": "Клавиатурная навигация с пропуском запрещённых дней.",
+    "docsUrl": "/components/datepicker/#datepicker-logic",
+    "constraints": [
+      "Клавиатурный поиск проверяет до 366 дней от цели; при исчерпании возвращает исходную дату. Home/End ограничены текущей неделей. Для более длинных промежутков используйте выбор месяца/года.",
+      "Чистые календарные даты YYYY-MM-DD, годы 0001–9999, без времени и часового пояса. Вход не изменяется.",
+      "Границы включительны. Диапазон проверяет только конечные даты; disabledDate получает from при выборе второй даты."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "getNextCalendarDate",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { getNextCalendarDate } from '@dreadnought/core';\nconst next = getNextCalendarDate('2026-10-12', 'nextDay', {}, 1);"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "domain:get-calendar-range",
+    "kind": "domain",
+    "name": "getCalendarRange",
+    "family": "Calendar",
+    "description": "Выбор и нормализация диапазона.",
+    "docsUrl": "/components/datepicker/#datepicker-logic",
+    "constraints": [
+      "Чистые календарные даты YYYY-MM-DD, годы 0001–9999, без времени и часового пояса. Вход не изменяется.",
+      "Границы включительны. Диапазон проверяет только конечные даты; disabledDate получает from при выборе второй даты."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "getCalendarRange",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { getCalendarRange } from '@dreadnought/core';\nconst draft = getCalendarRange({ start: null, end: null }, '2026-10-20');\nconst range = getCalendarRange(draft, '2026-10-10');"
+          }
+        ]
+      }
+    ]
+  }
+]

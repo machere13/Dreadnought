@@ -13,6 +13,7 @@ export const componentFamilies: readonly { name: string; sections: readonly Comp
       name: 'Fields',
       sections: [
         'input',
+        'datepicker',
         'form',
         'upload',
         'textarea',
@@ -48,6 +49,7 @@ export const componentTitles = {
   loader: 'Loader',
   progress: 'Progress',
   input: 'Input',
+  datepicker: 'DatePicker',
   form: 'Form',
   upload: 'Upload',
   textarea: 'TextArea',

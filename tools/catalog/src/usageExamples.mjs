@@ -1,5 +1,9 @@
 // Agent-facing examples, type-checked during catalog generation. No screen logic.
 export const usageExamples = {
+  DatePicker: `import { DatePicker } from '@dreadnought/ui/react';
+export function Example() {
+  return <DatePicker mode="range" aria-label="Период" minDate="2026-01-01" />;
+}`,
   Upload: `import { useUpload } from '@dreadnought/react/logic';
 import { Upload } from '@dreadnought/ui/react';
 export function Example() {

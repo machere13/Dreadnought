@@ -1,0 +1,73 @@
+{
+  "componentId": "component:date-picker",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "DatePicker",
+      "defaults": {
+        "mode": "single",
+        "locale": "en-US",
+        "weekStartsOn": 1,
+        "allowClear": true,
+        "disabled": false,
+        "readOnly": false,
+        "defaultOpen": false,
+        "placement": "bottomLeft"
+      },
+      "propertyDescriptions": {
+        "mode": "Одна дата или диапазон.",
+        "value": "Выбранная дата ISO, пара дат или null.",
+        "defaultValue": "Начальное значение.",
+        "onChange": "Подтверждённое значение.",
+        "minDate": "Минимальная дата включительно.",
+        "maxDate": "Максимальная дата включительно.",
+        "disabledDate": "Запрет даты; from — начало незавершённого диапазона.",
+        "locale": "Язык календаря.",
+        "weekStartsOn": "Начало недели: 0 — воскресенье, 1 — понедельник.",
+        "allowClear": "Кнопка очистки.",
+        "open": "Состояние календаря.",
+        "defaultOpen": "Начальная видимость.",
+        "onOpenChange": "Изменение видимости.",
+        "readOnly": "Просмотр без изменения.",
+        "name": "Имя поля; диапазон: name.start и name.end.",
+        "placement": "Расположение календаря.",
+        "placeholder": "Подсказка; в диапазоне пара строк."
+      },
+      "examples": [
+        {
+          "id": "range",
+          "code": "import { DatePicker } from '@dreadnought/ui/react';\nexport function Example() {\n  return <DatePicker mode=\"range\" aria-label=\"Период\" minDate=\"2026-01-01\" />;\n}"
+        }
+      ]
+    }
+  ],
+  "parts": [
+    {
+      "name": "fields",
+      "description": "Поля даты."
+    },
+    {
+      "name": "popup",
+      "description": "Календарь."
+    },
+    {
+      "name": "header",
+      "description": "Выбор месяца и года."
+    },
+    {
+      "name": "grid",
+      "description": "Сетка дней."
+    },
+    {
+      "name": "day",
+      "description": "День календаря."
+    },
+    {
+      "name": "error",
+      "description": "Ошибка ручного ввода."
+    }
+  ]
+}

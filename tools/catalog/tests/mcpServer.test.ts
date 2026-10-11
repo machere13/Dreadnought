@@ -227,9 +227,14 @@ describe('generated catalog over MCP', () => {
   });
   it('serves the Radar domain through real MCP list, API and checked context', async () => {
     await withClient(generatedCatalogPath, projectPath, async client => {
-      const list = await client.callTool({ name: 'dreadnought_list', arguments: { kind: 'domain' } });
+      const list = await client.callTool({ name: 'dreadnought_list', arguments: { kind: 'domain', limit: 50 } });
       expect(list.isError).toBeUndefined();
-      expect(replyPayload(list).result.items.map((item: any) => item.name).sort()).toEqual(['applyMarkdownCommand', 'buildBarLayout', 'buildLineLayout', 'buildRadarLayout', 'getClosestLinePoint', 'getLinePointAtX', 'isContinuousMarkdownInput', 'sampleLineLayout']);
+      expect(replyPayload(list).result.items.map((item: any) => item.name).sort()).toEqual([
+        'applyMarkdownCommand', 'buildBarLayout', 'buildLineLayout', 'buildRadarLayout',
+        'getClosestLinePoint', 'getLinePointAtX', 'isContinuousMarkdownInput', 'sampleLineLayout',
+        'parseCalendarDate', 'assertCalendarDate', 'addCalendarDays', 'addCalendarMonths',
+        'getCalendarGrid', 'isCalendarDateAllowed', 'getNextCalendarDate', 'getCalendarRange',
+      ].sort());
       const editorApi = await client.callTool({ name: 'dreadnought_get', arguments: {
         component: 'component:markdown-editor', binding: 'react-adapter', section: 'api' } });
       expect(editorApi.isError).toBeUndefined();

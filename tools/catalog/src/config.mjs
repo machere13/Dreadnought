@@ -10,6 +10,7 @@ const core = 'packages/core/src/components';
 const adapter = 'packages/adapters/react/src';
 const ui = 'packages/ui/src/adapters/react/components';
 export const components = [
+  { family: 'Fields', name: 'DatePicker', sources: [adapter, ui] },
   { family: 'Fields', name: 'Upload', sources: [adapter, ui] },
   { family: 'Fields', name: 'Form', sources: [adapter, ui] },
   { family: 'DataDisplay', name: 'MarkdownPreview', sources: [adapter, ui] },
@@ -51,4 +52,4 @@ export const components = [
   { family: 'DataDisplay', name: 'Mark', sources: [adapter, ui] },
 ];
 
-export const capabilitySources = ['packages/core/src/actions/catalog.json', 'packages/core/src/behaviors/catalog.json', 'packages/core/src/domains/charts/catalog.json', 'packages/core/src/domains/markdown/catalog.json'];
+export const capabilitySources = ['packages/core/src/actions/catalog.json', 'packages/core/src/behaviors/catalog.json', 'packages/core/src/domains/charts/catalog.json', 'packages/core/src/domains/markdown/catalog.json', 'packages/core/src/domains/calendar/catalog.json'];

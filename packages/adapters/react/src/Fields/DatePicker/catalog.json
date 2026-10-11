@@ -1,0 +1,111 @@
+{
+  "id": "component:date-picker",
+  "kind": "component",
+  "name": "DatePicker",
+  "family": "Fields",
+  "description": "Одна календарная дата или диапазон, ручной ввод и ограничения.",
+  "docsUrl": "/components/datepicker/#datepicker-api",
+  "states": [
+    "open",
+    "closed",
+    "disabled",
+    "readOnly",
+    "invalid"
+  ],
+  "composesWith": [
+    "domain:get-calendar-grid",
+    "domain:get-calendar-range",
+    "domain:get-next-calendar-date",
+    "component:input",
+    "component:select"
+  ],
+  "constraints": [
+    "Значения и ручной ввод только YYYY-MM-DD, годы 0001–9999, без времени и часового пояса. Неполный диапазон не публикуется.",
+    "minDate/maxDate включительны; disabledDate проверяет конечные даты, не дни внутри диапазона.",
+    "Enter или уход фокуса подтверждает ввод; Escape восстанавливает опубликованное значение.",
+    "Управляемое значение сбрасывает родитель. Неконтролируемое поле поддерживает native form reset."
+  ],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "DatePickerAdapter",
+      "defaults": {
+        "mode": "single",
+        "locale": "en-US",
+        "weekStartsOn": 1,
+        "allowClear": true,
+        "disabled": false,
+        "readOnly": false,
+        "defaultOpen": false,
+        "placement": "bottomLeft"
+      },
+      "propertyDescriptions": {
+        "mode": "Одна дата или диапазон.",
+        "value": "Выбранная дата ISO, пара дат или null.",
+        "defaultValue": "Начальное значение.",
+        "onChange": "Подтверждённое значение.",
+        "minDate": "Минимальная дата включительно.",
+        "maxDate": "Максимальная дата включительно.",
+        "disabledDate": "Запрет даты; from — начало незавершённого диапазона.",
+        "locale": "Язык календаря.",
+        "weekStartsOn": "Начало недели: 0 — воскресенье, 1 — понедельник.",
+        "allowClear": "Кнопка очистки.",
+        "open": "Состояние календаря.",
+        "defaultOpen": "Начальная видимость.",
+        "onOpenChange": "Изменение видимости.",
+        "readOnly": "Просмотр без изменения.",
+        "name": "Имя поля; диапазон: name.start и name.end.",
+        "placement": "Расположение календаря.",
+        "placeholder": "Подсказка; в диапазоне пара строк."
+      },
+      "examples": [
+        {
+          "id": "single",
+          "code": "import { DatePickerAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <DatePickerAdapter aria-label=\"Дата\" defaultValue=\"2026-10-12\" />; }"
+        }
+      ]
+    },
+    {
+      "id": "react-logic",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/logic",
+      "exportName": "useDatePicker",
+      "defaults": {
+        "mode": "single",
+        "locale": "en-US",
+        "weekStartsOn": 1,
+        "allowClear": true,
+        "disabled": false,
+        "readOnly": false,
+        "defaultOpen": false
+      },
+      "propertyDescriptions": {
+        "mode": "Одна дата или диапазон.",
+        "value": "Выбранная дата ISO, пара дат или null.",
+        "defaultValue": "Начальное значение.",
+        "onChange": "Подтверждённое значение.",
+        "minDate": "Минимальная дата включительно.",
+        "maxDate": "Максимальная дата включительно.",
+        "disabledDate": "Запрет даты; from — начало незавершённого диапазона.",
+        "locale": "Язык календаря.",
+        "weekStartsOn": "Начало недели: 0 — воскресенье, 1 — понедельник.",
+        "allowClear": "Кнопка очистки.",
+        "open": "Состояние календаря.",
+        "defaultOpen": "Начальная видимость.",
+        "onOpenChange": "Изменение видимости.",
+        "readOnly": "Просмотр без изменения.",
+        "placeholder": "Подсказка; в диапазоне пара строк."
+      },
+      "examples": [
+        {
+          "id": "single",
+          "code": "import { useDatePicker } from '@dreadnought/react/logic';\nexport function Example() {\n  const picker = useDatePicker({ defaultValue: '2026-10-12' });\n  return <input aria-label=\"Дата\" value={picker.draft[0]} onChange={event => picker.setDraft(0, event.target.value)} onBlur={picker.confirm} />;\n}"
+        }
+      ]
+    }
+  ]
+}

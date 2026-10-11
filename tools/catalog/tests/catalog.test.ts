@@ -11,6 +11,7 @@ import { describeContract } from '../src/contracts.mjs';
 import { checkExamples } from '../src/examples.mjs';
 import { components, packages } from '../src/config.mjs';
 import { mergeMetadata, readMetadata } from '../src/metadata.mjs';
+import { invokeCatalog } from '../src/mcp/invoke.mjs';
 import { disclosureCode } from '../../../apps/docs/src/content/guides/disclosureCode.ts';
 
 vi.setConfig({ testTimeout: 120_000, hookTimeout: 120_000 });
@@ -35,6 +36,32 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes DatePicker and independent calendar domains with checked examples', () => {
+    const entry = catalog.entries.find(entry => entry.id === 'component:date-picker');
+    expect(entry?.bindings.map(binding => binding.exportName)).toEqual(
+      expect.arrayContaining(['useDatePicker', 'DatePickerAdapter', 'DatePicker']),
+    );
+    expect(entry?.tokens.length).toBeGreaterThan(0);
+    for (const binding of entry!.bindings) checkExamples(context, binding.examples);
+    for (const name of ['parseCalendarDate', 'assertCalendarDate', 'addCalendarDays',
+      'addCalendarMonths', 'getCalendarGrid', 'isCalendarDateAllowed',
+      'getNextCalendarDate', 'getCalendarRange']) {
+      const domain = catalog.entries.find(item => item.kind === 'domain' && item.name === name);
+      expect(domain?.bindings[0]).toMatchObject({ layer: 1, importPath: '@dreadnought/core' });
+      checkExamples(context, domain!.bindings[0].examples);
+    }
+    const directory = mkdtempSync(path.join(tmpdir(), 'date-picker-catalog-'));
+    temporaryRoots.push(directory);
+    const catalogPath = path.join(directory, 'catalog.json');
+    writeFileSync(catalogPath, JSON.stringify(catalog));
+    const config = { catalogPath, projectPath: path.join(root, 'apps/docs') };
+    const ready = invokeCatalog('context', { components: ['DatePicker'], format: 'usage' }, config);
+    expect(ready.isError).toBeUndefined();
+    expect(JSON.stringify(ready.structuredContent)).toContain('@dreadnought/ui/react');
+    const core = invokeCatalog('get', { component: 'getCalendarGrid' }, config);
+    expect(core.isError).toBeUndefined();
+    expect(JSON.stringify(core.structuredContent)).toContain('@dreadnought/core');
+  });
   it('publishes Upload in React layers and standalone selection/state behaviors', () => {
     const upload = catalog.entries.find(entry => entry.id === 'component:upload');
     expect(upload?.bindings.map(binding => binding.exportName)).toEqual(
