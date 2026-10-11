@@ -1,9 +1,17 @@
 {
-  "id": "component:upload", "kind": "component", "name": "Upload", "family": "Fields",
+  "id": "component:upload",
+  "kind": "component",
+  "name": "Upload",
+  "family": "Fields",
   "description": "Выбор и отправка файлов с ограничениями, отменой, повтором и прогрессом.",
   "docsUrl": "/components/upload/#upload-api",
   "states": ["ready", "uploading", "success", "error", "canceled", "disabled"],
-  "composesWith": ["behavior:get-upload-selection", "behavior:get-upload-item-state", "action:pick-files", "component:form"],
+  "composesWith": [
+    "behavior:get-upload-selection",
+    "behavior:get-upload-item-state",
+    "action:pick-files",
+    "component:form"
+  ],
   "constraints": [
     "useUpload владеет списком File. Нет внешних fileList/defaultFileList; Upload принимает модель hook.",
     "Без upload работает выбор файлов для Form. autoUpload по умолчанию false; true требует upload.",
@@ -12,22 +20,51 @@
     "accept и maxSize проверяют метаданные, не безопасность содержимого. Сервер обязан повторить проверку.",
     "multiple=false не заменяет существующий файл. Все сохранённые статусы занимают место до remove/clear. clear отменяет и системный picker."
   ],
-  "bindings": [{
-    "id": "react-adapter", "layer": 2, "framework": "react",
-    "importPath": "@dreadnought/react/unstyled", "exportName": "UploadAdapter",
-    "propertyDescriptions": { "upload": "Модель useUpload.", "label": "Доступное название выбора файлов.", "dropzone": "Перетаскивание в дополнение к клавиатурной кнопке.", "renderAction": "Одна native button с предоставленными onClick/disabled/label.", "renderProgress": "Представление прогресса записи." },
-    "examples": [{ "id": "selection", "code": "import { useUpload } from '@dreadnought/react/logic';\nimport { UploadAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  const upload = useUpload({ multiple: true });\n  return <UploadAdapter upload={upload} label=\"Прикрепить файлы\" dropzone />;\n}" }]
-  }, {
-    "id": "react-logic", "layer": 2, "framework": "react",
-    "importPath": "@dreadnought/react/logic", "exportName": "useUpload",
-    "defaults": { "multiple": false, "autoUpload": false, "disabled": false },
-    "propertyDescriptions": {
-      "accept": "Расширения, точные MIME и семейства MIME через запятую.",
-      "maxCount": "Максимальное число сохранённых файлов.",
-      "maxSize": "Максимальный размер файла в байтах включительно.",
-      "upload": "Функция отправки файла, получает AbortSignal и onProgress.",
-      "autoUpload": "Запуск отправки сразу после принятия файла."
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "UploadAdapter",
+      "propertyDescriptions": {
+        "upload": "Модель useUpload.",
+        "label": "Доступное название выбора файлов.",
+        "dropzone": "Перетаскивание в дополнение к клавиатурной кнопке.",
+        "renderAction": "Одна native button с предоставленными onClick/disabled/label.",
+        "renderProgress": "Представление прогресса записи."
+      },
+      "examples": [
+        {
+          "id": "selection",
+          "code": "import { useUpload } from '@dreadnought/react/logic';\nimport { UploadAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  const upload = useUpload({ multiple: true });\n  return <UploadAdapter upload={upload} label=\"Прикрепить файлы\" dropzone />;\n}"
+        }
+      ]
     },
-    "examples": [{ "id": "selection", "code": "import { useUpload } from '@dreadnought/react/logic';\nexport function Example() {\n  const upload = useUpload({ accept: '.pdf', multiple: true, maxCount: 3 });\n  return <button type=\"button\" onClick={() => { void upload.pick(); }}>Выбрать документы</button>;\n}" }]
-  }]
+    {
+      "id": "react-logic",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/logic",
+      "exportName": "useUpload",
+      "defaults": { "multiple": false, "autoUpload": false, "disabled": false },
+      "propertyDescriptions": {
+        "accept": "Расширения, точные MIME и семейства MIME через запятую.",
+        "maxCount": "Максимальное число сохранённых файлов.",
+        "maxSize": "Максимальный размер файла в байтах включительно.",
+        "upload": "Функция отправки файла, получает AbortSignal и onProgress.",
+        "autoUpload": "Запуск отправки сразу после принятия файла."
+      },
+      "examples": [
+        {
+          "id": "transport",
+          "code": "import { useUpload } from '@dreadnought/react/logic';\nexport function Example() {\n  const upload = useUpload({\n    upload: async (file, { signal }) => {\n      const body = new FormData();\n      body.append('file', file);\n      const response = await fetch('/api/upload', { method: 'POST', body, signal });\n      if (!response.ok) throw new Error('Upload failed');\n    },\n  });\n  return <>\n    <button type=\"button\" onClick={() => { void upload.pick(); }}>Выбрать файл</button>\n    <button type=\"button\" onClick={() => { void upload.startAll(); }}>Отправить</button>\n  </>;\n}"
+        },
+        {
+          "id": "selection",
+          "code": "import { useUpload } from '@dreadnought/react/logic';\nexport function Example() {\n  const upload = useUpload({ accept: '.pdf', multiple: true, maxCount: 3 });\n  return <button type=\"button\" onClick={() => { void upload.pick(); }}>Выбрать документы</button>;\n}"
+        }
+      ]
+    }
+  ]
 }

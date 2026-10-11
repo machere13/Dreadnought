@@ -1,5 +1,11 @@
 // Agent-facing examples, type-checked during catalog generation. No screen logic.
 export const usageExamples = {
+  Upload: `import { useUpload } from '@dreadnought/react/logic';
+import { Upload } from '@dreadnought/ui/react';
+export function Example() {
+  const upload = useUpload({ accept: '.pdf', multiple: true, maxCount: 3 });
+  return <Upload upload={upload} label="Выбрать документы" dropzone />;
+}`,
   Form: `import { useForm } from '@dreadnought/react/logic';
 import { Form, FormField, Input, Button } from '@dreadnought/ui/react';
 const requiredName = (value: string) => value.trim() ? undefined : 'Введите имя';

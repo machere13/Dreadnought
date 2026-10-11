@@ -45,7 +45,7 @@ it('keeps navigation and sidebar independent of component documents', () => {
 it('loads only the requested document through each component route', () => {
   const routes = readdirSync(path.join(root, 'pages/components'))
     .filter(component => existsSync(path.join(root, 'pages/components', component, 'index.astro')));
-  expect(routes).toHaveLength(38);
+  expect(routes).toHaveLength(39);
   for (const component of routes) {
     const files = [...dependencies(`pages/components/${component}/index.astro`)];
     const docs = files.filter(file => /Doc\.tsx$/.test(file));

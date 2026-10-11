@@ -35,6 +35,17 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes Upload in React layers and standalone selection/state behaviors', () => {
+    const upload = catalog.entries.find(entry => entry.id === 'component:upload');
+    expect(upload?.bindings.map(binding => binding.exportName)).toEqual(
+      expect.arrayContaining(['useUpload', 'UploadAdapter', 'Upload']),
+    );
+    expect(catalog.entries.find(entry => entry.id === 'behavior:get-upload-selection')
+      ?.bindings[0].exportName).toBe('getUploadSelection');
+    expect(catalog.entries.find(entry => entry.id === 'behavior:get-upload-item-state')
+      ?.bindings[0].exportName).toBe('getUploadItemState');
+    expect(upload?.bindings.every(binding => binding.examples.length > 0)).toBe(true);
+  });
   it('publishes Form logic, adapters, UI and reusable core behaviors', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:form');
     expect(entry).toMatchObject({ family: 'Fields', docsUrl: '/components/form/#form-api' });
@@ -265,7 +276,7 @@ describe('public catalog', () => {
       'getFormState', 'getFormValidationState', 'getHistoryState', 'getNavigationDirection',
       'getNextEnabledValue', 'getSelectionValue', 'getSteppedRange', 'getSteppedValue',
       'getTextFieldState', 'getTooltipPosition', 'getTreeCheckState', 'getTreeKeyAction',
-      'getTypeaheadValue', 'getVirtualWindow', 'getVisibleMenuRows', 'getVisibleTreeRows',
+      'getTypeaheadValue', 'getUploadItemState', 'getUploadSelection', 'getVirtualWindow', 'getVisibleMenuRows', 'getVisibleTreeRows',
       'pickFiles', 'readClipboard', 'resetFormState', 'setFormError', 'setFormTouched', 'setFormValue',
     ]);
     expect(capabilities.every(entry => entry.tokens.length === 0 && entry.bindings.length === 1 && entry.bindings[0].layer === 1)).toBe(true);
