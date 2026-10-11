@@ -1,0 +1,43 @@
+{
+  "componentId": "component:form",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Form",
+      "propertyDescriptions": {
+        "form": "Состояние и операции useForm.",
+        "onFinish": "Обработчик проверенных значений; Promise блокирует повторную отправку."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { useForm } from '@dreadnought/react/logic';\nimport { Form, FormField, Input, Button } from '@dreadnought/ui/react';\nexport function Example() {\n  const form = useForm({ initialValues: { name: '' } });\n  const name = form.field('name');\n  return <Form form={form} onFinish={values => { console.log(values.name); }}>\n    <FormField label=\"Имя\" error={name.error}>{props =>\n      <Input {...props} value={name.value}\n        onChange={event => name.setValue(event.target.value)}\n        onBlur={name.onBlur} />}\n    </FormField>\n    <Button type=\"submit\">Сохранить</Button>\n  </Form>;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-ui-field",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "FormField",
+      "propertyDescriptions": {
+        "label": "Доступное название контрола.",
+        "help": "Подсказка поля.",
+        "error": "Текст ошибки; undefined снимает её.",
+        "required": "Визуальная отметка и aria-required.",
+        "controlId": "id реального контрола.",
+        "children": "Функция, получающая id и ARIA-пропсы реального контрола."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { FormField, Input } from '@dreadnought/ui/react';\nconst example = <FormField label=\"Имя\" help=\"Ваше имя\">{props => <Input {...props} />}</FormField>;"
+        }
+      ]
+    }
+  ]
+}

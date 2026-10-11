@@ -1,0 +1,91 @@
+{
+  "id": "component:form",
+  "kind": "component",
+  "name": "Form",
+  "family": "Fields",
+  "description": "Общая логика форм и доступная разметка для любых контролов.",
+  "docsUrl": "/components/form/#form-api",
+  "states": [
+    "invalid",
+    "validating",
+    "submitting",
+    "dirty",
+    "touched"
+  ],
+  "constraints": [
+    "Явные value/checked и события; без клонирования children.",
+    "Строковые собственные ключи initialValues, без вложенных путей. Dirty использует Object.is; объекты изменяются иммутабельно.",
+    "reset() восстанавливает текущий baseline, reset(values) заменяет baseline с теми же ключами.",
+    "Последний запуск проверки выигрывает. Изменение значений/reset/setError отменяет старые проверки; signal может быть проигнорирован правилом.",
+    "Form с моделью требует onFinish и использует noValidate; без модели — нативная форма. DOM handlers вызываются первыми; preventDefault отменяет действие.",
+    "Стабилизируйте функции validators. Новая функция правила инвалидирует текущую проверку."
+  ],
+  "composesWith": [
+    "behavior:create-form-state",
+    "behavior:get-form-validation-state",
+    "component:input",
+    "component:select",
+    "component:checkbox"
+  ],
+  "bindings": [
+    {
+      "id": "react-logic",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/logic",
+      "exportName": "useForm",
+      "defaults": {
+        "validateOn": "blur"
+      },
+      "propertyDescriptions": {
+        "initialValues": "Полный начальный снимок значений.",
+        "validators": "Правила полей: значение, все значения, {signal}.",
+        "validateOn": "blur, change или submit; проверка перед отправкой обязательна."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { useForm } from '@dreadnought/react/logic';\nexport function Example() {\n  const form = useForm({ initialValues: { name: '' } });\n  const name = form.field('name');\n  return <input value={name.value}\n    onChange={event => name.setValue(event.target.value)}\n    onBlur={name.onBlur} />;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "FormAdapter",
+      "propertyDescriptions": {
+        "form": "Состояние и операции useForm.",
+        "onFinish": "Обработчик проверенных значений; Promise блокирует повторную отправку."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { useForm } from '@dreadnought/react/logic';\nimport { FormAdapter, FormFieldAdapter } from '@dreadnought/react/unstyled';\nexport function Example() {\n  const form = useForm({ initialValues: { name: '' } });\n  const name = form.field('name');\n  return <FormAdapter form={form} onFinish={values => { console.log(values.name); }}>\n    <FormFieldAdapter label=\"Имя\" error={name.error}>{props =>\n      <input {...props} value={name.value}\n        onChange={event => name.setValue(event.target.value)}\n        onBlur={name.onBlur} />}\n    </FormFieldAdapter>\n    <button type=\"submit\">Сохранить</button>\n  </FormAdapter>;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-adapter-field",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "FormFieldAdapter",
+      "propertyDescriptions": {
+        "label": "Доступное название контрола.",
+        "help": "Подсказка поля.",
+        "error": "Текст ошибки; undefined снимает её.",
+        "required": "Визуальная отметка и aria-required.",
+        "controlId": "id реального контрола.",
+        "children": "Функция, получающая id и ARIA-пропсы реального контрола."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { FormFieldAdapter } from '@dreadnought/react/unstyled';\nconst example = <FormFieldAdapter label=\"Имя\" help=\"Ваше имя\">{props => <input {...props} />}</FormFieldAdapter>;"
+        }
+      ]
+    }
+  ]
+}

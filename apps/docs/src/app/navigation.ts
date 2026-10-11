@@ -13,6 +13,7 @@ export const componentFamilies: readonly { name: string; sections: readonly Comp
       name: 'Fields',
       sections: [
         'input',
+        'form',
         'textarea',
         'markdowneditor',
         'checkbox',
@@ -46,6 +47,7 @@ export const componentTitles = {
   loader: 'Loader',
   progress: 'Progress',
   input: 'Input',
+  form: 'Form',
   textarea: 'TextArea',
   markdowneditor: 'MarkdownEditor',
   checkbox: 'Checkbox',

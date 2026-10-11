@@ -35,6 +35,23 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes Form logic, adapters, UI and reusable core behaviors', () => {
+    const entry = catalog.entries.find(entry => entry.id === 'component:form');
+    expect(entry).toMatchObject({ family: 'Fields', docsUrl: '/components/form/#form-api' });
+    expect(entry!.bindings.map(binding => binding.exportName)).toEqual([
+      'useForm', 'FormAdapter', 'FormFieldAdapter', 'Form', 'FormField',
+    ]);
+    expect(entry!.bindings.map(binding => binding.layer)).toEqual([2, 2, 2, 3, 3]);
+    expect(entry!.tokens.some(token => token.name === '--dreadnought-form-gap')).toBe(true);
+    for (const name of [
+      'create-form-state', 'set-form-value', 'set-form-touched', 'set-form-error',
+      'reset-form-state', 'get-form-state', 'get-form-validation-state',
+    ]) {
+      const behavior = catalog.entries.find(entry => entry.id === `behavior:${name}`);
+      expect(behavior!.bindings[0]).toMatchObject({ layer: 1, framework: null, importPath: '@dreadnought/core' });
+    }
+    for (const binding of entry!.bindings) expect(() => checkExamples(context, binding.examples)).not.toThrow();
+  });
   it('publishes Tree with checked core, adapter and ready UI examples', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:tree');
     expect(entry).toMatchObject({ name: 'Tree', family: 'Navigation', docsUrl: '/components/tree/#tree-api' });
@@ -242,7 +259,15 @@ describe('public catalog', () => {
   });
   it('publishes standalone actions and behaviors with checked public contracts', () => {
     const capabilities = catalog.entries.filter(entry => entry.kind === 'action' || entry.kind === 'behavior');
-    expect(capabilities.map(entry => entry.name).sort()).toEqual(['copy', 'download', 'getCheckableState', 'getComboboxKeyAction', 'getContentMountState', 'getCountdownRemaining', 'getDisclosureOpen', 'getDisclosureState', 'getHistoryState', 'getNavigationDirection', 'getNextEnabledValue', 'getSelectionValue', 'getSteppedRange', 'getSteppedValue', 'getTextFieldState', 'getTooltipPosition', 'getTreeCheckState', 'getTreeKeyAction', 'getTypeaheadValue', 'getVirtualWindow', 'getVisibleMenuRows', 'getVisibleTreeRows', 'pickFiles', 'readClipboard']);
+    expect(capabilities.map(entry => entry.name).sort()).toEqual([
+      'copy', 'createFormState', 'download', 'getCheckableState', 'getComboboxKeyAction',
+      'getContentMountState', 'getCountdownRemaining', 'getDisclosureOpen', 'getDisclosureState',
+      'getFormState', 'getFormValidationState', 'getHistoryState', 'getNavigationDirection',
+      'getNextEnabledValue', 'getSelectionValue', 'getSteppedRange', 'getSteppedValue',
+      'getTextFieldState', 'getTooltipPosition', 'getTreeCheckState', 'getTreeKeyAction',
+      'getTypeaheadValue', 'getVirtualWindow', 'getVisibleMenuRows', 'getVisibleTreeRows',
+      'pickFiles', 'readClipboard', 'resetFormState', 'setFormError', 'setFormTouched', 'setFormValue',
+    ]);
     expect(capabilities.every(entry => entry.tokens.length === 0 && entry.bindings.length === 1 && entry.bindings[0].layer === 1)).toBe(true);
     const selection = capabilities.find(entry => entry.name === 'getSelectionValue');
     expect(selection.bindings[0].contracts).toHaveLength(3);
