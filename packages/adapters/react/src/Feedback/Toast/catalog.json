@@ -36,15 +36,50 @@
       ]
     },
     {
-      "id": "react-adapter-viewport", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/unstyled", "exportName": "ToastViewportAdapter",
+      "id": "react-adapter-viewport",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "ToastViewportAdapter",
       "propertyDescriptions": { "placement": "Положение контейнера; адаптер сам не задаёт CSS." },
       "defaults": { "placement": "top-end" },
-      "examples": [{ "id": "stack", "code": "import { ToastAdapter, ToastViewportAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <ToastViewportAdapter><ToastAdapter title=\"Сохранено\" /></ToastViewportAdapter>; }" }]
+      "examples": [
+        {
+          "id": "stack",
+          "code": "import { ToastAdapter, ToastViewportAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <ToastViewportAdapter><ToastAdapter title=\"Сохранено\" /></ToastViewportAdapter>; }"
+        }
+      ]
     },
     {
-      "id": "react-logic", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/logic", "exportName": "useToast",
+      "id": "react-logic",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/logic",
+      "exportName": "useToast",
       "defaults": { "defaultOpen": true, "duration": 3000 },
-      "examples": [{ "id": "basic", "code": "import { useToast } from '@dreadnought/react/logic';\nimport { getToastState } from '@dreadnought/core';\nexport function Example() {\n  const toast = useToast();\n  const state = getToastState({ open: toast.open });\n  if (!state.open) return null;\n  return <div {...state.rootProps} onMouseEnter={() => toast.setHovered(true)} onMouseLeave={() => toast.setHovered(false)} onFocus={() => toast.setFocused(true)} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) toast.setFocused(false); }}>Сохранено<button onClick={toast.close}>Закрыть</button></div>;\n}" }]
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { useToast } from '@dreadnought/react/logic';\nimport { getToastState } from '@dreadnought/core';\nexport function Example() {\n  const toast = useToast();\n  const state = getToastState({ open: toast.open });\n  if (!state.open) return null;\n  return <div {...state.rootProps} onMouseEnter={() => toast.setHovered(true)} onMouseLeave={() => toast.setHovered(false)} onFocus={() => toast.setFocused(true)} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) toast.setFocused(false); }}>Сохранено<button onClick={toast.close}>Закрыть</button></div>;\n}"
+        }
+      ]
+    },
+    {
+      "id": "react-logic-queue",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/logic",
+      "exportName": "useToastQueue",
+      "description": "Очередь Toast: items содержат id и props для Toast. add возвращает id; update меняет свойства по id; remove закрывает одно уведомление, clear закрывает все. Таймер остаётся в Toast.",
+      "propertyDescriptions": {
+        "maxCount": "Лимит уведомлений; удаляются самые старые. Без значения лимита нет."
+      },
+      "examples": [
+        {
+          "id": "queue",
+          "code": "import { useToastQueue } from '@dreadnought/react/logic';\nimport { Toast, ToastViewport, Button } from '@dreadnought/ui/react';\nexport function Example() {\n  const queue = useToastQueue({ maxCount: 3 });\n  return <><Button onClick={() => queue.add({ title: 'Сохранено', type: 'success' })}>Показать</Button><ToastViewport>{queue.items.map(({ id, props }) => <Toast key={id} {...props} />)}</ToastViewport></>;\n}"
+        }
+      ]
     }
   ]
 }

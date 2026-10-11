@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "packages/ui/tests/toastQueue.types.tsx",
     "packages/ui/tests/loader.types.tsx",
     "packages/ui/tests/fieldAppearance.types.tsx",
     "packages/ui/tests/adapters/react/components/Surfaces/Card/Card.types.tsx",

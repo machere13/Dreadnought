@@ -13,7 +13,9 @@ it('documents Progress with a real editable value and a Feedback link', () => {
   expect(progress.getAttribute('aria-valuenow')).toBe('35');
   fireEvent.click(screen.getByRole('button', { name: 'Увеличить' }));
   expect(progress.getAttribute('aria-valuenow')).toBe('45');
-  expect(screen.getByRole('link', { name: 'Progress' }).getAttribute('href')).toBe('/components/progress/');
+  expect(screen.getByRole('link', { name: 'Progress' }).getAttribute('href')).toBe(
+    '/components/progress/',
+  );
 });
 it('shows a real toast from the documentation demo', () => {
   render(<DocsPage section="toast" />);
@@ -39,4 +41,18 @@ it('toggles the loader over actual documentation content', () => {
   fireEvent.click(screen.getByRole('button', { name: 'Завершить загрузку' }));
   expect(screen.queryByRole('status', { name: 'Загрузка данных' })).toBeNull();
   expect(content?.hasAttribute('inert')).toBe(false);
+});
+
+it('updates a queued toast in place and removes it after its new duration', () => {
+  vi.useFakeTimers();
+  render(<DocsPage section="toast" />);
+  fireEvent.click(screen.getByRole('button', { name: 'Начать сохранение' }));
+  const toast = screen.getByRole('status');
+  act(() => vi.advanceTimersByTime(5000));
+  expect(toast.textContent).toContain('Сохраняем');
+  fireEvent.click(screen.getByRole('button', { name: 'Завершить сохранение' }));
+  expect(screen.getByRole('status')).toBe(toast);
+  expect(toast.textContent).toContain('Сохранено');
+  act(() => vi.advanceTimersByTime(3000));
+  expect(screen.queryByRole('status')).toBeNull();
 });
