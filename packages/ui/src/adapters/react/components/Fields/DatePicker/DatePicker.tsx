@@ -30,12 +30,17 @@ export function DatePicker({ className, slotClassNames, ...props }: DatePickerPr
     <DatePickerAdapter
       {...props}
       className={[datePickerPresentation.root, className].filter(Boolean).join(' ')}
-      slotClassNames={{ ...slotClassNames, ...Object.fromEntries(
-        Object.entries(datePickerPresentation.slots).map(([name, value]) => [
-          name,
-          [value, slotClassNames?.[name as keyof typeof slotClassNames]].filter(Boolean).join(' '),
-        ]),
-      )}}
+      slotClassNames={{
+        ...slotClassNames,
+        ...Object.fromEntries(
+          Object.entries(datePickerPresentation.slots).map(([name, value]) => [
+            name,
+            [value, slotClassNames?.[name as keyof typeof slotClassNames]]
+              .filter(Boolean)
+              .join(' '),
+          ]),
+        ),
+      }}
       renderField={(field) => (
         <Input {...field} controlSize={field.type === 'number' ? 'compact' : 'default'} />
       )}

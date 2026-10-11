@@ -8,6 +8,18 @@ import type { CalendarNavigation } from '../../../src/index.ts';
 
 const limits = { minDate: '2026-10-01', maxDate: '2026-10-31' };
 
+it('bounds predicate work when every following date is disabled', () => {
+  let calls = 0;
+  const date = getNextCalendarDate('2026-10-12', 'nextDay', {
+    disabledDate: (candidate) => {
+      calls++;
+      return candidate > '2026-10-12';
+    },
+  });
+  expect(date).toBe('2026-10-12');
+  expect(calls).toBeLessThanOrEqual(366);
+});
+
 it('enforces inclusive bounds and predicate', () => {
   expect(isCalendarDateAllowed('2026-10-01', limits)).toBe(true);
   expect(isCalendarDateAllowed('2026-10-31', limits)).toBe(true);

@@ -52,7 +52,7 @@ export function useAnchoredPopover(
         gap,
         arrowPadding,
       });
-      const clamp = matchAnchorWidth && tooltip.autoAdjustOverflow;
+      const clamp = (matchAnchorWidth || !tooltip.arrow) && tooltip.autoAdjustOverflow;
       const left = clamp
         ? Math.max(0, Math.min(result.left, viewport.clientWidth - box.width))
         : result.left;

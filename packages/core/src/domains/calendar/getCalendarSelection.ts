@@ -79,7 +79,7 @@ export function getNextCalendarDate(
     upper = Math.min(upper, timestamp + (6 - weekOffset) * calendarDayMilliseconds);
   }
   const first = calendarTimestamp(assertCalendarDate(target));
-  const steps = Math.floor((upper - lower) / calendarDayMilliseconds) + 1;
+  const steps = Math.min(366, Math.floor((upper - lower) / calendarDayMilliseconds) + 1);
   for (let index = 0; index < steps; index++) {
     const candidateTime = first + index * direction * calendarDayMilliseconds;
     if (candidateTime < lower || candidateTime > upper) break;

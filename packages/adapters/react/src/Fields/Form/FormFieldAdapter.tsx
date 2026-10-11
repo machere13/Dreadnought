@@ -13,6 +13,7 @@ export function FormFieldAdapter({
   const generated = useId();
   const id = controlId ?? `${generated}-control`;
   const helpId = `${generated}-help`;
+  const labelId = `${generated}-label`;
   const errorId = `${generated}-error`;
   const hasHelp = help !== undefined && help !== null && help !== false;
   const hasError = error !== undefined;
@@ -20,7 +21,7 @@ export function FormFieldAdapter({
   return (
     <div {...props} data-ui="form-field" data-invalid={hasError ? '' : undefined}>
       {label !== undefined && label !== null && (
-        <label htmlFor={id} data-slot="label">
+        <label id={labelId} htmlFor={id} data-slot="label">
           {label}
           {required && (
             <span data-slot="required" aria-hidden="true">
@@ -32,6 +33,7 @@ export function FormFieldAdapter({
       )}
       {children({
         id,
+        'aria-labelledby': label !== undefined && label !== null ? labelId : undefined,
         'aria-describedby': description || undefined,
         'aria-invalid': hasError ? true : undefined,
         'aria-required': required ? true : undefined,

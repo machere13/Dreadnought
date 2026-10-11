@@ -227,6 +227,19 @@ export function useDatePicker(options: UseDatePickerOptions = {}): UseDatePicker
       update({ open: false });
       if (wasOpen) options.onOpenChange?.(false);
     }
+    if (!options.disabled && (options.open ?? current.current.open)) {
+      const state = current.current;
+      const month = clampDatePickerMonth(state.month, limits);
+      const rangeStart = state.range.end === null ? (state.range.start ?? undefined) : undefined;
+      const activeDate = firstDatePickerDay(
+        month,
+        state.activeDate ?? month,
+        limits,
+        weekStartsOn,
+        rangeStart,
+      );
+      if (month !== state.month || activeDate !== state.activeDate) update({ month, activeDate });
+    }
     previous.current = { mode, value: key, disabled: options.disabled, open: options.open };
   });
   useEffect(() => {

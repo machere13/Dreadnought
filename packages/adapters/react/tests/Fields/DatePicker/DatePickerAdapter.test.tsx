@@ -4,8 +4,133 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
 import { DatePickerAdapter } from '../../../src/unstyled.ts';
 import { OverlayVisibilityContext } from '../../../src/shared/OverlayVisibilityContext.ts';
+import { FormFieldAdapter } from '../../../src/unstyled.ts';
 
 afterEach(cleanup);
+
+it('continues contextual range selection entirely by keyboard', async () => {
+  const user = userEvent.setup();
+  render(
+    <DatePickerAdapter
+      mode="range"
+      aria-label="Period"
+      defaultValue={['2026-10-12', '2026-10-20']}
+      disabledDate={(date, { from }) => from !== undefined && date <= from}
+    />,
+  );
+  await user.click(screen.getByRole('button', { name: 'Open calendar' }));
+  await user.keyboard('{Enter}');
+  expect(document.activeElement?.getAttribute('data-date')).toBe('2026-10-13');
+  await user.keyboard('{Enter}');
+  expect(screen.getByRole('textbox', { name: 'Period end' })).toHaveProperty('value', '2026-10-13');
+  expect(screen.queryByRole('dialog')).toBeNull();
+});
+
+it('submits single and range values to their explicit external form', () => {
+  render(
+    <>
+      <form id="external" aria-label="External" />
+      <DatePickerAdapter form="external" name="date" defaultValue="2026-10-12" />
+      <DatePickerAdapter
+        form="external"
+        mode="range"
+        name="period"
+        defaultValue={['2026-10-10', '2026-10-20']}
+      />
+    </>,
+  );
+  const data = new FormData(screen.getByRole('form', { name: 'External' }) as HTMLFormElement);
+  expect(data.get('date')).toBe('2026-10-12');
+  expect(data.get('period.start')).toBe('2026-10-10');
+  expect(data.get('period.end')).toBe('2026-10-20');
+});
+
+it('distinguishes labelled range endpoints including FormField labels', () => {
+  render(
+    <>
+      <span id="period-label">Period</span>
+      <DatePickerAdapter mode="range" aria-labelledby="period-label" />
+      <FormFieldAdapter label="Booking">
+        {(props) => <DatePickerAdapter {...props} mode="range" />}
+      </FormFieldAdapter>
+    </>,
+  );
+  for (const name of ['Period start', 'Period end', 'Booking start', 'Booking end']) {
+    expect(screen.getByRole('textbox', { name })).toBeTruthy();
+  }
+});
+
+it('uses Gregorian years even when the locale defaults to another calendar', async () => {
+  const user = userEvent.setup();
+  render(<DatePickerAdapter defaultValue="2026-10-12" locale="th-TH" />);
+  await user.click(screen.getByRole('button', { name: 'Open calendar' }));
+  expect(screen.getByRole('grid').getAttribute('aria-label')).toContain('2026');
+  expect(screen.getByRole('grid').getAttribute('aria-label')).not.toContain('2569');
+});
+
+it('keeps an arrowless calendar within a narrow viewport without matching anchor width', () => {
+  const viewport = document.documentElement;
+  const width = Object.getOwnPropertyDescriptor(viewport, 'clientWidth');
+  const height = Object.getOwnPropertyDescriptor(viewport, 'clientHeight');
+  Object.defineProperties(viewport, {
+    clientWidth: { configurable: true, value: 390 },
+    clientHeight: { configurable: true, value: 844 },
+  });
+  const measure = vi
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockImplementation(function () {
+      const popup = this.hasAttribute('popover');
+      return {
+        x: 70,
+        y: 500,
+        left: 70,
+        top: 500,
+        width: popup ? 366 : 280,
+        height: popup ? 320 : 40,
+        bottom: 540,
+        right: 350,
+        toJSON: () => ({}),
+      };
+    });
+  try {
+    render(<DatePickerAdapter aria-label="Date" defaultOpen />);
+    expect(parseFloat(screen.getByRole('dialog').style.left)).toBeLessThanOrEqual(24);
+    expect(screen.getByRole('dialog').style.minWidth).toBe('0px');
+  } finally {
+    cleanup();
+    measure.mockRestore();
+    if (width) Object.defineProperty(viewport, 'clientWidth', width);
+    else Reflect.deleteProperty(viewport, 'clientWidth');
+    if (height) Object.defineProperty(viewport, 'clientHeight', height);
+    else Reflect.deleteProperty(viewport, 'clientHeight');
+  }
+});
+
+it('focuses the calendar only after the native popover is shown', async () => {
+  const nativeFocus = HTMLElement.prototype.focus;
+  const descriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'showPopover');
+  Object.defineProperty(HTMLElement.prototype, 'showPopover', {
+    configurable: true,
+    value() {
+      this.dataset.shown = 'true';
+    },
+  });
+  const focus = vi.spyOn(HTMLElement.prototype, 'focus').mockImplementation(function () {
+    const popup = this.closest<HTMLElement>('[popover]');
+    if (!popup || popup.dataset.shown === 'true') nativeFocus.call(this);
+  });
+  try {
+    const user = userEvent.setup();
+    render(<DatePickerAdapter aria-label="Date" defaultValue="2026-10-12" />);
+    await user.click(screen.getByRole('button', { name: 'Open calendar' }));
+    expect(document.activeElement?.getAttribute('data-date')).toBe('2026-10-12');
+  } finally {
+    cleanup();
+    focus.mockRestore();
+    if (descriptor) Object.defineProperty(HTMLElement.prototype, 'showPopover', descriptor);
+    else Reflect.deleteProperty(HTMLElement.prototype, 'showPopover');
+  }
+});
 
 it('opens with focused selected day and selects the next day by keyboard', async () => {
   const user = userEvent.setup();

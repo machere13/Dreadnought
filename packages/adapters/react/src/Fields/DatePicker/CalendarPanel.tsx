@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { KeyboardEvent, MutableRefObject } from 'react';
 import {
   addCalendarMonths,
@@ -13,7 +13,7 @@ import type {
   DatePickerSlotClassNames,
   UseDatePickerResult,
 } from './datePicker.types.ts';
-import { localCalendarToday } from './datePickerState.ts';
+import { firstDatePickerDay, localCalendarToday } from './datePickerState.ts';
 
 export function calendarDateLabel(
   date: CalendarDate,
@@ -23,7 +23,11 @@ export function calendarDateLabel(
   const parts = assertCalendarDate(date);
   const value = new Date(0);
   value.setUTCFullYear(parts.year, parts.month - 1, parts.day);
-  return new Intl.DateTimeFormat(locale, { ...options, timeZone: 'UTC' }).format(value);
+  return new Intl.DateTimeFormat(locale, {
+    ...options,
+    calendar: 'gregory',
+    timeZone: 'UTC',
+  }).format(value);
 }
 
 export function nativeDatePickerAction({ action: _action, ...props }: DatePickerActionProps) {
@@ -60,10 +64,13 @@ export function CalendarPanel({
   const cells = getCalendarGrid(picker.month, picker.weekStartsOn);
   const from =
     picker.range.start !== null && picker.range.end === null ? picker.range.start : undefined;
-  const active =
-    picker.activeDate !== null && isCalendarDateAllowed(picker.activeDate, picker.constraints, from)
-      ? picker.activeDate
-      : null;
+  const active = firstDatePickerDay(
+    picker.month,
+    picker.activeDate ?? picker.month,
+    picker.constraints,
+    picker.weekStartsOn,
+    from,
+  );
   const parts = assertCalendarDate(picker.month);
   const [yearText, setYearText] = useState(String(parts.year));
   useLayoutEffect(() => {
@@ -84,7 +91,7 @@ export function CalendarPanel({
       ? [picker.range.start, picker.hoveredDate].sort()
       : null;
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const node = root.current;
     if (!node) return;
     const focused = node.ownerDocument.activeElement;

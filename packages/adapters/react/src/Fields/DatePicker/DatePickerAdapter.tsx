@@ -99,6 +99,7 @@ export function DatePickerAdapter({
   }
   function choose(date: CalendarDate) {
     if (picker.readOnly) return;
+    focusRequested.current = true;
     picker.choose(date);
     if (picker.mode === 'single' || picker.range.start !== null) {
       initiator.current?.focus({ preventScroll: true });
@@ -168,6 +169,7 @@ export function DatePickerAdapter({
         {(picker.mode === 'range' ? ([0, 1] as const) : ([0] as const)).map((index) => {
           const error = picker.errors[index];
           const errorId = `${fieldId}-${index}-error`;
+          const endpointId = `${fieldId}-${index}-label`;
           const props: DatePickerFieldProps = {
             ...native,
             id: index === 0 ? fieldId : `${fieldId}-end`,
@@ -184,6 +186,10 @@ export function DatePickerAdapter({
               picker.mode === 'range'
                 ? `${baseLabel} ${index === 0 ? 'start' : 'end'}`
                 : native['aria-label'],
+            'aria-labelledby':
+              picker.mode === 'range' && native['aria-labelledby']
+                ? `${native['aria-labelledby']} ${endpointId}`
+                : native['aria-labelledby'],
             'aria-invalid': error || picker.invalid ? true : native['aria-invalid'],
             'aria-describedby':
               [native['aria-describedby'], error ? errorId : null].filter(Boolean).join(' ') ||
@@ -195,6 +201,11 @@ export function DatePickerAdapter({
           };
           return (
             <div key={index} data-slot="field">
+              {picker.mode === 'range' && native['aria-labelledby'] && (
+                <span id={endpointId} hidden>
+                  {index === 0 ? 'start' : 'end'}
+                </span>
+              )}
               {renderField(props)}
               {error && (
                 <span id={errorId} className={slotClassNames.error} role="alert">
@@ -239,6 +250,7 @@ export function DatePickerAdapter({
               <input
                 key={index}
                 type="hidden"
+                form={native.form}
                 disabled={picker.disabled}
                 name={picker.mode === 'range' ? `${name}.${index === 0 ? 'start' : 'end'}` : name}
                 value={date}

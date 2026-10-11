@@ -5,6 +5,23 @@ import { useDatePicker } from '../../../src/logic.ts';
 
 afterEach(cleanup);
 
+it('clamps an open view to changed bounds without rewriting the published value', () => {
+  const { result, rerender } = renderHook(
+    ({ minDate }) =>
+      useDatePicker({
+        defaultValue: '2026-10-12',
+        defaultOpen: true,
+        minDate,
+      }),
+    { initialProps: { minDate: '2026-10-01' } },
+  );
+  rerender({ minDate: '2026-11-01' });
+  expect(result.current.month).toBe('2026-11-01');
+  expect(result.current.activeDate).toBe('2026-11-01');
+  expect(result.current.value).toBe('2026-10-12');
+  expect(result.current.invalid).toBe(true);
+});
+
 it('publishes a range only after the second choice and sorts reversed ends', () => {
   const change = vi.fn();
   const { result } = renderHook(() => useDatePicker({ mode: 'range', onChange: change }));

@@ -10,8 +10,9 @@
     align-items: start;
   }
   .fields > [data-slot='field'] {
-    flex: 1;
-    min-width: 0;
+    flex: 1 0 10rem;
+    min-width: min(100%, 10rem);
+    max-width: 100%;
   }
   .field {
     width: 100%;

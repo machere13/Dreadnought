@@ -17,6 +17,7 @@ export type FormAdapterProps<V extends object> = ComponentPropsWithRef<'form'> &
 
 export interface FormFieldControlProps {
   id: string;
+  'aria-labelledby'?: string;
   'aria-describedby'?: string;
   'aria-invalid'?: true;
   'aria-required'?: true;
