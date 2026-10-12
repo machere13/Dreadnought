@@ -201,6 +201,28 @@ describe('local MCP stdio server', () => {
 
 describe('generated catalog over MCP', () => {
   let generatedCatalogPath: string;
+  it('serves all TreeSelect layers, search behavior and compatible Form context', async () => {
+    install('@dreadnought/react', '0.1.0');
+    await withClient(generatedCatalogPath, projectPath, async client => {
+      const overview = await client.callTool({ name: 'dreadnought_get', arguments: { component: 'TreeSelect' } });
+      expect(overview.isError).toBeUndefined();
+      expect(replyPayload(overview).result.bindings.map((binding: any) => binding.exportName))
+        .toEqual(['TreeSelectAdapter', 'useTreeSelect', 'TreeSelect']);
+      const context = await client.callTool({ name: 'dreadnought_context', arguments: {
+        components: ['TreeSelect', 'Form'], layer: 3, format: 'usage', maxBytes: 16384,
+      } });
+      expect(context.isError).toBeUndefined();
+      expect(replyPayload(context).compatibility.status).toBe('compatible');
+      expect(replyPayload(context).result.items.map((item: any) => item.binding.exportName))
+        .toEqual(['TreeSelect', 'Form']);
+      expect(replyPayload(context).result.items.every((item: any) => item.binding.importPath === '@dreadnought/ui/react')).toBe(true);
+      const core = await client.callTool({ name: 'dreadnought_get', arguments: {
+        component: 'getTreeSearchRows', binding: 'core', section: 'api',
+      } });
+      expect(core.isError).toBeUndefined();
+      expect(replyPayload(core).result.contracts[0].returnType).toBe('TreeSearchResult<RecordType, Key>');
+    });
+  });
   beforeAll(() => {
     const catalog = generateCatalog(createContext(repoRoot, packages), readMetadata(repoRoot, components));
     generatedCatalogPath = path.join(projectPath, 'generated.json');

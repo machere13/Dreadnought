@@ -36,6 +36,17 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes checked TreeSelect UI, adapter and logic contracts', () => {
+    const entry = catalog.entries.find(item => item.id === 'component:tree-select');
+    expect(entry?.bindings.map(binding => binding.exportName)).toEqual([
+      'TreeSelectAdapter', 'useTreeSelect', 'TreeSelect',
+    ]);
+    expect(entry?.bindings.map(binding => binding.importPath)).toEqual([
+      '@dreadnought/react/unstyled', '@dreadnought/react/logic', '@dreadnought/ui/react',
+    ]);
+    expect(entry?.bindings[2].defaults).toMatchObject({ multiple: false, checkStrictly: false, showSearch: false });
+    checkExamples(context, entry!.bindings.flatMap(binding => binding.examples));
+  });
   it('publishes independently checked hierarchical tree search', () => {
     const entry = catalog.entries.find(item => item.id === 'behavior:get-tree-search-rows');
     expect(entry?.bindings[0]).toMatchObject({ importPath: '@dreadnought/core', exportName: 'getTreeSearchRows' });
@@ -329,7 +340,7 @@ describe('public catalog', () => {
       'getContentMountState', 'getCountdownRemaining', 'getDisclosureOpen', 'getDisclosureState',
       'getFormState', 'getFormValidationState', 'getHistoryState', 'getNavigationDirection',
       'getNextEnabledValue', 'getSelectionValue', 'getSteppedRange', 'getSteppedValue',
-      'getTextFieldState', 'getTooltipPosition', 'getTreeCheckState', 'getTreeKeyAction',
+      'getTextFieldState', 'getTooltipPosition', 'getTreeCheckState', 'getTreeKeyAction', 'getTreeSearchRows',
       'getTypeaheadValue', 'getUploadItemState', 'getUploadSelection', 'getVirtualWindow', 'getVisibleMenuRows', 'getVisibleTreeRows',
       'pickFiles', 'readClipboard', 'resetFormState', 'setFormError', 'setFormTouched', 'setFormValue',
     ]);
