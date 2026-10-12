@@ -6,6 +6,32 @@ import { useTimePicker } from '../../../src/logic.ts';
 afterEach(cleanup);
 
 describe('time picker state', () => {
+  it('reconciles a valid controlled seconds-mode change before calculating columns', () => {
+    const onChange = vi.fn();
+    const { result, rerender } = renderHook(
+      ({ value, showSeconds }) => useTimePicker({ value, showSeconds, onChange }),
+      { initialProps: { value: '09:00:03', showSeconds: true } },
+    );
+    rerender({ value: '09:00:00', showSeconds: false });
+    expect(result.current.draft).toBe('09:00');
+    expect(result.current.selection.second).toBe(0);
+    expect(result.current.error).toBeNull();
+    expect(onChange).not.toHaveBeenCalled();
+  });
+  it('discards unconfirmed seconds when switching to a valid minutes-only mode', () => {
+    const onChange = vi.fn();
+    const { result, rerender } = renderHook(
+      ({ showSeconds }) => useTimePicker({ defaultValue: '09:00:00', showSeconds, onChange }),
+      { initialProps: { showSeconds: true } },
+    );
+    act(() => result.current.setDraft('10:07:03'));
+    rerender({ showSeconds: false });
+    expect(result.current.draft).toBe('09:00');
+    expect(result.current.value).toBe('09:00:00');
+    act(() => result.current.choose('minute', 15));
+    expect(result.current.draft).toBe('09:15');
+    expect(onChange).not.toHaveBeenCalled();
+  });
   it('revalidates a previously rejected draft when constraints change', () => {
     const { result, rerender } = renderHook(
       ({ minTime }) => useTimePicker({ defaultValue: '09:00:00', minTime }),

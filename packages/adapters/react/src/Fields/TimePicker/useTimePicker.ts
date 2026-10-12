@@ -53,17 +53,24 @@ export function useTimePicker(options: UseTimePickerOptions = {}): UseTimePicker
   const previous = useRef({ value: options.value, showSeconds, disabled: options.disabled });
   const value = options.value !== undefined ? options.value : view.value;
   timePickerText(value, showSeconds);
+  const reconcile =
+    previous.current.value !== options.value || previous.current.showSeconds !== showSeconds;
+  const selection = useMemo(
+    () => (reconcile ? timePickerSelection(value) : view.selection),
+    [reconcile, value, view.selection],
+  );
+  const draft = reconcile ? timePickerText(value, showSeconds) : view.draft;
   const open = (options.open ?? view.open) && !options.disabled;
   const blocked = Boolean(options.disabled || options.readOnly);
   const columns = useMemo(
     () => ({
-      hour: getTimeOptions('hour', view.selection, settings),
-      minute: getTimeOptions('minute', view.selection, settings),
-      second: getTimeOptions('second', view.selection, settings),
+      hour: getTimeOptions('hour', selection, settings),
+      minute: getTimeOptions('minute', selection, settings),
+      second: getTimeOptions('second', selection, settings),
     }),
-    [view.selection, settings],
+    [selection, settings],
   );
-  const draftError = timePickerDraftError(view.draft, showSeconds, settings);
+  const draftError = timePickerDraftError(draft, showSeconds, settings);
 
   function update(patch: Partial<typeof view>) {
     if (!mounted.current) return;
@@ -148,8 +155,8 @@ export function useTimePicker(options: UseTimePickerOptions = {}): UseTimePicker
   }, []);
   return {
     value,
-    draft: view.draft,
-    selection: view.selection,
+    draft,
+    selection,
     error: draftError,
     open,
     disabled: Boolean(options.disabled),
