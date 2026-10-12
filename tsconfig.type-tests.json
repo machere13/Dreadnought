@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "packages/core/tests/domains/time/time.types.ts",
     "packages/ui/tests/datepicker.types.tsx",
     "packages/ui/tests/toastQueue.types.tsx",
     "packages/ui/tests/loader.types.tsx",

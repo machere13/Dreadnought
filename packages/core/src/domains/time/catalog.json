@@ -1,0 +1,170 @@
+[
+  {
+    "id": "domain:parse-clock-time",
+    "kind": "domain",
+    "name": "parseClockTime",
+    "family": "Time",
+    "description": "Строгий разбор времени суток.",
+    "docsUrl": "/components/timepicker/#timepicker-logic",
+    "constraints": [
+      "Каноническое время HH:mm:ss внутри суток, без даты и часового пояса; входы не изменяются.",
+      "Границы включительны; шаги задают только сетку панели, а не ограничения ручного ввода.",
+      "showSeconds=false в колоночной модели допускает только секунды 00. Полностью запрещённые колонки не создают бесконечный поиск."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "parseClockTime",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { parseClockTime } from '@dreadnought/core';\nconst parts = parseClockTime('09:07:03');"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "domain:assert-clock-time",
+    "kind": "domain",
+    "name": "assertClockTime",
+    "family": "Time",
+    "description": "Проверка канонического времени.",
+    "docsUrl": "/components/timepicker/#timepicker-logic",
+    "constraints": [
+      "Каноническое время HH:mm:ss внутри суток, без даты и часового пояса; входы не изменяются.",
+      "Границы включительны; шаги задают только сетку панели, а не ограничения ручного ввода.",
+      "showSeconds=false в колоночной модели допускает только секунды 00. Полностью запрещённые колонки не создают бесконечный поиск."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "assertClockTime",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { assertClockTime } from '@dreadnought/core';\nconst parts = assertClockTime('09:07:03');"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "domain:format-clock-time",
+    "kind": "domain",
+    "name": "formatClockTime",
+    "family": "Time",
+    "description": "Формирование канонического времени.",
+    "docsUrl": "/components/timepicker/#timepicker-logic",
+    "constraints": [
+      "Каноническое время HH:mm:ss внутри суток, без даты и часового пояса; входы не изменяются.",
+      "Границы включительны; шаги задают только сетку панели, а не ограничения ручного ввода.",
+      "showSeconds=false в колоночной модели допускает только секунды 00. Полностью запрещённые колонки не создают бесконечный поиск."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "formatClockTime",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { formatClockTime } from '@dreadnought/core';\nconst time = formatClockTime({ hour: 9, minute: 7, second: 3 });"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "domain:is-clock-time-allowed",
+    "kind": "domain",
+    "name": "isClockTimeAllowed",
+    "family": "Time",
+    "description": "Проверка границ и зависимых запретов.",
+    "docsUrl": "/components/timepicker/#timepicker-logic",
+    "constraints": [
+      "Каноническое время HH:mm:ss внутри суток, без даты и часового пояса; входы не изменяются.",
+      "Границы включительны; шаги задают только сетку панели, а не ограничения ручного ввода.",
+      "showSeconds=false в колоночной модели допускает только секунды 00. Полностью запрещённые колонки не создают бесконечный поиск."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "isClockTimeAllowed",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { isClockTimeAllowed } from '@dreadnought/core';\nconst allowed = isClockTimeAllowed('09:37:00', { minTime: '09:30:00' });"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "domain:get-time-options",
+    "kind": "domain",
+    "name": "getTimeOptions",
+    "family": "Time",
+    "description": "Пункты колонки с проверкой допустимого завершения.",
+    "docsUrl": "/components/timepicker/#timepicker-logic",
+    "constraints": [
+      "Каноническое время HH:mm:ss внутри суток, без даты и часового пояса; входы не изменяются.",
+      "Границы включительны; шаги задают только сетку панели, а не ограничения ручного ввода.",
+      "showSeconds=false в колоночной модели допускает только секунды 00. Полностью запрещённые колонки не создают бесконечный поиск."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "getTimeOptions",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { getTimeOptions } from '@dreadnought/core';\nconst options = getTimeOptions('hour', { hour: null, minute: null, second: null }, { minuteStep: 15 });"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "domain:get-time-selection",
+    "kind": "domain",
+    "name": "getTimeSelection",
+    "family": "Time",
+    "description": "Выбор единицы времени с допустимым завершением.",
+    "docsUrl": "/components/timepicker/#timepicker-logic",
+    "constraints": [
+      "Каноническое время HH:mm:ss внутри суток, без даты и часового пояса; входы не изменяются.",
+      "Границы включительны; шаги задают только сетку панели, а не ограничения ручного ввода.",
+      "showSeconds=false в колоночной модели допускает только секунды 00. Полностью запрещённые колонки не создают бесконечный поиск."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "getTimeSelection",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { getTimeSelection } from '@dreadnought/core';\nconst selection = getTimeSelection({ hour: null, minute: null, second: null }, 'hour', 9, { minTime: '09:30:00' });"
+          }
+        ]
+      }
+    ]
+  }
+]
