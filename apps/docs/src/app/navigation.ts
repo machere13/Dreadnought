@@ -14,6 +14,7 @@ export const componentFamilies: readonly { name: string; sections: readonly Comp
       sections: [
         'input',
         'datepicker',
+        'timepicker',
         'form',
         'upload',
         'textarea',
@@ -50,6 +51,7 @@ export const componentTitles = {
   progress: 'Progress',
   input: 'Input',
   datepicker: 'DatePicker',
+  timepicker: 'TimePicker',
   form: 'Form',
   upload: 'Upload',
   textarea: 'TextArea',

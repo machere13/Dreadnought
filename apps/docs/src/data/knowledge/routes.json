@@ -4,7 +4,7 @@
   "/components/badge/", "/components/alert/", "/components/toast/", "/components/loader/", "/components/progress/", "/components/card/",
   "/components/accordion/", "/components/tabs/", "/components/menu/", "/components/dropdown/", "/components/table/", "/components/pagination/", "/components/tree/",
   "/components/breadcrumb/", "/components/codeblock/", "/components/icon/",
-  "/components/mark/", "/components/layout/",
+  "/components/mark/", "/components/layout/", "/components/timepicker/",
   "/components/form/", "/components/upload/", "/components/datepicker/", "/components/checkbox/", "/components/switch/", "/components/radio/", "/components/select/", "/components/slider/", "/components/toolbar/",
   "/components/radarchart/", "/components/linechart/", "/components/barchart/", "/components/tooltip/", "/components/popover/", "/components/modal/", "/components/drawer/", "/components/floatingpanel/"
 ]

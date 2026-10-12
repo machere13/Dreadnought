@@ -225,6 +225,33 @@ describe('generated catalog over MCP', () => {
         example: { code: expect.stringContaining('RadarChartAdapter label=') } });
     });
   });
+  it('serves TimePicker layers and independent time functions through real MCP', async () => {
+    install('@dreadnought/react', '0.1.0');
+    await withClient(generatedCatalogPath, projectPath, async client => {
+      const overview = await client.callTool({ name: 'dreadnought_get', arguments: { component: 'TimePicker' } });
+      expect(overview.isError).toBeUndefined();
+      expect(replyPayload(overview).result.bindings.map((binding: any) => binding.exportName))
+        .toEqual(['TimePickerAdapter', 'useTimePicker', 'TimePicker']);
+      const context = await client.callTool({ name: 'dreadnought_context', arguments: {
+        components: ['TimePicker'], layer: 3, format: 'usage', maxBytes: 8192,
+      } });
+      expect(context.isError).toBeUndefined();
+      expect(JSON.stringify(replyPayload(context).result)).toContain('@dreadnought/ui/react');
+      const core = await client.callTool({ name: 'dreadnought_get', arguments: {
+        component: 'getTimeSelection', binding: 'core', section: 'api',
+      } });
+      expect(core.isError).toBeUndefined();
+      expect(replyPayload(core).result.contracts[0]).toMatchObject({ returnType: 'TimeSelection' });
+      const example = await client.callTool({ name: 'dreadnought_context', arguments: {
+        components: ['getTimeOptions'], layer: 1, maxBytes: 8192,
+      } });
+      expect(example.isError).toBeUndefined();
+      expect(replyPayload(example).result.items[0]).toMatchObject({
+        binding: { importPath: '@dreadnought/core' },
+        example: { code: expect.stringContaining('getTimeOptions(') },
+      });
+    });
+  });
   it('serves the Radar domain through real MCP list, API and checked context', async () => {
     await withClient(generatedCatalogPath, projectPath, async client => {
       const list = await client.callTool({ name: 'dreadnought_list', arguments: { kind: 'domain', limit: 50 } });
@@ -234,7 +261,8 @@ describe('generated catalog over MCP', () => {
         'getClosestLinePoint', 'getLinePointAtX', 'isContinuousMarkdownInput', 'sampleLineLayout',
         'parseCalendarDate', 'assertCalendarDate', 'addCalendarDays', 'addCalendarMonths',
         'getCalendarGrid', 'isCalendarDateAllowed', 'getNextCalendarDate', 'getCalendarRange',
-        'searchCalendarDate',
+        'searchCalendarDate', 'parseClockTime', 'assertClockTime', 'formatClockTime',
+        'isClockTimeAllowed', 'getTimeOptions', 'getTimeSelection',
       ].sort());
       const editorApi = await client.callTool({ name: 'dreadnought_get', arguments: {
         component: 'component:markdown-editor', binding: 'react-adapter', section: 'api' } });

@@ -36,6 +36,28 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes all TimePicker layers and independent checked time capabilities', () => {
+    const entry = catalog.entries.find(entry => entry.name === 'TimePicker');
+    expect(entry?.bindings.map(binding => binding.exportName)).toEqual([
+      'TimePickerAdapter', 'useTimePicker', 'TimePicker',
+    ]);
+    expect(entry?.tokens.length).toBeGreaterThan(0);
+    for (const binding of entry!.bindings) checkExamples(context, binding.examples);
+    for (const name of ['parseClockTime', 'assertClockTime', 'formatClockTime',
+      'isClockTimeAllowed', 'getTimeOptions', 'getTimeSelection']) {
+      const domain = catalog.entries.find(item => item.kind === 'domain' && item.name === name);
+      expect(domain?.bindings[0]).toMatchObject({ layer: 1, importPath: '@dreadnought/core' });
+      checkExamples(context, domain!.bindings[0].examples);
+    }
+    const directory = mkdtempSync(path.join(tmpdir(), 'time-picker-catalog-'));
+    temporaryRoots.push(directory);
+    const catalogPath = path.join(directory, 'catalog.json');
+    writeFileSync(catalogPath, JSON.stringify(catalog));
+    const config = { catalogPath, projectPath: path.join(root, 'apps/docs') };
+    const usage = invokeCatalog('context', { components: ['TimePicker', 'Form'], format: 'usage' }, config);
+    expect(usage.isError).toBeUndefined();
+    expect(JSON.stringify(usage.structuredContent)).toContain('@dreadnought/ui/react');
+  });
   it('publishes DatePicker and independent calendar domains with checked examples', () => {
     const entry = catalog.entries.find(entry => entry.id === 'component:date-picker');
     expect(entry?.bindings.map(binding => binding.exportName)).toEqual(
