@@ -7,6 +7,7 @@
     "packages/adapters/react/tests/Fields/TreeSelect/TreeSelectPublic.types.tsx",
     "packages/core/tests/behaviors/treeSearch.types.ts",
     "packages/ui/tests/timepicker.types.tsx",
+    "packages/ui/tests/treeselect.types.tsx",
     "packages/adapters/react/tests/Fields/TimePicker/TimePickerPublic.types.tsx",
     "packages/core/tests/domains/time/time.types.ts",
     "packages/ui/tests/datepicker.types.tsx",

@@ -1,13 +1,69 @@
 {
-  "id": "component:tree-select", "kind": "component", "name": "TreeSelect", "family": "Fields",
+  "id": "component:tree-select",
+  "kind": "component",
+  "name": "TreeSelect",
+  "family": "Fields",
   "description": "Выбор значения из дерева с поиском и связанными отметками.",
   "docsUrl": "/components/treeselect/#treeselect-api",
-  "composesWith": ["component:tree", "behavior:get-tree-search-rows", "behavior:get-tree-check-state", "behavior:get-selection-value"],
-  "constraints": ["multiple=false принимает один ключ или null; multiple=true массив ключей. checkStrictly делает отметки независимыми.", "Связанный выбор публикует полностью отмеченные ключи, включая родителей. Теги сокращаются, значение не сокращается.", "Поиск сохраняет предков; отметка родителя применяется к полному дереву. Unknown keys сохраняются. Нет async/virtual и анимаций."],
-  "bindings": [{ "id": "react-adapter", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/unstyled", "exportName": "TreeSelectAdapter",
-    "defaults": { "multiple": false, "checkStrictly": false, "showSearch": false, "allowClear": true, "disabled": false, "readOnly": false, "defaultOpen": false, "placement": "bottomLeft", "autoAdjustOverflow": true },
-    "examples": [{ "id": "adapter", "code": "import { TreeSelectAdapter } from '@dreadnought/react/unstyled';\ntype Node = { id: string; label: string; children?: readonly Node[] };\nconst records: readonly Node[] = [{ id: 'front', label: 'Frontend' }];\nexport function Example() { return <TreeSelectAdapter records={records} getKey={node => node.id} getChildren={node => node.children} getLabel={node => node.label} name=\"team\" aria-label=\"Команда\" showSearch renderField={props => <input {...props} />} />; }" }] },
-    { "id": "react-logic", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/logic", "exportName": "useTreeSelect",
-    "defaults": { "multiple": false, "checkStrictly": false, "showSearch": false, "allowClear": true, "disabled": false, "readOnly": false, "defaultOpen": false },
-    "examples": [{ "id": "logic", "code": "import { useTreeSelect } from '@dreadnought/react/logic';\ntype Node = { id: string; label: string; children?: readonly Node[] };\nconst records: readonly Node[] = [{ id: 'front', label: 'Frontend' }];\nexport function Example() { const tree = useTreeSelect({ records, getKey: node => node.id, getChildren: node => node.children, getLabel: node => node.label }); return <button onClick={() => tree.select('front')}>{tree.tags[0]?.label ?? 'Выбрать'}</button>; }" }] }]
+  "states": [],
+  "parts": [],
+  "composesWith": [
+    "component:tree",
+    "behavior:get-tree-search-rows",
+    "behavior:get-tree-check-state",
+    "behavior:get-selection-value"
+  ],
+  "constraints": [
+    "multiple=false принимает один ключ или null; multiple=true массив ключей. checkStrictly делает отметки независимыми.",
+    "Связанный выбор публикует полностью отмеченные ключи, включая родителей. Теги сокращаются, значение не сокращается.",
+    "Поиск сохраняет предков; отметка родителя применяется к полному дереву. Unknown keys сохраняются. Нет async/virtual и анимаций."
+  ],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "TreeSelectAdapter",
+      "defaults": {
+        "multiple": false,
+        "checkStrictly": false,
+        "showSearch": false,
+        "allowClear": true,
+        "disabled": false,
+        "readOnly": false,
+        "defaultOpen": false,
+        "placement": "bottomLeft",
+        "autoAdjustOverflow": true
+      },
+      "examples": [
+        {
+          "id": "adapter",
+          "code": "import { TreeSelectAdapter } from '@dreadnought/react/unstyled';\ntype Node = { id: string; label: string; children?: readonly Node[] };\nconst records: readonly Node[] = [{ id: 'front', label: 'Frontend' }];\nexport function Example() { return <TreeSelectAdapter records={records} getKey={node => node.id} getChildren={node => node.children} getLabel={node => node.label} name=\"team\" aria-label=\"Команда\" showSearch renderField={props => <input {...props} />} />; }"
+        }
+      ]
+    },
+    {
+      "id": "react-logic",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/logic",
+      "exportName": "useTreeSelect",
+      "defaults": {
+        "multiple": false,
+        "checkStrictly": false,
+        "showSearch": false,
+        "allowClear": true,
+        "disabled": false,
+        "readOnly": false,
+        "defaultOpen": false
+      },
+      "examples": [
+        {
+          "id": "logic",
+          "code": "import { useTreeSelect } from '@dreadnought/react/logic';\ntype Node = { id: string; label: string; children?: readonly Node[] };\nconst records: readonly Node[] = [{ id: 'front', label: 'Frontend' }];\nexport function Example() { const tree = useTreeSelect({ records, getKey: node => node.id, getChildren: node => node.children, getLabel: node => node.label }); return <button onClick={() => tree.select('front')}>{tree.tags[0]?.label ?? 'Выбрать'}</button>; }"
+        }
+      ]
+    }
+  ]
 }

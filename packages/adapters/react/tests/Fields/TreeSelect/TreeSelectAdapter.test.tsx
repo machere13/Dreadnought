@@ -9,6 +9,132 @@ import { FormAdapter } from '../../../src/Fields/Form/FormAdapter.tsx';
 import { OverlayVisibilityContext } from '../../../src/shared/OverlayVisibilityContext.ts';
 
 afterEach(cleanup);
+it('sizes the popup to its anchor and remaining viewport space', () => {
+  const height = vi.spyOn(document.documentElement, 'clientHeight', 'get').mockReturnValue(320);
+  const width = vi.spyOn(document.documentElement, 'clientWidth', 'get').mockReturnValue(390);
+  const originalRect = HTMLElement.prototype.getBoundingClientRect;
+  const rect = vi
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockImplementation(function () {
+      if (this.getAttribute('data-ui') === 'tree-select')
+        return {
+          x: 16,
+          y: 16,
+          left: 16,
+          top: 16,
+          width: 256,
+          height: 114,
+          right: 272,
+          bottom: 130,
+          toJSON() {},
+        };
+      return originalRect.call(this);
+    });
+  try {
+    const view = render(
+      <>
+        <style>
+          {'.sizing-popup{padding:8px;border:1px solid black}.sizing-viewport{max-height:224px}'}
+        </style>
+        <TreeSelectAdapter
+          {...options}
+          defaultOpen
+          aria-label="Команда"
+          slotClassNames={{ popup: 'sizing-popup', viewport: 'sizing-viewport' }}
+        />
+      </>,
+    );
+    const popup = document.querySelector<HTMLElement>('.sizing-popup')!;
+    const viewport = document.querySelector<HTMLElement>('.sizing-viewport')!;
+    expect(popup.style.width).toBe('256px');
+    expect(viewport.style.maxHeight).toBe('172px');
+    view.rerender(
+      <>
+        <style>
+          {'.sizing-popup{padding:8px;border:1px solid black}.sizing-viewport{max-height:224px}'}
+        </style>
+        <TreeSelectAdapter
+          {...options}
+          defaultOpen
+          autoAdjustOverflow={false}
+          aria-label="Команда"
+          slotClassNames={{ popup: 'sizing-popup', viewport: 'sizing-viewport' }}
+        />
+      </>,
+    );
+    expect(viewport.style.maxHeight).toBe('');
+  } finally {
+    cleanup();
+    rect.mockRestore();
+    width.mockRestore();
+    height.mockRestore();
+  }
+});
+it('preserves native required ARIA and styles native invalid states', () => {
+  const view = render(
+    <TreeSelectAdapter
+      {...options}
+      aria-label="Команда"
+      aria-required="true"
+      aria-invalid="true"
+    />,
+  );
+  const field = screen.getByRole('combobox');
+  expect(field.getAttribute('aria-required')).toBe('true');
+  expect(field.closest('[data-ui="tree-select"]')?.getAttribute('data-invalid')).toBe('true');
+  view.rerender(<TreeSelectAdapter {...options} aria-label="Команда" aria-invalid="false" />);
+  expect(field.closest('[data-ui="tree-select"]')?.hasAttribute('data-invalid')).toBe(false);
+});
+it('names the popup tree from the associated native label', async () => {
+  const user = userEvent.setup();
+  render(
+    <>
+      <label htmlFor="team">Отдел</label>
+      <TreeSelectAdapter {...options} id="team" />
+    </>,
+  );
+  await user.click(screen.getByRole('button', { name: 'Открыть дерево' }));
+  expect(screen.getByRole('tree', { name: 'Отдел' })).not.toBeNull();
+});
+
+it('does not select a row when its custom label contains an interactive link', async () => {
+  const user = userEvent.setup();
+  const change = vi.fn();
+  render(
+    <TreeSelectAdapter
+      {...options}
+      onValueChange={change}
+      aria-label="Команда"
+      renderLabel={(row) => <a href="#label">{row.record.label}</a>}
+    />,
+  );
+  await user.click(screen.getByRole('button', { name: 'Открыть дерево' }));
+  await user.click(screen.getByRole('link', { name: 'Разработка' }));
+  expect(change).not.toHaveBeenCalled();
+});
+
+it('restores focus when the current row becomes disabled without being removed', async () => {
+  const user = userEvent.setup();
+  const view = render(
+    <TreeSelectAdapter {...options} defaultExpandedKeys={['dev']} aria-label="Команда" />,
+  );
+  await user.click(screen.getByRole('button', { name: 'Открыть дерево' }));
+  await user.keyboard('{ArrowDown}{ArrowRight}');
+  expect(document.activeElement).toBe(
+    screen.getByRole('treeitem', { name: 'Frontend', exact: true }),
+  );
+  view.rerender(
+    <TreeSelectAdapter
+      {...options}
+      defaultExpandedKeys={['dev']}
+      getDisabled={(node) => node.id === 'front'}
+      aria-label="Команда"
+    />,
+  );
+  expect(document.activeElement).toBe(
+    screen.getByRole('treeitem', { name: 'Разработка', exact: true }),
+  );
+});
 type Node = { id: string; label: string; children?: readonly Node[]; disabled?: boolean };
 const records: readonly Node[] = [
   {
@@ -514,7 +640,10 @@ it('consumes the first Escape before the parent Modal closes', async () => {
     expect(screen.queryByRole('tree')).toBeNull();
     expect(screen.getByRole('dialog', { name: 'Форма' })).toHaveProperty('open', true);
     expect(fireEvent.keyDown(screen.getByRole('combobox'), { key: 'Escape' })).toBe(true);
-    fireEvent(screen.getByRole('dialog', { name: 'Форма' }), new Event('cancel', { cancelable: true }));
+    fireEvent(
+      screen.getByRole('dialog', { name: 'Форма' }),
+      new Event('cancel', { cancelable: true }),
+    );
     expect(screen.queryByRole('dialog', { name: 'Форма' })).toBeNull();
     view.unmount();
   } finally {

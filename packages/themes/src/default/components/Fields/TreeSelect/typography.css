@@ -1,0 +1,7 @@
+@layer dreadnought {
+  .dreadnought-text-treeselect {
+    font-size: var(--dreadnought-font-size-treeselect);
+    font-weight: var(--dreadnought-font-weight-treeselect);
+    line-height: var(--dreadnought-line-height-treeselect);
+  }
+}

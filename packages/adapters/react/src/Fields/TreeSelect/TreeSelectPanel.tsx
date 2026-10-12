@@ -52,7 +52,9 @@ export function TreeSelectPanel<RecordType, Key extends TreeKey>({
       removed &&
       !removed.isConnected &&
       (doc?.activeElement === doc?.body || doc?.activeElement === tree.current);
-    if (focusRequested.current || restore) {
+    const disabledFocus =
+      next !== active && active !== undefined && doc?.activeElement === nodes.current.get(active);
+    if (focusRequested.current || restore || disabledFocus) {
       focusRequested.current = false;
       focus(next);
     } else if (next !== active) setActive(next);
@@ -135,7 +137,9 @@ export function TreeSelectPanel<RecordType, Key extends TreeKey>({
             if (
               disabled ||
               event.defaultPrevented ||
-              (event.target as HTMLElement).closest('button, input, label')
+              (event.target as HTMLElement).closest(
+                'button, input, label, select, textarea, a[href], [contenteditable="true"]',
+              )
             )
               return;
             focus(row.key);
@@ -146,6 +150,7 @@ export function TreeSelectPanel<RecordType, Key extends TreeKey>({
           {row.expandable &&
             options.renderAction?.({
               action: 'expand',
+              className: slots.indicator,
               type: 'button',
               tabIndex: -1,
               disabled,
@@ -156,22 +161,25 @@ export function TreeSelectPanel<RecordType, Key extends TreeKey>({
               },
               children: row.expanded ? '−' : '+',
             })}
-          {model.multiple &&
-            options.renderCheckbox?.(
-              {
-                checked,
-                indeterminate: mixed,
-                disabled:
-                  disabled || model.readOnly || Boolean(options.getCheckDisabled?.(row.record)),
-                tabIndex: -1,
-                'aria-label': label,
-                onChange: (event) => {
-                  focus(row.key);
-                  model.check(row.key, event.target.checked);
+          {model.multiple && (
+            <span data-slot="tree-checkbox">
+              {options.renderCheckbox?.(
+                {
+                  checked,
+                  indeterminate: mixed,
+                  disabled:
+                    disabled || model.readOnly || Boolean(options.getCheckDisabled?.(row.record)),
+                  tabIndex: -1,
+                  'aria-label': label,
+                  onChange: (event) => {
+                    focus(row.key);
+                    model.check(row.key, event.target.checked);
+                  },
                 },
-              },
-              row,
-            )}
+                row,
+              )}
+            </span>
+          )}
           <span>{options.renderLabel?.(row) ?? label}</span>
         </div>
         {children && (
@@ -190,6 +198,7 @@ export function TreeSelectPanel<RecordType, Key extends TreeKey>({
       ref={tree}
       role="tree"
       aria-label={options['aria-label']}
+      aria-labelledby={options['aria-labelledby']}
       aria-multiselectable={model.multiple || undefined}
       tabIndex={available.length ? -1 : 0}
       className={slots.tree}

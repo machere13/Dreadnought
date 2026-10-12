@@ -37,4 +37,5 @@ export * from './DataDisplay/MarkdownPreview/index.ts';
 export * from './Fields/Slider/index.ts';
 export * from './Fields/DatePicker/index.ts';
 export * from './Fields/TimePicker/index.ts';
+export * from './Fields/TreeSelect/index.ts';
 export * from './Overlays/FloatingPanel/index.ts';

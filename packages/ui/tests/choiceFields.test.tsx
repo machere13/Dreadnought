@@ -20,6 +20,16 @@ it('styles Select group labels while preserving consumer slots', () => {
 });
 
 afterEach(cleanup);
+it('renders a font-independent mixed mark and preserves custom indicators', () => {
+  const view = render(<Checkbox indeterminate aria-label="Выбор" />);
+  const checkbox = screen.getByRole('checkbox');
+  expect(checkbox).toHaveProperty('indeterminate', true);
+  expect(checkbox.closest('label')?.querySelector('[data-slot="mixed-mark"]')).not.toBeNull();
+  view.rerender(<Checkbox indeterminate aria-label="Выбор"
+    slotProps={{ indicator: { children: <span>Своя отметка</span> } }} />);
+  expect(screen.getByText('Своя отметка')).not.toBeNull();
+  expect(checkbox.closest('label')?.querySelector('[data-slot="mixed-mark"]')).toBeNull();
+});
 it('renders removable Select tags with library icons and preserves consumer slots', () => {
   render(
     <form>

@@ -1,0 +1,56 @@
+{
+  "componentId": "component:tree-select",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "TreeSelect",
+      "defaults": {
+        "multiple": false,
+        "checkStrictly": false,
+        "showSearch": false,
+        "allowClear": true,
+        "disabled": false,
+        "readOnly": false,
+        "defaultOpen": false,
+        "placement": "bottomLeft",
+        "autoAdjustOverflow": true
+      },
+      "propertyDescriptions": {
+        "records": "Узлы дерева.",
+        "getKey": "Уникальный ключ узла.",
+        "getChildren": "Потомки узла.",
+        "getLabel": "Текст узла и поиска.",
+        "value": "Ключ или null; при multiple — массив ключей.",
+        "onValueChange": "Принятый выбор; связанные отметки включают родителей.",
+        "multiple": "Множественный выбор.",
+        "checkStrictly": "Независимые отметки.",
+        "showSearch": "Поиск и его настройки.",
+        "allowClear": "Очистка значения.",
+        "expandedKeys": "Раскрытые узлы.",
+        "defaultExpandedKeys": "Начальное раскрытие.",
+        "onExpandedKeysChange": "Изменение раскрытия без поисковых путей.",
+        "renderLabel": "Содержимое подписи узла.",
+        "tagRender": "Содержимое выбранного тега.",
+        "emptyContent": "Содержимое пустого дерева.",
+        "placement": "Угол размещения панели.",
+        "autoAdjustOverflow": "Удерживать панель в окне.",
+        "readOnly": "Просмотр без изменения выбора."
+      },
+      "examples": [
+        {
+          "id": "usage",
+          "code": "import { TreeSelect } from '@dreadnought/ui/react';\ntype Node = { id: string; label: string; children?: readonly Node[] };\nconst records: readonly Node[] = [{ id: 'dev', label: 'Разработка', children: [{ id: 'front', label: 'Frontend' }] }];\nexport function Example() { return <TreeSelect records={records} getKey={node => node.id} getChildren={node => node.children} getLabel={node => node.label} aria-label=\"Команда\" showSearch />; }"
+        }
+      ]
+    }
+  ],
+  "parts": [
+    { "name": "field", "description": "Выбор, поиск и действия." },
+    { "name": "tag", "description": "Выбранный узел." },
+    { "name": "popup", "description": "Панель дерева." },
+    { "name": "viewport", "description": "Прокрутка дерева." }
+  ]
+}

@@ -1,5 +1,6 @@
 import { useTreeSelect } from '@dreadnought/react/logic';
 import { TreeSelectAdapter } from '@dreadnought/react/unstyled';
+import type { TreeSelectAdapterProps } from '@dreadnought/react/unstyled';
 import { createRef } from 'react';
 type Node = { id: number; label: string; children?: readonly Node[] };
 const options = {
@@ -8,6 +9,15 @@ const options = {
   getChildren: (node: Node) => node.children,
   getLabel: (node: Node) => node.label,
 };
+const spreadOptions: TreeSelectAdapterProps<Node, number> = { ...options, multiple: true };
+<TreeSelectAdapter
+  {...spreadOptions}
+  multiple
+  onValueChange={(value) => {
+    const keys: number[] = value;
+    void keys;
+  }}
+/>;
 useTreeSelect({
   ...options,
   onValueChange: (value) => {

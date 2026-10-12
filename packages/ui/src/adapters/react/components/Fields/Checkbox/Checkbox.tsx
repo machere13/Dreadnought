@@ -15,7 +15,8 @@ function CheckboxComponent({ className, slotProps, ...props }: CheckboxProps) {
         indicator: {
           ...slotProps?.indicator,
           children:
-            slotProps?.indicator?.children ?? (props.indeterminate ? '−' : <Icon name="check" />),
+            slotProps?.indicator?.children ??
+            (props.indeterminate ? <span data-slot="mixed-mark" /> : <Icon name="check" />),
         },
       }}
     />

@@ -1,0 +1,10 @@
+:root {
+  --dreadnought-treeselect-field-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-treeselect-popup-bg: var(--dreadnought-color-surface-panel);
+  --dreadnought-treeselect-tag-bg: var(--dreadnought-color-surface-subtle);
+  --dreadnought-treeselect-text: var(--dreadnought-color-text-primary);
+  --dreadnought-treeselect-border: var(--dreadnought-color-border-default);
+  --dreadnought-treeselect-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-treeselect-invalid: var(--dreadnought-color-status-error);
+  --dreadnought-treeselect-scrollbar: var(--dreadnought-color-border-default);
+}

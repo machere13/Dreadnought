@@ -36,6 +36,11 @@
   .root [data-slot='indicator'] > * {
     visibility: hidden;
   }
+  .root [data-slot='mixed-mark'] {
+    width: 50%;
+    height: var(--dreadnought-checkbox-mixed-height);
+    background: currentColor;
+  }
   .root:has(input:checked) [data-slot='indicator'] > *,
   .root:has(input:indeterminate) [data-slot='indicator'] > * {
     visibility: visible;

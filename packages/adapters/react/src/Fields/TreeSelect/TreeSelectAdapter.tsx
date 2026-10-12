@@ -14,6 +14,7 @@ import { usePickerForm } from '../../shared/usePickerForm.ts';
 import { CheckboxAdapter } from '../Checkbox/CheckboxAdapter.tsx';
 import { useTreeSelect } from './useTreeSelect.ts';
 import { TreeSelectPanel } from './TreeSelectPanel.tsx';
+import { useTreeSelectViewport } from './useTreeSelectViewport.ts';
 import type { TreeSelectAdapterProps, UseTreeSelectOptions } from './treeSelect.types.ts';
 
 export function TreeSelectAdapter<RecordType, Key extends TreeKey>({
@@ -101,6 +102,7 @@ export function TreeSelectAdapter<RecordType, Key extends TreeKey>({
   const [nativeInvalid, setNativeInvalid] = useState(false);
   current.current = model;
   useImperativeHandle(ref, () => field.current!);
+  useTreeSelectViewport(model.open && visible, root, popup, autoAdjustOverflow);
   useAnchoredPopover(model.open && visible, root, popup, root.current, true, {
     placement,
     autoAdjustOverflow,
@@ -166,14 +168,26 @@ export function TreeSelectAdapter<RecordType, Key extends TreeKey>({
     renderLabel,
     emptyContent,
     slotClassNames,
-    'aria-label': native['aria-label'],
+    'aria-label':
+      native['aria-label'] ??
+      (native['aria-labelledby']
+        ? undefined
+        : (field.current?.labels?.[0]?.textContent ?? 'Выбор значения')),
+    'aria-labelledby': native['aria-labelledby'],
   } as TreeSelectAdapterProps<RecordType, Key>;
   return (
     <div
       ref={root}
       data-ui="tree-select"
       data-disabled={model.disabled || undefined}
-      data-invalid={model.invalid || nativeInvalid || undefined}
+      data-invalid={
+        model.invalid ||
+        nativeInvalid ||
+        (native['aria-invalid'] !== undefined &&
+          native['aria-invalid'] !== false &&
+          native['aria-invalid'] !== 'false') ||
+        undefined
+      }
       className={[className, slotClassNames.root].filter(Boolean).join(' ')}
       style={style}
       onKeyDown={(event) => {
@@ -266,7 +280,7 @@ export function TreeSelectAdapter<RecordType, Key extends TreeKey>({
           'aria-expanded': model.open,
           'aria-haspopup': 'tree',
           'aria-controls': model.open ? popupId : undefined,
-          'aria-required': required || undefined,
+          'aria-required': required || native['aria-required'],
           'aria-invalid': model.invalid || nativeInvalid || native['aria-invalid'],
           onChange: (event) => model.setSearch(event.target.value),
           onBlur,
@@ -361,7 +375,7 @@ export function TreeSelectAdapter<RecordType, Key extends TreeKey>({
           popover="manual"
           data-slot="popup"
           className={slotClassNames.popup}
-          style={{ position: 'fixed', inset: 'auto', margin: 0 }}
+          style={{ position: 'fixed', inset: 'auto', margin: 0, boxSizing: 'border-box' }}
         >
           <div data-slot="viewport" className={slotClassNames.viewport}>
             <TreeSelectPanel

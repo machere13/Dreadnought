@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-font-size-treeselect: var(--dreadnought-font-size-body-2);
+  --dreadnought-font-weight-treeselect: var(--dreadnought-font-weight-body-2);
+  --dreadnought-line-height-treeselect: var(--dreadnought-line-height-body-2);
+}

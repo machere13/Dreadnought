@@ -39,3 +39,4 @@ export * from './Overlays/FloatingPanel/index.ts';
 export * from './Fields/Upload/index.ts';
 export * from './Fields/DatePicker/index.ts';
 export * from './Fields/TimePicker/index.ts';
+export * from './Fields/TreeSelect/index.ts';
