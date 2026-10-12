@@ -36,6 +36,11 @@ afterAll(() => {
 });
 
 describe('public catalog', () => {
+  it('publishes independently checked hierarchical tree search', () => {
+    const entry = catalog.entries.find(item => item.id === 'behavior:get-tree-search-rows');
+    expect(entry?.bindings[0]).toMatchObject({ importPath: '@dreadnought/core', exportName: 'getTreeSearchRows' });
+    checkExamples(context, entry!.bindings[0].examples);
+  });
   it('publishes all TimePicker layers and independent checked time capabilities', () => {
     const entry = catalog.entries.find(entry => entry.name === 'TimePicker');
     expect(entry?.bindings.map(binding => binding.exportName)).toEqual([

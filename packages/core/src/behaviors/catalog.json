@@ -427,5 +427,14 @@
     "constraints": ["Чистая функция. getKey/getChildren — чистые callbacks; getChildren возвращает массив/null/undefined. expandedKeys по умолчанию пуст, неизвестные и повторные ключи игнорируются. Корни depth=0/parentKey=null; preorder сохраняет порядок и record-ссылки. expanded true только при наличии детей. Закрытие родителя не удаляет раскрытые ключи детей: набор принадлежит вызывающему коду, переключайте его через getSelectionValue. Ключи уникальны во всём дереве: строки или конечные числа, 1 и '1' различаются. Повтор ключа/цикл, неверный ключ или дети вызывают TypeError; ошибки callbacks не поглощаются. Обход без рекурсии проверяет даже скрытые ветви: O(N+E) времени и памяти. Не выполняет выбор, фокус, ARIA, поиск, виртуализацию или загрузку детей."],
     "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getVisibleTreeRows",
       "examples": [{ "id": "composition", "code": "import { getVisibleTreeRows, getSelectionValue } from '@dreadnought/core';\ntype Folder = { id: string; nodes?: readonly Folder[] };\nconst folders: readonly Folder[] = [{ id: 'docs', nodes: [{ id: 'file' }] }];\nconst expanded = getSelectionValue<string>([], { type: 'toggle', value: 'docs' });\nconst rows = getVisibleTreeRows(folders, { getKey: folder => folder.id, getChildren: folder => folder.nodes, expandedKeys: expanded });" }] }]
+  },
+  {
+    "id": "behavior:get-tree-search-rows", "kind": "behavior", "name": "getTreeSearchRows", "family": "Behaviors",
+    "description": "Поиск дерева с сохранением предков, полного набора записей и временного раскрытия.",
+    "docsUrl": "/components/treeselect/#treeselect-api",
+    "composesWith": ["behavior:get-visible-tree-rows", "behavior:get-tree-check-state"],
+    "constraints": ["Поиск меняет только видимые строки. Для связанных отметок используйте полные records, не поисковую проекцию.", "Ключи типизированы и уникальны; циклы, неверные подписи и результаты filterNode вызывают TypeError. Входы не мутируются. Нет DOM, состояния, async и виртуализации."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "getTreeSearchRows",
+      "examples": [{ "id": "search", "code": "import { getTreeSearchRows } from '@dreadnought/core';\ntype Node = { id: string; label: string; children?: readonly Node[] };\nconst records: readonly Node[] = [{ id: 'dev', label: 'Разработка', children: [{ id: 'front', label: 'Frontend' }] }];\nconst result = getTreeSearchRows(records, { getKey: node => node.id, getChildren: node => node.children, getLabel: node => node.label, searchValue: 'front' });" }] }]
   }
 ]

@@ -20,6 +20,8 @@ export type {
   FormSubmitHandler,
 } from './form.types.ts';
 export { getVisibleTreeRows } from './getVisibleTreeRows.ts';
+export { getTreeSearchRows } from './getTreeSearchRows.ts';
+export type { TreeSearchOptions, TreeSearchResult } from './getTreeSearchRows.ts';
 export { getVisibleMenuRows } from './getVisibleMenuRows.ts';
 export type { MenuRowKind, VisibleMenuRow, VisibleMenuRowsOptions } from './getVisibleMenuRows.ts';
 export { getTreeCheckState } from './getTreeCheckState.ts';
