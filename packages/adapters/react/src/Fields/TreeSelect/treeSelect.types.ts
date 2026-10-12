@@ -1,4 +1,60 @@
 import type { TreeKey, VisibleTreeRow } from '@dreadnought/core';
+import type { ComponentPropsWithRef, ComponentPropsWithoutRef, ReactNode, Ref } from 'react';
+import type { TooltipPlacement } from '@dreadnought/core';
+import type { CheckboxAdapterProps } from '../Checkbox/CheckboxAdapter.tsx';
+
+export type TreeSelectActionProps = ComponentPropsWithoutRef<'button'> & {
+  action: 'expand' | 'toggle' | 'clear' | 'remove';
+};
+export type TreeSelectFieldProps = ComponentPropsWithRef<'input'>;
+export type TreeSelectSlotClassNames = Partial<
+  Record<
+    | 'root'
+    | 'field'
+    | 'selection'
+    | 'tag'
+    | 'tagLabel'
+    | 'popup'
+    | 'viewport'
+    | 'tree'
+    | 'item'
+    | 'content'
+    | 'group'
+    | 'indicator'
+    | 'empty'
+    | 'actions',
+    string
+  >
+>;
+export type TreeSelectAdapterProps<
+  RecordType,
+  Key extends TreeKey = TreeKey,
+> = UseTreeSelectOptions<RecordType, Key> &
+  Omit<
+    ComponentPropsWithoutRef<'input'>,
+    'value' | 'defaultValue' | 'onChange' | 'type' | 'multiple' | 'size' | 'children' | 'prefix'
+  > & {
+    ref?: Ref<HTMLInputElement>;
+    placement?: Extract<TooltipPlacement, 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'>;
+    autoAdjustOverflow?: boolean;
+    emptyContent?: ReactNode;
+    slotClassNames?: TreeSelectSlotClassNames;
+    renderField?: (props: TreeSelectFieldProps) => ReactNode;
+    renderAction?: (props: TreeSelectActionProps) => ReactNode;
+    renderCheckbox?: (
+      props: CheckboxAdapterProps,
+      row: VisibleTreeRow<RecordType, Key>,
+    ) => ReactNode;
+    renderLabel?: (row: VisibleTreeRow<RecordType, Key>) => ReactNode;
+    tagRender?: (
+      tag: TreeSelectTag<RecordType, Key>,
+      state: {
+        disabled: boolean;
+        onRemove(): void;
+        removeLabel: string;
+      },
+    ) => ReactNode;
+  };
 
 export type TreeSelectValue<Key extends TreeKey> = Key | null | readonly Key[];
 export type TreeSelectSelection<Key extends TreeKey> =
