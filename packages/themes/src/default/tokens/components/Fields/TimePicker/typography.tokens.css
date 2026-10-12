@@ -1,0 +1,5 @@
+:root {
+  --dreadnought-font-size-timepicker: var(--dreadnought-font-size-body-2);
+  --dreadnought-font-weight-timepicker: var(--dreadnought-font-weight-body-2);
+  --dreadnought-line-height-timepicker: var(--dreadnought-line-height-body-2);
+}

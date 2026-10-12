@@ -1,0 +1,11 @@
+:root {
+  --dreadnought-timepicker-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-timepicker-option-gap: var(--dreadnought-spacing-x1);
+  --dreadnought-timepicker-padding: var(--dreadnought-spacing-x3);
+  --dreadnought-timepicker-field-width: var(--dreadnought-size-x3);
+  --dreadnought-timepicker-popup-width: var(--dreadnought-size-x3);
+  --dreadnought-timepicker-column-height: var(--dreadnought-size-x3);
+  --dreadnought-timepicker-viewport-clearance: var(--dreadnought-size-x1);
+  --dreadnought-timepicker-radius: var(--dreadnought-border-radius-x1);
+  --dreadnought-timepicker-border-width: var(--dreadnought-border-width-outline);
+}

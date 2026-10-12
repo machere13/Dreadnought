@@ -1,0 +1,79 @@
+@layer dreadnought {
+  .root {
+    display: inline-block;
+    width: var(--dreadnought-timepicker-field-width);
+    max-width: 100%;
+  }
+  .field {
+    display: flex;
+    gap: var(--dreadnought-timepicker-gap);
+    align-items: center;
+    min-width: 0;
+  }
+  .field > [data-ui='input'] {
+    flex: 1;
+    min-width: 0;
+  }
+  .actions {
+    display: inline-flex;
+    align-items: center;
+    flex: none;
+  }
+  .popup {
+    box-sizing: border-box;
+    width: var(--dreadnought-timepicker-popup-width);
+    max-width: calc(100vw - var(--dreadnought-timepicker-padding) * 2);
+    max-height: calc(100dvh - var(--dreadnought-timepicker-padding) * 2);
+    padding: var(--dreadnought-timepicker-padding);
+    border: var(--dreadnought-timepicker-border-width) solid var(--dreadnought-timepicker-border);
+    border-radius: var(--dreadnought-timepicker-radius);
+    background: var(--dreadnought-timepicker-bg);
+    color: var(--dreadnought-timepicker-text);
+    font: inherit;
+    gap: var(--dreadnought-timepicker-gap);
+  }
+  .columns {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: var(--dreadnought-timepicker-gap);
+  }
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dreadnought-timepicker-option-gap);
+    padding: var(--dreadnought-timepicker-option-gap);
+    min-width: 0;
+    max-height: min(
+      var(--dreadnought-timepicker-column-height),
+      calc(100dvh - var(--dreadnought-timepicker-viewport-clearance) * 2)
+    );
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--dreadnought-timepicker-scrollbar) transparent;
+  }
+  .option {
+    width: 100%;
+    flex: none;
+    min-width: 0;
+  }
+  .option[aria-selected='true'] {
+    --dreadnought-button-ghosted-bg: var(--dreadnought-timepicker-selected-bg);
+    --dreadnought-button-ghosted-bg-hover: var(--dreadnought-timepicker-selected-hover-bg);
+    --dreadnought-button-ghosted-fg: var(--dreadnought-timepicker-selected-text);
+  }
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-block-start: var(--dreadnought-timepicker-gap);
+    margin-block-start: var(--dreadnought-timepicker-gap);
+    border-block-start: var(--dreadnought-timepicker-border-width) solid
+      var(--dreadnought-timepicker-border);
+  }
+  .error {
+    display: block;
+    margin-block-start: var(--dreadnought-timepicker-gap);
+    color: var(--dreadnought-timepicker-error);
+  }
+}

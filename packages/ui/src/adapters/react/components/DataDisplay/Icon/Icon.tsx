@@ -1,4 +1,5 @@
 import {
+  ClockCircleOutlined,
   CalendarOutlined,
   LeftOutlined,
   RightOutlined,
@@ -39,6 +40,7 @@ import { iconPresentation } from '#presentation/DataDisplay/Icon/iconPresentatio
 import type { IconName } from '@dreadnought/ui';
 
 const icons = {
+  clock: ClockCircleOutlined,
   calendar: CalendarOutlined,
   left: LeftOutlined,
   right: RightOutlined,

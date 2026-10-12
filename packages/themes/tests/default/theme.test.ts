@@ -6,6 +6,7 @@ const css = (file: string) => readFileSync(resolve('packages/themes/src/default'
 const componentFamilies = {
   Button: 'Controls',
   Input: 'Fields',
+  TimePicker: 'Fields',
   TextArea: 'Fields',
   MarkdownEditor: 'Fields',
   MarkdownPreview: 'DataDisplay',
@@ -279,6 +280,7 @@ describe('default theme', () => {
       "@import './components/Fields/Form/index.css';",
       "@import './components/Fields/Upload/index.css';",
       "@import './components/Fields/DatePicker/index.css';",
+      "@import './components/Fields/TimePicker/index.css';",
       "@import './components/Fields/Slider/index.css';",
       "@import './components/Fields/TextArea/index.css';",
       "@import './components/Fields/MarkdownEditor/index.css';",

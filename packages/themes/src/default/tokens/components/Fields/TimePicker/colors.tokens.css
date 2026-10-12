@@ -1,0 +1,10 @@
+:root {
+  --dreadnought-timepicker-bg: var(--dreadnought-color-surface-panel);
+  --dreadnought-timepicker-text: var(--dreadnought-color-text-primary);
+  --dreadnought-timepicker-border: var(--dreadnought-color-border-subtle);
+  --dreadnought-timepicker-selected-bg: var(--dreadnought-color-action-primary);
+  --dreadnought-timepicker-selected-hover-bg: var(--dreadnought-color-action-primary-hover);
+  --dreadnought-timepicker-selected-text: var(--dreadnought-color-text-on-action-primary);
+  --dreadnought-timepicker-error: var(--dreadnought-color-status-error);
+  --dreadnought-timepicker-scrollbar: var(--dreadnought-color-border-default);
+}

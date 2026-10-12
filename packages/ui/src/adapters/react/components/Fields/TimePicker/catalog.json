@@ -1,0 +1,55 @@
+{
+  "componentId": "component:time-picker",
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "TimePicker",
+      "defaults": {
+        "showSeconds": false,
+        "hourStep": 1,
+        "minuteStep": 1,
+        "secondStep": 1,
+        "allowClear": true,
+        "disabled": false,
+        "readOnly": false,
+        "defaultOpen": false,
+        "placement": "bottomLeft"
+      },
+      "propertyDescriptions": {
+        "value": "Время HH:mm:ss или null.",
+        "defaultValue": "Начальное время.",
+        "onChange": "Подтверждённое время.",
+        "showSeconds": "Колонка секунд и ввод HH:mm:ss.",
+        "hourStep": "Шаг часов в панели.",
+        "minuteStep": "Шаг минут в панели.",
+        "secondStep": "Шаг секунд в панели.",
+        "minTime": "Нижняя граница включительно.",
+        "maxTime": "Верхняя граница включительно.",
+        "disabledTime": "Запреты единиц времени.",
+        "allowClear": "Кнопка очистки.",
+        "open": "Видимость панели.",
+        "onOpenChange": "Изменение видимости.",
+        "placement": "Расположение панели.",
+        "name": "Имя поля формы.",
+        "readOnly": "Просмотр без изменения."
+      },
+      "examples": [
+        {
+          "id": "usage",
+          "code": "import { TimePicker } from '@dreadnought/ui/react';\nexport function Example() { return <TimePicker aria-label=\"Время\" minuteStep={15} defaultValue=\"09:30:00\" />; }"
+        }
+      ]
+    }
+  ],
+  "parts": [
+    { "name": "field", "description": "Поле и действия." },
+    { "name": "popup", "description": "Панель выбора." },
+    { "name": "column", "description": "Прокручиваемая колонка." },
+    { "name": "option", "description": "Пункт времени." },
+    { "name": "footer", "description": "Подтверждение." },
+    { "name": "error", "description": "Ошибка ввода." }
+  ]
+}
