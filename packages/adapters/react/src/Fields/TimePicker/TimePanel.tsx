@@ -1,4 +1,4 @@
-import { Fragment, useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent, MutableRefObject } from 'react';
 import { getNextEnabledValue } from '@dreadnought/core';
 import type { NavigationDirection, TimePart } from '@dreadnought/core';
@@ -10,6 +10,16 @@ import type {
 } from './timePicker.types.ts';
 
 const titles = { hour: 'Hours', minute: 'Minutes', second: 'Seconds' };
+
+function scrollOption(item: HTMLElement) {
+  const column = item.closest<HTMLElement>('[data-slot="column"]');
+  if (!column) return;
+  const itemRect = item.getBoundingClientRect();
+  const columnRect = column.getBoundingClientRect();
+  if (itemRect.top < columnRect.top) column.scrollTop += itemRect.top - columnRect.top;
+  else if (itemRect.bottom > columnRect.bottom)
+    column.scrollTop += itemRect.bottom - columnRect.bottom;
+}
 
 export function nativeTimePickerAction({ action: _action, ...props }: TimePickerActionProps) {
   return <button {...props} />;
@@ -49,9 +59,17 @@ export function TimePanel({
       ?.querySelector<HTMLElement>(`[data-time-part="${part}"][data-time-value="${value}"]`)
       ?.focus({ preventScroll: true });
   }
-  useLayoutEffect(() => {
+  useEffect(() => {
     const node = root.current;
     if (!node) return;
+    for (const part of parts) {
+      const selected = picker.selection[part];
+      if (selected === null) continue;
+      const item = node.querySelector<HTMLElement>(
+        `[data-time-part="${part}"][data-time-value="${selected}"]`,
+      );
+      if (item) scrollOption(item);
+    }
     if (focusRequested.current) {
       focusRequested.current = false;
       if (active.hour !== null && !picker.readOnly) focus('hour', active.hour);
@@ -64,7 +82,7 @@ export function TimePanel({
       if (active[part] !== null && !picker.readOnly) focus(part, active[part]);
       else node.focus({ preventScroll: true });
     }
-  }, [picker.columns, picker.readOnly]);
+  }, [picker.columns, picker.readOnly, picker.selection]);
 
   function keyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (
@@ -135,15 +153,7 @@ export function TimePanel({
                   className: slotClassNames.option,
                   onFocus: (event) => {
                     setFocused((current) => ({ ...current, [part]: option.value }));
-                    const item = event.currentTarget;
-                    const column = item.closest<HTMLElement>('[data-slot="column"]');
-                    if (!column) return;
-                    const itemRect = item.getBoundingClientRect();
-                    const columnRect = column.getBoundingClientRect();
-                    if (itemRect.top < columnRect.top)
-                      column.scrollTop += itemRect.top - columnRect.top;
-                    else if (itemRect.bottom > columnRect.bottom)
-                      column.scrollTop += itemRect.bottom - columnRect.bottom;
+                    scrollOption(event.currentTarget);
                   },
                   onClick: () => picker.choose(part, option.value),
                   children: option.label,

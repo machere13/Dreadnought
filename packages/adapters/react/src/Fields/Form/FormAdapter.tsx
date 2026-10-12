@@ -21,11 +21,12 @@ export function FormAdapter<V extends object>({
         const submitter = (event.nativeEvent as SubmitEvent).submitter as
           HTMLButtonElement | HTMLInputElement | null;
         if (!noValidate && !submitter?.formNoValidate) {
+          const view = event.currentTarget.ownerDocument.defaultView ?? window;
           const invalid = Array.from(event.currentTarget.elements).find(
             (control): control is HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement =>
-              (control instanceof HTMLInputElement ||
-                control instanceof HTMLTextAreaElement ||
-                control instanceof HTMLSelectElement) &&
+              (control instanceof view.HTMLInputElement ||
+                control instanceof view.HTMLTextAreaElement ||
+                control instanceof view.HTMLSelectElement) &&
               control.willValidate &&
               control.validity.customError,
           );

@@ -11,6 +11,69 @@ afterEach(cleanup);
 const input = () => screen.getByRole('textbox', { name: 'Time' }) as HTMLInputElement;
 
 describe('time picker adapter', () => {
+  it('blocks invalid controlled Form submissions inside an iframe document', async () => {
+    const frame = document.createElement('iframe');
+    document.body.append(frame);
+    const sent: unknown[] = [];
+    function Example() {
+      const form = useForm({ initialValues: { time: '09:00:00' as string | null } });
+      const time = form.field('time');
+      return <FormAdapter form={form} onFinish={values => { sent.push(values.time); }}>
+        <TimePickerAdapter aria-label="Time" value={time.value} onChange={time.setValue} />
+      </FormAdapter>;
+    }
+    try {
+      const doc = frame.contentDocument!;
+      render(<Example />, { container: doc.body });
+      const field = within(doc.body).getByRole('textbox') as HTMLInputElement;
+      fireEvent.change(field, { target: { value: '25:00' } });
+      expect(field.validity.customError).toBe(true);
+      await act(async () => field.form!.requestSubmit());
+      expect(sent).toEqual([]);
+      fireEvent.change(field, { target: { value: '10:07' } });
+      await act(async () => field.form!.requestSubmit());
+      expect(sent).toEqual(['10:07:00']);
+    } finally { cleanup(); frame.remove(); }
+  });
+  it('scrolls every selected unit into its own column on opening', async () => {
+    const original = HTMLElement.prototype.getBoundingClientRect;
+    const geometry = vi
+      .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+      .mockImplementation(function (this: HTMLElement) {
+        if (this.matches('[role="option"], [data-slot="column"]')) {
+          const column = this.closest<HTMLElement>('[data-slot="column"]');
+          const top = this.matches('[role="option"]')
+            ? Number(this.dataset.timeValue) * 35 - (column?.scrollTop ?? 0)
+            : 0;
+          const height = this.matches('[role="option"]') ? 32 : 100;
+          return {
+            x: 0,
+            y: top,
+            top,
+            bottom: top + height,
+            left: 0,
+            right: 64,
+            width: 64,
+            height,
+            toJSON() {
+              return {};
+            },
+          };
+        }
+        return original.call(this);
+      });
+    try {
+      const user = userEvent.setup();
+      render(<TimePickerAdapter aria-label="Time" showSeconds defaultValue="09:30:15" />);
+      await user.click(screen.getByRole('button', { name: 'Open time picker' }));
+      const positions = ['Hours', 'Minutes', 'Seconds'].map(
+        (name) => screen.getByRole('listbox', { name }).scrollTop,
+      );
+      expect(positions).toEqual([247, 982, 457]);
+    } finally {
+      geometry.mockRestore();
+    }
+  });
   it('closes only the time popup on the first Escape inside Modal', async () => {
     const show = Object.getOwnPropertyDescriptor(HTMLDialogElement.prototype, 'showModal');
     const close = Object.getOwnPropertyDescriptor(HTMLDialogElement.prototype, 'close');
