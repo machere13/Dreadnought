@@ -146,6 +146,53 @@ it('names the popup tree from the associated native label', async () => {
   await user.click(screen.getByRole('button', { name: 'Открыть дерево' }));
   expect(screen.getByRole('tree', { name: 'Отдел' })).not.toBeNull();
 });
+it.each([false, true])(
+  'names an initially open tree from its native label with controlled open=%s',
+  (controlled) => {
+    render(
+      <>
+        <label htmlFor="team">Отдел</label>
+        <TreeSelectAdapter
+          {...options}
+          id="team"
+          {...(controlled ? { open: true } : { defaultOpen: true })}
+        />
+      </>,
+    );
+    expect(screen.getByRole('tree', { name: 'Отдел' })).not.toBeNull();
+  },
+);
+it('updates the native tree name after label changes without moving focus', () => {
+  const view = render(
+    <>
+      <label htmlFor="team">Отдел</label>
+      <TreeSelectAdapter {...options} id="team" defaultOpen />
+    </>,
+  );
+  const row = screen.getByRole('treeitem', { name: 'Разработка', exact: true });
+  row.focus();
+  view.rerender(
+    <>
+      <label htmlFor="team">Команда проекта</label>
+      <TreeSelectAdapter {...options} id="team" defaultOpen />
+    </>,
+  );
+  expect(screen.getByRole('tree', { name: 'Команда проекта' })).not.toBeNull();
+  expect(document.activeElement).toBe(row);
+});
+it.each([{ 'aria-label': 'Явное имя' }, { 'aria-labelledby': 'tree-name' }])(
+  'preserves explicit ARIA naming on an initially open tree: %j',
+  (naming) => {
+    render(
+      <>
+        <label htmlFor="team">Отдел</label>
+        <span id="tree-name">Явное имя</span>
+        <TreeSelectAdapter {...options} id="team" defaultOpen {...naming} />
+      </>,
+    );
+    expect(screen.getByRole('tree', { name: 'Явное имя' })).not.toBeNull();
+  },
+);
 
 it('does not select a row when its custom label contains an interactive link', async () => {
   const user = userEvent.setup();

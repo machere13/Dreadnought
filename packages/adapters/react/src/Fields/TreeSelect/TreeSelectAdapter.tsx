@@ -101,8 +101,13 @@ export function TreeSelectAdapter<RecordType, Key extends TreeKey>({
   const current = useRef(model);
   const removedFocus = useRef<Element | null>(null);
   const [nativeInvalid, setNativeInvalid] = useState(false);
+  const [nativeLabel, setNativeLabel] = useState('Выбор значения');
   current.current = model;
   useImperativeHandle(ref, () => field.current!);
+  useLayoutEffect(() => {
+    if (!model.open || native['aria-label'] !== undefined || native['aria-labelledby']) return;
+    setNativeLabel(field.current?.labels?.[0]?.textContent ?? 'Выбор значения');
+  });
   useLayoutEffect(() => {
     const previous = removedFocus.current;
     removedFocus.current = null;
@@ -186,11 +191,7 @@ export function TreeSelectAdapter<RecordType, Key extends TreeKey>({
     renderLabel,
     emptyContent,
     slotClassNames,
-    'aria-label':
-      native['aria-label'] ??
-      (native['aria-labelledby']
-        ? undefined
-        : (field.current?.labels?.[0]?.textContent ?? 'Выбор значения')),
+    'aria-label': native['aria-label'] ?? (native['aria-labelledby'] ? undefined : nativeLabel),
     'aria-labelledby': native['aria-labelledby'],
   } as TreeSelectAdapterProps<RecordType, Key>;
   return (

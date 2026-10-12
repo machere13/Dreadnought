@@ -31,6 +31,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
+export const NativeLabel: Story = {
+  render: () => (
+    <>
+      <label htmlFor="tree-select-native-label">Отдел</label>
+      <TreeSelect {...args} id="tree-select-native-label" aria-label={undefined} defaultOpen />
+    </>
+  ),
+};
 export const Multiple: Story = {
   render: () => <TreeSelect {...args} multiple defaultValue={['front']} />,
 };
