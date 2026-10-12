@@ -99,9 +99,22 @@ export function TreeSelectAdapter<RecordType, Key extends TreeKey>({
   const focusRequested = useRef(false);
   const revision = useRef(0);
   const current = useRef(model);
+  const removedFocus = useRef<Element | null>(null);
   const [nativeInvalid, setNativeInvalid] = useState(false);
   current.current = model;
   useImperativeHandle(ref, () => field.current!);
+  useLayoutEffect(() => {
+    const previous = removedFocus.current;
+    removedFocus.current = null;
+    if (
+      previous &&
+      !previous.isConnected &&
+      !model.disabled &&
+      visible &&
+      previous.ownerDocument.activeElement === previous.ownerDocument.body
+    )
+      field.current?.focus({ preventScroll: true });
+  });
   useTreeSelectViewport(model.open && visible, root, popup, autoAdjustOverflow);
   useAnchoredPopover(model.open && visible, root, popup, root.current, true, {
     placement,
@@ -154,6 +167,11 @@ export function TreeSelectAdapter<RecordType, Key extends TreeKey>({
     field.current?.focus({ preventScroll: true });
     model.setOpen(true);
   }
+  function remove(key: Key) {
+    const active = root.current?.ownerDocument.activeElement;
+    removedFocus.current = active && root.current?.contains(active) ? active : null;
+    model.remove(key);
+  }
 
   const panelOptions = {
     records,
@@ -205,6 +223,7 @@ export function TreeSelectAdapter<RecordType, Key extends TreeKey>({
       onBlur={(event) => {
         if (event.defaultPrevented || root.current?.contains(event.relatedTarget as Node | null))
           return;
+        removedFocus.current = null;
         const version = revision.current;
         queueMicrotask(() => {
           const node = root.current;
@@ -234,7 +253,7 @@ export function TreeSelectAdapter<RecordType, Key extends TreeKey>({
                       Boolean(
                         tag.record && (getDisabled?.(tag.record) || getCheckDisabled?.(tag.record)),
                       ),
-                    onRemove: () => model.remove(tag.key),
+                    onRemove: () => remove(tag.key),
                     removeLabel: `Удалить ${tag.label}`,
                   })
                 ) : (
@@ -251,7 +270,7 @@ export function TreeSelectAdapter<RecordType, Key extends TreeKey>({
                             tag.record &&
                             (getDisabled?.(tag.record) || getCheckDisabled?.(tag.record)),
                           ),
-                        onClick: () => model.remove(tag.key),
+                        onClick: () => remove(tag.key),
                         children: '×',
                       })}
                   </>

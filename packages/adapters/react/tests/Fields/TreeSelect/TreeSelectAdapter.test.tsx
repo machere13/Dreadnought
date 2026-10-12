@@ -9,6 +9,56 @@ import { FormAdapter } from '../../../src/Fields/Form/FormAdapter.tsx';
 import { OverlayVisibilityContext } from '../../../src/shared/OverlayVisibilityContext.ts';
 
 afterEach(cleanup);
+it.each([false, true])(
+  'restores field focus after accepted tag removal with custom renderer=%s',
+  async (custom) => {
+    const user = userEvent.setup();
+    render(
+      <TreeSelectAdapter
+        {...options}
+        multiple
+        checkStrictly
+        defaultOpen
+        defaultValue={['front', 'back']}
+        aria-label="Команда"
+        tagRender={
+          custom
+            ? (tag, state) => (
+                <button type="button" onClick={state.onRemove}>
+                  {state.removeLabel}
+                </button>
+              )
+            : undefined
+        }
+      />,
+    );
+    const remove = screen.getByRole('button', { name: 'Удалить Frontend' });
+    remove.focus();
+    await user.keyboard('{Enter}');
+    expect(screen.queryByRole('button', { name: 'Удалить Frontend' })).toBeNull();
+    expect(document.activeElement).toBe(screen.getByRole('combobox'));
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('tree')).toBeNull();
+  },
+);
+it('retains the removal control focus when its controlled owner rejects removal', async () => {
+  const user = userEvent.setup();
+  const changed = vi.fn();
+  render(
+    <TreeSelectAdapter
+      {...options}
+      multiple
+      value={['front']}
+      onValueChange={changed}
+      aria-label="Команда"
+    />,
+  );
+  const remove = screen.getByRole('button', { name: 'Удалить Frontend' });
+  remove.focus();
+  await user.keyboard('{Enter}');
+  expect(changed).toHaveBeenCalledWith([]);
+  expect(document.activeElement).toBe(remove);
+});
 it('sizes the popup to its anchor and remaining viewport space', () => {
   const height = vi.spyOn(document.documentElement, 'clientHeight', 'get').mockReturnValue(320);
   const width = vi.spyOn(document.documentElement, 'clientWidth', 'get').mockReturnValue(390);
