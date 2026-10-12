@@ -39,7 +39,6 @@ export function FormAdapter<V extends object>({
       onReset={(event) => {
         onReset?.(event);
         if (event.defaultPrevented || !form) return;
-        event.preventDefault();
         form.reset();
       }}
     />

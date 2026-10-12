@@ -20,6 +20,48 @@
   ],
   "bindings": [
     {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "TimePickerAdapter",
+      "defaults": {
+        "showSeconds": false,
+        "hourStep": 1,
+        "minuteStep": 1,
+        "secondStep": 1,
+        "allowClear": true,
+        "disabled": false,
+        "readOnly": false,
+        "defaultOpen": false,
+        "placement": "bottomLeft"
+      },
+      "propertyDescriptions": {
+        "value": "Принятое время HH:mm:ss или null.",
+        "defaultValue": "Начальное время.",
+        "onChange": "Подтверждённое время.",
+        "showSeconds": "Показывать секунды.",
+        "hourStep": "Шаг колонки часов.",
+        "minuteStep": "Шаг колонки минут.",
+        "secondStep": "Шаг колонки секунд.",
+        "minTime": "Нижняя граница включительно.",
+        "maxTime": "Верхняя граница включительно.",
+        "disabledTime": "Зависимые запреты часов, минут и секунд.",
+        "allowClear": "Показывать очистку.",
+        "placement": "Расположение панели.",
+        "open": "Управляемая видимость панели.",
+        "name": "Имя канонического поля формы.",
+        "renderField": "Собственное представление поля.",
+        "renderAction": "Собственные кнопки и пункты колонок."
+      },
+      "examples": [
+        {
+          "id": "adapter",
+          "code": "import { TimePickerAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <TimePickerAdapter aria-label=\"Время\" defaultValue=\"09:30:00\" />; }"
+        }
+      ]
+    },
+    {
       "id": "react-logic",
       "layer": 2,
       "framework": "react",

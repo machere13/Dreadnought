@@ -1,4 +1,5 @@
 import { StrictMode, createRef } from 'react';
+import { flushSync } from 'react-dom';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -7,6 +8,21 @@ import { OverlayVisibilityContext } from '../../../src/shared/OverlayVisibilityC
 import { FormFieldAdapter } from '../../../src/unstyled.ts';
 
 afterEach(cleanup);
+
+it('ignores a queued reset when its form association changed', async () => {
+  const field = (form: string) => <><form id="first" /><form id="second" />
+    <DatePickerAdapter aria-label="Date" form={form} defaultValue="2026-10-12" /></>;
+  const { rerender } = render(field('first'));
+  const input = screen.getByRole('textbox') as HTMLInputElement;
+  fireEvent.change(input, { target: { value: '2026-10-20' } });
+  fireEvent.keyDown(input, { key: 'Enter' });
+  await act(async () => {
+    input.form!.reset();
+    flushSync(() => rerender(field('second')));
+    expect(input.form?.id).toBe('second');
+  });
+  expect(input.value).toBe('2026-10-20');
+});
 
 it('confirms the draft before React submit capture reads FormData', () => {
   const captured: unknown[] = [];

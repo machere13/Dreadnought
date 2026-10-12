@@ -12,6 +12,22 @@ import { useForm } from '../../../src/logic.ts';
 
 afterEach(cleanup);
 
+it('clears a DatePicker invalid draft when resetting an unchanged Form value', async () => {
+  function Example() {
+    const form = useForm({ initialValues: { date: '2026-10-12' as string | null } });
+    const date = form.field('date');
+    return <FormAdapter form={form}>
+      <DatePickerAdapter aria-label="Date" value={date.value} onChange={date.setValue} />
+      <button type="reset">Reset</button>
+    </FormAdapter>;
+  }
+  const user = userEvent.setup();
+  render(<Example />);
+  fireEvent.change(screen.getByRole('textbox'), { target: { value: 'invalid' } });
+  await user.click(screen.getByText('Reset'));
+  expect(screen.getByRole('textbox')).toHaveProperty('value', '2026-10-12');
+});
+
 it.each(['default', 'noValidate', 'formNoValidate', 'disabled', 'readOnly'] as const)(
   'handles DatePicker draft validity with %s validation settings',
   async (setting) => {

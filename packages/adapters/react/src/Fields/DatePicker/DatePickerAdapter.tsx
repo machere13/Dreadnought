@@ -1,8 +1,8 @@
 import { useContext, useEffect, useId, useImperativeHandle, useRef } from 'react';
-import { flushSync } from 'react-dom';
 import type { FocusEvent, KeyboardEvent } from 'react';
 import { OverlayVisibilityContext } from '../../shared/OverlayVisibilityContext.ts';
 import { useAnchoredPopover } from '../../shared/useAnchoredPopover.ts';
+import { usePickerForm } from '../../shared/usePickerForm.ts';
 import { CalendarPanel, nativeDatePickerAction } from './CalendarPanel.tsx';
 import { useDatePicker } from './useDatePicker.ts';
 import { datePickerDraftErrors, datePickerText } from './datePickerState.ts';
@@ -139,30 +139,12 @@ export function DatePickerAdapter({
       current.current.setOpen(false);
     });
   }
-  useEffect(() => {
-    const doc = input.current?.ownerDocument;
-    const events = doc?.defaultView ?? doc;
-    const submit = (event: Event) => {
-      if (event.target !== input.current?.form || event.defaultPrevented) return;
-      const state = current.current;
-      const saved = datePickerText(state.value);
-      if (state.draft.some((text, index) => text !== saved[index])) {
-        flushSync(() => current.current.confirm());
-      }
-    };
-    const reset = (event: Event) => {
-      if (event.target !== input.current?.form) return;
-      queueMicrotask(() => {
-        if (!event.defaultPrevented && root.current) current.current.reset();
-      });
-    };
-    events?.addEventListener('reset', reset, true);
-    events?.addEventListener('submit', submit, true);
-    return () => {
-      events?.removeEventListener('reset', reset, true);
-      events?.removeEventListener('submit', submit, true);
-    };
-  }, [native.form]);
+  usePickerForm(input, root, {
+    form: native.form,
+    isDirty: () => picker.draft.some((draft, index) => draft !== text[index]),
+    confirm: picker.confirm,
+    reset: picker.reset,
+  });
   useEffect(() => {
     if (!picker.open) return;
     const doc = root.current?.ownerDocument;

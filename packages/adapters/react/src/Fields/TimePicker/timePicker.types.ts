@@ -4,7 +4,9 @@ import type {
   TimeOptions,
   TimePart,
   TimeSelection,
+  TooltipPlacement,
 } from '@dreadnought/core';
+import type { ComponentPropsWithRef, ComponentPropsWithoutRef, ReactNode, Ref } from 'react';
 
 export interface UseTimePickerOptions extends TimeOptions {
   value?: ClockTime | null;
@@ -21,6 +23,30 @@ export interface UseTimePickerOptions extends TimeOptions {
 }
 
 export type TimePickerInputError = 'format' | 'disabled' | 'incomplete' | null;
+
+export type TimePickerFieldProps = ComponentPropsWithRef<'input'>;
+export type TimePickerActionProps = ComponentPropsWithoutRef<'button'> & {
+  action: 'clock' | 'clear' | 'confirm' | 'option';
+  'data-time-part'?: TimePart;
+  'data-time-value'?: number;
+};
+export type TimePickerSlotClassNames = Partial<
+  Record<
+    'root' | 'field' | 'actions' | 'popup' | 'columns' | 'column' | 'option' | 'footer' | 'error',
+    string
+  >
+>;
+export type TimePickerAdapterProps = UseTimePickerOptions &
+  Omit<
+    ComponentPropsWithoutRef<'input'>,
+    'value' | 'defaultValue' | 'onChange' | 'type' | 'size' | 'children' | 'prefix'
+  > & {
+    ref?: Ref<HTMLInputElement>;
+    placement?: TooltipPlacement;
+    slotClassNames?: TimePickerSlotClassNames;
+    renderField?: (props: TimePickerFieldProps) => ReactNode;
+    renderAction?: (props: TimePickerActionProps) => ReactNode;
+  };
 
 export interface UseTimePickerResult {
   value: ClockTime | null;

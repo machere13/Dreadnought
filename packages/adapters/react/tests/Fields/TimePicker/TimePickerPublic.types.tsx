@@ -1,5 +1,8 @@
 import { useTimePicker } from '@dreadnought/react/logic';
 import type { UseTimePickerOptions, UseTimePickerResult } from '@dreadnought/react/logic';
+import { TimePickerAdapter } from '@dreadnought/react/unstyled';
+import type { TimePickerAdapterProps } from '@dreadnought/react/unstyled';
+import { createRef } from 'react';
 const options: UseTimePickerOptions = { value: '09:30:00', onChange: (value) => void value };
 function CustomTime() {
   const state: UseTimePickerResult = useTimePicker(options);
@@ -13,3 +16,10 @@ const native: UseTimePickerOptions = {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void event,
 };
 void [range, native];
+const pickerProps: TimePickerAdapterProps = {
+  'aria-label': 'Time', name: 'time', form: 'booking', ref: createRef<HTMLInputElement>(),
+  renderField: props => <input {...props} />,
+  renderAction: ({ action, ...props }) => <button {...props} data-action={action} />,
+};
+const picker = <TimePickerAdapter {...pickerProps} />;
+void picker;

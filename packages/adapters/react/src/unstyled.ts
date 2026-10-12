@@ -107,6 +107,9 @@ export { FloatingPanelAdapter } from './Overlays/FloatingPanel/index.ts';
 export type { FloatingPanelAdapterProps, FloatingPanelControls } from './Overlays/FloatingPanel/index.ts';
 export { UploadAdapter } from './Fields/Upload/UploadAdapter.tsx';
 export { DatePickerAdapter } from './Fields/DatePicker/DatePickerAdapter.tsx';
+export { TimePickerAdapter } from './Fields/TimePicker/TimePickerAdapter.tsx';
+export type { TimePickerAdapterProps, TimePickerFieldProps, TimePickerActionProps,
+  TimePickerSlotClassNames } from './Fields/TimePicker/timePicker.types.ts';
 export type { DatePickerAdapterProps, DatePickerActionProps, DatePickerFieldProps,
   DatePickerMonthSelectProps, DatePickerSlotClassNames } from './Fields/DatePicker/datePicker.types.ts';
 export type {
