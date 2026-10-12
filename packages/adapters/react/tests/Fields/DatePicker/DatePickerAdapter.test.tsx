@@ -8,6 +8,159 @@ import { FormFieldAdapter } from '../../../src/unstyled.ts';
 
 afterEach(cleanup);
 
+it('confirms the draft before React submit capture reads FormData', () => {
+  const captured: unknown[] = [];
+  render(
+    <form
+      aria-label="Booking"
+      onSubmitCapture={(event) => {
+        captured.push(new FormData(event.currentTarget).get('date'));
+        event.preventDefault();
+      }}
+    >
+      <DatePickerAdapter name="date" aria-label="Date" defaultValue="2026-10-12" />
+    </form>,
+  );
+  fireEvent.change(screen.getByRole('textbox'), { target: { value: '2026-10-20' } });
+  act(() => (screen.getByRole('form', { name: 'Booking' }) as HTMLFormElement).requestSubmit());
+  expect(captured).toEqual(['2026-10-20']);
+});
+
+it('confirms drafts for late-mounted and replaced external forms', () => {
+  const sent: unknown[] = [];
+  function Example({ revision }: { revision: number }) {
+    return (
+      <>
+        <DatePickerAdapter
+          form="external"
+          name="date"
+          aria-label="Date"
+          defaultValue="2026-10-12"
+        />
+        {revision > 0 && (
+          <form
+            key={revision}
+            id="external"
+            aria-label="Booking"
+            onSubmit={(event) => {
+              event.preventDefault();
+              sent.push(new FormData(event.currentTarget).get('date'));
+            }}
+          />
+        )}
+      </>
+    );
+  }
+  const { rerender } = render(<Example revision={0} />);
+  rerender(<Example revision={1} />);
+  fireEvent.change(screen.getByRole('textbox'), { target: { value: '2026-10-20' } });
+  act(() => (screen.getByRole('form', { name: 'Booking' }) as HTMLFormElement).requestSubmit());
+  rerender(<Example revision={2} />);
+  fireEvent.change(screen.getByRole('textbox'), { target: { value: '2026-10-25' } });
+  act(() => (screen.getByRole('form', { name: 'Booking' }) as HTMLFormElement).requestSubmit());
+  expect(sent).toEqual(['2026-10-20', '2026-10-25']);
+});
+
+it('confirms a valid draft before programmatic native submission reads FormData', () => {
+  const sent: unknown[] = [];
+  render(
+    <form
+      aria-label="Booking"
+      onSubmit={(event) => {
+        event.preventDefault();
+        sent.push(new FormData(event.currentTarget).get('date'));
+      }}
+    >
+      <DatePickerAdapter name="date" aria-label="Date" defaultValue="2026-10-12" />
+    </form>,
+  );
+  const form = screen.getByRole('form', { name: 'Booking' }) as HTMLFormElement;
+  const input = screen.getByRole('textbox');
+  fireEvent.change(input, { target: { value: '2026-10-20' } });
+  act(() => form.requestSubmit());
+  expect(sent).toEqual(['2026-10-20']);
+  fireEvent.change(input, { target: { value: 'invalid' } });
+  act(() => form.requestSubmit());
+  expect(sent).toEqual(['2026-10-20']);
+});
+
+it('blocks native submission of an invalid draft even before blur', async () => {
+  const user = userEvent.setup();
+  const submissions: string[] = [];
+  render(
+    <form
+      aria-label="Booking"
+      onSubmit={(event) => {
+        event.preventDefault();
+        submissions.push(String(new FormData(event.currentTarget).get('date')));
+      }}
+    >
+      <DatePickerAdapter name="date" aria-label="Date" defaultValue="2026-10-12" />
+      <button type="submit">Save</button>
+    </form>,
+  );
+  const form = screen.getByRole('form', { name: 'Booking' }) as HTMLFormElement;
+  const input = screen.getByRole('textbox', { name: 'Date' }) as HTMLInputElement;
+  fireEvent.change(input, { target: { value: '2026-02-30' } });
+  expect(form.checkValidity()).toBe(false);
+  await user.click(screen.getByRole('button', { name: 'Save' }));
+  expect(submissions).toEqual([]);
+  expect(screen.getByRole('alert').textContent).toContain('YYYY-MM-DD');
+  fireEvent.change(input, { target: { value: '2026-10-20' } });
+  fireEvent.keyDown(input, { key: 'Enter' });
+  expect(form.checkValidity()).toBe(true);
+  await user.click(screen.getByRole('button', { name: 'Save' }));
+  expect(submissions).toEqual(['2026-10-20']);
+});
+
+it('validates partial ranges and contextual restrictions through the external form', () => {
+  render(
+    <>
+      <form id="booking" aria-label="Booking" />
+      <DatePickerAdapter
+        form="booking"
+        mode="range"
+        aria-label="Period"
+        disabledDate={(date, { from }) => from !== undefined && date < from}
+      />
+    </>,
+  );
+  const form = screen.getByRole('form', { name: 'Booking' }) as HTMLFormElement;
+  const start = screen.getByRole('textbox', { name: 'Period start' });
+  const end = screen.getByRole('textbox', { name: 'Period end' });
+  expect(form.checkValidity()).toBe(true);
+  fireEvent.change(start, { target: { value: '2026-10-20' } });
+  expect(form.checkValidity()).toBe(false);
+  fireEvent.change(end, { target: { value: '2026-10-10' } });
+  expect(form.checkValidity()).toBe(false);
+  fireEvent.change(end, { target: { value: '2026-10-25' } });
+  expect(form.checkValidity()).toBe(true);
+});
+
+it('clears native validity on cancel, reset and disable', async () => {
+  const { rerender } = render(
+    <form>
+      <DatePickerAdapter aria-label="Date" defaultValue="2026-10-12" />
+    </form>,
+  );
+  const form = document.querySelector('form')!;
+  const input = screen.getByRole('textbox');
+  fireEvent.change(input, { target: { value: 'invalid' } });
+  expect(form.checkValidity()).toBe(false);
+  fireEvent.keyDown(input, { key: 'Escape' });
+  expect(form.checkValidity()).toBe(true);
+  fireEvent.change(input, { target: { value: 'invalid' } });
+  await act(async () => form.reset());
+  expect(form.checkValidity()).toBe(true);
+  fireEvent.change(input, { target: { value: 'invalid' } });
+  rerender(
+    <form>
+      <DatePickerAdapter aria-label="Date" defaultValue="2026-10-12" disabled />
+    </form>,
+  );
+  expect(form.checkValidity()).toBe(true);
+});
+
 it('continues contextual range selection entirely by keyboard', async () => {
   const user = userEvent.setup();
   render(

@@ -1,10 +1,11 @@
 import { useContext, useEffect, useId, useImperativeHandle, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import type { FocusEvent, KeyboardEvent } from 'react';
 import { OverlayVisibilityContext } from '../../shared/OverlayVisibilityContext.ts';
 import { useAnchoredPopover } from '../../shared/useAnchoredPopover.ts';
 import { CalendarPanel, nativeDatePickerAction } from './CalendarPanel.tsx';
 import { useDatePicker } from './useDatePicker.ts';
-import { datePickerText } from './datePickerState.ts';
+import { datePickerDraftErrors, datePickerText } from './datePickerState.ts';
 import type { DatePickerAdapterProps, DatePickerFieldProps } from './datePicker.types.ts';
 import type { CalendarDate } from '@dreadnought/core';
 
@@ -86,6 +87,11 @@ export function DatePickerAdapter({
     arrow: false,
   });
   const text = datePickerText(picker.value);
+  const draftErrors = datePickerDraftErrors(
+    picker.draft,
+    picker.mode === 'range',
+    picker.constraints,
+  );
   const baseLabel = native['aria-label'] ?? 'Date';
 
   function openCalendar(target: HTMLElement) {
@@ -134,15 +140,29 @@ export function DatePickerAdapter({
     });
   }
   useEffect(() => {
-    const form = input.current?.form;
+    const doc = input.current?.ownerDocument;
+    const events = doc?.defaultView ?? doc;
+    const submit = (event: Event) => {
+      if (event.target !== input.current?.form || event.defaultPrevented) return;
+      const state = current.current;
+      const saved = datePickerText(state.value);
+      if (state.draft.some((text, index) => text !== saved[index])) {
+        flushSync(() => current.current.confirm());
+      }
+    };
     const reset = (event: Event) => {
+      if (event.target !== input.current?.form) return;
       queueMicrotask(() => {
         if (!event.defaultPrevented && root.current) current.current.reset();
       });
     };
-    form?.addEventListener('reset', reset);
-    return () => form?.removeEventListener('reset', reset);
-  }, []);
+    events?.addEventListener('reset', reset, true);
+    events?.addEventListener('submit', submit, true);
+    return () => {
+      events?.removeEventListener('reset', reset, true);
+      events?.removeEventListener('submit', submit, true);
+    };
+  }, [native.form]);
   useEffect(() => {
     if (!picker.open) return;
     const doc = root.current?.ownerDocument;
@@ -173,7 +193,10 @@ export function DatePickerAdapter({
           const props: DatePickerFieldProps = {
             ...native,
             id: index === 0 ? fieldId : `${fieldId}-end`,
-            ref: index === 0 ? input : undefined,
+            ref: (node) => {
+              if (index === 0) input.current = node;
+              node?.setCustomValidity(draftErrors[index] ? inputErrors[draftErrors[index]] : '');
+            },
             type: 'text',
             autoComplete: native.autoComplete ?? 'off',
             value: picker.draft[index],
@@ -197,6 +220,10 @@ export function DatePickerAdapter({
             className: slotClassNames.field,
             onKeyDown: keyDown,
             onBlur,
+            onInvalid: (event) => {
+              native.onInvalid?.(event);
+              if (!event.defaultPrevented) picker.confirm();
+            },
             onChange: (event) => picker.setDraft(index, event.target.value),
           };
           return (

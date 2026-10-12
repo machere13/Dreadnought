@@ -16,5 +16,6 @@ export { getCalendarGrid } from './getCalendarGrid.ts';
 export {
   isCalendarDateAllowed,
   getNextCalendarDate,
+  searchCalendarDate,
   getCalendarRange,
 } from './getCalendarSelection.ts';

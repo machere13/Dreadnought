@@ -45,7 +45,7 @@ describe('public catalog', () => {
     for (const binding of entry!.bindings) checkExamples(context, binding.examples);
     for (const name of ['parseCalendarDate', 'assertCalendarDate', 'addCalendarDays',
       'addCalendarMonths', 'getCalendarGrid', 'isCalendarDateAllowed',
-      'getNextCalendarDate', 'getCalendarRange']) {
+      'getNextCalendarDate', 'searchCalendarDate', 'getCalendarRange']) {
       const domain = catalog.entries.find(item => item.kind === 'domain' && item.name === name);
       expect(domain?.bindings[0]).toMatchObject({ layer: 1, importPath: '@dreadnought/core' });
       checkExamples(context, domain!.bindings[0].examples);

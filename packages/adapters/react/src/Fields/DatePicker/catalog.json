@@ -5,25 +5,22 @@
   "family": "Fields",
   "description": "Одна календарная дата или диапазон, ручной ввод и ограничения.",
   "docsUrl": "/components/datepicker/#datepicker-api",
-  "states": [
-    "open",
-    "closed",
-    "disabled",
-    "readOnly",
-    "invalid"
-  ],
+  "states": ["open", "closed", "disabled", "readOnly", "invalid"],
   "composesWith": [
     "domain:get-calendar-grid",
     "domain:get-calendar-range",
     "domain:get-next-calendar-date",
+    "domain:search-calendar-date",
     "component:input",
     "component:select"
   ],
   "constraints": [
     "Значения и ручной ввод только YYYY-MM-DD, годы 0001–9999, без времени и часового пояса. Неполный диапазон не публикуется.",
     "minDate/maxDate включительны; disabledDate проверяет конечные даты, не дни внутри диапазона.",
-    "Enter или уход фокуса подтверждает ввод; Escape восстанавливает опубликованное значение.",
-    "Управляемое значение сбрасывает родитель. Неконтролируемое поле поддерживает native form reset."
+    "Enter, уход фокуса или отправка формы подтверждают ввод; Escape восстанавливает опубликованное значение.",
+    "Управляемое значение сбрасывает родитель. Неконтролируемое поле поддерживает native form reset.",
+    "Невалидный или незавершённый ручной ввод блокирует обычную отправку формы через native constraint validation. noValidate/formNoValidate и прямой form.submit() отключают проверку браузера.",
+    "Клавиатурная навигация проходит длинные запрещённые промежутки порциями без блокировки интерфейса. Закрытие, изменение данных или ограничений отменяют незавершённый поиск."
   ],
   "bindings": [
     {

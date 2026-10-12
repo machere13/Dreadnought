@@ -43,6 +43,20 @@ export function getNextCalendarDate(
   weekStartsOn = 1,
   from?: CalendarDate,
 ): CalendarDate {
+  const search = searchCalendarDate(date, action, limits, weekStartsOn, from);
+  while (true) {
+    const step = search.next();
+    if (step.done) return step.value;
+  }
+}
+
+export function* searchCalendarDate(
+  date: CalendarDate,
+  action: CalendarNavigation,
+  limits: CalendarConstraints = {},
+  weekStartsOn = 1,
+  from?: CalendarDate,
+): Generator<void, CalendarDate> {
   const parts = assertCalendarDate(date);
   assertCalendarWeekStart(weekStartsOn);
   if (from !== undefined) assertCalendarDate(from);
@@ -79,12 +93,13 @@ export function getNextCalendarDate(
     upper = Math.min(upper, timestamp + (6 - weekOffset) * calendarDayMilliseconds);
   }
   const first = calendarTimestamp(assertCalendarDate(target));
-  const steps = Math.min(366, Math.floor((upper - lower) / calendarDayMilliseconds) + 1);
+  const steps = Math.floor((upper - lower) / calendarDayMilliseconds) + 1;
   for (let index = 0; index < steps; index++) {
     const candidateTime = first + index * direction * calendarDayMilliseconds;
     if (candidateTime < lower || candidateTime > upper) break;
     const candidate = formatCalendarTimestamp(candidateTime)!;
     if (!limits.disabledDate?.(candidate, { from })) return candidate;
+    yield;
   }
   return date;
 }

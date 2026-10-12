@@ -8,16 +8,26 @@ import type { CalendarNavigation } from '../../../src/index.ts';
 
 const limits = { minDate: '2026-10-01', maxDate: '2026-10-31' };
 
-it('bounds predicate work when every following date is disabled', () => {
+it('finds the next date across more than a year of disabled dates', () => {
   let calls = 0;
   const date = getNextCalendarDate('2026-10-12', 'nextDay', {
+    maxDate: '2030-01-01',
     disabledDate: (candidate) => {
       calls++;
-      return candidate > '2026-10-12';
+      return candidate < '2029-10-12';
     },
   });
-  expect(date).toBe('2026-10-12');
-  expect(calls).toBeLessThanOrEqual(366);
+  expect(date).toBe('2029-10-12');
+  expect(calls).toBeGreaterThan(366);
+});
+
+it('finds a previous date across a long blocked interval without reversing direction', () => {
+  expect(
+    getNextCalendarDate('2029-10-12', 'previousDay', {
+      minDate: '2026-10-12',
+      disabledDate: (date) => date > '2026-10-12',
+    }),
+  ).toBe('2026-10-12');
 });
 
 it('enforces inclusive bounds and predicate', () => {

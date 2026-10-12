@@ -1,9 +1,34 @@
-import { assertCalendarDate, getCalendarGrid, isCalendarDateAllowed } from '@dreadnought/core';
+import {
+  assertCalendarDate,
+  getCalendarGrid,
+  getCalendarRange,
+  isCalendarDateAllowed,
+  parseCalendarDate,
+} from '@dreadnought/core';
 import type { CalendarDate, CalendarConstraints } from '@dreadnought/core';
 import type { DatePickerValue, DatePickerInputError } from './datePicker.types.ts';
 
 export function datePickerText(value: DatePickerValue): [string, string] {
   return value === null ? ['', ''] : typeof value === 'string' ? [value, ''] : [...value];
+}
+
+export function datePickerDraftErrors(
+  draft: readonly [string, string],
+  range: boolean,
+  limits: CalendarConstraints,
+): [DatePickerInputError, DatePickerInputError] {
+  if (!draft[0] && (!range || !draft[1])) return [null, null];
+  const errors = draft.map((text, index) => {
+    if (!range && index === 1) return null;
+    if (!text) return 'incomplete';
+    if (!parseCalendarDate(text)) return 'format';
+    return isCalendarDateAllowed(text, limits) ? null : 'disabled';
+  }) as [DatePickerInputError, DatePickerInputError];
+  if (range && !errors.some(Boolean)) {
+    const selection = getCalendarRange({ start: draft[0], end: null }, draft[1], limits);
+    if (selection.end === null) errors[1] = 'disabled';
+  }
+  return errors;
 }
 
 export function validateDatePickerValue(value: DatePickerValue, range: boolean): void {

@@ -3,7 +3,7 @@ import {
   assertCalendarDate,
   getCalendarGrid,
   getCalendarRange,
-  getNextCalendarDate,
+  searchCalendarDate,
   isCalendarDateAllowed,
   parseCalendarDate,
 } from '@dreadnought/core';
@@ -17,6 +17,7 @@ import type {
 import {
   clampDatePickerMonth,
   datePickerModel,
+  datePickerDraftErrors,
   datePickerText,
   firstDatePickerDay,
   localCalendarToday,
@@ -47,6 +48,10 @@ export function useDatePicker(options: UseDatePickerOptions = {}): UseDatePicker
   );
   const current = useRef(view);
   const mounted = useRef(true);
+  const navigation = useRef<{
+    iterator: Generator<void, CalendarDate>;
+    timer?: ReturnType<typeof setTimeout>;
+  } | null>(null);
   const previous = useRef({
     mode,
     value: JSON.stringify(options.value),
@@ -57,8 +62,13 @@ export function useDatePicker(options: UseDatePickerOptions = {}): UseDatePicker
   const blocked = Boolean(options.disabled || options.readOnly);
   const from = view.range.start !== null && view.range.end === null ? view.range.start : undefined;
 
+  function stopNavigation() {
+    if (navigation.current?.timer !== undefined) clearTimeout(navigation.current.timer);
+    navigation.current = null;
+  }
   function update(patch: Partial<DatePickerModel>) {
     if (!mounted.current) return;
+    stopNavigation();
     current.current = { ...current.current, ...patch };
     setView(current.current);
   }
@@ -135,12 +145,7 @@ export function useDatePicker(options: UseDatePickerOptions = {}): UseDatePicker
       publish(null);
       return;
     }
-    const errors = draft.map((text, index) => {
-      if (mode === 'single' && index === 1) return null;
-      if (!text) return 'incomplete';
-      if (!parseCalendarDate(text)) return 'format';
-      return isCalendarDateAllowed(text, limits) ? null : 'disabled';
-    }) as DatePickerModel['errors'];
+    const errors = datePickerDraftErrors(draft, mode === 'range', limits);
     if (errors.some(Boolean)) {
       update({ errors });
       return;
@@ -188,21 +193,47 @@ export function useDatePicker(options: UseDatePickerOptions = {}): UseDatePicker
     });
   }
   function move(action: CalendarNavigation) {
+    stopNavigation();
     if (options.disabled || current.current.activeDate === null) return;
-    const date = getNextCalendarDate(
-      current.current.activeDate,
-      action,
-      limits,
-      weekStartsOn,
-      current.current.range.start ?? undefined,
-    );
-    update({ activeDate: date, month: `${date.slice(0, 7)}-01` });
+    const pending = {
+      iterator: searchCalendarDate(
+        current.current.activeDate,
+        action,
+        limits,
+        weekStartsOn,
+        current.current.range.start ?? undefined,
+      ),
+      timer: undefined as ReturnType<typeof setTimeout> | undefined,
+    };
+    navigation.current = pending;
+    function resume() {
+      if (!mounted.current || navigation.current !== pending) return;
+      for (let index = 0; index < 512; index++) {
+        const step = pending.iterator.next();
+        if (step.done) {
+          update({ activeDate: step.value, month: `${step.value.slice(0, 7)}-01` });
+          return;
+        }
+      }
+      pending.timer = setTimeout(resume, 0);
+    }
+    resume();
   }
   function hover(date: CalendarDate | null) {
     if (blocked) return;
     if (date !== null) assertCalendarDate(date);
     update({ hoveredDate: date });
   }
+  useLayoutEffect(stopNavigation, [
+    mode,
+    options.disabled,
+    options.open,
+    JSON.stringify(options.value),
+    limits.minDate,
+    limits.maxDate,
+    limits.disabledDate,
+    weekStartsOn,
+  ]);
   useLayoutEffect(() => {
     const key = JSON.stringify(options.value);
     if (previous.current.mode !== mode || previous.current.value !== key) {
@@ -247,6 +278,7 @@ export function useDatePicker(options: UseDatePickerOptions = {}): UseDatePicker
     if (options.open ?? options.defaultOpen) setOpen(true);
     return () => {
       mounted.current = false;
+      stopNavigation();
     };
   }, []);
   const dates = datePickerText(value).filter(Boolean);

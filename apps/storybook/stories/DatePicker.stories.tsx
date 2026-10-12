@@ -25,6 +25,13 @@ export const Restrictions: Story = {
   },
 };
 export const ManualInput: Story = { args: { defaultValue: null, placeholder: 'YYYY-MM-DD' } };
+export const LongDisabledInterval: Story = {
+  args: {
+    minDate: '2026-01-01',
+    maxDate: '2030-12-31',
+    disabledDate: (date) => date > '2026-10-12' && date < '2029-10-12',
+  },
+};
 export const Disabled: Story = { args: { disabled: true } };
 export const ReadOnly: Story = { args: { readOnly: true } };
 export const Controlled: Story = {

@@ -3,7 +3,63 @@ import { act, cleanup, renderHook } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import { useDatePicker } from '../../../src/logic.ts';
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
+
+it('yields during a long keyboard search and eventually reaches the allowed date', async () => {
+  vi.useFakeTimers();
+  let calls = 0;
+  const disabledDate = (date: string) => {
+    calls++;
+    return date > '2026-10-12' && date < '2029-10-12';
+  };
+  const { result } = renderHook(() =>
+    useDatePicker({
+      defaultValue: '2026-10-12',
+      defaultOpen: true,
+      disabledDate,
+    }),
+  );
+  calls = 0;
+  act(() => result.current.move('nextDay'));
+  expect(result.current.activeDate).toBe('2026-10-12');
+  expect(calls).toBeLessThan(1000);
+  expect(vi.getTimerCount()).toBeGreaterThan(0);
+  await act(async () => vi.runAllTimersAsync());
+  expect(result.current.activeDate).toBe('2029-10-12');
+  expect(result.current.value).toBe('2026-10-12');
+});
+
+it.each(['cancel', 'reset', 'setMonth', 'unmount', 'constraints'] as const)(
+  'cancels a pending keyboard search on %s',
+  async (action) => {
+    vi.useFakeTimers();
+    const disabledDate = (date: string) => date > '2026-10-12' && date < '2029-10-12';
+    const { result, unmount, rerender } = renderHook(
+      ({ maxDate }) =>
+        useDatePicker({
+          defaultValue: '2026-10-12',
+          defaultOpen: true,
+          disabledDate,
+          maxDate,
+        }),
+      { initialProps: { maxDate: '2030-01-01' } },
+    );
+    act(() => result.current.move('nextDay'));
+    expect(vi.getTimerCount()).toBeGreaterThan(0);
+    act(() => {
+      if (action === 'unmount') unmount();
+      else if (action === 'constraints') rerender({ maxDate: '2027-01-01' });
+      else if (action === 'setMonth') result.current.setMonth('2026-09-01');
+      else result.current[action]();
+    });
+    expect(vi.getTimerCount()).toBe(0);
+    await act(async () => vi.runAllTimersAsync());
+    expect(result.current.month).not.toBe('2029-10-01');
+  },
+);
 
 it('clamps an open view to changed bounds without rewriting the published value', () => {
   const { result, rerender } = renderHook(

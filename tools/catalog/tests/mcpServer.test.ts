@@ -234,6 +234,7 @@ describe('generated catalog over MCP', () => {
         'getClosestLinePoint', 'getLinePointAtX', 'isContinuousMarkdownInput', 'sampleLineLayout',
         'parseCalendarDate', 'assertCalendarDate', 'addCalendarDays', 'addCalendarMonths',
         'getCalendarGrid', 'isCalendarDateAllowed', 'getNextCalendarDate', 'getCalendarRange',
+        'searchCalendarDate',
       ].sort());
       const editorApi = await client.callTool({ name: 'dreadnought_get', arguments: {
         component: 'component:markdown-editor', binding: 'react-adapter', section: 'api' } });

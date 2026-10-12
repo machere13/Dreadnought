@@ -2,10 +2,52 @@ import { createRef } from 'react';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
-import { FormAdapter, FormFieldAdapter, CheckboxAdapter } from '../../../src/unstyled.ts';
+import {
+  FormAdapter,
+  FormFieldAdapter,
+  CheckboxAdapter,
+  DatePickerAdapter,
+} from '../../../src/unstyled.ts';
 import { useForm } from '../../../src/logic.ts';
 
 afterEach(cleanup);
+
+it.each(['default', 'noValidate', 'formNoValidate', 'disabled', 'readOnly'] as const)(
+  'handles DatePicker draft validity with %s validation settings',
+  async (setting) => {
+    const sent: unknown[] = [];
+    function Example() {
+      const form = useForm({ initialValues: { date: '2026-10-12' as string | null } });
+      const field = form.field('date');
+      return (
+        <FormAdapter
+          form={form}
+          noValidate={setting === 'noValidate'}
+          onFinish={(values) => {
+            sent.push(values);
+          }}
+        >
+          <DatePickerAdapter
+            aria-label="Date"
+            value={field.value}
+            onChange={field.setValue}
+            disabled={setting === 'disabled'}
+            readOnly={setting === 'readOnly'}
+          />
+          <button type="submit" formNoValidate={setting === 'formNoValidate'}>
+            Send
+          </button>
+        </FormAdapter>
+      );
+    }
+    render(<Example />);
+    const user = userEvent.setup();
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'invalid' } });
+    await user.click(screen.getByRole('button', { name: 'Send' }));
+    if (setting === 'default') expect(sent).toEqual([]);
+    else await waitFor(() => expect(sent).toEqual([{ date: '2026-10-12' }]));
+  },
+);
 
 it('connects unique labels, help and errors to controls across two forms', () => {
   render(

@@ -169,7 +169,7 @@
     "description": "Клавиатурная навигация с пропуском запрещённых дней.",
     "docsUrl": "/components/datepicker/#datepicker-logic",
     "constraints": [
-      "Клавиатурный поиск проверяет до 366 дней от цели; при исчерпании возвращает исходную дату. Home/End ограничены текущей неделей. Для более длинных промежутков используйте выбор месяца/года.",
+      "Поиск проходит до границы minDate/maxDate без ограничения длины промежутка. Home/End ограничены текущей неделей. Синхронный поиск по большому диапазону может быть долгим; для интерфейсов используйте searchCalendarDate порциями.",
       "Чистые календарные даты YYYY-MM-DD, годы 0001–9999, без времени и часового пояса. Вход не изменяется.",
       "Границы включительны. Диапазон проверяет только конечные даты; disabledDate получает from при выборе второй даты."
     ],
@@ -184,6 +184,34 @@
           {
             "id": "basic",
             "code": "import { getNextCalendarDate } from '@dreadnought/core';\nconst next = getNextCalendarDate('2026-10-12', 'nextDay', {}, 1);"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "domain:search-calendar-date",
+    "kind": "domain",
+    "name": "searchCalendarDate",
+    "family": "Calendar",
+    "description": "Пошаговый поиск следующей разрешённой даты без блокировки интерфейса.",
+    "docsUrl": "/components/datepicker/#datepicker-logic",
+    "constraints": [
+      "Каждый next() проверяет кандидата: done=false позволяет отложить продолжение, done=true возвращает найденную или исходную дату. Итератор можно отбросить для отмены поиска.",
+      "Длина запрещённого промежутка не ограничена; поиск ограничен календарными годами 0001–9999 и minDate/maxDate. Home/End остаются в текущей неделе.",
+      "Валидация параметров выполняется при первом next(). disabledDate должен быть чистым и быстрым."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "searchCalendarDate",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { searchCalendarDate } from '@dreadnought/core';\nconst search = searchCalendarDate('2026-10-12', 'nextDay');\nconst step = search.next();\nif (step.done) console.log(step.value);"
           }
         ]
       }

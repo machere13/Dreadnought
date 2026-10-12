@@ -1,9 +1,26 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
 import { DatePicker } from '../../../../../../src/adapters/react/components/Fields/DatePicker/DatePicker.tsx';
 
 afterEach(cleanup);
+
+it('focuses and selects a date beyond a multi-year disabled interval', async () => {
+  const user = userEvent.setup();
+  render(
+    <DatePicker
+      aria-label="Date"
+      defaultValue="2026-10-12"
+      maxDate="2030-01-01"
+      disabledDate={(date) => date > '2026-10-12' && date < '2028-10-12'}
+    />,
+  );
+  await user.click(screen.getByRole('button', { name: 'Open calendar' }));
+  await user.keyboard('{ArrowRight}');
+  await waitFor(() => expect(document.activeElement?.getAttribute('data-date')).toBe('2028-10-12'));
+  await user.keyboard('{Enter}');
+  expect(screen.getByRole('textbox', { name: 'Date' })).toHaveProperty('value', '2028-10-12');
+});
 
 it('preserves custom root slot styling', () => {
   render(<DatePicker aria-label="Date" slotClassNames={{ root: 'custom-picker' }} />);
