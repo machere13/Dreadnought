@@ -69,3 +69,5 @@ export type {
 export type {
   UploadHandler, UploadItem, UseUploadOptions, UseUploadResult,
 } from './Fields/Upload/upload.types.ts';
+export { useTreeSelect } from './Fields/TreeSelect/index.ts';
+export type { UseTreeSelectOptions, UseTreeSelectResult, TreeSelectValue, TreeSelectTag, TreeSelectSearchOptions } from './Fields/TreeSelect/index.ts';

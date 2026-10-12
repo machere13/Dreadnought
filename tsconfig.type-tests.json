@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "packages/adapters/react/tests/Fields/TreeSelect/TreeSelectPublic.types.tsx",
     "packages/core/tests/behaviors/treeSearch.types.ts",
     "packages/ui/tests/timepicker.types.tsx",
     "packages/adapters/react/tests/Fields/TimePicker/TimePickerPublic.types.tsx",

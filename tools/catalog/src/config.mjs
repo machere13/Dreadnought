@@ -10,6 +10,7 @@ const core = 'packages/core/src/components';
 const adapter = 'packages/adapters/react/src';
 const ui = 'packages/ui/src/adapters/react/components';
 export const components = [
+  { family: 'Fields', name: 'TreeSelect', sources: [adapter] },
   { family: 'Fields', name: 'TimePicker', sources: [adapter, ui] },
   { family: 'Fields', name: 'DatePicker', sources: [adapter, ui] },
   { family: 'Fields', name: 'Upload', sources: [adapter, ui] },
