@@ -6,6 +6,8 @@
     border: var(--dreadnought-popover-border-width) solid var(--dreadnought-popover-border);
     border-radius: var(--dreadnought-popover-radius);
     background: var(--dreadnought-popover-bg);
+    -webkit-backdrop-filter: var(--dreadnought-popup-backdrop-filter);
+    backdrop-filter: var(--dreadnought-popup-backdrop-filter);
     color: var(--dreadnought-popover-text);
     font-family: var(--dreadnought-popover-font-family);
     font-size: var(--dreadnought-popover-font-size);

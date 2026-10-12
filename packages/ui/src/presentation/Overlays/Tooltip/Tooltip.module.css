@@ -6,6 +6,8 @@
     border: var(--dreadnought-tooltip-border-width) solid var(--dreadnought-tooltip-border);
     border-radius: var(--dreadnought-tooltip-radius);
     background: var(--dreadnought-tooltip-bg);
+    -webkit-backdrop-filter: var(--dreadnought-popup-backdrop-filter);
+    backdrop-filter: var(--dreadnought-popup-backdrop-filter);
     color: var(--dreadnought-tooltip-text);
     font-family: var(--dreadnought-tooltip-font-family);
     font-size: var(--dreadnought-tooltip-font-size);

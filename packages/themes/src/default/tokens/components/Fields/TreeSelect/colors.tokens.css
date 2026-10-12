@@ -1,6 +1,6 @@
 :root {
   --dreadnought-treeselect-field-bg: var(--dreadnought-color-surface-default);
-  --dreadnought-treeselect-popup-bg: var(--dreadnought-color-surface-panel);
+  --dreadnought-treeselect-popup-bg: var(--dreadnought-color-surface-popup);
   --dreadnought-treeselect-tag-bg: var(--dreadnought-color-surface-subtle);
   --dreadnought-treeselect-text: var(--dreadnought-color-text-primary);
   --dreadnought-treeselect-border: var(--dreadnought-color-border-default);

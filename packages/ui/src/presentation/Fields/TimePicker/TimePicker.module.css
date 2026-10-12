@@ -28,6 +28,8 @@
     border: var(--dreadnought-timepicker-border-width) solid var(--dreadnought-timepicker-border);
     border-radius: var(--dreadnought-timepicker-radius);
     background: var(--dreadnought-timepicker-bg);
+    -webkit-backdrop-filter: var(--dreadnought-popup-backdrop-filter);
+    backdrop-filter: var(--dreadnought-popup-backdrop-filter);
     color: var(--dreadnought-timepicker-text);
     font: inherit;
     gap: var(--dreadnought-timepicker-gap);

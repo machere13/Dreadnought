@@ -1,5 +1,5 @@
 :root {
-  --dreadnought-popover-bg: var(--dreadnought-color-surface-subtle);
+  --dreadnought-popover-bg: var(--dreadnought-color-surface-popup);
   --dreadnought-popover-text: var(--dreadnought-color-text-primary);
   --dreadnought-popover-border: var(--dreadnought-color-border-default);
 }

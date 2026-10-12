@@ -238,9 +238,9 @@ export function TreeSelectAdapter<RecordType, Key extends TreeKey>({
       }}
     >
       <div data-slot="field" className={slotClassNames.field}>
-        {model.multiple && (
-          <div data-slot="selection" className={slotClassNames.selection}>
-            {model.tags.map((tag) => (
+        <div data-slot="selection" className={slotClassNames.selection}>
+          {model.multiple &&
+            model.tags.map((tag) => (
               <span
                 key={`${typeof tag.key}:${tag.key}`}
                 data-slot="tag"
@@ -278,67 +278,54 @@ export function TreeSelectAdapter<RecordType, Key extends TreeKey>({
                 )}
               </span>
             ))}
-          </div>
-        )}
-        {renderField({
-          ...native,
-          id: fieldId,
-          ref: (node) => {
-            field.current = node;
-          },
-          type: 'text',
-          role: 'combobox',
-          autoComplete: native.autoComplete ?? 'off',
-          value:
-            showSearch && model.open && !model.readOnly
-              ? model.searchValue
-              : model.multiple
-                ? ''
-                : (model.tags[0]?.label ?? ''),
-          disabled: model.disabled,
-          readOnly: model.readOnly || !showSearch,
-          'aria-expanded': model.open,
-          'aria-haspopup': 'tree',
-          'aria-controls': model.open ? popupId : undefined,
-          'aria-required': required || native['aria-required'],
-          'aria-invalid': model.invalid || nativeInvalid || native['aria-invalid'],
-          onChange: (event) => model.setSearch(event.target.value),
-          onBlur,
-          onClick: (event) => {
-            onClick?.(event);
-            if (!event.defaultPrevented) openTree();
-          },
-          onKeyDown: (event) => {
-            onKeyDown?.(event);
-            if (event.defaultPrevented || event.nativeEvent.isComposing || model.disabled) return;
-            if (event.key !== 'ArrowDown' || event.ctrlKey || event.metaKey || event.shiftKey)
-              return;
-            event.preventDefault();
-            if (model.open) {
-              const first = tree.current?.querySelector<HTMLElement>(
-                '[role="treeitem"][tabindex="0"]',
-              );
-              (first ?? tree.current)?.focus({ preventScroll: true });
-            } else {
-              focusRequested.current = true;
-              model.setOpen(true);
-            }
-          },
-        })}
-        <div data-slot="actions" className={slotClassNames.actions}>
-          {renderAction({
-            action: 'toggle',
-            type: 'button',
-            'aria-label': 'Открыть дерево',
+          {renderField({
+            ...native,
+            placeholder: model.multiple && model.tags.length > 0 ? undefined : native.placeholder,
+            id: fieldId,
+            ref: (node) => {
+              field.current = node;
+            },
+            type: 'text',
+            role: 'combobox',
+            autoComplete: native.autoComplete ?? 'off',
+            value:
+              showSearch && model.open && !model.readOnly
+                ? model.searchValue
+                : model.multiple
+                  ? ''
+                  : (model.tags[0]?.label ?? ''),
+            disabled: model.disabled,
+            readOnly: model.readOnly || !showSearch,
             'aria-expanded': model.open,
             'aria-haspopup': 'tree',
-            disabled: model.disabled,
-            onClick: () => {
-              if (model.open) close();
-              else openTree();
+            'aria-controls': model.open ? popupId : undefined,
+            'aria-required': required || native['aria-required'],
+            'aria-invalid': model.invalid || nativeInvalid || native['aria-invalid'],
+            onChange: (event) => model.setSearch(event.target.value),
+            onBlur,
+            onClick: (event) => {
+              onClick?.(event);
+              if (!event.defaultPrevented) openTree();
             },
-            children: '⌄',
+            onKeyDown: (event) => {
+              onKeyDown?.(event);
+              if (event.defaultPrevented || event.nativeEvent.isComposing || model.disabled) return;
+              if (event.key !== 'ArrowDown' || event.ctrlKey || event.metaKey || event.shiftKey)
+                return;
+              event.preventDefault();
+              if (model.open) {
+                const first = tree.current?.querySelector<HTMLElement>(
+                  '[role="treeitem"][tabindex="0"]',
+                );
+                (first ?? tree.current)?.focus({ preventScroll: true });
+              } else {
+                focusRequested.current = true;
+                model.setOpen(true);
+              }
+            },
           })}
+        </div>
+        <div data-slot="actions" className={slotClassNames.actions}>
           {allowClear &&
             model.values.length > 0 &&
             !model.readOnly &&
@@ -353,6 +340,19 @@ export function TreeSelectAdapter<RecordType, Key extends TreeKey>({
               },
               children: '×',
             })}
+          {renderAction({
+            action: 'toggle',
+            type: 'button',
+            'aria-label': 'Открыть дерево',
+            'aria-expanded': model.open,
+            'aria-haspopup': 'tree',
+            disabled: model.disabled,
+            onClick: () => {
+              if (model.open) close();
+              else openTree();
+            },
+            children: '⌄',
+          })}
         </div>
       </div>
       <select

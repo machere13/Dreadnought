@@ -1,4 +1,5 @@
 :root {
+  --dreadnought-popup-backdrop-filter: blur(24px);
   --dreadnought-z-index-notification: 1000;
   --dreadnought-opacity-disabled: 0.55;
   --dreadnought-opacity-chart-fill: 0.14;

@@ -32,6 +32,8 @@
     border: var(--dreadnought-datepicker-border-width) solid var(--dreadnought-datepicker-border);
     border-radius: var(--dreadnought-datepicker-radius);
     background: var(--dreadnought-datepicker-bg);
+    -webkit-backdrop-filter: var(--dreadnought-popup-backdrop-filter);
+    backdrop-filter: var(--dreadnought-popup-backdrop-filter);
     color: var(--dreadnought-datepicker-text);
     font: inherit;
     gap: var(--dreadnought-datepicker-gap);

@@ -7,7 +7,6 @@
   }
   .field {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     gap: var(--dreadnought-treeselect-gap);
     box-sizing: border-box;
@@ -28,20 +27,23 @@
   .root[data-disabled] {
     opacity: var(--dreadnought-treeselect-disabled-opacity);
   }
-  .field > [data-ui='input'] {
+  .selection > [data-ui='input'] {
     --dreadnought-input-min-height: calc(
       var(--dreadnought-treeselect-min-height) - var(--dreadnought-treeselect-border-width) * 2
     );
     --dreadnought-input-border-width: 0;
     --dreadnought-input-padding-x: 0;
     --dreadnought-input-padding-y: 0;
-    flex: 1;
+    flex: 1 1 1ch;
+    width: 1ch;
     min-width: 0;
     max-width: 100%;
   }
   .selection {
     display: flex;
     flex-wrap: wrap;
+    flex: 1;
+    align-items: center;
     gap: var(--dreadnought-treeselect-gap);
     min-width: 0;
     max-width: 100%;
@@ -79,6 +81,8 @@
     border: var(--dreadnought-treeselect-border-width) solid var(--dreadnought-treeselect-border);
     border-radius: var(--dreadnought-treeselect-popup-radius);
     background: var(--dreadnought-treeselect-popup-bg);
+    -webkit-backdrop-filter: var(--dreadnought-popup-backdrop-filter);
+    backdrop-filter: var(--dreadnought-popup-backdrop-filter);
     color: var(--dreadnought-treeselect-text);
     font: inherit;
   }

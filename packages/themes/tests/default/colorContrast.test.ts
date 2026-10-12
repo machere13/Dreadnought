@@ -26,6 +26,12 @@ const tokens = new Map([
   ...declarations('components/Surfaces/Card/colors.tokens.css'),
   ...declarations('components/DataDisplay/CodeBlock/colors.tokens.css'),
   ...declarations('components/Visualization/RadarChart/colors.tokens.css'),
+  ...declarations('components/Overlays/Tooltip/colors.tokens.css'),
+  ...declarations('components/Overlays/Popover/colors.tokens.css'),
+  ...declarations('components/Fields/Select/colors.tokens.css'),
+  ...declarations('components/Fields/TreeSelect/colors.tokens.css'),
+  ...declarations('components/Fields/DatePicker/colors.tokens.css'),
+  ...declarations('components/Fields/TimePicker/colors.tokens.css'),
 ]);
 
 function color(name: string): number[] {
@@ -74,10 +80,43 @@ function borderWidth(name: string): number {
 }
 
 describe('default dark theme contrast', () => {
+  it('keeps translucent popup text readable even over a white page without blur', () => {
+    for (const name of [
+      'tooltip-bg',
+      'popover-bg',
+      'select-popup-bg',
+      'treeselect-popup-bg',
+      'datepicker-bg',
+      'timepicker-bg',
+    ]) {
+      let value = tokens.get(`--dreadnought-${name}`)!;
+      while (value?.startsWith('var(')) {
+        value = tokens.get(value.slice(4, -1))!;
+      }
+      const channels = value?.match(/^rgb\((\d+) (\d+) (\d+) \/ (\d+(?:\.\d+)?)%\)$/);
+      expect(channels, name).not.toBeNull();
+      const alpha = Number(channels![4]) / 100;
+      expect(alpha, name).toBeGreaterThan(0);
+      expect(alpha, name).toBeLessThan(1);
+      for (const backdrop of [0, 255]) {
+        const surface = channels!
+          .slice(1, 4)
+          .map(Number)
+          .map((channel) => channel * alpha + backdrop * (1 - alpha));
+        for (const text of ['color-text-primary', 'color-text-placeholder']) {
+          const ratio = (luminance(color(text)) + 0.05) / (luminance(surface) + 0.05);
+          expect(ratio, `${name} / ${text} over ${backdrop}`).toBeGreaterThanOrEqual(4.5);
+        }
+      }
+    }
+  });
+
   it('keeps card and code surfaces darker than controls while preserving readable text', () => {
     for (const name of ['card-bg', 'code-block-bg']) {
       expect(luminance(color(name)), name).toBeLessThan(luminance(color('color-surface-default')));
-      expect(luminance(color(name)), name).toBeGreaterThan(luminance(color('color-surface-canvas')));
+      expect(luminance(color(name)), name).toBeGreaterThan(
+        luminance(color('color-surface-canvas')),
+      );
       expect(contrast('color-text-primary', name), name).toBeGreaterThanOrEqual(4.5);
       expect(contrast('color-text-placeholder', name), name).toBeGreaterThanOrEqual(4.5);
     }

@@ -103,6 +103,9 @@
   }
 
   .menu {
+    --dreadnought-menu-bg: var(--dreadnought-color-surface-popup);
+    -webkit-backdrop-filter: var(--dreadnought-popup-backdrop-filter);
+    backdrop-filter: var(--dreadnought-popup-backdrop-filter);
     position: fixed;
     inset: auto;
     margin: 0;

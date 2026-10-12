@@ -5,6 +5,20 @@ import { afterEach, expect, it } from 'vitest';
 import { TreeSelect } from '../../../../../../src/adapters/react/components/Fields/TreeSelect/TreeSelect.tsx';
 
 afterEach(cleanup);
+it('keeps the search with selected tags and clear before disclosure', async () => {
+  const user = userEvent.setup();
+  render(<TreeSelect {...options} multiple defaultValue={[1]} placeholder="Выберите команды" />);
+  const input = screen.getByRole('combobox');
+  const selection = screen.getByText('Frontend').closest('[data-slot="selection"]');
+  expect(selection?.contains(input)).toBe(true);
+  expect(input.getAttribute('placeholder')).toBeNull();
+  const clear = screen.getByRole('button', { name: 'Очистить выбор' });
+  const toggle = screen.getByRole('button', { name: 'Открыть дерево' });
+  expect(clear.nextElementSibling).toBe(toggle);
+  await user.click(clear);
+  expect(input.getAttribute('placeholder')).toBe('Выберите команды');
+});
+
 type Node = { id: number; label: string; children?: readonly Node[] };
 const records: readonly Node[] = [
   {

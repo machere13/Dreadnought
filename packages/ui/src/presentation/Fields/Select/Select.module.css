@@ -128,7 +128,9 @@
     padding: var(--dreadnought-select-popup-padding);
     border: var(--dreadnought-select-popup-border-width) solid var(--dreadnought-select-border);
     border-radius: var(--dreadnought-select-popup-radius);
-    background: var(--dreadnought-select-bg);
+    background: var(--dreadnought-select-popup-bg);
+    -webkit-backdrop-filter: var(--dreadnought-popup-backdrop-filter);
+    backdrop-filter: var(--dreadnought-popup-backdrop-filter);
     color: var(--dreadnought-select-text);
   }
   .popup[hidden] {

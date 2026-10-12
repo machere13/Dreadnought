@@ -1,5 +1,6 @@
 :root {
   --dreadnought-select-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-select-popup-bg: var(--dreadnought-color-surface-popup);
   --dreadnought-select-text: var(--dreadnought-color-text-primary);
   --dreadnought-select-border: var(--dreadnought-color-border-default);
   --dreadnought-select-placeholder: var(--dreadnought-color-text-placeholder);

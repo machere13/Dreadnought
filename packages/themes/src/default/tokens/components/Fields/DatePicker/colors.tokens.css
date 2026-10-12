@@ -1,5 +1,5 @@
 :root {
-  --dreadnought-datepicker-bg: var(--dreadnought-color-surface-panel);
+  --dreadnought-datepicker-bg: var(--dreadnought-color-surface-popup);
   --dreadnought-datepicker-text: var(--dreadnought-color-text-primary);
   --dreadnought-datepicker-muted: var(--dreadnought-color-text-placeholder);
   --dreadnought-datepicker-border: var(--dreadnought-color-border-subtle);
