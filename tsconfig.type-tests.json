@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "packages/adapters/react/tests/Fields/TimePicker/TimePickerPublic.types.tsx",
     "packages/core/tests/domains/time/time.types.ts",
     "packages/ui/tests/datepicker.types.tsx",
     "packages/ui/tests/toastQueue.types.tsx",

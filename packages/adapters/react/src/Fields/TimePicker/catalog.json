@@ -1,0 +1,46 @@
+{
+  "id": "component:time-picker",
+  "kind": "component",
+  "name": "TimePicker",
+  "family": "Fields",
+  "description": "Выбор одного времени с ручным вводом и зависимыми ограничениями.",
+  "docsUrl": "/components/timepicker/#timepicker-api",
+  "states": ["open", "closed", "disabled", "readOnly", "invalid"],
+  "composesWith": [
+    "domain:get-time-options",
+    "domain:get-time-selection",
+    "domain:is-clock-time-allowed",
+    "behavior:get-next-enabled-value"
+  ],
+  "constraints": [
+    "Значение HH:mm:ss или null без даты и зоны. showSeconds=false принимает текст HH:mm, секунды значения должны быть 00.",
+    "minTime/maxTime включительны внутри суток. Шаги ограничивают пункты панели, но не корректный ручной ввод.",
+    "Черновик не публикуется до подтверждения. Escape восстанавливает принятое значение; controlled-владелец может отклонить изменение.",
+    "Диапазон времени, AM/PM и часовые пояса не поддерживаются."
+  ],
+  "bindings": [
+    {
+      "id": "react-logic",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/logic",
+      "exportName": "useTimePicker",
+      "defaults": {
+        "showSeconds": false,
+        "hourStep": 1,
+        "minuteStep": 1,
+        "secondStep": 1,
+        "allowClear": true,
+        "disabled": false,
+        "readOnly": false,
+        "defaultOpen": false
+      },
+      "examples": [
+        {
+          "id": "logic",
+          "code": "import { useTimePicker } from '@dreadnought/react/logic';\nexport function Example() {\n  const time = useTimePicker({ defaultValue: '09:30:00' });\n  return <button onClick={() => { time.choose('hour', 10); time.confirm(); }}>{time.draft || 'Выбрать время'}</button>;\n}"
+        }
+      ]
+    }
+  ]
+}

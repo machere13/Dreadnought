@@ -61,6 +61,8 @@ export type {
 } from './Overlays/FloatingPanel/index.ts';
 export { useUpload } from './Fields/Upload/useUpload.ts';
 export { useDatePicker } from './Fields/DatePicker/useDatePicker.ts';
+export { useTimePicker } from './Fields/TimePicker/useTimePicker.ts';
+export type { UseTimePickerOptions, UseTimePickerResult, TimePickerInputError } from './Fields/TimePicker/timePicker.types.ts';
 export type {
   UseDatePickerOptions, UseDatePickerResult, DatePickerRange, DatePickerValue,
 } from './Fields/DatePicker/datePicker.types.ts';
