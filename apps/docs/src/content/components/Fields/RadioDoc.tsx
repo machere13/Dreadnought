@@ -1,24 +1,37 @@
 import { ComponentPage } from '../../../shared/ComponentPage.tsx';
-import { useState } from 'react';
-import { Radio } from '@dreadnought/ui/react';
-import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc';
+import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc.ts';
 import type { ComponentDoc } from '../../../shared/types.ts';
-import styles from '../../../shared/Documentation.module.css';
-
-function RadioDemo() {
-  const [value, setValue] = useState('basic');
-  return <div className={styles.demo}><Radio.Group label="Тариф" name="plan" value={value} onValueChange={setValue}
-    options={[{ value: 'basic', label: 'Базовый' }, { value: 'pro', label: 'Про' }, { value: 'enterprise', label: 'Корпоративный', disabled: true }]} />
-    <p role="status">Выбран тариф: {value}</p></div>;
-}
+import { RadioGroupDemo } from './RadioGroupDemo.tsx';
+import example0Code from './RadioGroupDemo.tsx?raw';
+import { RadioStandaloneDemo } from './RadioStandaloneDemo.tsx';
+import example1Code from './RadioStandaloneDemo.tsx?raw';
 
 export const radioDoc: ComponentDoc = {
   ...getCatalogDoc('radio'),
   title: 'Radio',
-  description: 'Выбор одного варианта. Radio.Group связывает радиокнопки общим name и поддерживает стандартную навигацию стрелками.',
-  adapterDescription: 'Адаптер предоставляет разметку и поведение без оформления. Токены и CSS Modules подключает готовый компонент.',
-  footnote: 'Для самостоятельных Radio задавайте одинаковый name внутри одной группы. value группы — строка. ref отдельной кнопки указывает на input.',
-  demo: <RadioDemo />,
+  description:
+    'Выбор ровно одного варианта. Обычно используйте Radio.Group; отдельные Radio удобны, когда нужна собственная разметка.',
+  adapterDescription: 'Адаптер сохраняет разметку и поведение без оформления темы.',
+  footnote:
+    'Стрелки переключают варианты внутри группы. name связывает радиокнопки и задаёт имя поля формы. value отдельной Radio — значение для отправки; checked управляет её выбором, defaultChecked задаёт начальный выбор.',
+  examples: [
+    {
+      id: 'group',
+      title: 'Группа тарифов',
+      description:
+        'Выберите один тариф: текущий выбор показан под группой. Корпоративный тариф недоступен. Radio.Group получает строковое value и сообщает изменения через onValueChange.',
+      demo: <RadioGroupDemo />,
+      code: example0Code,
+    },
+    {
+      id: 'standalone',
+      title: 'Отдельные радиокнопки',
+      description:
+        'Выберите частоту уведомлений. Одинаковый name связывает отдельные Radio в группу: одновременно выбран только один вариант. defaultChecked задаёт начальный выбор.',
+      demo: <RadioStandaloneDemo />,
+      code: example1Code,
+    },
+  ],
 };
 
 export function RadioPage() {

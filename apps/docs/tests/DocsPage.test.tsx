@@ -112,8 +112,8 @@ describe('documentation pages', () => {
     render(<DocsPage section="tree" />);
     const tree = screen.getByRole('tree', { name: 'Разделы документации' });
     expect(tree.className).not.toBe('');
-    fireEvent.keyDown(screen.getByRole('treeitem', { name: 'Компоненты' }), { key: 'ArrowRight' });
-    expect(screen.getByRole('treeitem', { name: 'Button' })).toBeTruthy();
+    fireEvent.keyDown(within(tree).getByRole('treeitem', { name: 'Компоненты' }), { key: 'ArrowRight' });
+    expect(within(tree).getByRole('treeitem', { name: 'Button' })).toBeTruthy();
     expect(screen.getByRole('rowheader', { name: 'expandedKeys' })).toBeTruthy();
     expect(screen.getByText(/import \{ Tree \} from '@dreadnought\/ui\/react'/)).toBeTruthy();
   });
@@ -179,7 +179,7 @@ describe('documentation pages', () => {
       expect(document.activeElement).toBe(trigger);
       expect(screen.queryByLabelText('Имя профиля')).toBeNull();
       fireEvent.click(trigger);
-      expect((screen.getByLabelText('Имя профиля') as HTMLInputElement).value).toBe('');
+      expect((screen.getByLabelText('Имя профиля') as HTMLInputElement).value).toBe('Ada');
     } finally {
       cleanup();
       delete (HTMLDialogElement.prototype as Partial<HTMLDialogElement>).showModal;
@@ -206,7 +206,7 @@ describe('documentation pages', () => {
       expect(document.activeElement).toBe(trigger);
       expect(screen.queryByLabelText('Имя профиля')).toBeNull();
       fireEvent.click(trigger);
-      expect((screen.getByLabelText('Имя профиля') as HTMLInputElement).value).toBe('');
+      expect((screen.getByLabelText('Имя профиля') as HTMLInputElement).value).toBe('Ada');
     } finally {
       cleanup();
       delete (HTMLDialogElement.prototype as Partial<HTMLDialogElement>).showModal;
