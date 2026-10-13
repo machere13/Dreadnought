@@ -102,7 +102,7 @@
   padding: calc(var(--dreadnought-spacing-x4) * 2);
   border: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle);
   border-radius: var(--dreadnought-border-radius-x1);
-  background: var(--dreadnought-color-surface-default);
+  background: var(--dreadnought-code-block-bg);
 }
 
 .demoRow { display: flex; flex-wrap: wrap; align-items: center; gap: var(--dreadnought-spacing-x4); }
