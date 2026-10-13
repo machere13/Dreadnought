@@ -2,6 +2,8 @@
   --dreadnought-treeselect-width: var(--dreadnought-size-x3);
   --dreadnought-treeselect-gap: var(--dreadnought-spacing-x1);
   --dreadnought-treeselect-padding: var(--dreadnought-spacing-x2);
+  --dreadnought-treeselect-field-padding-y: var(--dreadnought-spacing-x1);
+  --dreadnought-treeselect-popup-padding: var(--dreadnought-spacing-x1);
   --dreadnought-treeselect-min-height: var(--dreadnought-size-control-min-height);
   --dreadnought-treeselect-field-radius: var(--dreadnought-border-radius-x1);
   --dreadnought-treeselect-tag-radius: var(--dreadnought-border-radius-pill);

@@ -3,6 +3,7 @@
   --dreadnought-treeselect-popup-bg: var(--dreadnought-color-surface-popup);
   --dreadnought-treeselect-tag-bg: var(--dreadnought-color-surface-subtle);
   --dreadnought-treeselect-text: var(--dreadnought-color-text-primary);
+  --dreadnought-treeselect-placeholder: var(--dreadnought-color-text-placeholder);
   --dreadnought-treeselect-border: var(--dreadnought-color-border-default);
   --dreadnought-treeselect-focus: var(--dreadnought-color-focus-ring);
   --dreadnought-treeselect-invalid: var(--dreadnought-color-status-error);
