@@ -422,7 +422,7 @@ describe('documentation pages', () => {
     expect(screen.getByRole('link', { name: 'Table' }).getAttribute('href')).toBe('/components/table/');
     expect(screen.getByRole('heading', { name: 'Table', level: 1 })).toBeTruthy();
     expect(screen.queryByText('DATA DISPLAY / 01')).toBeNull();
-    expect(screen.getByRole('heading', { name: 'Пример' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Примеры' })).toBeTruthy();
     expect(screen.getByRole('heading', { name: 'Когда нужен другой слой' })).toBeTruthy();
     expect(screen.getByRole('heading', { name: 'Основные свойства' })).toBeTruthy();
     expect(screen.getByRole('rowheader', { name: 'dataSource' })).toBeTruthy();

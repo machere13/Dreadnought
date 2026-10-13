@@ -17,7 +17,7 @@ export function ComponentDocumentation({
 }) {
   return (
     <div className={styles.componentPage}>
-      <ComponentOutline key={component} component={component} />
+      <ComponentOutline key={component} component={component} examples={doc.examples} />
       <article className={styles.article}>
         <Breadcrumb
           items={[
@@ -34,15 +34,34 @@ export function ComponentDocumentation({
         <section className={styles.section} aria-labelledby={`${component}-example`}>
           <div className={styles.sectionHeading}>
             <h2 id={`${component}-example`} className={styles.sectionTitle}>
-              Пример
+              {doc.examples ? 'Примеры' : 'Пример'}
             </h2>
           </div>
-          {doc.demo}
-          <CodeBlock
-            code={doc.readyCode ?? doc.adapterCode}
-            language="tsx"
-            copyLabels={copyLabels}
-          />
+          {doc.examples ? (
+            doc.examples.map((example) => (
+              <section
+                key={example.id}
+                className={styles.example}
+                aria-labelledby={`${component}-${example.id}`}
+              >
+                <h3 id={`${component}-${example.id}`} className={styles.subheading}>
+                  {example.title}
+                </h3>
+                <p className={styles.bodyText}>{example.description}</p>
+                <div className={styles.demo}>{example.demo}</div>
+                <CodeBlock code={example.code} language="tsx" copyLabels={copyLabels} />
+              </section>
+            ))
+          ) : (
+            <>
+              {doc.demo}
+              <CodeBlock
+                code={doc.readyCode ?? doc.adapterCode}
+                language="tsx"
+                copyLabels={copyLabels}
+              />
+            </>
+          )}
         </section>
 
         <section data-knowledge className={styles.section} aria-labelledby={`${component}-layers`}>
@@ -54,7 +73,9 @@ export function ComponentDocumentation({
           <div className={styles.layerExamples}>
             <div>
               <h3 className={styles.subheading}>Свои стили — адаптер</h3>
-              {doc.adapterDescription && <p className={styles.bodyText}>{doc.adapterDescription}</p>}
+              {doc.adapterDescription && (
+                <p className={styles.bodyText}>{doc.adapterDescription}</p>
+              )}
               <div data-knowledge-exclude>
                 <CodeBlock code={doc.adapterCode} language="tsx" copyLabels={copyLabels} />
               </div>
@@ -98,14 +119,16 @@ export function ComponentDocumentation({
               />
             </div>
           ))}
-          {doc.footnote && <p
-            data-knowledge
-            data-knowledge-id={`${component}-api`}
-            data-knowledge-title={`${doc.title}: примечания`}
-            className={styles.footnote}
-          >
-            {doc.footnote}
-          </p>}
+          {doc.footnote && (
+            <p
+              data-knowledge
+              data-knowledge-id={`${component}-api`}
+              data-knowledge-title={`${doc.title}: примечания`}
+              className={styles.footnote}
+            >
+              {doc.footnote}
+            </p>
+          )}
         </section>
       </article>
     </div>

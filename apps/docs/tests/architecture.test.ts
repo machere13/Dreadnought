@@ -25,7 +25,7 @@ function dependencies(entry: string, visited = new Set<string>()) {
     if (ts.isImportDeclaration(node) && node.importClause?.isTypeOnly) continue;
     if (ts.isExportDeclaration(node) && node.isTypeOnly) continue;
     if (!node.moduleSpecifier || !ts.isStringLiteral(node.moduleSpecifier)) continue;
-    const specifier = node.moduleSpecifier.text;
+    const specifier = node.moduleSpecifier.text.replace(/\?raw$/, '');
     if (!specifier.startsWith('.')) continue;
     const target = path.resolve(path.dirname(file), specifier);
     const resolved = [target, target + '.ts', target + '.tsx'].find(existsSync);

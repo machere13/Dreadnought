@@ -12,5 +12,12 @@ export type ComponentDoc = {
   apiRows: readonly ApiRow[];
   apiGroups?: readonly ApiGroup[];
   footnote: ReactNode;
-  demo: ReactNode;
+  demo?: ReactNode;
+  examples?: readonly {
+    id: string;
+    title: string;
+    description: string;
+    demo: ReactNode;
+    code: string;
+  }[];
 };

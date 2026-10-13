@@ -107,6 +107,10 @@
 
 .demoRow { display: flex; flex-wrap: wrap; align-items: center; gap: var(--dreadnought-spacing-x4); }
 
+.example { display: grid; gap: var(--dreadnought-spacing-x4); min-width: 0; }
+
+.example > .bodyText { margin: 0; }
+
 .demoStack { display: flex; flex-direction: column; gap: var(--dreadnought-spacing-x4); }
 
 .demoStack > button { align-self: flex-start; }

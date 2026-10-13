@@ -1,20 +1,31 @@
 import { useEffect, useState } from 'react';
 import { Button, Icon } from '@dreadnought/ui/react';
 import styles from './Documentation.module.css';
+import type { ComponentDoc } from './types.ts';
 
-export function ComponentOutline({ component }: { component: string }) {
+export function ComponentOutline({
+  component,
+  examples,
+}: {
+  component: string;
+  examples?: ComponentDoc['examples'];
+}) {
   const [active, setActive] = useState(`${component}-overview`);
   const [expanded, setExpanded] = useState(false);
   const items = [
     { id: `${component}-overview`, title: 'Когда использовать' },
     { id: `${component}-example`, title: 'Примеры' },
+    ...(examples ?? []).map((example) => ({
+      id: `${component}-${example.id}`,
+      title: example.title,
+    })),
     { id: `${component}-layers`, title: 'Слои' },
     { id: `${component}-api`, title: 'API' },
   ];
 
   useEffect(() => {
-    const targets = ['overview', 'example', 'layers', 'api']
-      .map(section => document.getElementById(`${component}-${section}`))
+    const targets = items
+      .map((item) => document.getElementById(item.id))
       .filter((target): target is HTMLElement => target !== null);
     let frame = 0;
 
@@ -43,7 +54,7 @@ export function ComponentOutline({ component }: { component: string }) {
       window.removeEventListener('resize', schedule);
       window.removeEventListener('hashchange', schedule);
     };
-  }, [component]);
+  }, [component, examples]);
 
   return (
     <nav className={styles.outline} aria-label="На этой странице">
@@ -56,12 +67,12 @@ export function ComponentOutline({ component }: { component: string }) {
         iconPosition="end"
         aria-expanded={expanded}
         aria-controls={`${component}-outline`}
-        onClick={() => setExpanded(value => !value)}
+        onClick={() => setExpanded((value) => !value)}
       >
         На этой странице
       </Button>
       <ul id={`${component}-outline`} className={styles.outlineLinks} data-expanded={expanded}>
-        {items.map(item => (
+        {items.map((item) => (
           <li key={item.id}>
             <a
               href={`#${item.id}`}

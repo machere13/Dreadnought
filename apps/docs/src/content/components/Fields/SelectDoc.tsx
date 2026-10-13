@@ -1,67 +1,107 @@
 import { ComponentPage } from '../../../shared/ComponentPage.tsx';
-import { useState } from 'react';
-import { Badge, Button, Icon, Mark, Select } from '@dreadnought/ui/react';
-import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc';
+import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc.ts';
 import type { ComponentDoc } from '../../../shared/types.ts';
-import styles from '../../../shared/Documentation.module.css';
-
-const largeOptions = Array.from({ length: 10000 }, (_, index) => ({
-  value: String(index), label: `Участник ${index + 1}`,
-}));
-
-function SelectDemo() {
-  const [value, setValue] = useState<string | null>(null);
-  const options = [{ value: 'anna', label: 'Анна' }, { value: 'boris', label: 'Борис', disabled: true }, { value: 'vera', label: 'Вера' }];
-  return <div className={styles.demo}>
-    <div className={styles.demoRow}>
-    <Select
-      aria-label="Компактный выбор"
-      controlSize="compact"
-      variant="filled"
-      options={options}
-      placeholder="Компактное заполненное поле"
-      allowClear
-    />
-    <Select aria-label="Выбор без рамки" variant="borderless" options={options} placeholder="Без рамки" />
-    <Select aria-label="Исполнитель" name="owner" options={options} placeholder="Выберите исполнителя" showSearch allowClear value={value} onValueChange={setValue} />
-    <Select multiple aria-label="Участники" options={options} showSearch allowClear defaultValue={['anna', 'vera']} placeholder="Выберите участников" />
-    <Select multiple aria-label="Ограничение меток" options={options} showSearch maxTagCount={1} defaultValue={['anna', 'vera']} />
-    <Select multiple aria-label="Не больше двух участников" maxCount={2} showSearch allowClear defaultValue={['anna', 'vera']} options={[...options, { value: 'guest', label: 'Даша' }]} />
-    <Select multiple aria-label="Свои метки" options={options} showSearch defaultValue={['anna', 'vera']}
-      tagRender={(option, { disabled, removeLabel, onRemove }) => (
-        <Badge appearance="outline" icon={<Mark color={option.value === 'anna' ? '#73c991' : '#86a9ff'} />}>
-          {option.label}
-          <Button type="button" variant="ghosted" size="compact" disabled={disabled}
-            aria-label={removeLabel} icon={<Icon name="close" />} onClick={onRemove} />
-        </Badge>
-      )} />
-    <Select aria-label="Недоступный выбор" options={options} disabled defaultValue="anna" />
-    <Select aria-label="Поиск по имени или коду" options={options}
-      placeholder="Имя или код: anna" allowClear
-      showSearch={{ optionFilterProp: ['label', 'value'],
-        filterSort: (a, b) => a.label.localeCompare(b.label, 'ru') }} />
-    <Select aria-label="Подробные варианты" options={options}
-      optionRender={option => <span>{option.label} <small>— {option.value}</small></span>} />
-    <Select aria-label="Список сверху справа" options={options} placement="topRight"
-      autoAdjustOverflow={false} placeholder="Список сверху справа" />
-    <Select aria-label="Загрузка вариантов" options={[]} loading loadingContent="Загружаем варианты…" placeholder="Откройте список" />
-    <Select aria-label="10 000 участников" options={largeOptions} showSearch allowClear
-      placeholder="10 000 участников" />
-    <Select aria-label="Выбор по командам" showSearch placeholder="Выберите участника" options={[
-      { label: 'Команда', options }, { label: 'Гости', options: [{ value: 'guest', label: 'Даша' }] },
-    ]} />
-    </div>
-    <p role="status">Исполнитель: {value ?? 'не выбран'}</p>
-  </div>;
-}
+import { SelectBasicDemo } from './Select/SelectBasicDemo.tsx';
+import basicCode from './Select/SelectBasicDemo.tsx?raw';
+import { SelectMultipleDemo } from './Select/SelectMultipleDemo.tsx';
+import multipleCode from './Select/SelectMultipleDemo.tsx?raw';
+import { SelectLimitsDemo } from './Select/SelectLimitsDemo.tsx';
+import limitsCode from './Select/SelectLimitsDemo.tsx?raw';
+import { SelectSearchDemo } from './Select/SelectSearchDemo.tsx';
+import searchCode from './Select/SelectSearchDemo.tsx?raw';
+import { SelectAppearanceDemo } from './Select/SelectAppearanceDemo.tsx';
+import appearanceCode from './Select/SelectAppearanceDemo.tsx?raw';
+import { SelectStatesDemo } from './Select/SelectStatesDemo.tsx';
+import statesCode from './Select/SelectStatesDemo.tsx?raw';
+import { SelectTagsDemo } from './Select/SelectTagsDemo.tsx';
+import tagsCode from './Select/SelectTagsDemo.tsx?raw';
+import { SelectPlacementDemo } from './Select/SelectPlacementDemo.tsx';
+import placementCode from './Select/SelectPlacementDemo.tsx?raw';
+import { SelectLargeDemo } from './Select/SelectLargeDemo.tsx';
+import largeCode from './Select/SelectLargeDemo.tsx?raw';
 
 export const selectDoc: ComponentDoc = {
   ...getCatalogDoc('select'),
   title: 'Select',
-  description: 'Выбор из списка: одиночный или множественный, с группами, поиском и очисткой. При multiple выбранные значения отображаются метками. Backspace в пустом поле удаляет последнее значение; при наличии текста редактирует поиск. Меню открывается поверх страницы и не расширяет её.',
-  adapterDescription: 'Адаптер предоставляет разметку и поведение без оформления. Токены и CSS Modules подключает готовый компонент.',
-  footnote: 'Длинные списки виртуализируются автоматически. virtual={{ itemHeight: 40, height: 256, overscan: 3 }} настраивает окно; для строк произвольной высоты и нативного автозаполнения используйте virtual={false}. Поиск и сортировка работают по всему списку. showSearch объединяет настройки поиска; для серверного поиска задайте showSearch={{ filterOption: false }}. optionRender не меняет доступное имя; не вкладывайте в варианты кнопки или ссылки.',
-  demo: <SelectDemo />,
+  description:
+    'Выбор одного или нескольких вариантов из списка. Начните с одиночного выбора, затем посмотрите поиск, группы и дополнительные настройки.',
+  adapterDescription: 'Адаптер сохраняет разметку и поведение выбора без оформления.',
+  footnote:
+    'value управляется приложением, defaultValue задаёт только начальный выбор. При одиночном выборе очистка возвращает null, при multiple — пустой массив. Не вкладывайте кнопки или ссылки в optionRender. Для вариантов произвольной высоты отключите виртуализацию через virtual={false}.',
+  examples: [
+    {
+      id: 'basic',
+      title: 'Один исполнитель',
+      description:
+        'Выберите имя, найдите его через поиск или очистите поле крестиком. Под полем показан текущий выбор. Борис недоступен. Значение хранится в React через value и onValueChange.',
+      demo: <SelectBasicDemo />,
+      code: basicCode,
+    },
+    {
+      id: 'multiple',
+      title: 'Несколько участников',
+      description:
+        'Выберите несколько имён. Крестик на метке удаляет одного участника; очистка поля удаляет всех. При multiple значение — массив строк.',
+      demo: <SelectMultipleDemo />,
+      code: multipleCode,
+    },
+    {
+      id: 'limits',
+      title: 'Количество меток и лимит выбора',
+      description:
+        'maxTagCount скрывает лишние метки, но сохраняет выбор. maxCount ограничивает сам выбор: удалите одного участника во втором поле, чтобы выбрать Дашу.',
+      demo: <SelectLimitsDemo />,
+      code: limitsCode,
+    },
+    {
+      id: 'search',
+      title: 'Поиск, группы и содержимое вариантов',
+      description:
+        'В первом поле найдите Анну по имени или коду anna; варианты показывают оба значения. Во втором поле участники разделены на команды — заголовки групп не выбираются.',
+      demo: <SelectSearchDemo />,
+      code: searchCode,
+    },
+    {
+      id: 'appearance',
+      title: 'Размер и оформление',
+      description:
+        'Сравните компактное заполненное поле и вариант без рамки. Эти настройки меняют оформление, а не способ выбора.',
+      demo: <SelectAppearanceDemo />,
+      code: appearanceCode,
+    },
+    {
+      id: 'states',
+      title: 'Недоступность и загрузка',
+      description:
+        'Первое поле заблокировано. Откройте второе, чтобы увидеть сообщение загрузки. Это постоянная демонстрация состояния, а не реальный запрос.',
+      demo: <SelectStatesDemo />,
+      code: statesCode,
+    },
+    {
+      id: 'tags',
+      title: 'Свои метки',
+      description:
+        'tagRender заменяет метку выбранного участника. Здесь используются Badge и Mark; кнопка удаления сохраняет доступное имя и обработчик Select.',
+      demo: <SelectTagsDemo />,
+      code: tagsCode,
+    },
+    {
+      id: 'placement',
+      title: 'Положение списка',
+      description:
+        'Откройте список: он появится над полем по правому краю. Здесь автоперемещение отключено для демонстрации; обычно autoAdjustOverflow стоит оставить включённым.',
+      demo: <SelectPlacementDemo />,
+      code: placementCode,
+    },
+    {
+      id: 'large',
+      title: 'Длинный список',
+      description:
+        'Введите «Участник 9999» или прокрутите список. Поиск работает по всем 10 000 вариантам, а в разметке отображается только видимая часть.',
+      demo: <SelectLargeDemo />,
+      code: largeCode,
+    },
+  ],
 };
 
 export function SelectPage() {

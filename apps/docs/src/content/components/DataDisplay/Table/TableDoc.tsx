@@ -1,79 +1,100 @@
-import { useState } from 'react';
-import { Button, Table } from '@dreadnought/ui/react';
+import { ComponentPage } from '../../../../shared/ComponentPage.tsx';
 import { getCatalogDoc } from '../../../../data/catalog/getCatalogDoc.ts';
 import type { ComponentDoc } from '../../../../shared/types.ts';
-import { ComponentPage } from '../../../../shared/ComponentPage.tsx';
-import styles from '../../../../shared/Documentation.module.css';
-import { TableManualDemo } from './TableManualDemo.tsx';
+import { TableBasicDemo } from './TableBasicDemo.tsx';
+import basicCode from './TableBasicDemo.tsx?raw';
 import { TableFiltersDemo } from './TableFiltersDemo.tsx';
-function TableDemo() {
-  const [hideCity, setHideCity] = useState(false);
-  return <div className={`${styles.demo} ${styles.demoStack}`}>
-    <TableManualDemo />
-    <p><code>processing="local"</code> — обработка полного набора данных внутри таблицы. <code>processing="manual"</code> — показ переданной страницы без локальных фильтров, сортировки и обрезки. Для пагинации укажите <code>pagination.total</code>; без пагинации передайте <code>pagination=false</code>. Серверные колонки используют <code>sorter: true</code> или <code>sorter: {'{ multiple: 2 }'}</code>. <code>onChange</code> сообщает запрос, а <code>extra.currentDataSource</code> и <code>summary</code> получают переданные строки. <code>loading</code> использует Loader и не удаляет таблицу или фокус; параметры Loader доступны в <code>slotProps.loader</code>. Выбранные ключи сохраняются между страницами, но <code>rowSelection.onChange</code> возвращает записи только из доступной страницы.</p>
-    <p>Для выбора строк нужен уникальный <code>rowKey</code> или <code>record.key</code>: строка либо конечное число.</p>
-    <TableFiltersDemo />
-    <p>Фильтрация запрашивает страницу 1, сортировка сохраняет страницу. Причина изменения — <code>extra.action</code>.</p>
-    <Button variant="secondary" size="compact" onClick={() => setHideCity(!hideCity)}>{hideCity ? 'Показать город' : 'Скрыть город'}</Button>
-    <Table<{ key: number; name: string; email: string; city: string }> aria-label="Многоуровневая шапка" bordered sticky scroll={{ x: 700, y: 320 }} pagination={false}
-      dataSource={[{ key: 1, name: 'Анна', email: 'anna.very.long.email.address.for.documentation@example.com', city: 'Москва' }, { key: 2, name: 'Марк', email: 'mark@example.com', city: 'Казань' }]}
-      columns={[
-        { key: 'name', title: 'Участник', dataIndex: 'name', width: 160, fixed: 'left' },
-        { key: 'contacts', title: 'Контакты', children: [
-          { key: 'email', title: 'Почта', dataIndex: 'email', width: 260, ellipsis: true },
-          { key: 'address', title: 'Адрес', children: [{ key: 'city', title: 'Город', dataIndex: 'city', width: 180, align: 'center', hidden: hideCity }] },
-        ] },
-      ]} />
-    <p><code>scroll</code> создаёт контейнер прокрутки, <code>fixed</code> закрепляет колонку. Ширина измеряется автоматически; <code>width</code> задаёт минимум. Для объединённых или скрытых заголовков задайте ширину явно.</p>
-    <Table
-      aria-label="Пример таблицы"
-      rowKey="id"
-      dataSource={[{ id: 1, name: 'Борис', role: 'Разработчик' }, { id: 2, name: 'Анна', role: 'Дизайнер' }]}
-      columns={[
-        { key: 'name', title: 'Имя', dataIndex: 'name', sorter: (a, b) => a.name.localeCompare(b.name) },
-        { key: 'role', title: 'Роль', dataIndex: 'role' },
-      ]}
-      pagination={false}
-      bordered
-    />
-    <p>Для нескольких колонок задайте <code>sorter: {'{ compare, multiple }'}</code>: большее <code>multiple</code> означает более высокий приоритет, равные приоритеты следуют порядку колонок. Нажмите «Команда», затем «Участник»: имя уточняет порядок внутри команды. Третье нажатие сбрасывает только выбранную колонку. Обычная функция <code>sorter</code> переключает таблицу обратно на одиночную сортировку. <code>sortOrder</code> управляет состоянием, <code>defaultSortOrder</code> задаёт начальное значение. Управляемая одиночная сортировка имеет приоритет над цепочкой. Третий аргумент <code>onChange</code> остаётся объектом выбранной колонки; полный порядок доступен в <code>extra.sorters</code>, при фильтре и пагинации — тоже.</p>
-    <Table<{ key: number; team: string; name: string }> aria-label="Множественная сортировка" bordered pagination={false}
-      dataSource={[{ key: 1, team: 'Разработка', name: 'Марк' }, { key: 2, team: 'Дизайн', name: 'Нина' }, { key: 3, team: 'Разработка', name: 'Анна' }, { key: 4, team: 'Дизайн', name: 'Лев' }]}
-      columns={[
-        { key: 'team', title: 'Команда', dataIndex: 'team', sorter: { compare: (a, b) => a.team.localeCompare(b.team), multiple: 2 } },
-        { key: 'name', title: 'Участник', dataIndex: 'name', sorter: { compare: (a, b) => a.name.localeCompare(b.name), multiple: 1 } },
-      ]} />
-    <p><code>summary(rows)</code> получает строки текущей страницы после фильтрации и сортировки; без пагинации — все подходящие строки. Используйте <code>Table.Row</code> и <code>Table.Cell</code>; <code>tfoot</code> создаётся автоматически. Формулы и <code>colSpan</code> задаёт приложение, <code>null</code> скрывает итог. Итоги прокручиваются с таблицей; закрепление колонок на ручные ячейки не переносится.</p>
-    <Table<{ key: number; item: string; amount: number }> aria-label="Итоги страницы" bordered pagination={{ pageSize: 2 }}
-      dataSource={[{ key: 1, item: 'Дизайн', amount: 120 }, { key: 2, item: 'Разработка', amount: 240 }, { key: 3, item: 'Тестирование', amount: 80 }]}
-      columns={[{ key: 'item', title: 'Работа', dataIndex: 'item' }, { key: 'amount', title: 'Часы', dataIndex: 'amount', align: 'right', sorter: (a, b) => a.amount - b.amount }]}
-      summary={rows => <Table.Row><Table.HeaderCell scope="row">Итого на странице</Table.HeaderCell>
-        <Table.Cell style={{ textAlign: 'right' }}>{rows.reduce((sum, row) => sum + row.amount, 0)}</Table.Cell>
-      </Table.Row>} />
-    <Table<{ id: number; name: string; city: string }> aria-label="Раскрываемые строки" bordered rowKey="id" pagination={false}
-      dataSource={[{ id: 1, name: 'Анна', city: 'Москва' }, { id: 2, name: 'Марк', city: 'Казань' }]}
-      columns={[{ key: 'name', title: 'Участник', dataIndex: 'name' }]}
-      expandable={{ defaultExpandedRowKeys: [1], expandedRowRender: record => <p>Город: {record.city}</p> }} />
-    <p><code>rowSpan/colSpan=0</code> скрывает ячейку. Остальные значения объединяют её. Приложение пересчитывает spans при изменении порядка строк; не объединяйте ячейки через границу закреплённых областей.</p>
-    <Table<{ id: number; team: string; name: string }> aria-label="Объединённые ячейки" rowKey="id" pagination={false} bordered
-      dataSource={[{ id: 1, team: 'Дизайн', name: 'Анна' }, { id: 2, team: 'Дизайн', name: 'Нина' }, { id: 3, team: 'Разработка', name: 'Марк' }]}
-      onRow={record => ({ title: `Участник: ${record.name}` })}
-      columns={[
-        { key: 'team', title: 'Команда', dataIndex: 'team', onCell: (_record, index) => ({ rowSpan: index === 0 ? 2 : index === 1 ? 0 : 1 }) },
-        { key: 'name', title: 'Участник', dataIndex: 'name', onHeaderCell: () => ({ title: 'Имя участника' }) },
-      ]} />
-  </div>;
-}
+import filtersCode from './TableFiltersDemo.tsx?raw';
+import { TableSortDemo } from './TableSortDemo.tsx';
+import sortCode from './TableSortDemo.tsx?raw';
+import { TableSummaryDemo } from './TableSummaryDemo.tsx';
+import summaryCode from './TableSummaryDemo.tsx?raw';
+import { TableExpandDemo } from './TableExpandDemo.tsx';
+import expandCode from './TableExpandDemo.tsx?raw';
+import { TableLayoutDemo } from './TableLayoutDemo.tsx';
+import layoutCode from './TableLayoutDemo.tsx?raw';
+import { TableSpanDemo } from './TableSpanDemo.tsx';
+import spanCode from './TableSpanDemo.tsx?raw';
+import { TableManualDemo } from './TableManualDemo.tsx';
+import manualCode from './TableManualDemo.tsx?raw';
 
-const tableDoc: ComponentDoc = {
+export const tableDoc: ComponentDoc = {
   ...getCatalogDoc('table'),
-    title: 'Table',
-    description: 'Структурированные данные с группами колонок, сортировкой, фильтрами, выбором и раскрытием строк, пагинацией и закреплением шапки.',
-    adapterDescription: 'Адаптер сохраняет семантику и поведение таблицы, но позволяет оформить её самостоятельно.',
-    logicDescription: 'Ядро рассчитывает уровни и объединения шапки, сортирует и фильтрует строки — независимо от фреймворка.',
-    footnote: <>Обработчики строк и ячеек возвращают нативные свойства, события и ref. Индекс строки относится к текущей странице. Содержимое задавайте через <code>render/title</code>; геометрия и <code>aria-sort</code> сохраняются.</>,
-    demo: <TableDemo />,
-  };
+  title: 'Table',
+  description:
+    'Таблица структурированных данных. Начните с двух строк и сортировки, затем добавьте фильтры, пагинацию и детали строк.',
+  adapterDescription: 'Адаптер сохраняет семантику и поведение таблицы без оформления.',
+  logicDescription:
+    'Ядро рассчитывает шапку, сортирует и фильтрует строки независимо от фреймворка.',
+  footnote:
+    'Для выбора и раскрытия строк нужен уникальный rowKey или record.key. Обработчики строк и ячеек получают индекс текущей страницы и возвращают нативные свойства. Для закреплённых колонок задавайте width; ручные объединения ячеек не должны пересекать закреплённые области.',
+  examples: [
+    {
+      id: 'basic',
+      title: 'Таблица и простая сортировка',
+      description:
+        'Две строки и две колонки. Нажмите «Имя», чтобы отсортировать участников; повторные нажатия меняют направление и сбрасывают сортировку. Данные обрабатываются локально, пагинация отключена.',
+      demo: <TableBasicDemo />,
+      code: basicCode,
+    },
+    {
+      id: 'filters',
+      title: 'Фильтры',
+      description:
+        'Откройте фильтр «Город», выберите Москву и подтвердите выбор. В фильтре «Возраст» введите 30 и нажмите «Применить»: останется Марк. Ввод и выбор не применяют фильтр до подтверждения; «Сбросить» очищает его.',
+      demo: <TableFiltersDemo />,
+      code: filtersCode,
+    },
+    {
+      id: 'sort',
+      title: 'Сортировка по нескольким колонкам',
+      description:
+        'Нажмите «Команда», затем «Участник»: сначала строки группируются по команде, затем сортируются по имени. Приоритет задаёт multiple: большее число важнее. Третье нажатие сбрасывает сортировку только этой колонки.',
+      demo: <TableSortDemo />,
+      code: sortCode,
+    },
+    {
+      id: 'summary',
+      title: 'Пагинация и итог страницы',
+      description:
+        'На странице две записи. Перейдите на следующую: итог изменится с 360 до 80 часов. summary получает только строки текущей страницы; без пагинации — все подходящие строки.',
+      demo: <TableSummaryDemo />,
+      code: summaryCode,
+    },
+    {
+      id: 'expand',
+      title: 'Детали строки',
+      description:
+        'У Анны уже раскрыт город. Закройте её детали или откройте строку Марка кнопкой в первой колонке. Ключ строки связывает раскрытие с записью.',
+      demo: <TableExpandDemo />,
+      code: expandCode,
+    },
+    {
+      id: 'layout',
+      title: 'Группы колонок и закрепление',
+      description:
+        'Прокрутите таблицу вниз: шапка останется видимой. На узком экране прокрутите вправо: колонка «Участник» останется слева. Кнопка скрывает город и перестраивает группы шапки; наведите на сокращённую почту, чтобы прочитать её полностью.',
+      demo: <TableLayoutDemo />,
+      code: layoutCode,
+    },
+    {
+      id: 'span',
+      title: 'Объединение ячеек',
+      description:
+        'Первые два участника относятся к дизайну — их команда отображается одной ячейкой. rowSpan: 2 объединяет строки, rowSpan: 0 скрывает повтор. При изменении порядка данных эти значения нужно пересчитать.',
+      demo: <TableSpanDemo />,
+      code: spanCode,
+    },
+    {
+      id: 'manual',
+      title: 'Серверная пагинация и загрузка',
+      description:
+        'Последний пример имитирует сервер с задержкой 700 мс. Переключите страницу или сортировку: появится загрузка, затем три новые строки. processing="manual" не обрабатывает переданную страницу повторно. В реальном приложении запросы, ошибки и отмену устаревших ответов реализует приложение.',
+      demo: <TableManualDemo />,
+      code: manualCode,
+    },
+  ],
+};
 
 export function TablePage() {
   return <ComponentPage component="table" doc={tableDoc} />;
