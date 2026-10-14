@@ -10,6 +10,11 @@ it('validates, submits and resets the complete documentation example', async () 
   const user = userEvent.setup();
   await user.click(screen.getByRole('button', { name: 'Сохранить' }));
   expect(await screen.findByText('Введите имя')).toBeTruthy();
+  const name = screen.getByRole('textbox', { name: 'Имя' });
+  await user.type(name, 'admin');
+  await user.tab();
+  expect(await screen.findByText('Это имя занято')).toBeTruthy();
+  await user.clear(name);
   await user.type(screen.getByRole('textbox', { name: 'Имя' }), 'Ada');
   await user.type(screen.getByLabelText(/^Пароль/, { selector: 'input' }), 'password');
   await user.type(screen.getByLabelText(/^Подтверждение пароля/, { selector: 'input' }), 'other');
@@ -25,6 +30,8 @@ it('validates, submits and resets the complete documentation example', async () 
   );
   await user.click(screen.getByRole('button', { name: 'Сохранить' }));
   await waitFor(() => expect(screen.getByRole('status').textContent).toContain('Сохранено: Ada'));
+  expect(screen.getByRole('status').textContent).toContain('Роль: Редактор');
+  expect(screen.getByRole('status').textContent).not.toContain('password');
   await user.click(screen.getByRole('button', { name: 'Сбросить' }));
   expect((screen.getByRole('textbox', { name: 'Имя' }) as HTMLInputElement).value).toBe('');
   expect(screen.queryByText('Сохранено: Ada')).toBeNull();

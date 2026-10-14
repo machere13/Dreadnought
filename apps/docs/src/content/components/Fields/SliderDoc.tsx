@@ -1,38 +1,78 @@
 import { ComponentPage } from '../../../shared/ComponentPage.tsx';
-import { useState } from 'react';
-import { Slider } from '@dreadnought/ui/react';
-import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc';
+import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc.ts';
 import type { ComponentDoc } from '../../../shared/types.ts';
-
-function SliderDemo() {
-  const [value, setValue] = useState(25);
-  const [range, setRange] = useState<[number, number]>([20, 80]);
-  return <div>
-    <p>Громкость: {value}%</p>
-    <Slider aria-label="Громкость" value={value} onValueChange={setValue} tooltip={{ formatter: next => `${next}%` }} />
-    <p>Цена: {range[0]}–{range[1]} ₽</p>
-    <Slider range value={range} onValueChange={setRange} step={5}
-      slotProps={{ thumb: [{ 'aria-label': 'Цена от' }, { 'aria-label': 'Цена до' }] }}
-      tooltip={{ formatter: next => `${next} ₽` }} />
-    <p>Дробный шаг</p>
-    <Slider aria-label="Дробное значение" min={0} max={1} step={0.1} defaultValue={0.4} />
-    <p>Выбор только по отметкам</p>
-    <Slider aria-label="Уровень" step={null} marks={{ 0: 'Мало', 30: 'Средне', 100: 'Много' }} defaultValue={30} />
-    <p>Вертикальный диапазон с отметками</p>
-    <Slider orientation="vertical" range step={null} marks={{ 0: '0', 30: '30', 70: '70', 100: '100' }}
-      defaultValue={[30, 70]} slotProps={{ thumb: [{ 'aria-label': 'Вертикальный минимум' }, { 'aria-label': 'Вертикальный максимум' }] }} />
-    <p>Недоступное управление</p>
-    <Slider aria-label="Недоступное значение" disabled defaultValue={50} />
-  </div>;
-}
+import { SliderVolumeDemo } from './SliderVolumeDemo.tsx';
+import volumeCode from './SliderVolumeDemo.tsx?raw';
+import { SliderRangeDemo } from './SliderRangeDemo.tsx';
+import rangeCode from './SliderRangeDemo.tsx?raw';
+import { SliderStepDemo } from './SliderStepDemo.tsx';
+import stepCode from './SliderStepDemo.tsx?raw';
+import { SliderMarksDemo } from './SliderMarksDemo.tsx';
+import marksCode from './SliderMarksDemo.tsx?raw';
+import { SliderVerticalDemo } from './SliderVerticalDemo.tsx';
+import verticalCode from './SliderVerticalDemo.tsx?raw';
+import { SliderDisabledDemo } from './SliderDisabledDemo.tsx';
+import disabledCode from './SliderDisabledDemo.tsx?raw';
 
 export const sliderDoc: ComponentDoc = {
   ...getCatalogDoc('slider'),
   title: 'Slider',
-  description: 'Число или диапазон на горизонтальной или вертикальной шкале. Перетаскивайте бегунки или используйте стрелки; подсказки показывают принятые значения.',
-  adapterDescription: 'useSlider связывает getSteppedValue, getSteppedRange, getNavigationDirection и getNextEnabledValue с формами и pointer capture. SliderAdapter создаёт разметку без стилей; Slider добавляет тему и общий Tooltip каждому бегунку.',
-  footnote: 'range=true включает пару [от, до]. Бегунки не пересекаются, но могут совпадать; нажатие на шкалу или отметку двигает ближайший. marks задаёт значения и подписи; step=null разрешает только отметки, стрелки переключают между ними. Нужна хотя бы одна отметка внутри min/max. Подписи — текст или неинтерактивная разметка; плотные подписи потребитель сокращает. orientation=vertical: минимум снизу, максимум сверху; ArrowUp увеличивает, ArrowDown уменьшает, горизонтальные стрелки не перехватываются. Высота задаётся style.height или токеном --dreadnought-slider-vertical-height (по умолчанию 12rem). Tooltip по умолчанию справа, placement меняет его сторону. Горизонтальный режим LTR: ArrowRight/Up увеличивают, ArrowLeft/Down уменьшают. Home/End выбирают доступные края сфокусированного бегунка. Для формы используйте FormData.getAll(name). ref указывает на первый бегунок; slotProps.thumb принимает пару объектов с отдельными доступными названиями.',
-  demo: <SliderDemo />,
+  description:
+    'Выбирает число или диапазон на шкале. Перетаскивайте бегунки, нажимайте на шкалу или используйте клавиатуру. Подсказка показывает значение с нужной единицей измерения.',
+  adapterDescription:
+    'SliderAdapter создаёт шкалу и бегунки без оформления; useSlider управляет шагом, диапазоном, клавиатурой и перетаскиванием.',
+  examples: [
+    {
+      id: 'volume',
+      title: 'Одно значение: громкость',
+      description:
+        'Измените громкость от 0 до 100%: число над шкалой и подсказка обновятся вместе. value хранится в React, onValueChange принимает новое число. Стрелки меняют его на 1, Home и End выбирают края шкалы.',
+      demo: <SliderVolumeDemo />,
+      code: volumeCode,
+    },
+    {
+      id: 'range',
+      title: 'Диапазон цен',
+      description:
+        'Два бегунка задают цену от и до в пределах 0–100 ₽ с шагом 5 ₽. range возвращает пару чисел. Бегунки не пересекаются, но могут совпасть. В slotProps.thumb каждому задано своё доступное имя; клавиатура меняет только сфокусированный бегунок.',
+      demo: <SliderRangeDemo />,
+      code: rangeCode,
+    },
+    {
+      id: 'step',
+      title: 'Дробный шаг',
+      description:
+        'Коэффициент меняется от 0 до 1 с шагом 0.1. Сфокусируйте бегунок и нажмите стрелку вправо: 0.4 станет 0.5. min, max и step определяют допустимые значения; строка результата показывает принятое число.',
+      demo: <SliderStepDemo />,
+      code: stepCode,
+    },
+    {
+      id: 'marks',
+      title: 'Выбор только по отметкам',
+      description:
+        'Нажмите «Мало», «Средне» или «Много». step=null разрешает только значения marks: 0, 30 и 100. Стрелки переходят между соседними отметками, а не прибавляют единицу. Подпись и число в результате показывают один и тот же выбор.',
+      demo: <SliderMarksDemo />,
+      code: marksCode,
+    },
+    {
+      id: 'vertical',
+      title: 'Вертикальный диапазон',
+      description:
+        'Минимум расположен снизу, максимум — сверху. Здесь доступны только отметки 0, 30, 70 и 100. ArrowUp увеличивает значение, ArrowDown уменьшает; горизонтальные стрелки не меняют выбор. Высота задана через style.height, подсказки по умолчанию показываются справа.',
+      demo: <SliderVerticalDemo />,
+      code: verticalCode,
+    },
+    {
+      id: 'disabled',
+      title: 'Недоступная шкала',
+      description:
+        'disabled оставляет значение 50, но блокирует перетаскивание, нажатия и клавиатуру. Бегунок пропускается при обходе Tab. defaultValue задаёт начальное значение без управляемого состояния React.',
+      demo: <SliderDisabledDemo />,
+      code: disabledCode,
+    },
+  ],
+  footnote:
+    'Для диапазона задавайте отдельные имена бегункам через slotProps.thumb. step=null требует хотя бы одну отметку внутри min/max. tooltip=false отключает подсказки, tooltip.placement меняет их сторону. В форме диапазон передаёт два значения с одним name: читайте их через FormData.getAll(name). ref указывает на первый бегунок.',
 };
 
 export function SliderPage() {

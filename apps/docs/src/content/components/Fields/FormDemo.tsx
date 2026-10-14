@@ -36,7 +36,8 @@ export function FormDemo() {
     <Form
       form={form}
       onFinish={(values) => {
-        setSaved(`Сохранено: ${values.name}`);
+        const roleLabel = values.role === 'editor' ? 'Редактор' : 'Читатель';
+        setSaved(`Сохранено: ${values.name} · Роль: ${roleLabel} · Согласие: да`);
       }}
       onReset={() => setSaved('')}
       style={{ maxWidth: '32rem', width: '100%' }}
@@ -52,7 +53,11 @@ export function FormDemo() {
             label={label}
             error={field.error}
             required
-            help={key === 'name' ? 'Имя admin занято; проверка асинхронная.' : undefined}
+            help={
+              key === 'name'
+                ? 'Имя admin зарезервировано в этом примере. Запросов к серверу нет.'
+                : undefined
+            }
           >
             {(props) => (
               <Input
