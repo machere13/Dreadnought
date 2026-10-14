@@ -192,6 +192,12 @@
 
 .apiTable a { color: inherit; text-underline-offset: 0.2em; }
 
+.apiType summary { cursor: pointer; text-decoration: underline; text-underline-offset: 0.2em; }
+
+.apiType summary:focus-visible { outline: var(--dreadnought-border-width-x2) solid var(--dreadnought-color-focus-ring); }
+
+.apiType code { display: block; margin-block-start: var(--dreadnought-spacing-x2); }
+
 .apiTable a:focus-visible { outline: var(--dreadnought-border-width-x2) solid var(--dreadnought-color-focus-ring); }
 
 .footnote { margin: var(--dreadnought-spacing-x4) 0 0; font-size: var(--dreadnought-font-size-body-3); }

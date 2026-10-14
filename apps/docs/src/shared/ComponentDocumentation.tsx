@@ -64,36 +64,6 @@ export function ComponentDocumentation({
           )}
         </section>
 
-        <section data-knowledge className={styles.section} aria-labelledby={`${component}-layers`}>
-          <div className={styles.sectionHeading}>
-            <h2 id={`${component}-layers`} className={styles.sectionTitle}>
-              Когда нужен другой слой
-            </h2>
-          </div>
-          <div className={styles.layerExamples}>
-            <div>
-              <h3 className={styles.subheading}>Свои стили — адаптер</h3>
-              {doc.adapterDescription && (
-                <p className={styles.bodyText}>{doc.adapterDescription}</p>
-              )}
-              <div data-knowledge-exclude>
-                <CodeBlock code={doc.adapterCode} language="tsx" copyLabels={copyLabels} />
-              </div>
-            </div>
-            {doc.logicCode && (
-              <div>
-                <h3 id={`${component}-logic`} className={styles.subheading}>
-                  Своя разметка — логика
-                </h3>
-                {doc.logicDescription && <p className={styles.bodyText}>{doc.logicDescription}</p>}
-                <div data-knowledge-exclude>
-                  <CodeBlock code={doc.logicCode} language="tsx" copyLabels={copyLabels} />
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-
         <section className={styles.section} aria-labelledby={`${component}-api`}>
           <div className={styles.sectionHeading}>
             <h2 id={`${component}-api`} className={styles.sectionTitle}>
@@ -129,6 +99,36 @@ export function ComponentDocumentation({
               {doc.footnote}
             </p>
           )}
+        </section>
+
+        <section data-knowledge className={styles.section} aria-labelledby={`${component}-layers`}>
+          <div className={styles.sectionHeading}>
+            <h2 id={`${component}-layers`} className={styles.sectionTitle}>
+              Когда нужен другой слой
+            </h2>
+          </div>
+          <div className={styles.layerExamples}>
+            <div>
+              <h3 className={styles.subheading}>Свои стили — адаптер</h3>
+              {doc.adapterDescription && (
+                <p className={styles.bodyText}>{doc.adapterDescription}</p>
+              )}
+              <div data-knowledge-exclude>
+                <CodeBlock code={doc.adapterCode} language="tsx" copyLabels={copyLabels} />
+              </div>
+            </div>
+            {doc.logicCode && (
+              <div>
+                <h3 id={`${component}-logic`} className={styles.subheading}>
+                  Своя разметка — логика
+                </h3>
+                {doc.logicDescription && <p className={styles.bodyText}>{doc.logicDescription}</p>}
+                <div data-knowledge-exclude>
+                  <CodeBlock code={doc.logicCode} language="tsx" copyLabels={copyLabels} />
+                </div>
+              </div>
+            )}
+          </div>
         </section>
       </article>
     </div>

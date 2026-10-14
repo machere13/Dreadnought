@@ -5,17 +5,26 @@ export const commonPropertySummaries: Record<string, string> = {
   ref: 'Ссылка на DOM-элемент управления.',
   form: 'ID связанной формы.',
   name: 'Имя поля при отправке формы.',
+  invalid: 'Состояние ошибки поля.',
 };
 
 export const propertySummaries: Record<string, Record<string, string>> = {
   accordion: {
-    'Accordion.Panel.mountPolicy': 'eager — сразу; lazy — при первом открытии; unmount — удалять при закрытии.',
+    children: 'Элементы Accordion.Item.',
+    'Accordion.Item.children': 'Заголовок и панель элемента.',
+    'Accordion.Trigger.children': 'Содержимое кнопки раскрытия.',
+    'Accordion.Panel.mountPolicy':
+      'eager — сразу; lazy — при первом открытии; unmount — удалять при закрытии.',
   },
   card: {
     slotClassNames: 'Классы отдельных зон карточки.',
   },
   codeblock: {
     copyIcons: 'Иконки копирования, успеха и ошибки.',
+  },
+  datepicker: {
+    slotClassNames: 'Классы поля, календаря, его ячеек и сообщения об ошибке.',
+    ref: 'Ссылка на input поля.',
   },
   dropdown: {
     menuProps: 'Свойства меню и его пунктов. preventDefault отменяет действие и закрытие.',
@@ -39,27 +48,37 @@ export const propertySummaries: Record<string, Record<string, string>> = {
     tagRender: 'Рендерер метки: option и { disabled, removeLabel, onRemove }.',
   },
   tabs: {
+    children: 'Вкладки Tabs.Tab и соответствующие панели Tabs.Panel.',
     orientation: 'horizontal — сверху; vertical — слева, с навигацией ↑↓.',
-    'Tabs.Panel.mountPolicy': 'eager — сразу; lazy — при первом открытии; unmount — удалять при закрытии.',
+    'Tabs.Panel.mountPolicy':
+      'eager — сразу; lazy — при первом открытии; unmount — удалять при закрытии.',
   },
   tooltip: {
     autoAdjustOverflow: 'Менять сторону и сдвигать подсказку, если она не помещается.',
     openDelay: 'Задержка наведения в мс; 0 — сразу. Клавиатурный фокус без задержки.',
   },
   table: {
-    columns: 'Конфигурация колонок.',
+    columns: 'Колонки: заголовок, поле данных, ширина, сортировка, фильтры и вложенные группы.',
     loading: 'Показывать Loader, сохраняя строки и фокус.',
-    expandable: 'Раскрываемые строки.',
-    onChange: 'Изменение сортировки, фильтров или страницы.',
-    pagination: 'Пагинация; false отключает её.',
-    processing: 'Локальная обработка данных или показ готовой серверной страницы.',
-    rowSelection: 'Выбор строк по устойчивым ключам.',
+    expandable: 'Детали строки через expandedRowRender; нужны устойчивые rowKey или record.key.',
+    onChange:
+      'Изменение сортировки, фильтров или страницы. extra.action сообщает причину, extra.sorters — цепочку сортировки.',
+    pagination:
+      'current/pageSize управляют страницей; defaultCurrent/defaultPageSize задают начало. false отключает пагинацию.',
+    processing:
+      'local обрабатывает весь набор данных. manual показывает готовую серверную страницу; запросы выполняет приложение.',
+    rowSelection:
+      'Выбор по устойчивым ключам. Чекбокс шапки выбирает доступные строки только текущей страницы.',
     slotProps: 'Настройки Tooltip, Loader, фильтров и отрисовки пагинации.',
-    summary: 'Итоги по строкам текущей страницы.',
+    summary:
+      'Итоги по строкам текущей страницы; без пагинации — по всем подходящим строкам. В manual получает переданные строки.',
     locale: 'Текст пустого состояния.',
     rowHoverable: 'Подсвечивать строку при наведении.',
   },
   markdowneditor: {
+    allowClear: 'Показывать кнопку очистки Markdown.',
+    clearLabel: 'Доступное имя кнопки очистки.',
+    showCount: 'Показывать количество символов.',
     autoSize: 'Высота по содержимому в пределах minRows/maxRows.',
     defaultValue: 'Начальный Markdown в неуправляемом режиме.',
     invalid: 'Состояние ошибки.',
@@ -68,6 +87,20 @@ export const propertySummaries: Record<string, Record<string, string>> = {
     readOnly: 'Чтение без редактирования.',
     value: 'Markdown в управляемом режиме.',
     renderToolbar: 'Своя панель форматирования, истории, предпросмотра и загрузки.',
-    uploadImage: 'Загрузка изображения из файла, буфера или перетаскивания.',
+    uploadImage:
+      'Загрузка изображения: (file, { signal }) → Promise<URL>. Обрабатывайте отмену через signal.',
+  },
+  timepicker: {
+    defaultOpen: 'Открыть список времени при первом отображении.',
+    slotClassNames: 'Классы поля, колонок времени, вариантов и сообщения об ошибке.',
+    ref: 'Ссылка на input поля.',
+  },
+  treeselect: {
+    defaultValue: 'Начальный выбор: ключ узла или массив ключей при множественном выборе.',
+    slotClassNames: 'Классы поля, выбранных меток, дерева и всплывающего списка.',
+    ref: 'Ссылка на input поля.',
+  },
+  upload: {
+    slotClassNames: 'Классы зоны загрузки, списка файлов, действий и сообщений об отклонении.',
   },
 };

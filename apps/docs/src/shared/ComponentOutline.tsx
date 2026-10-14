@@ -19,8 +19,8 @@ export function ComponentOutline({
       id: `${component}-${example.id}`,
       title: example.title,
     })),
-    { id: `${component}-layers`, title: 'Слои' },
     { id: `${component}-api`, title: 'API' },
+    { id: `${component}-layers`, title: 'Другие слои' },
   ];
 
   useEffect(() => {
