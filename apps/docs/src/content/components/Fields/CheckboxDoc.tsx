@@ -1,27 +1,58 @@
 import { ComponentPage } from '../../../shared/ComponentPage.tsx';
-import { useState } from 'react';
-import { Checkbox } from '@dreadnought/ui/react';
 import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc';
 import type { ComponentDoc } from '../../../shared/types.ts';
-import styles from '../../../shared/Documentation.module.css';
-
-function CheckboxDemo() {
-  const [checked, setChecked] = useState(false);
-  return <div className={styles.demo}><div className={styles.demoRow}><Checkbox checked={checked} onChange={event => setChecked(event.target.checked)}>Получать уведомления</Checkbox>
-    <Checkbox indeterminate>Часть пунктов выбрана</Checkbox>
-    <Checkbox disabled>Недоступный пункт</Checkbox>
-    </div>
-    <Checkbox.Group label="Каналы уведомлений" name="channels" defaultValue={['email']} options={[{ value: 'email', label: 'Почта' }, { value: 'push', label: 'Push' }]} />
-  </div>;
-}
+import { CheckboxBasicDemo } from './CheckboxBasicDemo.tsx';
+import basicCode from './CheckboxBasicDemo.tsx?raw';
+import { CheckboxGroupDemo } from './CheckboxGroupDemo.tsx';
+import groupCode from './CheckboxGroupDemo.tsx?raw';
+import { CheckboxSelectAllDemo } from './CheckboxSelectAllDemo.tsx';
+import allCode from './CheckboxSelectAllDemo.tsx?raw';
+import { CheckboxStatesDemo } from './CheckboxStatesDemo.tsx';
+import statesCode from './CheckboxStatesDemo.tsx?raw';
 
 export const checkboxDoc: ComponentDoc = {
   ...getCatalogDoc('checkbox'),
   title: 'Checkbox',
-  description: 'Флажок для независимого выбора. Поддерживает неопределённое состояние и группу нескольких значений.',
-  adapterDescription: 'Адаптер предоставляет разметку и поведение без оформления. Токены и CSS Modules подключает готовый компонент.',
-  footnote: 'checked управляет отдельным флажком; value группы — массив строк. ref отдельного компонента указывает на input, группы — на fieldset.',
-  demo: <CheckboxDemo />,
+  description:
+    'Отмечает независимые пункты: можно выбрать один, несколько или ни одного. Для выбора только одного варианта используйте Radio.',
+  adapterDescription:
+    'Адаптер предоставляет разметку и поведение без оформления. Токены и CSS Modules подключает готовый компонент.',
+  footnote:
+    'checked управляет отдельным флажком; value группы — массив строк. ref отдельного компонента указывает на input, группы — на fieldset.',
+  examples: [
+    {
+      id: 'basic',
+      title: 'Один флажок',
+      description:
+        'Нажмите на флажок или его подпись: строка ниже покажет состояние уведомлений. checked хранится в React, а onChange обновляет его. С клавиатуры используйте Tab и Space.',
+      demo: <CheckboxBasicDemo />,
+      code: basicCode,
+    },
+    {
+      id: 'group',
+      title: 'Несколько каналов уведомлений',
+      description:
+        'Выберите «Почта» и «Push» независимо друг от друга. Checkbox.Group возвращает массив значений email и push; пустой массив означает отсутствие выбора. SMS недоступен и не добавляется в результат.',
+      demo: <CheckboxGroupDemo />,
+      code: groupCode,
+    },
+    {
+      id: 'select-all',
+      title: 'Выбрать всё и промежуточное состояние',
+      description:
+        'Изначально выбрана только почта, поэтому «Все каналы» показывает черту. Нажмите его, чтобы выбрать оба канала; повторное нажатие снимет все отметки. При выборе части пунктов indeterminate вычисляется из массива — это не отдельное значение выбора.',
+      demo: <CheckboxSelectAllDemo />,
+      code: allCode,
+    },
+    {
+      id: 'disabled',
+      title: 'Недоступные пункты',
+      description:
+        'disabled блокирует изменение и исключает флажок из обхода Tab. Он может быть как отмеченным, так и пустым. Попробуйте нажать на подписи: значения не изменятся.',
+      demo: <CheckboxStatesDemo />,
+      code: statesCode,
+    },
+  ],
 };
 
 export function CheckboxPage() {

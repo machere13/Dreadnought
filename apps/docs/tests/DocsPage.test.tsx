@@ -302,11 +302,11 @@ describe('documentation pages', () => {
     expect(checkbox.checked).toBe(true);
     rerender(<DocsPage section="radio" />);
     fireEvent.click(screen.getByRole('radio', { name: 'Про' }));
-    expect(screen.getByText('Выбран тариф: pro')).toBeTruthy();
+    expect(screen.getByText('Выбран тариф: Про')).toBeTruthy();
     rerender(<DocsPage section="select" />);
     fireEvent.click(screen.getByRole('combobox', { name: 'Исполнитель' }));
     fireEvent.click(screen.getByRole('option', { name: 'Вера' }));
-    expect(screen.getByText('Исполнитель: vera')).toBeTruthy();
+    expect(screen.getByText('Исполнитель: Вера')).toBeTruthy();
   });
   it('documents the shared Menu and runs its actions', () => {
     render(<DocsPage section="menu" />);
