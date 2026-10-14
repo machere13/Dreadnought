@@ -1,20 +1,55 @@
 import { ComponentPage } from '../../../shared/ComponentPage.tsx';
-import { BarChart } from '@dreadnought/ui/react';
 import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc';
 import type { ComponentDoc } from '../../../shared/types.ts';
-import styles from '../../../shared/Documentation.module.css';
-
-const categories = [{ id: 'jan', label: 'Январь' }, { id: 'feb', label: 'Февраль' }, { id: 'mar', label: 'Март' }];
-const series = [{ id: 'a', label: 'Вариант A', values: { jan: 60, feb: 85, mar: 70 } },
-  { id: 'b', label: 'Вариант B', values: { jan: 40, feb: 60, mar: 90 } }];
+import { BarComparisonDemo } from './BarComparisonDemo.tsx';
+import comparisonCode from './BarComparisonDemo.tsx?raw';
+import { BarHorizontalDemo } from './BarHorizontalDemo.tsx';
+import horizontalCode from './BarHorizontalDemo.tsx?raw';
+import { BarBalanceDemo } from './BarBalanceDemo.tsx';
+import balanceCode from './BarBalanceDemo.tsx?raw';
 export const barChartDoc: ComponentDoc = {
-  ...getCatalogDoc('barchart'), title: 'BarChart',
-  description: 'Группированные столбцы для сравнения категорий и нескольких серий.',
-  adapterDescription: 'BarChartAdapter строит SVG, связывает столбцы с Tooltip и клавиатурой, показывает легенду и полную таблицу без темы.',
-  logicDescription: 'buildBarLayout вычисляет координаты столбцов, нулевую ось и отметки шкалы. Расчёт не зависит от React, DOM или SVG.',
-  footnote: <>domain включает ноль. null и пропуск не создают столбец; ноль обозначается на оси. orientation переключает направление; серии располагаются рядом, не суммируются. При нехватке места категории прокручиваются: minCategorySize задаёт минимальное пространство на серию с зазорами (64 пикселя по умолчанию), размер группы растёт с числом видимых серий. Рисуются видимые категории и небольшой запас. Числовая ось остаётся на месте. Стрелки и Home/End прокручивают к выбранному столбцу, даже если группа шире экрана; Escape закрывает Tooltip. Легенда скрывает серии, но сохраняет их в постраничной таблице (pageSize=50). Данные передавайте неизменяемыми. Для настройки используйте --dreadnought-bar-chart-* и slotProps. Без ResizeObserver задайте width/height; таблица доступна и при SSR. Стоимость зависит от числа серий. Stacked и brush пока не входят в компонент.</>,
-  demo: <div className={styles.demo}><BarChart label="Сравнение по месяцам" description="Наведите на столбец или выберите его через Tab. Подсказка сравнивает видимые серии одной категории."
-    categories={categories} series={series} domain={[0, 100]} categoryLabel="Месяц" valueLabel="Значение" /></div>,
+  ...getCatalogDoc('barchart'),
+  title: 'BarChart',
+  description:
+    'Сравнивает числовые значения категорий. Серии располагаются рядом, а не складываются. Поддерживает вертикальные и горизонтальные столбцы.',
+  adapterDescription:
+    'BarChartAdapter строит SVG, связывает столбцы с Tooltip и клавиатурой, показывает легенду и полную таблицу без темы.',
+  logicDescription:
+    'buildBarLayout вычисляет координаты столбцов, нулевую ось и отметки шкалы. Расчёт не зависит от React, DOM или SVG.',
+  footnote: (
+    <>
+      domain должен включать ноль и все значения. Ключи values соответствуют id категорий; данные
+      передавайте неизменяемыми. При нехватке места категории прокручиваются, minCategorySize задаёт
+      минимальное пространство на серию. Без ResizeObserver задайте width и height вместе; иначе
+      доступна таблица. Stacked, zoom и brush не поддерживаются.
+    </>
+  ),
+  examples: [
+    {
+      id: 'bar-comparison',
+      title: 'Сравнение плана и факта',
+      description:
+        'В каждом месяце два столбца стоят рядом. categories задаёт названия, values связывает числа с id месяцев. Легенда скрывает серию, но не удаляет её из таблицы. Tooltip сравнивает видимые значения одного месяца.',
+      demo: <BarComparisonDemo />,
+      code: comparisonCode,
+    },
+    {
+      id: 'bar-horizontal',
+      title: 'Горизонтальные столбцы',
+      description:
+        'orientation="horizontal" удобен для сравнения направлений с текстовыми названиями. В примере значения — часы. Tab выбирает столбец, Up/Down переходят между ними, Escape закрывает Tooltip. Размер явно задан 560 × 280; внешний контейнер прокручивается на узком экране.',
+      demo: <BarHorizontalDemo />,
+      code: horizontalCode,
+    },
+    {
+      id: 'bar-balance',
+      title: 'Отрицательное значение, ноль и пропуск',
+      description:
+        'Понедельник: +12 единиц, вторник: −8, среда: 0, четверг: null. Отрицательный столбец идёт от нулевой оси в обратную сторону, ноль остаётся отметкой на оси, null не создаёт столбец. Таблица различает 0 и прочерк. Диапазон [-10, 20] включает ноль и все числа.',
+      demo: <BarBalanceDemo />,
+      code: balanceCode,
+    },
+  ],
 };
 
 export function BarChartPage() {

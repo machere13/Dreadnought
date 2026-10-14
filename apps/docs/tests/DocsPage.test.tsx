@@ -239,17 +239,17 @@ describe('documentation pages', () => {
     expect(document.getElementById('barchart-api')).toBeTruthy();
     expect(screen.getByRole('link', { name: 'BarChart' }).getAttribute('href')).toBe('/components/barchart/');
     expect(screen.getByRole('rowheader', { name: 'orientation' })).toBeTruthy();
-    const button = screen.getByRole('button', { name: 'Вариант A' });
+    const button = screen.getByRole('button', { name: 'План' });
     fireEvent.click(button); expect(button.getAttribute('aria-pressed')).toBe('false');
-    expect(screen.getByRole('table', { name: 'Сравнение по месяцам: Данные' }).textContent).toContain('85');
+    expect(screen.getByRole('table', { name: 'Заказы по месяцам: Данные' }).textContent).toContain('85');
   });
   it('documents LineChart layers, navigation and real legend interaction', () => {
     render(<DocsPage section="linechart" />);
     expect(document.getElementById('linechart-api')).toBeTruthy();
     expect(screen.getByRole('link', { name: 'LineChart' }).getAttribute('href')).toBe('/components/linechart/');
-    const button = screen.getByRole('button', { name: 'Вариант A' });
+    const button = screen.getByRole('button', { name: 'План' });
     fireEvent.click(button); expect(button.getAttribute('aria-pressed')).toBe('false');
-    expect(screen.getByRole('table', { name: 'Измерения: Данные' })).toBeTruthy();
+    expect(screen.getByRole('table', { name: 'Заказы по дням: Данные' })).toBeTruthy();
   });
   it('documents independent Tooltip with a working focus example', () => {
     render(<DocsPage section="tooltip" />);

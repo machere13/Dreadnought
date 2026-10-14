@@ -1,21 +1,55 @@
 import { ComponentPage } from '../../../shared/ComponentPage.tsx';
-import { LineChart } from '@dreadnought/ui/react';
 import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc';
 import type { ComponentDoc } from '../../../shared/types.ts';
-import styles from '../../../shared/Documentation.module.css';
-
-const series = [
-  { id: 'a', label: 'Вариант A', data: [{ x: 0, y: 20 }, { x: 2, y: 45 }, { x: 4, y: 35 }, { x: 6, y: 70 }, { x: 8, y: 60 }, { x: 10, y: 85 }] },
-  { id: 'b', label: 'Вариант B', data: [{ x: 0, y: 40 }, { x: 2, y: 30 }, { x: 4, y: 65 }, { x: 6, y: 50 }, { x: 8, y: 80 }, { x: 10, y: 70 }] },
-];
+import { LineComparisonDemo } from './LineComparisonDemo.tsx';
+import comparisonCode from './LineComparisonDemo.tsx?raw';
+import { LineMissingDemo } from './LineMissingDemo.tsx';
+import missingCode from './LineMissingDemo.tsx?raw';
+import { LineRangeDemo } from './LineRangeDemo.tsx';
+import rangeCode from './LineRangeDemo.tsx?raw';
 export const lineChartDoc: ComponentDoc = {
-  ...getCatalogDoc('linechart'), title: 'LineChart',
-  description: 'Линейный график с числовыми шкалами, несколькими сериями и явными диапазонами.',
-  adapterDescription: 'LineChartAdapter строит SVG, связывает наведение и клавиатуру с Tooltip и оставляет разметку без темы.',
-  logicDescription: 'buildLineLayout готовит полные данные; sampleLineLayout сокращает геометрию по ширине экрана, getLinePointAtX двоичным поиском находит точный исходный X. Расчёты независимы от React, DOM и SVG.',
-  footnote: <>null по Y разрывает линию. X уникален внутри серии. Большие наборы сокращаются только для рисования: сохраняются пики и впадины в каждом пиксельном столбце, разрывы не соединяются. Tooltip и таблица используют исходные значения. Два ползунка выбирают диапазон X; zoom=false их скрывает. Стрелки и Home/End проходят исходные точки выбранного диапазона; Escape закрывает подсказку. Таблица показывает pageSize строк на странице (50 по умолчанию). Данные передавайте неизменяемыми. Перерасчёт происходит при замене данных, размеров или диапазона, не при каждом наведении. Стоимость зависит и от числа серий; неограниченный объём не гарантируется. Для настройки используйте --dreadnought-line-chart-* и slotProps. Без ResizeObserver задайте width/height. Brush и сглаживание пока не входят в компонент.</>,
-  demo: <div className={styles.demo}><LineChart label="Измерения" description="Наведите между точками или выберите точку через Tab. Легенда скрывает серии, но не удаляет их из таблицы."
-    series={series} xDomain={[0, 10]} yDomain={[0, 100]} xLabel="Время" yLabel="Значение" /></div>,
+  ...getCatalogDoc('linechart'),
+  title: 'LineChart',
+  description:
+    'Показывает изменение числового показателя по времени или другой числовой шкале X. Каждая серия — отдельная линия; исходные значения доступны в таблице.',
+  adapterDescription:
+    'LineChartAdapter строит SVG, связывает наведение и клавиатуру с Tooltip и оставляет разметку без темы.',
+  logicDescription:
+    'buildLineLayout готовит полные данные; sampleLineLayout сокращает геометрию по ширине экрана, getLinePointAtX двоичным поиском находит точный исходный X. Расчёты независимы от React, DOM и SVG.',
+  footnote: (
+    <>
+      X уникален внутри серии; точки должны попадать в xDomain/yDomain. Передавайте данные
+      неизменяемыми. Без ResizeObserver задайте width и height вместе; иначе доступна таблица.
+      Большие наборы сокращаются только для рисования, не для Tooltip и таблицы; стоимость всё равно
+      зависит от объёма и числа серий. Brush, временная шкала и сглаживание не поддерживаются.
+    </>
+  ),
+  examples: [
+    {
+      id: 'line-comparison',
+      title: 'План и факт по дням',
+      description:
+        'Две линии сравнивают число заказов за шесть дней. Нажмите «План» или «Факт» в легенде: линия скроется, но её значения останутся в таблице. Наведение или Tab на точку показывает Tooltip; Left/Right проходят точки, Escape закрывает подсказку. zoom={false} убирает ползунки.',
+      demo: <LineComparisonDemo />,
+      code: comparisonCode,
+    },
+    {
+      id: 'line-missing',
+      title: 'Пропуск измерения — не ноль',
+      description:
+        'В 2 часа y равен null. Линия прерывается, а таблица показывает прочерк, не 0 °C. formatX и formatY добавляют единицы к числовым значениям. Число по X — часы, не строковая дата.',
+      demo: <LineMissingDemo />,
+      code: missingCode,
+    },
+    {
+      id: 'line-range',
+      title: 'Диапазон и страницы исходных данных',
+      description:
+        'Два ползунка zoom выбирают границы по исходным точкам и ограничивают видимый диапазон X, не удаляя записи. В таблице pageSize={4} делит 12 дней на три страницы. Для этого примера явно заданы width={560} и height={280}; на узком экране внешний контейнер прокручивается. Это небольшой учебный набор, не тест производительности.',
+      demo: <LineRangeDemo />,
+      code: rangeCode,
+    },
+  ],
 };
 
 export function LineChartPage() {
