@@ -1,9 +1,8 @@
-import { useState } from 'react';
-import { useForm } from '@dreadnought/react/logic';
-import { Button, Form, FormField, TreeSelect } from '@dreadnought/ui/react';
+import { useId, useState } from 'react';
+import { TreeSelect } from '@dreadnought/ui/react';
 
-type Node = { id: string; label: string; children?: readonly Node[] };
-const records: readonly Node[] = [
+type Team = { id: string; label: string; children?: readonly Team[] };
+const records: readonly Team[] = [
   {
     id: 'dev',
     label: 'Разработка',
@@ -14,112 +13,30 @@ const records: readonly Node[] = [
   },
   { id: 'design', label: 'Дизайн' },
 ];
-export const treeSelectDemoProps = {
-  records,
-  getKey: (node: Node) => node.id,
-  getChildren: (node: Node) => node.children,
-  getLabel: (node: Node) => node.label,
-  defaultExpandedKeys: ['dev'],
-};
-const validators = {
-  team: (value: string | null) => (value === null ? 'Выберите команду' : undefined),
-};
 
 export function TreeSelectDemo() {
+  const id = useId();
+  const [value, setValue] = useState<string | null>(null);
+  const selected = records
+    .flatMap((team) => [team, ...(team.children ?? [])])
+    .find((team) => team.id === value);
   return (
-    <TreeSelect {...treeSelectDemoProps} aria-label="Команда" placeholder="Выберите команду" />
-  );
-}
-
-export function TreeSelectMultipleDemo({ checkStrictly = false }: { checkStrictly?: boolean }) {
-  const [value, setValue] = useState<string[]>([]);
-  return (
-    <div style={{ display: 'grid', gap: '0.75rem' }}>
-      <TreeSelect<Node, string>
-        {...treeSelectDemoProps}
-        multiple
-        checkStrictly={checkStrictly}
+    <div style={{ display: 'grid', gap: 12 }}>
+      <p id={id}>Команда</p>
+      <TreeSelect<Team, string>
+        records={records}
+        getKey={(team) => team.id}
+        getChildren={(team) => team.children}
+        getLabel={(team) => team.label}
+        defaultExpandedKeys={['dev']}
+        aria-labelledby={id}
+        placeholder="Выберите команду"
         value={value}
         onValueChange={setValue}
-        showSearch
-        aria-label={checkStrictly ? 'Независимый выбор' : 'Связанный выбор'}
-        placeholder="Выберите команды"
       />
-      <output role="status">{JSON.stringify(value)}</output>
+      <p role="status">
+        {selected ? `Команда: ${selected.label} (${value})` : 'Команда не выбрана'}
+      </p>
     </div>
-  );
-}
-
-export function TreeSelectSearchDemo() {
-  const [search, setSearch] = useState('');
-  return (
-    <TreeSelect
-      {...treeSelectDemoProps}
-      aria-label="Поиск команды"
-      showSearch={{ searchValue: search, onSearch: setSearch }}
-      placeholder="Найдите команду"
-    />
-  );
-}
-
-export function TreeSelectStatesDemo() {
-  return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-      <TreeSelect
-        {...treeSelectDemoProps}
-        disabled
-        defaultValue="front"
-        aria-label="Недоступный выбор"
-      />
-      <TreeSelect
-        {...treeSelectDemoProps}
-        readOnly
-        defaultValue="front"
-        aria-label="Только просмотр"
-      />
-      <TreeSelect
-        {...treeSelectDemoProps}
-        getDisabled={() => true}
-        aria-label="Нет доступных команд"
-        placeholder="Все узлы недоступны"
-      />
-      <TreeSelect {...treeSelectDemoProps} defaultValue="archived" aria-label="Неизвестный ключ" />
-    </div>
-  );
-}
-
-export function TreeSelectFormDemo() {
-  const [saved, setSaved] = useState('');
-  const form = useForm<{ team: string | null }>({ initialValues: { team: null }, validators });
-  const team = form.field('team');
-  return (
-    <Form
-      form={form}
-      onFinish={(values) => setSaved(values.team ?? '')}
-      onReset={() => setSaved('')}
-    >
-      <FormField label="Команда" required error={team.error}>
-        {(props) => (
-          <TreeSelect
-            {...props}
-            {...treeSelectDemoProps}
-            name="team"
-            required
-            showSearch
-            value={team.value}
-            onValueChange={team.setValue}
-            onBlur={team.onBlur}
-            placeholder="Выберите команду"
-          />
-        )}
-      </FormField>
-      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-        <Button type="submit">Сохранить</Button>
-        <Button type="reset" variant="secondary">
-          Сбросить
-        </Button>
-      </div>
-      {saved && <div role="status">{saved}</div>}
-    </Form>
   );
 }
