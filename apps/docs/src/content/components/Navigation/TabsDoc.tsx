@@ -1,83 +1,60 @@
 import { ComponentPage } from '../../../shared/ComponentPage.tsx';
-import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc';
-import { Input, Tabs } from '@dreadnought/ui/react';
+import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc.ts';
 import type { ComponentDoc } from '../../../shared/types.ts';
-import styles from '../../../shared/Documentation.module.css';
-
-function TabsDemo({ orientation = 'horizontal' }: { orientation?: 'horizontal' | 'vertical' }) {
-  return (
-    <div className={styles.demo}>
-      {orientation === 'vertical' && <h3>Вертикальные вкладки</h3>}
-      <Tabs defaultValue="ready" orientation={orientation}>
-        <Tabs.List
-          aria-label={orientation === 'vertical' ? 'Вертикальные разделы' : 'Уровень библиотеки'}
-        >
-          <Tabs.Tab value="ready">Компонент</Tabs.Tab>
-          <Tabs.Tab value="adapter">Адаптер</Tabs.Tab>
-          <Tabs.Tab value="logic">Логика</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="ready">Готовый компонент с темой.</Tabs.Panel>
-        <Tabs.Panel value="adapter">Разметка и поведение без готовых стилей.</Tabs.Panel>
-        <Tabs.Panel value="logic">Состояние и функции для своего компонента.</Tabs.Panel>
-      </Tabs>
-    </div>
-  );
-}
-
-function TabsLifecycleDemo() {
-  const policies = ['eager', 'lazy', 'unmount'] as const;
-  return (
-    <div className={styles.demo}>
-      <h3>Состояние содержимого</h3>
-      <p>Введите текст, переключите вкладку и вернитесь. В unmount поле сбросится.</p>
-      <Tabs defaultValue="eager">
-        <Tabs.List aria-label="Режим содержимого">
-          {policies.map((policy) => (
-            <Tabs.Tab key={policy} value={policy}>
-              {policy}
-            </Tabs.Tab>
-          ))}
-        </Tabs.List>
-        {policies.map((policy) => (
-          <Tabs.Panel key={policy} value={policy} mountPolicy={policy}>
-            <Input aria-label={`Текст ${policy}`} placeholder="Введите текст" />
-          </Tabs.Panel>
-        ))}
-      </Tabs>
-    </div>
-  );
-}
+import { TabsBasicDemo } from './TabsBasicDemo.tsx';
+import basicCode from './TabsBasicDemo.tsx?raw';
+import { TabsVerticalDemo } from './TabsVerticalDemo.tsx';
+import verticalCode from './TabsVerticalDemo.tsx?raw';
+import { TabsOverflowDemo } from './TabsOverflowDemo.tsx';
+import overflowCode from './TabsOverflowDemo.tsx?raw';
+import { TabsLifecycleDemo } from './TabsLifecycleDemo.tsx';
+import lifecycleCode from './TabsLifecycleDemo.tsx?raw';
 
 export const tabsDoc: ComponentDoc = {
   ...getCatalogDoc('tabs'),
   title: 'Tabs',
   description:
-    'Переключение разделов с клавиатурной навигацией, прокруткой и меню скрытых вкладок при переполнении.',
+    'Переключает содержимое разделов без перехода на другую страницу. Каждой Tabs.Tab соответствует Tabs.Panel с тем же value; доступное имя списка задаётся через Tabs.List.',
   adapterDescription:
     'Составной адаптер сохраняет связи вкладок и панелей, управление фокусом и клавиатурой, но не подключает тему.',
   logicDescription:
     'Хук управляет выбранным значением; при собственной разметке семантику и клавиатурное поведение нужно реализовать самостоятельно.',
-  footnote: (
-    <>
-      Для каждого <code>Tabs.Tab</code> нужна одна <code>Tabs.Panel</code> с тем же значением. Дайте{' '}
-      <code>Tabs.List</code> доступное имя. Стрелки, Home и End переключают доступные вкладки.{' '}
-      <code>orientation="vertical"</code> располагает список слева и использует ↑↓ вместо ←→. Чтобы
-      скрывать вкладки, не помещающиеся по высоте, ограничьте высоту через{' '}
-      <code>Tabs.List slotProps.container.style.maxHeight</code>. <code>mountPolicy</code> панели:{' '}
-      <code>eager</code> создаёт содержимое сразу, <code>lazy</code> — при первом открытии и
-      сохраняет, <code>unmount</code> — удаляет при закрытии. По умолчанию <code>eager</code>;
-      оболочка остаётся во всех режимах. При unmount очищаются эффекты и локальное состояние, но
-      внешнее состояние сохраняется. Сохранение содержимого не приостанавливает эффекты. Меню
-      переполнения настраивается через <code>moreLabel</code> и <code>slotProps</code> списка.
-    </>
-  ),
-  demo: (
-    <>
-      <TabsDemo />
-      <TabsDemo orientation="vertical" />
-      <TabsLifecycleDemo />
-    </>
-  ),
+  examples: [
+    {
+      id: 'basic',
+      title: 'Переключение разделов',
+      description:
+        'Нажмите «Адаптер» или «Логика»: под вкладками изменится содержимое. value хранит выбранный раздел в React, onValueChange обновляет его. Стрелки влево/вправо, Home и End переключают вкладки с клавиатуры.',
+      demo: <TabsBasicDemo />,
+      code: basicCode,
+    },
+    {
+      id: 'vertical',
+      title: 'Вертикальные вкладки',
+      description:
+        'orientation="vertical" располагает список слева от панели. ArrowUp и ArrowDown переключают разделы, а не горизонтальные стрелки. Здесь defaultValue задаёт начальный раздел, дальнейший выбор хранится внутри Tabs.',
+      demo: <TabsVerticalDemo />,
+      code: verticalCode,
+    },
+    {
+      id: 'overflow',
+      title: 'Меню вкладок, которые не помещаются',
+      description:
+        'Ширина примера ограничена 24rem. Не поместившиеся вкладки доступны через кнопку с тремя точками «Остальные разделы»; moreLabel задаёт её доступное имя. Откройте меню и выберите скрытый раздел — появится его панель. Переполнение определяется по реальным размерам, вручную делить список не нужно.',
+      demo: <TabsOverflowDemo />,
+      code: overflowCode,
+    },
+    {
+      id: 'lifecycle',
+      title: 'Сохранение и сброс состояния панели',
+      description:
+        'Введите текст в каждой вкладке, переключитесь и вернитесь. eager создаёт поле сразу, lazy — при первом открытии; оба сохраняют введённый текст. unmount удаляет поле при закрытии, поэтому текст сбросится. mountPolicy управляет содержимым панели, не внешним состоянием приложения.',
+      demo: <TabsLifecycleDemo />,
+      code: lifecycleCode,
+    },
+  ],
+  footnote:
+    'Скрытие панели не приостанавливает эффекты её сохранённого содержимого. unmount очищает эффекты и локальное состояние. Меню переполнения требует Popover API браузера. Для переполнения вертикального списка ограничьте высоту через Tabs.List slotProps.container.style.maxHeight. При динамическом списке используйте стабильные keys.',
 };
 
 export function TabsPage() {

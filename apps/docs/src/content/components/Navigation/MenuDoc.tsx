@@ -1,30 +1,49 @@
 import { ComponentPage } from '../../../shared/ComponentPage.tsx';
-import { useState } from 'react';
-import { Menu } from '@dreadnought/ui/react';
-import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc';
+import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc.ts';
 import type { ComponentDoc } from '../../../shared/types.ts';
-import styles from '../../../shared/Documentation.module.css';
-
-function MenuDemo() {
-  const [action, setAction] = useState('');
-  return <div className={styles.demo}>
-    <Menu aria-label="Действия примера" items={[
-      { value: 'copy', label: 'Копировать' },
-      { value: 'export', label: 'Экспорт', children: [{ value: 'pdf', label: 'PDF' }, { value: 'csv', label: 'CSV' }] },
-      { value: 'delete', label: 'Удалить', disabled: true },
-    ]} onAction={setAction} />
-    <p role="status">{action ? `Действие: ${action}` : 'Выберите действие'}</p>
-  </div>;
-}
+import { MenuActionsDemo } from './MenuActionsDemo.tsx';
+import actionsCode from './MenuActionsDemo.tsx?raw';
+import { MenuGroupsDemo } from './MenuGroupsDemo.tsx';
+import groupsCode from './MenuGroupsDemo.tsx?raw';
+import { MenuNavigationDemo } from './MenuNavigationDemo.tsx';
+import navigationCode from './MenuNavigationDemo.tsx?raw';
 
 export const menuDoc: ComponentDoc = {
   ...getCatalogDoc('menu'),
   title: 'Menu',
-  description: 'Действия, группы, разделители и вложенные пункты с раскрытием внутри меню. mode="navigation" создаёт навигацию с настоящими ссылками. Menu используется также в Tabs и Dropdown.',
+  description:
+    'Показывает действия или навигационные ссылки. Поддерживает группы, разделители и вложенные пункты. Само Menu не открывает всплывающее окно: для этого используйте Dropdown.',
   adapterDescription: 'MenuAdapter задаёт разметку, выбор и клавиатурную навигацию без оформления.',
-  logicDescription: <>getVisibleMenuRows рассчитывает видимость групп, подменю и наследование disabled. getTreeKeyAction, getNextEnabledValue и getTypeaheadValue задают клавиатурные правила без React и DOM.</>,
-  footnote: <>Стрелки вверх/вниз и Home/End перемещают фокус; вправо раскрывает подменю и входит в него, влево закрывает его или возвращает к родителю. Набор букв ищет среди видимых доступных пунктов. Группы и разделители не участвуют в фокусе. openKeys управляет раскрытием, defaultOpenKeys задаёт начальное состояние; onOpenKeysChange сообщает запрос. onAction вызывается только у конечного пункта. В режиме navigation ссылки получают href и aria-current="page", Tab проходит по ним обычным способом. Раскрытие сейчас только внутри меню: боковых всплывающих подменю и горизонтального режима пока нет.</>,
-  demo: <MenuDemo />,
+  logicDescription:
+    'getVisibleMenuRows рассчитывает видимость и ограничения пунктов; getTreeKeyAction, getNextEnabledValue и getTypeaheadValue задают клавиатурные правила.',
+  examples: [
+    {
+      id: 'actions',
+      title: 'Действия и вложенное меню',
+      description:
+        'Нажмите «Копировать» — результат покажет ключ copy. Откройте «Экспорт» и выберите PDF или CSV: onAction получит ключ конечного пункта. Само раскрытие не запускает действие, «Удалить» недоступен. Это демонстрация callback: копирование и экспорт файлов здесь не выполняются.',
+      demo: <MenuActionsDemo />,
+      code: actionsCode,
+    },
+    {
+      id: 'groups',
+      title: 'Группы и разделитель',
+      description:
+        '«Документ» и «Настройки» — подписи групп, не действия. Стрелки перемещают фокус между доступными пунктами, пропуская подписи, разделитель и «Права доступа». Выбранный пункт хранится через selectedValue, его ключ появляется под меню.',
+      demo: <MenuGroupsDemo />,
+      code: groupsCode,
+    },
+    {
+      id: 'navigation',
+      title: 'Навигация настоящими ссылками',
+      description:
+        'Выберите «Использование примера»: ссылка ведёт к разделу ниже и меняет якорь страницы. mode="navigation" создаёт ссылки с href, выбранная получает aria-current="page". В этом примере selectedValue обновляет onAction; в приложении его обычно берут из текущего маршрута.',
+      demo: <MenuNavigationDemo />,
+      code: navigationCode,
+    },
+  ],
+  footnote:
+    'В режиме действий стрелки, Home/End и поиск по буквам меняют фокус. ArrowRight раскрывает подменю, ArrowLeft возвращает к родителю. Группы и разделители не фокусируются. openKeys/onOpenKeysChange управляют раскрытием, defaultOpenKeys задаёт начальное состояние. Подменю раскрываются внутри списка, не в боковом всплывающем окне.',
 };
 
 export function MenuPage() {
