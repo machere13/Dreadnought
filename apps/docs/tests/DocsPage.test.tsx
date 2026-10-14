@@ -544,7 +544,7 @@ describe('documentation pages', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Закрыть подсказку' }));
     expect(screen.queryByText('Полезная подсказка')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Повторить' }));
-    expect(screen.getByRole('alert').textContent).toContain('Попыток: 1');
+    expect(screen.getByText('Данные получены').closest('[role="status"]')).toBeTruthy();
   });
 
   it('documents Layout with a working collapsible sidebar', () => {

@@ -1,47 +1,12 @@
 import { ComponentPage } from '../../../shared/ComponentPage.tsx';
 import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc';
-import { Accordion, Input } from '@dreadnought/ui/react';
 import type { ComponentDoc } from '../../../shared/types.ts';
-import styles from '../../../shared/Documentation.module.css';
-
-function AccordionDemo() {
-  return (
-    <div className={styles.demo}>
-      <Accordion>
-        <Accordion.Item value="connect">
-          <Accordion.Trigger>Как подключить компонент?</Accordion.Trigger>
-          <Accordion.Panel>
-            Импортируйте готовый компонент из @dreadnought/ui/react.
-          </Accordion.Panel>
-        </Accordion.Item>
-        <Accordion.Item value="theme">
-          <Accordion.Trigger>Как изменить оформление?</Accordion.Trigger>
-          <Accordion.Panel>Задайте значения публичных токенов темы.</Accordion.Panel>
-        </Accordion.Item>
-      </Accordion>
-    </div>
-  );
-}
-
-function AccordionLifecycleDemo() {
-  const policies = ['eager', 'lazy', 'unmount'] as const;
-  return (
-    <div className={styles.demo}>
-      <h3>Состояние содержимого</h3>
-      <p>Введите текст, закройте раздел и откройте снова. В unmount поле сбросится.</p>
-      <Accordion>
-        {policies.map((policy) => (
-          <Accordion.Item key={policy} value={policy}>
-            <Accordion.Trigger>{policy}</Accordion.Trigger>
-            <Accordion.Panel mountPolicy={policy}>
-              <Input aria-label={`Текст ${policy}`} placeholder="Введите текст" />
-            </Accordion.Panel>
-          </Accordion.Item>
-        ))}
-      </Accordion>
-    </div>
-  );
-}
+import { AccordionFaqDemo } from './AccordionFaqDemo.tsx';
+import faqCode from './AccordionFaqDemo.tsx?raw';
+import { AccordionMultipleDemo } from './AccordionMultipleDemo.tsx';
+import multipleCode from './AccordionMultipleDemo.tsx?raw';
+import { AccordionLifecycleDemo } from './AccordionLifecycleDemo.tsx';
+import lifecycleCode from './AccordionLifecycleDemo.tsx?raw';
 
 export const accordionDoc: ComponentDoc = {
   ...getCatalogDoc('accordion'),
@@ -52,23 +17,34 @@ export const accordionDoc: ComponentDoc = {
     'Адаптер даёт доступные кнопки и панели без библиотечного оформления или декоративного индикатора.',
   logicDescription:
     'Чистая функция переключает открытый пункт. Для собственного компонента разметку, ARIA и состояние нужно собрать отдельно.',
-  footnote: (
-    <>
-      Каждому <code>Accordion.Item</code> нужны ровно один <code>Trigger</code> и один{' '}
-      <code>Panel</code>. <code>mountPolicy</code> панели: <code>eager</code> создаёт содержимое
-      сразу, <code>lazy</code> — при первом открытии и сохраняет, <code>unmount</code> — удаляет при
-      закрытии. По умолчанию <code>eager</code>; оболочка остаётся во всех режимах. При unmount
-      очищаются эффекты и локальное состояние, но внешнее состояние сохраняется. Сохранение
-      содержимого не приостанавливает эффекты. Для небольшого набора панелей можно добавить{' '}
-      <code>role="region"</code>.
-    </>
-  ),
-  demo: (
-    <>
-      <AccordionDemo />
-      <AccordionLifecycleDemo />
-    </>
-  ),
+  footnote:
+    'Каждому Item нужны один Trigger и один Panel. Используйте уникальные value и стабильные React keys. Скрытая панель сохраняет оболочку; сохранённое содержимое не приостанавливает эффекты. unmount очищает эффекты и локальное состояние, но не состояние родителя.',
+  examples: [
+    {
+      id: 'faq',
+      title: 'Один открытый раздел',
+      description:
+        'Откройте вопрос о подключении, затем вопрос об оформлении: первый закроется. Повторное нажатие закрывает текущий раздел. Tab переключает кнопки; Enter и пробел раскрывают выбранный вопрос.',
+      demo: <AccordionFaqDemo />,
+      code: faqCode,
+    },
+    {
+      id: 'multiple',
+      title: 'Несколько открытых разделов',
+      description:
+        'Откройте «Доставка» и «Оплата»: оба ответа останутся видимыми. «Закрыть все разделы» очищает управляемый массив value. multiple разрешает независимое раскрытие пунктов.',
+      demo: <AccordionMultipleDemo />,
+      code: multipleCode,
+    },
+    {
+      id: 'lifecycle',
+      title: 'Сохранение черновика после закрытия',
+      description:
+        'Введите текст в lazy, переключитесь на другой раздел и вернитесь: черновик останется. В unmount он сбросится. eager создаёт поле сразу, lazy — при первом открытии; оба сохраняют его после закрытия.',
+      demo: <AccordionLifecycleDemo />,
+      code: lifecycleCode,
+    },
+  ],
 };
 
 export function AccordionPage() {
