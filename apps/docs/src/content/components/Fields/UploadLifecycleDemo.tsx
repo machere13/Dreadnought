@@ -22,6 +22,18 @@ export function UploadLifecycleDemo() {
     upload: (file, { signal, onProgress }) =>
       new Promise<void>((resolve, reject) => {
         const id = ++sequence.current;
+        let settled = false;
+        function finish(error?: unknown) {
+          if (settled) return;
+          settled = true;
+          signal.removeEventListener('abort', cancel);
+          forget(id);
+          if (error) reject(error);
+          else resolve();
+        }
+        function cancel() {
+          finish();
+        }
         setAttempts((current) => [
           ...current,
           {
@@ -29,23 +41,14 @@ export function UploadLifecycleDemo() {
             name: file.name,
             onProgress,
             resolve() {
-              forget(id);
-              resolve();
+              finish();
             },
             reject(error) {
-              forget(id);
-              reject(error);
+              finish(error);
             },
           },
         ]);
-        signal.addEventListener(
-          'abort',
-          () => {
-            forget(id);
-            resolve();
-          },
-          { once: true },
-        );
+        signal.addEventListener('abort', cancel, { once: true });
       }),
   });
   return (
@@ -81,7 +84,7 @@ export function UploadLifecycleDemo() {
           <Button
             size="compact"
             variant="ghosted"
-            onClick={() => attempt.reject(new Error('Demo'))}
+            onClick={() => attempt.reject(new Error('Имитация ошибки загрузки'))}
           >
             Ошибка
           </Button>
