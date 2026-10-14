@@ -5,6 +5,10 @@ import { ToastBasicDemo } from './ToastBasicDemo.tsx';
 import example0Code from './ToastBasicDemo.tsx?raw';
 import { ToastQueueDemo } from './ToastQueueDemo.tsx';
 import example1Code from './ToastQueueDemo.tsx?raw';
+import { ToastPlacementDemo } from './ToastPlacementDemo.tsx';
+import placementCode from './ToastPlacementDemo.tsx?raw';
+import { ToastActionDemo } from './ToastActionDemo.tsx';
+import actionCode from './ToastActionDemo.tsx?raw';
 
 export const toastDoc: ComponentDoc = {
   ...getCatalogDoc('toast'),
@@ -30,6 +34,22 @@ export const toastDoc: ComponentDoc = {
         'Добавьте несколько уведомлений в очередь справа сверху: одновременно видны не больше трёх. «Начать сохранение» создаёт бессрочное уведомление; «Завершить сохранение» обновляет его на месте и включает таймер на 3 секунды. Это имитация операции, а не реальный запрос. «Закрыть все» очищает очередь.',
       demo: <ToastQueueDemo />,
       code: example1Code,
+    },
+    {
+      id: 'toast-placement',
+      title: 'Шесть положений',
+      description:
+        'Откройте уведомления по очереди, закрывая предыдущий пример крестиком. placement передаётся ToastViewport, а не Toast: start и end выбирают края, top и bottom — центр. Подписи «слева/справа» соответствуют направлению LTR этой документации. В приложении используйте один общий контейнер, здесь у сценариев отдельные демонстрационные контейнеры.',
+      demo: <ToastPlacementDemo />,
+      code: placementCode,
+    },
+    {
+      id: 'toast-action',
+      title: 'Ошибка с повторной попыткой',
+      description:
+        '«Показать ошибку» создаёт уведомление type="error" без таймера: duration={0}. «Повторить» в action меняет его на success и включает 3 секунды показа. Это имитация результата, без сетевого запроса. Крестик закрывает оба состояния.',
+      demo: <ToastActionDemo />,
+      code: actionCode,
     },
   ],
 };

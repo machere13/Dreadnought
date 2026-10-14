@@ -24,7 +24,7 @@ afterEach(() => {
 it.each([
   ['Tree', treeDoc, 'Navigation', 2],
   ['Radio', radioDoc, 'Fields', 2],
-  ['Toast', toastDoc, 'Feedback', 2],
+  ['Toast', toastDoc, 'Feedback', 4],
   ['Modal', modalDoc, 'Overlays', 3],
   ['Drawer', drawerDoc, 'Overlays', 3],
 ] as const)(
