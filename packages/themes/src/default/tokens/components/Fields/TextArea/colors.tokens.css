@@ -4,5 +4,6 @@
   --dreadnought-text-area-placeholder-text: var(--dreadnought-color-text-placeholder);
   --dreadnought-text-area-border-default: var(--dreadnought-color-border-default);
   --dreadnought-text-area-border-invalid: var(--dreadnought-color-status-error);
+  --dreadnought-text-area-border-invalid-focus: var(--dreadnought-color-status-error-focus);
   --dreadnought-text-area-border-focus: var(--dreadnought-color-focus-ring);
 }

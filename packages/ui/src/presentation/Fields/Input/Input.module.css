@@ -152,6 +152,10 @@
     border-color: var(--dreadnought-input-border-invalid);
   }
 
+  .input[data-invalid]:focus-within:not([data-disabled]) {
+    border-color: var(--dreadnought-input-border-invalid-focus);
+  }
+
   .input[data-disabled] {
     opacity: var(--dreadnought-input-disabled-opacity);
     cursor: var(--dreadnought-input-disabled-cursor);

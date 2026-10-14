@@ -11,13 +11,14 @@ import { TableBasicDemo } from '../src/content/components/DataDisplay/Table/Tabl
 import { TableLayoutDemo } from '../src/content/components/DataDisplay/Table/TableLayoutDemo.tsx';
 import { TableFiltersDemo } from '../src/content/components/DataDisplay/Table/TableFiltersDemo.tsx';
 import { TableSummaryDemo } from '../src/content/components/DataDisplay/Table/TableSummaryDemo.tsx';
+import { TableSelectionDemo } from '../src/content/components/DataDisplay/Table/TableSelectionDemo.tsx';
 import { ComponentDocumentation } from '../src/shared/ComponentDocumentation.tsx';
 
 afterEach(cleanup);
 
 it.each([
   ['Select', selectDoc, 'Fields/Select', 9],
-  ['Table', tableDoc, 'DataDisplay/Table', 8],
+  ['Table', tableDoc, 'DataDisplay/Table', 9],
 ] as const)('uses the exact runnable source for every %s example', (_title, doc, folder, count) => {
   expect(doc.examples).toHaveLength(count);
   expect(new Set(doc.examples!.map((example) => example.id)).size).toBe(count);
@@ -116,4 +117,19 @@ it('recalculates the documented summary when changing page', () => {
   fireEvent.click(screen.getByRole('button', { name: 'Следующая страница' }));
   expect(table.querySelector('tfoot')?.textContent).toContain('80');
   expect(table.querySelector('tbody')?.textContent).toContain('Тестирование');
+});
+
+it('shows initial and updated Table selection through row state and readable names', () => {
+  render(<TableSelectionDemo />);
+  const table = screen.getByRole('table', { name: 'Выбор участников' });
+  const rows = table.querySelectorAll('tbody tr');
+  expect(rows[0].getAttribute('data-selected')).toBe('true');
+  expect(screen.getByRole('status').textContent).toBe('Выбраны: Анна');
+  fireEvent.click(within(rows[1] as HTMLElement).getByRole('checkbox'));
+  expect(rows[1].getAttribute('data-selected')).toBe('true');
+  expect(screen.getByRole('status').textContent).toBe('Выбраны: Анна, Марк');
+  fireEvent.click(within(rows[0] as HTMLElement).getByRole('checkbox'));
+  expect(rows[0].getAttribute('data-selected')).not.toBe('true');
+  expect(screen.getByRole('status').textContent).toBe('Выбраны: Марк');
+  expect(rows[1].querySelector('[data-fixed="left"]')).toBeTruthy();
 });

@@ -24,6 +24,7 @@
   --dreadnought-color-border-muted: rgb(58 58 58 / 100%);
   --dreadnought-color-focus-ring: rgb(190 190 190 / 100%);
   --dreadnought-color-status-error: rgb(255 117 117 / 100%);
+  --dreadnought-color-status-error-focus: rgb(255 165 165 / 100%);
   --dreadnought-color-status-warning: rgb(245 188 102 / 100%);
   --dreadnought-color-status-success: rgb(118 211 160 / 100%);
   --dreadnought-color-status-info: rgb(125 177 245 / 100%);

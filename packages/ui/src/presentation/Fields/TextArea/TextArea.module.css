@@ -100,6 +100,10 @@
     border-color: var(--dreadnought-text-area-border-invalid);
   }
 
+  .textArea[aria-invalid='true']:focus-visible:not(:disabled) {
+    border-color: var(--dreadnought-text-area-border-invalid-focus);
+  }
+
   .textArea:disabled {
     opacity: var(--dreadnought-text-area-disabled-opacity);
     cursor: var(--dreadnought-text-area-disabled-cursor);

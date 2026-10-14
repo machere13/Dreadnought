@@ -3,6 +3,8 @@ import { getCatalogDoc } from '../../../../data/catalog/getCatalogDoc.ts';
 import type { ComponentDoc } from '../../../../shared/types.ts';
 import { TableBasicDemo } from './TableBasicDemo.tsx';
 import basicCode from './TableBasicDemo.tsx?raw';
+import { TableSelectionDemo } from './TableSelectionDemo.tsx';
+import selectionCode from './TableSelectionDemo.tsx?raw';
 import { TableFiltersDemo } from './TableFiltersDemo.tsx';
 import filtersCode from './TableFiltersDemo.tsx?raw';
 import { TableSortDemo } from './TableSortDemo.tsx';
@@ -36,6 +38,14 @@ export const tableDoc: ComponentDoc = {
         'Две строки и две колонки. Нажмите «Имя», чтобы отсортировать участников; повторные нажатия меняют направление и сбрасывают сортировку. Данные обрабатываются локально, пагинация отключена.',
       demo: <TableBasicDemo />,
       code: basicCode,
+    },
+    {
+      id: 'selection',
+      title: 'Выбор строк',
+      description:
+        'Анна уже выбрана. Отметьте других участников или нажмите чекбокс в шапке. Наведите на выбранную и обычную строки: их состояния различаются. На узком экране колонка «Участник» остаётся закреплённой при прокрутке.',
+      demo: <TableSelectionDemo />,
+      code: selectionCode,
     },
     {
       id: 'filters',

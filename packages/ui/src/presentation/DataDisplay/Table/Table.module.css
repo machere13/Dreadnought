@@ -45,8 +45,11 @@
     outline: var(--dreadnought-table-border-width) solid currentColor;
     outline-offset: var(--dreadnought-table-control-gap);
   }
-  .root[data-row-hoverable='true'] tbody tr:hover > * {
+  .root[data-row-hoverable='true'] tbody tr:not([data-selected='true']):hover > * {
     background: var(--dreadnought-table-row-bg-hover);
+  }
+  .root[data-row-hoverable='true'] tbody tr[data-selected='true']:hover > * {
+    background: var(--dreadnought-table-row-bg-selected-hover);
   }
   .root[data-size='middle'] {
     --dreadnought-table-active-padding-block: var(--dreadnought-table-cell-padding-block-middle);
@@ -182,9 +185,6 @@
   .root thead [data-fixed] {
     z-index: 3;
     background: var(--dreadnought-table-header-bg);
-  }
-  .root tbody tr:hover > [data-fixed] {
-    background: var(--dreadnought-table-row-bg-hover);
   }
   .root tbody tr[data-selected='true'] > [data-fixed] {
     background: var(--dreadnought-table-row-bg-selected);
