@@ -264,9 +264,9 @@ describe('documentation pages', () => {
     render(<DocsPage section="radarchart" />);
     expect(document.getElementById('radarchart-api')).toBeTruthy();
     expect(screen.getByRole('link', { name: 'RadarChart' }).getAttribute('href')).toBe('/components/radarchart/');
-    const button = screen.getByRole('button', { name: 'Вариант A' });
+    const button = screen.getByRole('button', { name: 'Версия 1.0' });
     fireEvent.click(button); expect(button.getAttribute('aria-pressed')).toBe('false');
-    expect(screen.getByRole('table', { name: 'Сравнение вариантов: Данные' })).toBeTruthy();
+    expect(screen.getByRole('table', { name: 'Сравнение версий: Данные' })).toBeTruthy();
     expect(screen.getByRole('navigation', { name: 'На этой странице' })).toBeTruthy();
   });
   it('documents a custom disclosure with a working example and anchor', () => {
