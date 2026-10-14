@@ -25,8 +25,8 @@ it.each([
   ['Tree', treeDoc, 'Navigation', 2],
   ['Radio', radioDoc, 'Fields', 2],
   ['Toast', toastDoc, 'Feedback', 2],
-  ['Modal', modalDoc, 'Overlays', 1],
-  ['Drawer', drawerDoc, 'Overlays', 1],
+  ['Modal', modalDoc, 'Overlays', 3],
+  ['Drawer', drawerDoc, 'Overlays', 3],
 ] as const)(
   'pairs every %s scenario with its exact portable source',
   (_title, doc, folder, count) => {
