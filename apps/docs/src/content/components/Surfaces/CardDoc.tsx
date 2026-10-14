@@ -1,54 +1,12 @@
 import { ComponentPage } from '../../../shared/ComponentPage.tsx';
 import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc';
-import { useState } from 'react';
-import { Button, Card } from '@dreadnought/ui/react';
 import type { ComponentDoc } from '../../../shared/types.ts';
-import styles from '../../../shared/Documentation.module.css';
-
-function CardDemo() {
-  const [expanded, setExpanded] = useState(false);
-  const [updated, setUpdated] = useState(false);
-
-  return (
-    <div className={`${styles.demo} ${styles.demoStack}`}>
-      <Card
-        className={styles.demoCard}
-        title="Композиция без лишних ограничений"
-        extra={
-          <Button size="compact" variant="ghosted" onClick={() => setExpanded((value) => !value)}>
-            {expanded ? 'Скрыть' : 'Подробнее'}
-          </Button>
-        }
-      >
-        <p>Карточка объединяет содержимое и действия.</p>
-        {expanded && <p>В карточку можно вложить любые компоненты.</p>}
-      </Card>
-      <Card className={styles.demoCard} title="Компактная карточка" size="compact">
-        <p>Уменьшенные отступы для плотных интерфейсов.</p>
-      </Card>
-      <Card className={styles.demoCard} variant="borderless">
-        <strong>Без шапки и рамки</strong>
-        <p>Произвольное содержимое с тем же тёмным фоном.</p>
-      </Card>
-      <Card
-        className={styles.demoCard}
-        title="Карточка проекта"
-        cover={<img src="/markdown-upload-demo.svg" alt="Обложка проекта Dreadnought" />}
-        footer={updated ? 'Только что обновлено' : 'Обновлено сегодня'}
-        actions={[
-          <Button key="open" size="compact" variant="ghosted" onClick={() => setUpdated(true)}>
-            Обновить
-          </Button>,
-          <Button key="docs" size="compact" variant="ghosted" href="/getting-started/">
-            Документация
-          </Button>,
-        ]}
-      >
-        <p>Обложка, содержимое, подвал и действия — отдельные зоны одной карточки.</p>
-      </Card>
-    </div>
-  );
-}
+import { CardHeaderDemo } from './CardHeaderDemo.tsx';
+import headerCode from './CardHeaderDemo.tsx?raw';
+import { CardAppearanceDemo } from './CardAppearanceDemo.tsx';
+import appearanceCode from './CardAppearanceDemo.tsx?raw';
+import { CardActionsDemo } from './CardActionsDemo.tsx';
+import actionsCode from './CardActionsDemo.tsx?raw';
 
 export const cardDoc: ComponentDoc = {
   ...getCatalogDoc('card'),
@@ -65,7 +23,32 @@ export const cardDoc: ComponentDoc = {
       кнопкой. Без дополнительных зон разметка содержимого не меняется.
     </>
   ),
-  demo: <CardDemo />,
+  examples: [
+    {
+      id: 'card-header',
+      title: 'Заголовок и действие',
+      description:
+        'title задаёт заголовок, extra — действие рядом с ним. «Подробнее» раскрывает дополнительный текст, «Скрыть» убирает его. Это состояние приложения: Card сама не раскрывается и не является кнопкой.',
+      demo: <CardHeaderDemo />,
+      code: headerCode,
+    },
+    {
+      id: 'card-appearance',
+      title: 'Размер, рамка и отсутствие шапки',
+      description:
+        'Сравните обычные и компактные отступы. variant="borderless" убирает рамку, но не фон. У третьей карточки нет title и extra, поэтому её содержимое начинается без шапки.',
+      demo: <CardAppearanceDemo />,
+      code: appearanceCode,
+    },
+    {
+      id: 'card-actions',
+      title: 'Обложка, подвал и действия',
+      description:
+        'cover находится сверху, footer — под содержимым, actions — последним рядом. «Обновить» меняет только статус примера; «Документация» открывает раздел начала работы. Обложка — файл /markdown-upload-demo.svg из public документации: при переносе замените src своим изображением.',
+      demo: <CardActionsDemo />,
+      code: actionsCode,
+    },
+  ],
 };
 
 export function CardPage() {

@@ -1,24 +1,44 @@
 import { ComponentPage } from '../../../shared/ComponentPage.tsx';
 import { getCatalogDoc } from '../../../data/catalog/getCatalogDoc';
-import { CodeBlock } from '@dreadnought/ui/react';
 import type { ComponentDoc } from '../../../shared/types.ts';
-import styles from '../../../shared/Documentation.module.css';
-
-function CodeBlockDemo() {
-  return <div className={`${styles.demo} ${styles.codeBlockDemo}`}>
-    <CodeBlock code={'const answer = 42;\n'} language="ts" copyLabels={{ copy: 'Копировать пример', copied: 'Пример скопирован', error: 'Не удалось скопировать пример' }} />
-    <CodeBlock code="npm install @dreadnought/ui" copyable={false} />
-  </div>;
-}
+import { CodeBlockCopyDemo } from './CodeBlockCopyDemo.tsx';
+import copyCode from './CodeBlockCopyDemo.tsx?raw';
+import { CodeBlockDisplayDemo } from './CodeBlockDisplayDemo.tsx';
+import displayCode from './CodeBlockDisplayDemo.tsx?raw';
 
 export const codeBlockDoc: ComponentDoc = {
   ...getCatalogDoc('codeblock'),
   title: 'CodeBlock',
-  description: 'Блок исходного кода с необязательной кнопкой копирования. Выводит код как текст без изменения пробелов и переводов строк.',
-  adapterDescription: 'Адаптер сохраняет структуру блока, действие копирования и доступные подписи, но не подключает оформление.',
-  logicDescription: 'Для полностью своей разметки используйте действие copy из core и самостоятельно показывайте состояние копирования.',
-  footnote: <>Подтверждение копирования исчезает автоматически. Если <code>copyable=false</code> и язык не указан, заголовок блока не создаётся. Подсветка синтаксиса пока не предусмотрена.</>,
-  demo: <CodeBlockDemo />,
+  description:
+    'Блок исходного кода с необязательной кнопкой копирования. Выводит код как текст без изменения пробелов и переводов строк.',
+  adapterDescription:
+    'Адаптер сохраняет структуру блока, действие копирования и доступные подписи, но не подключает оформление.',
+  logicDescription:
+    'Для полностью своей разметки используйте действие copy из core и самостоятельно показывайте состояние копирования.',
+  footnote: (
+    <>
+      Подтверждение копирования исчезает автоматически. Если <code>copyable=false</code> и язык не
+      указан, заголовок блока не создаётся. Подсветка синтаксиса пока не предусмотрена.
+    </>
+  ),
+  examples: [
+    {
+      id: 'codeblock-copy',
+      title: 'Копирование и обработка ошибки',
+      description:
+        'Нажмите значок копирования: в буфер попадёт ровно строка code, включая перевод строки. Значок подтверждения сбрасывается автоматически. onCopyError показывает сообщение приложения, onCopy снимает его после успешной повторной попытки. copyLabels задаёт доступные имена кнопки, не видимый текст.',
+      demo: <CodeBlockCopyDemo />,
+      code: copyCode,
+    },
+    {
+      id: 'codeblock-display',
+      title: 'Текст без кнопки копирования',
+      description:
+        'copyable={false} скрывает кнопку. language="python" оставляет подпись языка; без language исчезает и шапка. Отступы и переводы строк сохраняются, но код не выполняется и не подсвечивается.',
+      demo: <CodeBlockDisplayDemo />,
+      code: displayCode,
+    },
+  ],
 };
 
 export function CodeBlockPage() {
