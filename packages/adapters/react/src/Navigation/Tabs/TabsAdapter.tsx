@@ -1,7 +1,6 @@
 import { useCallback, useId } from 'react';
 import type { ComponentPropsWithRef, ReactNode } from 'react';
-import { getNextTabValue } from '@dreadnought/core';
-import type { TabDirection } from '@dreadnought/core';
+import { getCollectionNavigation } from '@dreadnought/core';
 import { TabsContext } from './TabsContext.tsx';
 import { TabsListAdapter } from './TabsListAdapter.tsx';
 import { TabsTabAdapter } from './TabsTabAdapter.tsx';
@@ -44,15 +43,15 @@ function TabsRootAdapter({
   );
 
   const navigate = useCallback(
-    (currentValue: string, direction: TabDirection) => {
-      const next = getNextTabValue(orderedTabs(), currentValue, direction);
+    (currentValue: string, key: string) => {
+      const next = getCollectionNavigation(orderedTabs(), currentValue, key, { orientation });
       if (next === undefined) {
         return;
       }
       getTab(next)?.element.focus();
       selection.setValue(next);
     },
-    [getTab, orderedTabs, selection],
+    [getTab, orderedTabs, selection, orientation],
   );
 
   return (

@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import type { ComponentPropsWithRef } from 'react';
-import { getNextEnabledValue, getToolbarState } from '@dreadnought/core';
-import type { NavigationDirection, ToolbarCoreOptions } from '@dreadnought/core';
+import { getCollectionNavigation, getToolbarState } from '@dreadnought/core';
+import type { ToolbarCoreOptions } from '@dreadnought/core';
 import { attachRef } from '../../shared/attachRef.ts';
 import { ToolbarContext } from './ToolbarContext.ts';
 import { useToolbarRegistry } from './useToolbarRegistry.ts';
@@ -37,12 +37,12 @@ export function ToolbarAdapter({
   );
   const state = getToolbarState({ items, activeValue, navigation, orientation });
   const navigate = useCallback(
-    (value: string, direction: NavigationDirection) => {
+    (value: string, key: string) => {
       const ordered = orderedItems();
-      const nextValue = getNextEnabledValue(ordered, value, direction, { loop });
+      const nextValue = getCollectionNavigation(ordered, value, key, { orientation, loop });
       ordered.find((item) => item.value === nextValue)?.element.focus();
     },
-    [orderedItems, loop],
+    [orderedItems, orientation, loop],
   );
   const rootRef = useCallback(
     (element: HTMLDivElement | null) => {

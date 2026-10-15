@@ -12,6 +12,23 @@ const items = [
 ];
 
 describe('MenuAdapter', () => {
+  it('keeps cyclic focus navigation separate from checked selection and actions', () => {
+    const action = vi.fn();
+    render(<MenuAdapter items={items} selectedValue="copy" onAction={action} />);
+    const copy = screen.getByRole('menuitemradio', { name: 'Copy' });
+    const save = screen.getByRole('menuitemradio', { name: 'Save' });
+    copy.focus();
+    expect(fireEvent.keyDown(copy, { key: 'ArrowUp' })).toBe(false);
+    expect(document.activeElement).toBe(save);
+    expect(fireEvent.keyDown(save, { key: 'ArrowDown' })).toBe(false);
+    expect(document.activeElement).toBe(copy);
+    expect(fireEvent.keyDown(copy, { key: 'ArrowRight' })).toBe(true);
+    expect(document.activeElement).toBe(copy);
+    expect(copy.getAttribute('aria-checked')).toBe('true');
+    expect(save.getAttribute('aria-checked')).toBe('false');
+    expect(action).not.toHaveBeenCalled();
+  });
+
   it('focuses by typed prefix and cycles repeated letters without choosing an item', () => {
     const action = vi.fn();
     render(

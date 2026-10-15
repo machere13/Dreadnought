@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import type { NavigationDirection, ToolbarCoreOptions } from '@dreadnought/core';
+import type { ToolbarCoreOptions } from '@dreadnought/core';
 
 export interface RegisteredToolbarItem {
   value: string;
@@ -14,7 +14,7 @@ export interface ToolbarContextValue {
   tabStopValue: string | undefined;
   register: (item: RegisteredToolbarItem) => () => void;
   activate: (value: string) => void;
-  navigate: (value: string, direction: NavigationDirection) => void;
+  navigate: (value: string, key: string) => void;
 }
 
 export const ToolbarContext = createContext<ToolbarContextValue | null>(null);

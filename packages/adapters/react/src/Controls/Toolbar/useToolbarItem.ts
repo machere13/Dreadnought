@@ -67,7 +67,7 @@ export function useToolbarItem<T extends HTMLElement = HTMLButtonElement>({
           return;
         }
         event.preventDefault();
-        navigate(value, direction);
+        navigate(value, event.key);
       },
     },
   };

@@ -8,7 +8,7 @@ import type {
 } from 'react';
 import {
   getNavigationDirection,
-  getNextEnabledValue,
+  getCollectionNavigation,
   getSelectionValue,
   getTreeKeyAction,
   getTypeaheadValue,
@@ -349,10 +349,10 @@ export function MenuAdapter({
         let next: string | undefined;
         if (direction) {
           search.current.query = '';
-          next = getNextEnabledValue(
+          next = getCollectionNavigation(
             latest.keyRows.map((row) => ({ value: row.key, disabled: row.disabled })),
             key,
-            direction,
+            event.key,
           );
         } else if (action?.type === 'focus') {
           next = action.key;

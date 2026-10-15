@@ -8,6 +8,44 @@ import { TabsAdapter } from '../../../src/unstyled.ts';
 
 afterEach(cleanup);
 
+it('keeps modified-arrow activation controlled and focuses before requesting selection', () => {
+  const order: string[] = [];
+  let prevented = () => false;
+  render(
+    <TabsAdapter value="a" onValueChange={(value) => order.push(`change:${value}`)}>
+      <TabsAdapter.List aria-label="Sections">
+        <TabsAdapter.Tab
+          value="a"
+          onKeyDown={(event) => {
+            prevented = () => event.defaultPrevented;
+          }}
+        >
+          A
+        </TabsAdapter.Tab>
+        <TabsAdapter.Tab value="b" disabled>
+          B
+        </TabsAdapter.Tab>
+        <TabsAdapter.Tab value="c" onFocus={() => order.push(`focus:${prevented()}`)}>
+          C
+        </TabsAdapter.Tab>
+      </TabsAdapter.List>
+      <TabsAdapter.Panel value="a">Alpha</TabsAdapter.Panel>
+      <TabsAdapter.Panel value="b">Beta</TabsAdapter.Panel>
+      <TabsAdapter.Panel value="c">Gamma</TabsAdapter.Panel>
+    </TabsAdapter>,
+  );
+  const first = screen.getByRole('tab', { name: 'A' });
+  first.focus();
+  expect(fireEvent.keyDown(first, { key: 'ArrowRight', isComposing: true })).toBe(true);
+  expect(document.activeElement).toBe(first);
+  expect(order).toEqual([]);
+  expect(fireEvent.keyDown(first, { key: 'ArrowRight', shiftKey: true })).toBe(false);
+  expect(document.activeElement).toBe(screen.getByRole('tab', { name: 'C' }));
+  expect(order).toEqual(['focus:true', 'change:c']);
+  expect(first.getAttribute('aria-selected')).toBe('true');
+  expect(screen.getByRole('tab', { name: 'C' }).getAttribute('aria-selected')).toBe('false');
+});
+
 function Sample({
   onValueChange,
   orientation,

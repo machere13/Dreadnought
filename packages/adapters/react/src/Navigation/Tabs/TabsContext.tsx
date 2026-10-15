@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
-import type { TabDirection, TabItem } from '@dreadnought/core';
+import type { TabItem } from '@dreadnought/core';
 
 export interface RegisteredTab extends TabItem {
   element: HTMLButtonElement;
@@ -21,7 +21,7 @@ export interface TabsContextValue {
   ) => void;
   orderedTabs: () => RegisteredTab[];
   registerPanel: (value: string, element: HTMLDivElement | null) => void;
-  navigate: (currentValue: string, direction: TabDirection) => void;
+  navigate: (currentValue: string, key: string) => void;
 }
 
 export const TabsContext = createContext<TabsContextValue | null>(null);

@@ -40,7 +40,7 @@ export function TabsTabAdapter({
       return;
     }
     event.preventDefault();
-    context.navigate(value, targetDirection);
+    context.navigate(value, event.key);
   }
 
   return (

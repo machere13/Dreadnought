@@ -14,6 +14,7 @@
     "RTL-навигация не поддерживается в первом контракте. Готового Angular-адаптера нет."
   ],
   "composesWith": [
+    "pattern:collection-navigation",
     "behavior:get-next-enabled-value",
     "behavior:get-navigation-direction"
   ],

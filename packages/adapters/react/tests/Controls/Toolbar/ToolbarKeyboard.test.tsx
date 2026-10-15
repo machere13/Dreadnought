@@ -6,6 +6,52 @@ import { ThreeTools, Tool } from './ToolbarFixture.tsx';
 
 afterEach(cleanup);
 describe('Toolbar keyboard', () => {
+  it('uses the latest orientation and loop policy after rerender', () => {
+    const view = render(<ThreeTools />);
+    const first = screen.getByRole('button', { name: 'save' });
+    const last = screen.getByRole('button', { name: 'copy' });
+    first.focus();
+    fireEvent.keyDown(first, { key: 'ArrowRight' });
+    expect(document.activeElement).toBe(last);
+    view.rerender(<ThreeTools orientation="vertical" loop={false} />);
+    expect(fireEvent.keyDown(last, { key: 'ArrowRight' })).toBe(true);
+    expect(document.activeElement).toBe(last);
+    fireEvent.keyDown(last, { key: 'ArrowDown' });
+    expect(document.activeElement).toBe(last);
+    fireEvent.keyDown(last, { key: 'ArrowUp' });
+    expect(document.activeElement).toBe(first);
+    view.rerender(<ThreeTools orientation="vertical" loop />);
+    fireEvent.keyDown(first, { key: 'ArrowUp' });
+    expect(document.activeElement).toBe(last);
+  });
+
+  it('prevents navigation before focusing the next tool without activating it', () => {
+    let prevented = () => false;
+    const focusOrder: boolean[] = [];
+    let clicks = 0;
+    render(
+      <ToolbarAdapter>
+        <Tool
+          value="first"
+          onKeyDown={(event) => {
+            prevented = () => event.defaultPrevented;
+          }}
+        />
+        <Tool
+          value="second"
+          onFocus={() => focusOrder.push(prevented())}
+          onClick={() => clicks++}
+        />
+      </ToolbarAdapter>,
+    );
+    const first = screen.getByRole('button', { name: 'first' });
+    first.focus();
+    expect(fireEvent.keyDown(first, { key: 'ArrowRight' })).toBe(false);
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'second' }));
+    expect(focusOrder).toEqual([true]);
+    expect(clicks).toBe(0);
+  });
+
   it('skips disabled tools and remembers the entry point after leaving with Tab', async () => {
     const user = userEvent.setup();
     render(
