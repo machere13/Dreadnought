@@ -13,6 +13,32 @@ const items = [
   { value: 'delete', label: 'Delete', disabled: true },
   { value: 'save', label: 'Save' },
 ];
+
+it('keeps focus explicitly moved by an action and requests closing only once', () => {
+  const change = vi.fn();
+  example({
+    onOpenChange: change,
+    onAction: () => screen.getByRole('button', { name: 'Outside' }).focus(),
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+  change.mockClear();
+  fireEvent.click(screen.getByRole('menuitem', { name: 'Save' }));
+  expect(screen.queryByRole('menu')).toBeNull();
+  expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Outside' }));
+  expect(change).toHaveBeenCalledExactlyOnceWith(false);
+});
+
+it.each([false, true])(
+  'can focus the first item without changing selection (defaultOpen=%s)',
+  (defaultOpen) => {
+    example({ selectedValue: 'save', initialFocus: 'first', defaultOpen });
+    if (!defaultOpen) fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+    expect(document.activeElement).toBe(screen.getByRole('menuitemradio', { name: 'Edit' }));
+    expect(screen.getByRole('menuitemradio', { name: 'Save' }).getAttribute('aria-checked')).toBe(
+      'true',
+    );
+  },
+);
 it('skips disabled links when opening and keeps submenu disclosure separate from actions', () => {
   const action = vi.fn();
   render(

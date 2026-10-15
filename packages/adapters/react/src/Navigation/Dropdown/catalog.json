@@ -19,10 +19,11 @@
   "bindings": [{
     "id": "react-adapter", "layer": 2, "framework": "react",
     "importPath": "@dreadnought/react/unstyled", "exportName": "DropdownAdapter",
-    "defaults": { "defaultOpen": false, "disabled": false, "placement": "bottomLeft", "arrow": false, "autoAdjustOverflow": true },
+    "defaults": { "defaultOpen": false, "disabled": false, "placement": "bottomLeft", "arrow": false, "autoAdjustOverflow": true, "initialFocus": "selected" },
     "propertyDescriptions": {
       "items": "Пункты Menu: value, label, необязательные disabled и ariaLabel. label может включать Icon.",
       "selectedValue": "Включает семантику menuitemradio; выбранное значение остаётся у приложения.",
+      "initialFocus": "Фокус при открытии без стрелок: selected — выбранный доступный пункт или первый; first — первый доступный пункт. ArrowDown и ArrowUp всегда открывают с соответствующего края.",
       "onAction": "Получает value выбранного пункта перед запросом закрытия.",
       "children": "Render-функция триггера; передайте все свойства одной кнопке.",
       "menuProps": "DOM-свойства, ref и класс меню; свойства пунктов через menuProps.slotProps.item. preventDefault в onClick пункта отменяет действие и закрытие.",

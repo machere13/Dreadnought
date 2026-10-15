@@ -2,6 +2,7 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TabsAdapter } from '../../../src/Navigation/Tabs/TabsAdapter.tsx';
+import type { TabsListAdapterProps } from '../../../src/Navigation/Tabs/TabsListAdapter.tsx';
 import { createPortal } from 'react-dom';
 import { within } from '@testing-library/react';
 
@@ -105,16 +106,18 @@ function Sample({
   onValueChange,
   last = true,
   orientation,
+  listSlots,
 }: {
   value?: string;
   onValueChange?: (value: string) => void;
   last?: boolean;
   orientation?: 'horizontal' | 'vertical';
+  listSlots?: TabsListAdapterProps['slotProps'];
 }) {
   const selection = value === undefined ? { defaultValue: 'a' } : { value };
   return (
     <TabsAdapter {...selection} onValueChange={onValueChange} orientation={orientation}>
-      <TabsAdapter.List aria-label="Sections" moreLabel="More sections">
+      <TabsAdapter.List aria-label="Sections" moreLabel="More sections" slotProps={listSlots}>
         <TabsAdapter.Tab value="a">A</TabsAdapter.Tab>
         <TabsAdapter.Tab value="b" disabled>
           B
@@ -131,6 +134,77 @@ function Sample({
 }
 
 describe('Tabs overflow', () => {
+  it('lets a custom blur handler keep the menu open when focus leaves it', () => {
+    const blur = vi.fn((event: React.FocusEvent) => event.preventDefault());
+    render(
+      <>
+        <Sample listSlots={{ menu: { onBlur: blur } }} />
+        <button>Outside</button>
+      </>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'More sections' }));
+    act(() => screen.getByRole('button', { name: 'Outside' }).focus());
+    expect(blur).toHaveBeenCalled();
+    expect(screen.getByRole('menu')).toBeTruthy();
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Outside' }));
+  });
+
+  it('forwards native popup toggles and closes after external dismissal', () => {
+    const toggle = vi.fn();
+    render(<Sample listSlots={{ menu: { onToggle: toggle } }} />);
+    const more = screen.getByRole('button', { name: 'More sections' });
+    fireEvent.click(more);
+    const popup = screen.getByRole('menu').closest('[popover]')!;
+    fireEvent(popup, Object.assign(new Event('toggle'), { oldState: 'open', newState: 'closed' }));
+    expect(toggle).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole('menu')).toBeNull();
+    expect(document.activeElement).toBe(more);
+  });
+
+  it('focuses the first enabled overflow item on click even when a later item is selected', () => {
+    render(<Sample value="d" />);
+    const list = screen.getByRole('tablist');
+    list.scrollLeft = 0;
+    fireEvent.scroll(list);
+    fireEvent.click(screen.getByRole('button', { name: 'More sections' }));
+    expect(document.activeElement).toBe(screen.getByRole('menuitemradio', { name: 'C' }));
+    expect(screen.getByRole('menuitemradio', { name: 'D' }).getAttribute('aria-checked')).toBe(
+      'true',
+    );
+  });
+
+  it('preserves custom trigger, menu and item props and their prevented actions', () => {
+    const click = vi.fn((event: React.MouseEvent) => event.preventDefault());
+    const keyDown = vi.fn((event: React.KeyboardEvent) => event.preventDefault());
+    const action = vi.fn((event: React.MouseEvent) => event.preventDefault());
+    const view = render(<Sample listSlots={{ more: { onClick: click, onKeyDown: keyDown } }} />);
+    const more = screen.getByRole('button', { name: 'More sections' });
+    fireEvent.click(more);
+    fireEvent.keyDown(more, { key: 'ArrowDown' });
+    expect(click).toHaveBeenCalledTimes(1);
+    expect(keyDown).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole('menu')).toBeNull();
+    view.rerender(
+      <Sample
+        listSlots={{
+          more: { title: 'More title' },
+          menu: { className: 'custom-menu', onKeyDown: keyDown },
+          item: { title: 'Tab action', onClick: action },
+        }}
+      />,
+    );
+    fireEvent.click(more);
+    expect(more.title).toBe('More title');
+    expect(screen.getByRole('menu').className).toBe('custom-menu');
+    const item = screen.getByRole('menuitemradio', { name: 'C' });
+    expect(item.title).toBe('Tab action');
+    fireEvent.click(item);
+    expect(action).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('tab', { name: 'A' }).getAttribute('aria-selected')).toBe('true');
+    fireEvent.keyDown(item, { key: 'Escape' });
+    expect(screen.getByRole('menu')).toBeTruthy();
+  });
+
   it('selects a hidden vertical tab and reveals it along the vertical axis', () => {
     render(<Sample orientation="vertical" />);
     fireEvent.click(screen.getByRole('button', { name: 'More sections' }));
@@ -194,10 +268,11 @@ describe('Tabs overflow', () => {
       }));
       fireEvent.keyDown(more, { key: 'ArrowDown' });
       const menu = within(doc.body).getByRole('menu');
-      expect(menu.style.left).toBe('76px');
+      const popup = menu.closest<HTMLElement>('[popover]')!;
+      expect(popup.style.left).toBe('76px');
       right = 84;
       act(() => doc.defaultView!.dispatchEvent(new Event('resize')));
-      expect(menu.style.left).toBe('40px');
+      expect(popup.style.left).toBe('40px');
       fireEvent.keyDown(doc.activeElement!, { key: 'Escape' });
       expect(doc.activeElement).toBe(more);
     } finally {
@@ -249,7 +324,7 @@ describe('Tabs overflow', () => {
     const user = userEvent.setup();
     const more = screen.getByRole('button', { name: 'More sections' });
     await user.click(more);
-    expect(screen.getByRole('menu').id).toBe(more.getAttribute('popovertarget'));
+    expect(screen.getByRole('menu').id).toBe(more.getAttribute('aria-controls'));
     await user.click(more);
     expect(screen.queryByRole('menu')).toBeNull();
     expect(document.activeElement).toBe(more);

@@ -44,6 +44,7 @@ export function usePopover({
   const popup = useRef<HTMLDivElement>(null);
   const restoreFocus = useRef<boolean | undefined>(undefined);
   const focusInside = useRef(false);
+  const blurPrevented = useRef(false);
   const state = getPopoverState({
     triggerId: `${id}-trigger`,
     panelId: id,
@@ -74,11 +75,13 @@ export function usePopover({
     }
     restoreFocus.current = next ? undefined : returnFocus;
     if (options.controlled === undefined) {
+      options.open = next;
       setInternal(next);
     }
     options.onOpenChange?.(next);
   }
   useLayoutEffect(() => {
+    blurPrevented.current = false;
     if (state.open) {
       const node = popup.current;
       if (!node) {
@@ -113,9 +116,14 @@ export function usePopover({
     function focus(event: FocusEvent) {
       const path = event.composedPath();
       focusInside.current = path.includes(node!);
-      if (!focusInside.current && (tabbing || !path.includes(anchor.current!))) {
+      if (
+        !blurPrevented.current &&
+        !focusInside.current &&
+        (tabbing || !path.includes(anchor.current!))
+      ) {
         request(false);
       }
+      blurPrevented.current = false;
       tabbing = false;
     }
     function escape(event: KeyboardEvent) {
@@ -150,7 +158,14 @@ export function usePopover({
   return {
     open: state.open,
     triggerProps,
-    contentProps: { ...state.contentProps, ref: popup, tabIndex: -1 },
+    contentProps: {
+      ...state.contentProps,
+      ref: popup,
+      tabIndex: -1,
+      onBlur: (event: { defaultPrevented: boolean }) => {
+        blurPrevented.current = event.defaultPrevented;
+      },
+    },
     show: () => request(true),
     close: () => request(false, true),
   };

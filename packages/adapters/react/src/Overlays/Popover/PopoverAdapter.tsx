@@ -59,6 +59,10 @@ export function PopoverAdapter({
           }
           popover="manual"
           data-ui="popover"
+          onBlur={(event) => {
+            native.onBlur?.(event);
+            popover.contentProps.onBlur(event);
+          }}
           style={{ position: 'fixed', inset: 'auto', margin: 0, ...style }}
         >
           {arrow !== false && <span data-ui="popover-arrow" aria-hidden="true" />}

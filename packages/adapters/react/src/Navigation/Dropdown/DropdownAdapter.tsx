@@ -7,6 +7,7 @@ import type { PopoverAdapterProps } from '../../Overlays/Popover/PopoverAdapter.
 export type DropdownAdapterProps = Omit<PopoverAdapterProps, 'content'> &
   Pick<MenuAdapterProps, 'items' | 'selectedValue' | 'onAction'> & {
     menuProps?: Omit<MenuAdapterProps, 'items' | 'selectedValue' | 'onAction' | 'id'>;
+    initialFocus?: 'selected' | 'first';
   };
 
 export function DropdownAdapter({
@@ -14,6 +15,7 @@ export function DropdownAdapter({
   selectedValue,
   onAction,
   menuProps = {},
+  initialFocus = 'selected',
   children,
   open,
   defaultOpen,
@@ -67,14 +69,18 @@ export function DropdownAdapter({
   useLayoutEffect(() => {
     const popup = popover.contentProps.ref.current;
     if (popover.open) {
-      if (edge.current || popup?.ownerDocument.activeElement === popup) {
+      if (
+        edge.current ||
+        initialFocus === 'first' ||
+        popup?.ownerDocument.activeElement === popup
+      ) {
         focusEdge();
       } else {
         revealFocus();
       }
     }
     edge.current = undefined;
-  }, [popover.open]);
+  }, [popover.open, initialFocus]);
   const menuLabel = menuProps['aria-label'] ?? label;
   return (
     <>
@@ -83,7 +89,7 @@ export function DropdownAdapter({
         'aria-haspopup': 'menu',
         'aria-controls': menuId,
         onClick: (event) => {
-          edge.current = undefined;
+          edge.current = initialFocus === 'first' ? 'first' : undefined;
           popover.triggerProps.onClick?.(event);
         },
         onKeyDown: (event) => {
@@ -113,6 +119,14 @@ export function DropdownAdapter({
           aria-labelledby={undefined}
           popover="manual"
           data-ui="dropdown"
+          onBlur={(event) => {
+            native.onBlur?.(event);
+            popover.contentProps.onBlur(event);
+          }}
+          onToggle={(event) => {
+            native.onToggle?.(event);
+            if (event.newState === 'closed') popover.close();
+          }}
           style={{ position: 'fixed', inset: 'auto', margin: 0, ...style }}
         >
           {arrow !== false && <span data-ui="popover-arrow" aria-hidden="true" />}

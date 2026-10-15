@@ -6,7 +6,7 @@
   "description": "Разделы с клавиатурной навигацией и настраиваемым созданием содержимого панелей.",
   "docsUrl": "/components/tabs/#tabs-api",
   "states": [],
-  "composesWith": ["pattern:collection-navigation", "behavior:get-content-mount-state"],
+  "composesWith": ["pattern:collection-navigation", "behavior:get-content-mount-state", "component:dropdown"],
   "constraints": ["Каждой Tabs.Tab нужна Tabs.Panel с тем же value; дайте Tabs.List доступное имя. Стрелки, Home и End переключают вкладки. Оболочки скрытых панелей остаются в DOM. mountPolicy панели: eager по умолчанию, lazy после первого открытия, unmount удаляет children при закрытии. Сохранение children не приостанавливает их эффекты; unmount сбрасывает локальное состояние и очищает эффекты, но не внешнее состояние. При динамических списках используйте стабильные React keys."],
   "bindings": [
     {
