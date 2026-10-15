@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { buildBarLayout, getNavigationDirection, getNextEnabledValue } from '@dreadnought/core';
+import { buildBarLayout, getCollectionNavigation } from '@dreadnought/core';
 import { TooltipAdapter } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
 import { MarkAdapter } from '../../DataDisplay/Mark/MarkAdapter.tsx';
 import { chartNativeProps as nativeProps } from '../../shared/chartNativeProps.ts';
@@ -476,13 +476,8 @@ export function BarPlot({
                               return;
                             }
                             trigger.onKeyDown?.(event);
-                            const direction = getNavigationDirection(event.key, {
+                            const next = getCollectionNavigation(navigation, identity, event.key, {
                               orientation: vertical ? 'horizontal' : 'vertical',
-                            });
-                            if (!direction) {
-                              return;
-                            }
-                            const next = getNextEnabledValue(navigation, identity, direction, {
                               loop: false,
                             });
                             if (next) {

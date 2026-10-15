@@ -14,6 +14,7 @@ const guideLabels = {
   '/custom-components/': ['custom', 'components', 'собственные', 'компоненты'],
   '/core/actions/': ['core', 'actions', 'действия'],
   '/core/behaviors/': ['core', 'behaviors', 'поведение'],
+  '/core/patterns/': ['core', 'patterns', 'паттерны', 'навигация'],
   '/core/domains/': ['core', 'domains', 'вычисления'],
   '/core/components/': ['core', 'components', 'состояния'],
 };

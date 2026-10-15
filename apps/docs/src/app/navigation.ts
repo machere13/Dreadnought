@@ -2,6 +2,7 @@ export type ComponentSection = keyof typeof componentTitles;
 export const coreTitles = {
   actions: 'Actions',
   behaviors: 'Behaviors',
+  patterns: 'Patterns',
   domains: 'Domains',
   components: 'Логика компонентов',
 } as const;

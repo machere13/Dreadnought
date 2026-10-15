@@ -5,6 +5,14 @@ import { CoreReference } from '../src/content/core/CoreReference.tsx';
 
 afterEach(cleanup);
 
+it('documents collection navigation as a pattern with an executable example', () => {
+  render(<CoreReference kind="patterns" />);
+  const navigation = within(screen.getByRole('region', { name: 'getCollectionNavigation', exact: true }));
+  expect(navigation.getByRole('rowheader', { name: 'items', exact: true })).toBeTruthy();
+  expect(navigation.getByText(/import \{ getCollectionNavigation \}/).textContent).toContain('ArrowRight');
+  expect(screen.queryByRole('heading', { name: 'getNextEnabledValue', exact: true })).toBeNull();
+});
+
 it('shows action parameters, return values and complete examples without mixing in component state', () => {
   render(<CoreReference kind="actions" />);
   const copy = within(screen.getByRole('region', { name: 'copy', exact: true }));

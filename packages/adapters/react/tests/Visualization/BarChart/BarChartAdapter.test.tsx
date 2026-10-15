@@ -78,6 +78,31 @@ it('navigates horizontal groups vertically and lets the caller cancel navigation
   fireEvent.keyDown(first, { key: 'End' });
   expect(document.activeElement).toBe(screen.getByRole('img', { name: 'A, Two: -10' }));
 });
+it.each(['vertical', 'horizontal'] as const)(
+  'keeps %s bar navigation on its axis without wrapping or handling IME input',
+  (orientation) => {
+    render(<adapters.BarChartAdapter {...props} orientation={orientation} />);
+    const first = screen.getByRole('img', { name: 'A, One: 10' });
+    const last = screen.getByRole('img', { name: 'A, Two: -10' });
+    const forward = orientation === 'vertical' ? 'ArrowRight' : 'ArrowDown';
+    const backward = orientation === 'vertical' ? 'ArrowLeft' : 'ArrowUp';
+    const otherAxis = orientation === 'vertical' ? 'ArrowDown' : 'ArrowRight';
+    act(() => first.focus());
+    fireEvent.keyDown(first, { key: backward });
+    expect(document.activeElement).toBe(first);
+    fireEvent.keyDown(first, { key: otherAxis });
+    expect(document.activeElement).toBe(first);
+    fireEvent.keyDown(first, { key: forward, isComposing: true });
+    expect(document.activeElement).toBe(first);
+    fireEvent.keyDown(first, { key: 'End' });
+    expect(document.activeElement).toBe(last);
+    fireEvent.keyDown(last, { key: forward });
+    expect(document.activeElement).toBe(last);
+    fireEvent.keyDown(last, { key: 'Home' });
+    expect(document.activeElement).toBe(first);
+  },
+);
+
 it('restores the focused bar when the pointer leaves another bar into plot whitespace', () => {
   render(<adapters.BarChartAdapter {...props} />);
   const first = screen.getByRole('img', { name: 'A, One: 10' });

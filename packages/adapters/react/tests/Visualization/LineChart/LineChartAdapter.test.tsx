@@ -62,6 +62,25 @@ it('navigates points with existing keyboard rules', () => {
   fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
   expect(screen.queryByRole('tooltip')).toBeNull();
 });
+it('keeps keyboard boundaries, Home/End and IME behavior for point navigation', () => {
+  render(<adapters.LineChartAdapter {...props} />);
+  const first = screen.getByRole('img', { name: 'A, 0: 0' });
+  const last = screen.getByRole('img', { name: 'B, 10: 100' });
+  act(() => first.focus());
+  fireEvent.keyDown(first, { key: 'ArrowLeft' });
+  expect(document.activeElement).toBe(first);
+  fireEvent.keyDown(first, { key: 'ArrowDown' });
+  expect(document.activeElement).toBe(first);
+  fireEvent.keyDown(first, { key: 'ArrowRight', isComposing: true });
+  expect(document.activeElement).toBe(first);
+  fireEvent.keyDown(first, { key: 'End' });
+  expect(document.activeElement).toBe(last);
+  fireEvent.keyDown(last, { key: 'ArrowRight' });
+  expect(document.activeElement).toBe(last);
+  fireEvent.keyDown(last, { key: 'Home' });
+  expect(document.activeElement).toBe(first);
+});
+
 it('uses nearest-point search between vertices, not only circle hover', () => {
   vi.useFakeTimers();
   render(<adapters.LineChartAdapter {...props} />);

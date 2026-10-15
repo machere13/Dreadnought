@@ -3,8 +3,7 @@ import {
   sampleLineLayout,
   getLinePointAtX,
   getClosestLinePoint,
-  getNavigationDirection,
-  getNextEnabledValue,
+  getCollectionNavigation,
   type LineLayout,
   type LinePoint,
 } from '@dreadnought/core';
@@ -390,13 +389,8 @@ export function LinePlot({
                         return;
                       }
                       trigger.onKeyDown?.(event);
-                      const direction = getNavigationDirection(event.key, {
+                      const next = getCollectionNavigation(navigation, identity, event.key, {
                         orientation: 'horizontal',
-                      });
-                      if (!direction) {
-                        return;
-                      }
-                      const next = getNextEnabledValue(navigation, identity, direction, {
                         loop: false,
                       });
                       if (next) {

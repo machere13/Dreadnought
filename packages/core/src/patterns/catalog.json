@@ -1,0 +1,31 @@
+[
+  {
+    "id": "pattern:collection-navigation",
+    "kind": "pattern",
+    "name": "getCollectionNavigation",
+    "family": "Patterns",
+    "description": "Вычисляет следующий доступный элемент коллекции по клавише. Объединяет направление навигации и пропуск disabled-элементов без React и DOM.",
+    "docsUrl": "/core/patterns/#get-collection-navigation",
+    "composesWith": ["behavior:get-navigation-direction", "behavior:get-next-enabled-value"],
+    "constraints": [
+      "По умолчанию вертикальная навигация, Home/End и loop=true. Для горизонтального списка задайте orientation=horizontal; для остановки на краях — loop=false.",
+      "Неподходящая клавиша, пустой список или отсутствие доступных элементов возвращают undefined. На краю при loop=false возвращается текущее значение; отсутствующее текущее значение восстанавливается с первого/последнего доступного элемента по направлению.",
+      "Порядок и уникальные value задаёт вызывающий код. Фокус, выбор, прокрутка, preventDefault, IME и проверка модификаторов остаются в адаптере. Исходные данные не изменяются."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "getCollectionNavigation",
+        "examples": [
+          {
+            "id": "horizontal",
+            "code": "import { getCollectionNavigation } from '@dreadnought/core';\n\nconst items = [{ value: 'first' }, { value: 'hidden', disabled: true }, { value: 'last' }];\nconst next = getCollectionNavigation(items, 'first', 'ArrowRight', {\n  orientation: 'horizontal',\n  loop: false,\n});\n// next === 'last'; focus and selection are handled by the adapter."
+          }
+        ]
+      }
+    ]
+  }
+]

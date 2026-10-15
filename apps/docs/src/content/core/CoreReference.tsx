@@ -14,6 +14,10 @@ const sections = {
     kind: 'behavior',
     description: 'Переиспользуемые правила: выбор, навигация, раскрытие, история и валидация. Функции получают данные и возвращают результат; состояние и DOM остаются в приложении.',
   },
+  patterns: {
+    kind: 'pattern',
+    description: 'Готовые связки behaviors для повторяющихся взаимодействий. Навигация коллекции вычисляет следующий доступный элемент; фокус, выбор и прокрутку выполняет адаптер.',
+  },
   domains: {
     kind: 'domain',
     description: 'Вычисления для календаря, времени, Markdown и графиков. Не зависят от React, разметки и оформления.',
@@ -72,7 +76,12 @@ export function CoreReference({ kind }: { kind: CoreSection }) {
 function CoreEntry({ entry }: { entry: Entry }) {
   const types = Object.assign({}, ...entry.contracts.map((contract) => contract.types));
   return (
-    <section data-knowledge className={styles.section} aria-labelledby={entry.name}>
+    <section
+      id={entry.kind === 'pattern'
+        ? entry.name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)
+        : undefined}
+      data-knowledge className={styles.section} aria-labelledby={entry.name}
+    >
       <h2 id={entry.name} className={styles.sectionTitle}>{entry.name}</h2>
       <p className={styles.bodyText}>{entry.description}</p>
       {entry.contracts.map((contract, index) => (
