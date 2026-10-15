@@ -1,33 +1,81 @@
 @layer dreadnought {
   .root {
     display: inline-block;
+    container-type: inline-size;
+    min-width: 0;
+    width: min(100%, var(--dreadnought-datepicker-field-width));
     max-width: 100%;
+  }
+  .root:has(.fields > [data-slot='field'] + [data-slot='field']) {
+    width: min(100%, var(--dreadnought-datepicker-range-width));
+  }
+  .root[data-disabled] {
+    --dreadnought-input-disabled-opacity: 1;
+    --dreadnought-button-disabled-opacity: 1;
+    opacity: var(--dreadnought-opacity-disabled);
   }
   .fields {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--dreadnought-datepicker-gap);
-    align-items: start;
+    box-sizing: border-box;
+    gap: var(--dreadnought-datepicker-field-gap);
+    align-items: center;
+    min-height: var(--dreadnought-size-control-min-height);
+    padding: var(--dreadnought-datepicker-field-padding-y)
+      var(--dreadnought-datepicker-field-padding-x);
+    border: var(--dreadnought-datepicker-border-width) solid
+      var(--dreadnought-datepicker-field-border);
+    border-radius: var(--dreadnought-datepicker-radius);
+    background: var(--dreadnought-datepicker-field-bg);
+  }
+  .root:not([data-disabled]) .fields:where(:hover, :focus-within, :has([aria-expanded='true'])) {
+    border-color: var(--dreadnought-datepicker-focus);
+  }
+  .root[data-invalid] .fields,
+  .root .fields:has([aria-invalid='true']) {
+    border-color: var(--dreadnought-datepicker-error);
   }
   .fields > [data-slot='field'] {
-    flex: 1 0 10rem;
-    min-width: min(100%, 10rem);
+    flex: 1;
+    min-width: 0;
     max-width: 100%;
   }
   .field {
     width: 100%;
   }
+  .fields > [data-slot='field'] > [data-ui='input'] {
+    --dreadnought-input-bg: var(--dreadnought-datepicker-field-bg);
+    --dreadnought-input-min-height: var(--dreadnought-size-control-compact-min-height);
+    --dreadnought-input-border-width: 0;
+    --dreadnought-input-padding-x: 0;
+    --dreadnought-input-padding-y: 0;
+  }
   .actions {
-    display: flex;
+    --dreadnought-button-ghosted-fg: var(--dreadnought-datepicker-muted);
+    --dreadnought-button-compact-padding-x: 0;
+    --dreadnought-button-focus-width: var(--dreadnought-datepicker-border-width);
+    --dreadnought-button-focus-offset: calc(-1 * var(--dreadnought-datepicker-border-width));
+    display: inline-flex;
     align-items: center;
-    gap: var(--dreadnought-datepicker-gap);
+    flex: none;
+    gap: var(--dreadnought-datepicker-field-gap);
+  }
+  .actions > button {
+    width: var(--dreadnought-size-control-compact-min-height);
+    min-width: 0;
+    flex: none;
+  }
+  .actions > button:hover:not(:disabled) {
+    color: var(--dreadnought-datepicker-text);
   }
   .popup {
     box-sizing: border-box;
     width: var(--dreadnought-datepicker-popup-width);
     max-width: calc(100vw - var(--dreadnought-datepicker-padding) * 2);
-    max-height: calc(100vh - var(--dreadnought-datepicker-padding) * 2);
+    max-height: calc(100dvh - var(--dreadnought-datepicker-padding) * 2);
     overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--dreadnought-datepicker-field-border) transparent;
     padding: var(--dreadnought-datepicker-padding);
     border: var(--dreadnought-datepicker-border-width) solid var(--dreadnought-datepicker-border);
     border-radius: var(--dreadnought-datepicker-radius);
@@ -97,5 +145,18 @@
     display: block;
     color: var(--dreadnought-datepicker-error);
     margin-block-start: var(--dreadnought-datepicker-gap);
+  }
+  @container (max-width: 22rem) {
+    .fields:has(> [data-slot='field'] + [data-slot='field']) {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+    .fields > [data-slot='field'] {
+      grid-column: 1;
+    }
+    .fields:has(> [data-slot='field'] + [data-slot='field']) > .actions {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+    }
   }
 }

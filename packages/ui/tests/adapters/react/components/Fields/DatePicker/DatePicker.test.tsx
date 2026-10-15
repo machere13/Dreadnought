@@ -5,6 +5,22 @@ import { DatePicker } from '../../../../../../src/adapters/react/components/Fiel
 
 afterEach(cleanup);
 
+it('tabs through clear before calendar and restores focus after Escape', async () => {
+  const user = userEvent.setup();
+  render(<DatePicker aria-label="Date" defaultValue="2026-10-12" />);
+  await user.click(screen.getByRole('textbox', { name: 'Date' }));
+  await user.tab();
+  expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Clear date' }));
+  await user.tab();
+  const calendar = screen.getByRole('button', { name: 'Open calendar' });
+  expect(document.activeElement).toBe(calendar);
+  await user.keyboard('{Enter}');
+  expect(screen.getByRole('dialog').contains(document.activeElement)).toBe(true);
+  await user.keyboard('{Escape}');
+  expect(screen.queryByRole('dialog')).toBeNull();
+  expect(document.activeElement).toBe(calendar);
+});
+
 it('focuses and selects a date beyond a multi-year disabled interval', async () => {
   const user = userEvent.setup();
   render(

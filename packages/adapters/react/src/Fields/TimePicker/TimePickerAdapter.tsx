@@ -194,17 +194,6 @@ export function TimePickerAdapter({
           },
         })}
         <div data-slot="actions" className={slotClassNames.actions}>
-          {renderAction({
-            action: 'clock',
-            type: 'button',
-            'aria-label': 'Open time picker',
-            'aria-expanded': picker.open,
-            'aria-controls': picker.open ? popupId : undefined,
-            'aria-haspopup': 'dialog',
-            disabled: picker.disabled,
-            onClick: (event) => toggle(event.currentTarget),
-            children: 'Time',
-          })}
           {allowClear &&
             !picker.readOnly &&
             Boolean(picker.value || picker.draft) &&
@@ -220,6 +209,17 @@ export function TimePickerAdapter({
               },
               children: 'Clear',
             })}
+          {renderAction({
+            action: 'clock',
+            type: 'button',
+            'aria-label': 'Open time picker',
+            'aria-expanded': picker.open,
+            'aria-controls': picker.open ? popupId : undefined,
+            'aria-haspopup': 'dialog',
+            disabled: picker.disabled,
+            onClick: (event) => toggle(event.currentTarget),
+            children: 'Time',
+          })}
         </div>
       </div>
       {picker.error && (

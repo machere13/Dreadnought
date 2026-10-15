@@ -1,5 +1,9 @@
 :root {
   --dreadnought-timepicker-bg: var(--dreadnought-color-surface-popup);
+  --dreadnought-timepicker-field-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-timepicker-field-border: var(--dreadnought-color-border-default);
+  --dreadnought-timepicker-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-timepicker-muted: var(--dreadnought-color-text-placeholder);
   --dreadnought-timepicker-text: var(--dreadnought-color-text-primary);
   --dreadnought-timepicker-border: var(--dreadnought-color-border-subtle);
   --dreadnought-timepicker-selected-bg: var(--dreadnought-color-action-primary);

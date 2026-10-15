@@ -216,26 +216,10 @@ export function DatePickerAdapter({
                 </span>
               )}
               {renderField(props)}
-              {error && (
-                <span id={errorId} className={slotClassNames.error} role="alert">
-                  {inputErrors[error]}
-                </span>
-              )}
             </div>
           );
         })}
         <div className={slotClassNames.actions} data-slot="actions">
-          {renderAction({
-            action: 'calendar',
-            type: 'button',
-            'aria-label': 'Open calendar',
-            'aria-expanded': picker.open,
-            'aria-controls': picker.open ? popupId : undefined,
-            'aria-haspopup': 'dialog',
-            disabled: picker.disabled,
-            onClick: (event) => openCalendar(event.currentTarget),
-            children: 'Calendar',
-          })}
           {allowClear &&
             text.some(Boolean) &&
             !picker.readOnly &&
@@ -250,8 +234,31 @@ export function DatePickerAdapter({
               },
               children: 'Clear',
             })}
+          {renderAction({
+            action: 'calendar',
+            type: 'button',
+            'aria-label': 'Open calendar',
+            'aria-expanded': picker.open,
+            'aria-controls': picker.open ? popupId : undefined,
+            'aria-haspopup': 'dialog',
+            disabled: picker.disabled,
+            onClick: (event) => openCalendar(event.currentTarget),
+            children: 'Calendar',
+          })}
         </div>
       </div>
+      {picker.errors.map((error, index) =>
+        error ? (
+          <span
+            key={index}
+            id={`${fieldId}-${index}-error`}
+            className={slotClassNames.error}
+            role="alert"
+          >
+            {inputErrors[error]}
+          </span>
+        ) : null,
+      )}
       {name &&
         text.map(
           (date, index) =>

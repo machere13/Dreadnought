@@ -6,18 +6,56 @@
   }
   .field {
     display: flex;
-    gap: var(--dreadnought-timepicker-gap);
+    box-sizing: border-box;
+    gap: var(--dreadnought-timepicker-field-gap);
     align-items: center;
     min-width: 0;
+    min-height: var(--dreadnought-size-control-min-height);
+    padding: var(--dreadnought-timepicker-field-padding-y)
+      var(--dreadnought-timepicker-field-padding-x);
+    border: var(--dreadnought-timepicker-border-width) solid
+      var(--dreadnought-timepicker-field-border);
+    border-radius: var(--dreadnought-timepicker-radius);
+    background: var(--dreadnought-timepicker-field-bg);
+  }
+  .root:not([data-disabled]) .field:where(:hover, :focus-within, :has([aria-expanded='true'])) {
+    border-color: var(--dreadnought-timepicker-focus);
+  }
+  .root[data-invalid] .field,
+  .root .field:has([aria-invalid='true']) {
+    border-color: var(--dreadnought-timepicker-error);
+  }
+  .root[data-disabled] {
+    --dreadnought-input-disabled-opacity: 1;
+    --dreadnought-button-disabled-opacity: 1;
+    opacity: var(--dreadnought-opacity-disabled);
   }
   .field > [data-ui='input'] {
+    --dreadnought-input-bg: var(--dreadnought-timepicker-field-bg);
+    --dreadnought-input-min-height: var(--dreadnought-size-control-compact-min-height);
+    --dreadnought-input-border-width: 0;
+    --dreadnought-input-padding-x: 0;
+    --dreadnought-input-padding-y: 0;
     flex: 1;
     min-width: 0;
   }
   .actions {
+    --dreadnought-button-ghosted-fg: var(--dreadnought-timepicker-muted);
+    --dreadnought-button-compact-padding-x: 0;
+    --dreadnought-button-focus-width: var(--dreadnought-timepicker-border-width);
+    --dreadnought-button-focus-offset: calc(-1 * var(--dreadnought-timepicker-border-width));
     display: inline-flex;
     align-items: center;
     flex: none;
+    gap: var(--dreadnought-timepicker-field-gap);
+  }
+  .actions > button {
+    width: var(--dreadnought-size-control-compact-min-height);
+    min-width: 0;
+    flex: none;
+  }
+  .actions > button:hover:not(:disabled) {
+    color: var(--dreadnought-timepicker-text);
   }
   .popup {
     box-sizing: border-box;

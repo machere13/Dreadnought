@@ -2,6 +2,9 @@
   --dreadnought-timepicker-gap: var(--dreadnought-spacing-x2);
   --dreadnought-timepicker-option-gap: var(--dreadnought-spacing-x1);
   --dreadnought-timepicker-padding: var(--dreadnought-spacing-x3);
+  --dreadnought-timepicker-field-padding-x: var(--dreadnought-spacing-x2);
+  --dreadnought-timepicker-field-padding-y: var(--dreadnought-spacing-x1);
+  --dreadnought-timepicker-field-gap: var(--dreadnought-spacing-x1);
   --dreadnought-timepicker-field-width: var(--dreadnought-size-x3);
   --dreadnought-timepicker-popup-width: var(--dreadnought-size-x3);
   --dreadnought-timepicker-column-height: var(--dreadnought-size-x3);

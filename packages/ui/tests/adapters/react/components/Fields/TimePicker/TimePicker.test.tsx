@@ -6,6 +6,22 @@ import { TimePicker } from '../../../../../../src/adapters/react/components/Fiel
 
 afterEach(cleanup);
 
+it('tabs through clear before clock and restores focus after Escape', async () => {
+  const user = userEvent.setup();
+  render(<TimePicker aria-label="Time" defaultValue="09:30:00" />);
+  await user.click(screen.getByRole('textbox', { name: 'Time' }));
+  await user.tab();
+  expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Clear time' }));
+  await user.tab();
+  const clock = screen.getByRole('button', { name: 'Open time picker' });
+  expect(document.activeElement).toBe(clock);
+  await user.keyboard('{Enter}');
+  expect(screen.getByRole('dialog').contains(document.activeElement)).toBe(true);
+  await user.keyboard('{Escape}');
+  expect(screen.queryByRole('dialog')).toBeNull();
+  expect(document.activeElement).toBe(clock);
+});
+
 it('uses themed Input, icon actions and named time columns', async () => {
   const user = userEvent.setup();
   render(<TimePicker aria-label="Time" showSeconds defaultValue="09:07:03" />);

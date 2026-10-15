@@ -1,5 +1,8 @@
 :root {
   --dreadnought-datepicker-bg: var(--dreadnought-color-surface-popup);
+  --dreadnought-datepicker-field-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-datepicker-field-border: var(--dreadnought-color-border-default);
+  --dreadnought-datepicker-focus: var(--dreadnought-color-focus-ring);
   --dreadnought-datepicker-text: var(--dreadnought-color-text-primary);
   --dreadnought-datepicker-muted: var(--dreadnought-color-text-placeholder);
   --dreadnought-datepicker-border: var(--dreadnought-color-border-subtle);
