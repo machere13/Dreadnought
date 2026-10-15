@@ -27,5 +27,34 @@
         ]
       }
     ]
+  },
+  {
+    "id": "pattern:draft-transition",
+    "kind": "pattern",
+    "name": "getDraftTransition",
+    "family": "Patterns",
+    "description": "Редактирование черновика, подтверждение и отмена. Отделяет предложенное изменение от принятого значения, в том числе при controlled-управлении.",
+    "docsUrl": "/core/patterns/#get-draft-transition",
+    "constraints": [
+      "edit сохраняет принятое значение, заменяя только черновик. cancel восстанавливает черновик через format(value). Оба перехода возвращают changed=false.",
+      "confirm принимает уже проверенное значение: разбор и валидация остаются у вызывающего кода. По умолчанию controlled=false. При controlled=true результат сохраняет принятое значение и его черновик, но changed сообщает об отличающемся предложении action.value.",
+      "Для changed используется Object.is; для составных значений передайте isEqual. null — обычное значение, если оно входит в тип Value.",
+      "Функция не хранит состояние, не вызывает onChange и не управляет видимостью. Передавайте актуальное принятое значение при каждом переходе; callbacks format/isEqual должны быть чистыми."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "getDraftTransition",
+        "examples": [
+          {
+            "id": "draft-confirm-cancel",
+            "code": "import { getDraftTransition } from '@dreadnought/core';\n\nconst options = { format: (value: number | null) => value === null ? '' : String(value) };\nconst edited = getDraftTransition(9, { type: 'edit', draft: '10' }, options);\nconst confirmed = getDraftTransition(edited.value, { type: 'confirm', value: 10 }, options);\nconst cancelled = getDraftTransition(confirmed.value, { type: 'cancel' }, options);\nconst proposed = getDraftTransition(9, { type: 'confirm', value: 10 }, {\n  ...options, controlled: true,\n});\n// confirmed: { value: 10, draft: '10', changed: true }\n// cancelled: { value: 10, draft: '10', changed: false }\n// proposed: { value: 9, draft: '9', changed: true }; proposal is action.value."
+          }
+        ]
+      }
+    ]
   }
 ]

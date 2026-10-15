@@ -5,6 +5,38 @@ import { useTimePicker } from '../../../src/logic.ts';
 
 afterEach(cleanup);
 
+it('cancels a draft before a same-turn confirm and clears empty input only once', () => {
+  const onChange = vi.fn();
+  const { result } = renderHook(() =>
+    useTimePicker({
+      defaultValue: '09:30:00',
+      defaultOpen: true,
+      onChange,
+    }),
+  );
+  act(() => {
+    result.current.setDraft('10:45');
+    result.current.cancel();
+    result.current.confirm();
+  });
+  expect(result.current.value).toBe('09:30:00');
+  expect(result.current.draft).toBe('09:30');
+  expect(result.current.selection).toEqual({ hour: 9, minute: 30, second: 0 });
+  expect(result.current.open).toBe(false);
+  expect(onChange).not.toHaveBeenCalled();
+  act(() => {
+    result.current.setOpen(true);
+    result.current.setDraft('');
+    result.current.confirm();
+    result.current.confirm();
+  });
+  expect(result.current.value).toBeNull();
+  expect(result.current.draft).toBe('');
+  expect(result.current.selection).toEqual({ hour: null, minute: null, second: null });
+  expect(result.current.open).toBe(true);
+  expect(onChange).toHaveBeenCalledExactlyOnceWith(null);
+});
+
 describe('time picker state', () => {
   it('reconciles a valid controlled seconds-mode change before calculating columns', () => {
     const onChange = vi.fn();

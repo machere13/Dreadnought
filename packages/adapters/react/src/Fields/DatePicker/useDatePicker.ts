@@ -3,11 +3,12 @@ import {
   assertCalendarDate,
   getCalendarGrid,
   getCalendarRange,
+  getDraftTransition,
   searchCalendarDate,
   isCalendarDateAllowed,
   parseCalendarDate,
 } from '@dreadnought/core';
-import type { CalendarDate, CalendarNavigation } from '@dreadnought/core';
+import type { CalendarDate, CalendarNavigation, DraftAction } from '@dreadnought/core';
 import type {
   DatePickerValue,
   UseDatePickerOptions,
@@ -75,13 +76,23 @@ export function useDatePicker(options: UseDatePickerOptions = {}): UseDatePicker
   function published(): DatePickerValue {
     return options.value !== undefined ? options.value : current.current.value;
   }
-  function restore(next = published()) {
+  function updateDraft(action: DraftAction<DatePickerValue, [string, string]>) {
+    const next = getDraftTransition(published(), action, {
+      format: datePickerText,
+      controlled: options.value !== undefined,
+      isEqual: (left, right) => JSON.stringify(left) === JSON.stringify(right),
+    });
     update({
-      draft: datePickerText(next),
+      ...(action.type === 'confirm' && options.value === undefined ? { value: next.value } : {}),
+      draft: next.draft,
       errors: [null, null],
       range: { start: null, end: null },
-      hoveredDate: null,
+      ...(action.type !== 'edit' ? { hoveredDate: null } : {}),
     });
+    return next.changed;
+  }
+  function restore() {
+    updateDraft({ type: 'cancel' });
   }
   function setOpen(next: boolean) {
     if (!mounted.current) return;
@@ -105,10 +116,7 @@ export function useDatePicker(options: UseDatePickerOptions = {}): UseDatePicker
   }
   function publish(next: DatePickerValue) {
     if (!mounted.current || blocked) return;
-    const old = published();
-    if (options.value === undefined) update({ value: next });
-    restore(options.value === undefined ? next : old);
-    if (JSON.stringify(old) === JSON.stringify(next)) return;
+    if (!updateDraft({ type: 'confirm', value: next })) return;
     if (options.mode === 'range') {
       options.onChange?.(next as readonly [CalendarDate, CalendarDate] | null);
     } else {
@@ -136,7 +144,7 @@ export function useDatePicker(options: UseDatePickerOptions = {}): UseDatePicker
     if (!mounted.current || blocked || (mode === 'single' && index !== 0)) return;
     const draft: [string, string] = [...current.current.draft];
     draft[index] = text;
-    update({ draft, errors: [null, null], range: { start: null, end: null } });
+    updateDraft({ type: 'edit', draft });
   }
   function confirm() {
     if (!mounted.current || blocked) return;

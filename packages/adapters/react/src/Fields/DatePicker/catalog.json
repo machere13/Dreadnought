@@ -7,6 +7,7 @@
   "docsUrl": "/components/datepicker/#datepicker-api",
   "states": ["open", "closed", "disabled", "readOnly", "invalid"],
   "composesWith": [
+    "pattern:draft-transition",
     "domain:get-calendar-grid",
     "domain:get-calendar-range",
     "domain:get-next-calendar-date",

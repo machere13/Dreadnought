@@ -5,6 +5,16 @@ import { CoreReference } from '../src/content/core/CoreReference.tsx';
 
 afterEach(cleanup);
 
+it('documents draft transitions with their contract and a complete lifecycle example', () => {
+  render(<CoreReference kind="patterns" />);
+  const draft = within(screen.getByRole('region', { name: 'getDraftTransition', exact: true }));
+  expect(draft.getByRole('rowheader', { name: 'action', exact: true })).toBeTruthy();
+  const example = draft.getByText(/import \{ getDraftTransition \}/).textContent;
+  expect(example).toContain("type: 'edit'");
+  expect(example).toContain("type: 'confirm'");
+  expect(example).toContain("type: 'cancel'");
+});
+
 it('documents collection navigation as a pattern with an executable example', () => {
   render(<CoreReference kind="patterns" />);
   const navigation = within(screen.getByRole('region', { name: 'getCollectionNavigation', exact: true }));

@@ -153,6 +153,37 @@ it('rejects partial manual range and confirms an ordered complete range', () => 
   expect(result.current.draft).toEqual(['2026-10-10', '2026-10-20']);
 });
 
+it('deduplicates equivalent range confirmations and discards invalid drafts on cancel', () => {
+  const onChange = vi.fn();
+  const { result } = renderHook(() =>
+    useDatePicker({
+      mode: 'range',
+      defaultValue: ['2026-10-10', '2026-10-20'],
+      defaultOpen: true,
+      onChange,
+    }),
+  );
+  act(() => {
+    result.current.setDraft(0, '2026-10-20');
+    result.current.setDraft(1, '2026-10-10');
+    result.current.confirm();
+  });
+  expect(result.current.draft).toEqual(['2026-10-10', '2026-10-20']);
+  expect(result.current.open).toBe(true);
+  expect(onChange).not.toHaveBeenCalled();
+  act(() => {
+    result.current.setDraft(0, 'invalid');
+    result.current.confirm();
+    result.current.cancel();
+    result.current.confirm();
+  });
+  expect(result.current.value).toEqual(['2026-10-10', '2026-10-20']);
+  expect(result.current.draft).toEqual(['2026-10-10', '2026-10-20']);
+  expect(result.current.errors).toEqual([null, null]);
+  expect(result.current.open).toBe(false);
+  expect(onChange).not.toHaveBeenCalled();
+});
+
 it('cannot publish dates blocked through typing or calendar selection', () => {
   const { result } = renderHook(() =>
     useDatePicker({ minDate: '2026-10-10', maxDate: '2026-10-20' }),

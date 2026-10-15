@@ -1,8 +1,14 @@
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { formatClockTime, getTimeOptions, getTimeSelection } from '@dreadnought/core';
+import {
+  formatClockTime,
+  getDraftTransition,
+  getTimeOptions,
+  getTimeSelection,
+} from '@dreadnought/core';
 import type {
   ClockTime,
   ClockTimeParts,
+  DraftAction,
   TimeOptions,
   TimePart,
   TimeSelection,
@@ -77,12 +83,20 @@ export function useTimePicker(options: UseTimePickerOptions = {}): UseTimePicker
     current.current = { ...current.current, ...patch };
     setView(current.current);
   }
-  function restore(next: ClockTime | null) {
-    update({
-      value: next,
-      draft: timePickerText(next, showSeconds),
-      selection: timePickerSelection(next),
+  function updateDraft(action: DraftAction<ClockTime | null, string>, value = acceptedValue()) {
+    const next = getDraftTransition(value, action, {
+      format: (value) => timePickerText(value, showSeconds),
+      controlled: options.value !== undefined,
     });
+    update({
+      value: next.value,
+      draft: next.draft,
+      selection: timePickerSelection(parseTimePickerDraft(next.draft, showSeconds)),
+    });
+    return next.changed;
+  }
+  function restore(next = acceptedValue()) {
+    updateDraft({ type: 'cancel' }, next);
   }
   function setOpen(next: boolean) {
     if (!mounted.current || (options.disabled && next)) return;
@@ -96,14 +110,11 @@ export function useTimePicker(options: UseTimePickerOptions = {}): UseTimePicker
   }
   function publish(next: ClockTime | null) {
     if (!mounted.current || blocked) return;
-    const accepted = acceptedValue();
-    restore(options.value !== undefined ? accepted : next);
-    if (next !== accepted) options.onChange?.(next);
+    if (updateDraft({ type: 'confirm', value: next })) options.onChange?.(next);
   }
   function setDraft(text: string) {
     if (!mounted.current || blocked) return;
-    const parsed = parseTimePickerDraft(text, showSeconds);
-    update({ draft: text, selection: timePickerSelection(parsed) });
+    updateDraft({ type: 'edit', draft: text });
   }
   function choose(part: TimePart, next: number) {
     if (!mounted.current || blocked) return;

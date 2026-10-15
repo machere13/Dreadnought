@@ -16,6 +16,12 @@ it('lists published core patterns through the same filters used by CLI and MCP',
       name: 'getCollectionNavigation',
       bindings: [expect.objectContaining({ importPath: '@dreadnought/core', layer: 1 })],
     }),
+    expect.objectContaining({
+      id: 'pattern:draft-transition',
+      kind: 'pattern',
+      name: 'getDraftTransition',
+      bindings: [expect.objectContaining({ importPath: '@dreadnought/core', layer: 1 })],
+    }),
   ]);
 });
 
@@ -49,7 +55,10 @@ it('accepts the pattern filter through the MCP protocol', async () => {
     });
     expect(response.isError).not.toBe(true);
     expect(response.structuredContent).toMatchObject({
-      result: { items: [expect.objectContaining({ id: 'pattern:collection-navigation' })] },
+      result: { items: [
+        expect.objectContaining({ id: 'pattern:collection-navigation' }),
+        expect.objectContaining({ id: 'pattern:draft-transition' }),
+      ] },
     });
   } finally {
     await client.close();
