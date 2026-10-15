@@ -69,7 +69,9 @@ export function useAnchoredPopover(
       return;
     }
     node.style.left = `${Math.max(0, Math.min(rect.left, viewport.clientWidth - box.width))}px`;
-    node.style.top = `${Math.max(0, rect.bottom + box.height <= viewport.clientHeight ? rect.bottom : rect.top - box.height)}px`;
+    const top =
+      rect.bottom + box.height <= viewport.clientHeight ? rect.bottom : rect.top - box.height;
+    node.style.top = `${Math.max(0, Math.min(top, viewport.clientHeight - box.height))}px`;
   }
   useLayoutEffect(() => {
     const node = popup.current;
