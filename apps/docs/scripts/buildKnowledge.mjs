@@ -12,6 +12,10 @@ const guideLabels = {
   '/getting-started/': ['install', 'setup', 'установка', 'начало'],
   '/theming/': ['theme', 'theming', 'тема', 'темы'],
   '/custom-components/': ['custom', 'components', 'собственные', 'компоненты'],
+  '/core/actions/': ['core', 'actions', 'действия'],
+  '/core/behaviors/': ['core', 'behaviors', 'поведение'],
+  '/core/domains/': ['core', 'domains', 'вычисления'],
+  '/core/components/': ['core', 'components', 'состояния'],
 };
 
 export function parsePage(html) { return new JSDOM(html).window.document; }

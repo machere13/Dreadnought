@@ -1,0 +1,14 @@
+.reference {
+  overflow-wrap: anywhere;
+}
+
+.reference a {
+  color: var(--dreadnought-color-text-primary);
+  text-underline-offset: 0.2em;
+}
+
+.reference h2,
+.reference td code,
+.reference th code {
+  overflow-wrap: anywhere;
+}

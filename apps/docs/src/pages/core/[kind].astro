@@ -1,0 +1,21 @@
+---
+import { CoreReferencePage } from '../../content/core/CoreReference.tsx';
+import { coreTitles, type CoreSection } from '../../app/navigation.ts';
+
+export function getStaticPaths() {
+  return Object.keys(coreTitles).map((kind) => ({ params: { kind }, props: { kind } }));
+}
+const { kind } = Astro.props as { kind: CoreSection };
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={`Справочник ${coreTitles[kind]} из @dreadnought/core: параметры, результат и примеры`} />
+    <title>{coreTitles[kind]} · Core · Dreadnought</title>
+  </head>
+  <body>
+    <CoreReferencePage kind={kind} client:load />
+  </body>
+</html>

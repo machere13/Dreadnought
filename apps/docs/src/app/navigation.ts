@@ -1,6 +1,13 @@
 export type ComponentSection = keyof typeof componentTitles;
+export const coreTitles = {
+  actions: 'Actions',
+  behaviors: 'Behaviors',
+  domains: 'Domains',
+  components: 'Логика компонентов',
+} as const;
+export type CoreSection = keyof typeof coreTitles;
 export type DocsSection =
-  'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection;
+  'overview' | 'getting-started' | 'theming' | 'custom-components' | ComponentSection | `core-${CoreSection}`;
 export const componentFamilies: readonly { name: string; sections: readonly ComponentSection[] }[] =
   [
     { name: 'Controls', sections: ['button', 'toolbar'] },

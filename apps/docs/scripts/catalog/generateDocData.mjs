@@ -35,6 +35,27 @@ function apiRows(entry, binding) {
   });
 }
 
+export function coreReferenceEntries(catalog) {
+  const entries = catalog.entries.flatMap((entry) => entry.bindings
+    .filter((binding) => binding.layer === 1 && binding.importPath === '@dreadnought/core')
+    .map((binding) => ({
+      kind: entry.kind,
+      name: binding.exportName,
+      family: entry.family,
+      description: binding.description ?? entry.description,
+      constraints: entry.constraints ?? [],
+      examples: binding.examples ?? [],
+      contracts: binding.contracts ?? [],
+    })));
+  const functions = new Map();
+  for (const entry of entries) {
+    if (!functions.has(entry.name) || functions.get(entry.name).kind === 'component') {
+      functions.set(entry.name, entry);
+    }
+  }
+  return [...functions.values()].sort((left, right) => left.name.localeCompare(right.name));
+}
+
 export function prepareCatalogDocs(root, context) {
   const catalog = JSON.parse(readFileSync(path.join(root, 'tools/catalog/dist/catalog.json'), 'utf8'));
   const components = {};
@@ -56,7 +77,9 @@ export function prepareCatalogDocs(root, context) {
   }
   const output = path.join(root, 'apps/docs/src/data/catalog/generated/catalog-docs.json');
   mkdirSync(path.dirname(output), { recursive: true });
-  writeFileSync(output, `${JSON.stringify({ packageVersions: catalog.packageVersions, components }, null, 2)}\n`);
+  writeFileSync(output, `${JSON.stringify({
+    packageVersions: catalog.packageVersions, components, core: coreReferenceEntries(catalog),
+  }, null, 2)}\n`);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

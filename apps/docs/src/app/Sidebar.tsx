@@ -1,7 +1,7 @@
 import { Accordion, Layout } from '@dreadnought/ui/react';
 import type { useKnowledge } from '../data/knowledge/useKnowledge.ts';
 import { DocsSearch } from '../features/search/DocsSearch.tsx';
-import { componentFamilies, componentTitles, type DocsSection } from './navigation.ts';
+import { componentFamilies, componentTitles, coreTitles, type DocsSection } from './navigation.ts';
 import styles from './DocsShell.module.css';
 
 export function Sidebar({
@@ -50,6 +50,17 @@ export function Sidebar({
           >
             Свой компонент
           </a>
+          <span className={styles.navigationGroup}>Core</span>
+          {Object.entries(coreTitles).map(([kind, title]) => (
+            <a
+              key={kind}
+              className={styles.navigationLink}
+              href={`/core/${kind}/`}
+              aria-current={section === `core-${kind}` ? 'page' : undefined}
+            >
+              {title}
+            </a>
+          ))}
           <span className={styles.navigationGroup}>Компоненты</span>
           <Accordion
             key={section}

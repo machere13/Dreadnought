@@ -1,5 +1,6 @@
 [
   "/", "/getting-started/", "/theming/", "/custom-components/",
+  "/core/actions/", "/core/behaviors/", "/core/domains/", "/core/components/",
   "/components/button/", "/components/input/", "/components/textarea/", "/components/markdowneditor/", "/components/markdownpreview/",
   "/components/badge/", "/components/alert/", "/components/toast/", "/components/loader/", "/components/progress/", "/components/card/",
   "/components/accordion/", "/components/tabs/", "/components/menu/", "/components/dropdown/", "/components/table/", "/components/pagination/", "/components/tree/",
