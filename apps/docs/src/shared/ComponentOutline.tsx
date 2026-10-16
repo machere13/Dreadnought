@@ -6,9 +6,11 @@ import type { ComponentDoc } from './types.ts';
 export function ComponentOutline({
   component,
   examples,
+  hasNotes = false,
 }: {
   component: string;
   examples?: ComponentDoc['examples'];
+  hasNotes?: boolean;
 }) {
   const [active, setActive] = useState(`${component}-overview`);
   const [expanded, setExpanded] = useState(false);
@@ -20,6 +22,7 @@ export function ComponentOutline({
       title: example.title,
     })),
     { id: `${component}-api`, title: 'API' },
+    ...(hasNotes ? [{ id: `${component}-notes`, title: 'Поведение и ограничения' }] : []),
     { id: `${component}-layers`, title: 'Другие слои' },
   ];
 
@@ -54,7 +57,7 @@ export function ComponentOutline({
       window.removeEventListener('resize', schedule);
       window.removeEventListener('hashchange', schedule);
     };
-  }, [component, examples]);
+  }, [component, examples, hasNotes]);
 
   return (
     <nav className={styles.outline} aria-label="На этой странице">

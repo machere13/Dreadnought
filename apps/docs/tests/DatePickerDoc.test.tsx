@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -7,11 +7,12 @@ import { datePickerDoc } from '../src/content/components/Fields/DatePickerDoc.ts
 import { DatePickerDemo } from '../src/content/components/Fields/DatePickerDemo.tsx';
 import { DatePickerFormDemo } from '../src/content/components/Fields/DatePickerFormDemo.tsx';
 import { DatePickerRangeDemo } from '../src/content/components/Fields/DatePickerRangeDemo.tsx';
+import { ComponentDocumentation } from '../src/shared/ComponentDocumentation.tsx';
 
 afterEach(cleanup);
 
 it('pairs each date example with its complete portable source', () => {
-  expect(datePickerDoc.examples).toHaveLength(3);
+  expect(datePickerDoc.examples).toHaveLength(4);
   for (const example of datePickerDoc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
@@ -19,6 +20,53 @@ it('pairs each date example with its complete portable source', () => {
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }
+});
+
+it('keeps advanced API and example code available through explicit disclosure', async () => {
+  const user = userEvent.setup();
+  render(<ComponentDocumentation component="datepicker" doc={datePickerDoc} />);
+  const api = screen.getByRole('table', { name: 'DatePicker API', exact: true });
+  expect(within(api).getByRole('rowheader', { name: 'value', exact: true })).toBeTruthy();
+  expect(within(api).queryByRole('rowheader', { name: 'slotClassNames' })).toBeNull();
+  const allTypes = api.closest('section')!.querySelector('details')!;
+  expect(allTypes).not.toBeNull();
+  expect(allTypes.open).toBe(false);
+  await user.click(within(allTypes).getByText(/Остальные свойства/));
+  const otherApi = screen.getByRole('table', { name: 'DatePicker: остальные свойства' });
+  const properties = [
+    ...within(api).getAllByRole('rowheader'),
+    ...within(otherApi).getAllByRole('rowheader'),
+  ].map((cell) => cell.textContent);
+  expect(properties.sort()).toEqual(datePickerDoc.apiRows.map(([name]) => name).sort());
+  expect(within(allTypes).getByRole('rowheader', { name: 'slotClassNames' })).toBeTruthy();
+
+  const range = screen.getByRole('region', { name: datePickerDoc.examples![1].title });
+  const code = range.querySelector('details')!;
+  expect(code.open).toBe(false);
+  await user.click(within(range).getByText('Код примера'));
+  expect(code.open).toBe(true);
+  expect(code.querySelector('pre')?.textContent).toBe(datePickerDoc.examples![1].code);
+
+  const outline = within(screen.getByRole('navigation', { name: 'На этой странице' }));
+  const notes = outline.getByRole('link', { name: 'Поведение и ограничения', hidden: true });
+  expect(document.getElementById(notes.getAttribute('href')!.slice(1))).toBeTruthy();
+});
+
+it('demonstrates inclusive date bounds without publishing a rejected draft', async () => {
+  const user = userEvent.setup();
+  const example = datePickerDoc.examples!.find((example) => example.id === 'limits');
+  expect(example).toBeTruthy();
+  render(example!.demo);
+  const field = screen.getByRole('textbox', { name: 'Дата доставки' });
+  fireEvent.change(field, { target: { value: '2026-10-20' } });
+  await user.click(field);
+  await user.keyboard('{Enter}');
+  expect(screen.getByRole('alert')).toBeTruthy();
+  expect(screen.getByRole('status').textContent).toContain('2026-10-12');
+  fireEvent.change(field, { target: { value: '2026-10-16' } });
+  await user.keyboard('{Enter}');
+  expect(screen.queryByRole('alert')).toBeNull();
+  expect(screen.getByRole('status').textContent).toContain('2026-10-16');
 });
 
 it('reports accepted date changes and clearing', async () => {

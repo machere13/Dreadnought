@@ -4,6 +4,9 @@ import type { ApiGroup, ApiRow } from '../data/catalog/getCatalogDoc.ts';
 export type ComponentDoc = {
   title: string;
   description: string;
+  usage?: ReactNode;
+  notes?: ReactNode;
+  primaryProps?: readonly string[];
   readyCode?: string;
   adapterCode: string;
   logicCode?: string;
@@ -19,5 +22,6 @@ export type ComponentDoc = {
     description: string;
     demo: ReactNode;
     code: string;
+    collapseCode?: boolean;
   }[];
 };

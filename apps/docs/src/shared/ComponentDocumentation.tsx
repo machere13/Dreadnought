@@ -15,9 +15,21 @@ export function ComponentDocumentation({
   component: ComponentSection;
   doc: ComponentDoc;
 }) {
+  const primaryProps = doc.primaryProps;
+  const primaryRows = primaryProps
+    ? doc.apiRows.filter(([name]) => primaryProps.includes(name))
+    : doc.apiRows;
+  const otherRows = primaryProps
+    ? doc.apiRows.filter(([name]) => !primaryProps.includes(name))
+    : [];
   return (
     <div className={styles.componentPage}>
-      <ComponentOutline key={component} component={component} examples={doc.examples} />
+      <ComponentOutline
+        key={component}
+        component={component}
+        examples={doc.examples}
+        hasNotes={Boolean(doc.notes)}
+      />
       <article className={styles.article}>
         <Breadcrumb
           items={[
@@ -29,6 +41,14 @@ export function ComponentDocumentation({
         />
         <div data-knowledge id={`${component}-overview`} data-knowledge-title={doc.title}>
           <PageHeading title={doc.title} description={doc.description} />
+          {doc.usage && (
+            <section className={styles.example} aria-labelledby={`${component}-usage`}>
+              <h2 id={`${component}-usage`} className={styles.sectionTitle}>
+                Когда использовать
+              </h2>
+              <div className={`${styles.bodyText} ${styles.usage}`}>{doc.usage}</div>
+            </section>
+          )}
         </div>
 
         <section className={styles.section} aria-labelledby={`${component}-example`}>
@@ -49,7 +69,16 @@ export function ComponentDocumentation({
                 </h3>
                 <p className={styles.bodyText}>{example.description}</p>
                 <div className={styles.demo}>{example.demo}</div>
-                <CodeBlock code={example.code} language="tsx" copyLabels={copyLabels} />
+                {example.collapseCode ? (
+                  <details className={styles.disclosure}>
+                    <summary>Код примера</summary>
+                    <div className={styles.disclosureContent}>
+                      <CodeBlock code={example.code} language="tsx" copyLabels={copyLabels} />
+                    </div>
+                  </details>
+                ) : (
+                  <CodeBlock code={example.code} language="tsx" copyLabels={copyLabels} />
+                )}
               </section>
             ))
           ) : (
@@ -73,9 +102,22 @@ export function ComponentDocumentation({
           <ApiTable
             component={component}
             label={`${doc.title} API`}
-            rows={doc.apiRows}
+            rows={primaryRows}
             groups={doc.apiGroups}
           />
+          {otherRows.length > 0 && (
+            <details className={styles.disclosure}>
+              <summary>Остальные свойства ({otherRows.length})</summary>
+              <div className={styles.disclosureContent}>
+                <ApiTable
+                  component={component}
+                  label={`${doc.title}: остальные свойства`}
+                  rows={otherRows}
+                  groups={doc.apiGroups}
+                />
+              </div>
+            </details>
+          )}
           {doc.apiGroups?.map((group) => (
             <div key={group.title} className={styles.apiGroup}>
               <h3 id={apiGroupId(component, group.title)} className={styles.subheading}>
@@ -100,6 +142,15 @@ export function ComponentDocumentation({
             </p>
           )}
         </section>
+
+        {doc.notes && (
+          <section data-knowledge className={styles.section} aria-labelledby={`${component}-notes`}>
+            <h2 id={`${component}-notes`} className={styles.sectionTitle}>
+              Поведение и ограничения
+            </h2>
+            <div className={`${styles.bodyText} ${styles.notes}`}>{doc.notes}</div>
+          </section>
+        )}
 
         <section data-knowledge className={styles.section} aria-labelledby={`${component}-layers`}>
           <div className={styles.sectionHeading}>

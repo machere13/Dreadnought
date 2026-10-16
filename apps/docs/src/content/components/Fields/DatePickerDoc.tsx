@@ -7,49 +7,105 @@ import { DatePickerRangeDemo } from './DatePickerRangeDemo.tsx';
 import rangeCode from './DatePickerRangeDemo.tsx?raw';
 import { DatePickerFormDemo } from './DatePickerFormDemo.tsx';
 import formCode from './DatePickerFormDemo.tsx?raw';
+import { DatePickerLimitsDemo } from './DatePickerLimitsDemo.tsx';
+import limitsCode from './DatePickerLimitsDemo.tsx?raw';
 
 export const datePickerDoc: ComponentDoc = {
   ...getCatalogDoc('datepicker'),
   title: 'DatePicker',
-  description:
-    'Выберите одну дату или период в календаре либо введите даты вручную. Значение — строка YYYY-MM-DD, без времени и часового пояса.',
-  adapterDescription: 'Поля, календарная сетка и клавиатура без оформления.',
-  logicDescription:
-    'useDatePicker управляет вводом; календарная арифметика доступна отдельно в core.',
+  description: 'Выбор одной даты или периода — в календаре или с помощью ручного ввода.',
+  usage: (
+    <p>
+      Для даты встречи, доставки или поездки. Значение и ввод — <code>YYYY-MM-DD</code>, без времени
+      и часового пояса. Для выбора времени используйте{' '}
+      <a href="/components/timepicker/">TimePicker</a>.
+    </p>
+  ),
+  adapterDescription:
+    'DatePickerAdapter сохраняет поля, календарь и клавиатурное управление. Вы задаёте оформление сами.',
+  logicDescription: (
+    <>
+      useDatePicker управляет значением, черновиком и календарём. Разметку и отображение ошибок
+      задаёте вы. Отдельные вычисления дат доступны в <a href="/core/domains/">Core → Domains</a>,
+      цикл подтверждения и отмены — в{' '}
+      <a href="/core/patterns/#get-draft-transition">Core → Patterns</a>.
+    </>
+  ),
+  primaryProps: [
+    'mode',
+    'value',
+    'defaultValue',
+    'onChange',
+    'minDate',
+    'maxDate',
+    'disabledDate',
+    'allowClear',
+  ],
   examples: [
     {
       id: 'single',
-      title: 'Одна дата: календарь и ручной ввод',
+      title: 'Выбор одной даты',
       description:
-        'Откройте календарь или введите 2026-10-20 и нажмите Enter. Под полем появится принятая дата; крестик очищает её до null. defaultValue задаёт начальную дату, дальнейшие изменения поле хранит само. locale="ru-RU" переводит календарь, но формат ввода остаётся YYYY-MM-DD.',
+        'Выберите день в календаре или введите 2026-10-20 и нажмите Enter. Результат появится под полем. Крестик очищает дату.',
       demo: <DatePickerDemo />,
       code: dateCode,
     },
     {
       id: 'range',
-      title: 'Период поездки в пределах года',
+      title: 'Выбор периода',
       description:
-        'Выберите начало и конец поездки. Доступны даты с 2026-01-01 по 2026-12-31 включительно. До завершения выбора строка результата сохраняет предыдущий период. mode="range" возвращает пару дат или null; value и onChange связывают её с состоянием примера.',
+        'Выберите начало и конец поездки в 2026 году. Результат обновится только после выбора обеих дат. В этом примере значение хранится в React-состоянии.',
       demo: <DatePickerRangeDemo />,
       code: rangeCode,
+      collapseCode: true,
+    },
+    {
+      id: 'limits',
+      title: 'Ограничение доступных дат',
+      description:
+        'Доставка доступна с 12 по 16 октября 2026 года включительно. Введите 2026-10-20: поле покажет ошибку, а принятая дата не изменится.',
+      demo: <DatePickerLimitsDemo />,
+      code: limitsCode,
+      collapseCode: true,
     },
     {
       id: 'form',
-      title: 'Сохранение даты в Form',
+      title: 'Сохранение в форме',
       description:
-        'Измените дату встречи и нажмите «Сохранить»: принятое значение появится под кнопками, без запроса к серверу. Ввод 2026-02-30 покажет ошибку и заблокирует отправку. «Сбросить» вернёт 2026-10-12 и уберёт результат. Здесь значением и сбросом управляет useForm.',
+        'Измените дату и нажмите «Сохранить» — результат появится под кнопками, без отправки на сервер. «Сбросить» вернёт начальную дату. Попробуйте 2026-02-30: ошибка заблокирует сохранение.',
       demo: <DatePickerFormDemo />,
       code: formCode,
+      collapseCode: true,
     },
   ],
-  footnote: (
-    <>
-      Значение и ручной ввод: YYYY-MM-DD, без времени и часового пояса. Enter, уход фокуса или
-      отправка формы подтверждают ввод; Escape отменяет его. disabledDate проверяет только начало и
-      конец диапазона, не дни между ними. В управляемом режиме сброс выполняет родитель; обычная
-      форма сбрасывает defaultValue. Невалидный или незавершённый ввод блокирует обычную отправку
-      формы.
-    </>
+  footnote: null,
+  notes: (
+    <ul>
+      <li>
+        Enter, уход фокуса или отправка формы подтверждают ручной ввод. Escape возвращает последнее
+        принятое значение.
+      </li>
+      <li>
+        Незавершённый или ошибочный ввод остаётся в поле, не меняет значение и блокирует обычную
+        отправку формы.
+      </li>
+      <li>
+        В режиме <code>range</code> возвращается пара дат или <code>null</code>. Пока выбрана только
+        первая дата, прежнее значение сохраняется.
+      </li>
+      <li>
+        <code>minDate</code> и <code>maxDate</code> включительны. <code>disabledDate</code>{' '}
+        проверяет края диапазона, не дни между ними.
+      </li>
+      <li>
+        <code>locale="ru-RU"</code> переводит календарь, но не меняет формат ручного ввода.
+      </li>
+      <li>
+        <code>defaultValue</code> задаёт начальное значение. При <code>value</code> изменение и
+        сброс контролирует родитель; обычная неуправляемая форма возвращает{' '}
+        <code>defaultValue</code> при сбросе.
+      </li>
+    </ul>
   ),
 };
 

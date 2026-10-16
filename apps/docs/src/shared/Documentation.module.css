@@ -111,6 +111,32 @@
 
 .example > .bodyText { margin: 0; }
 
+.disclosure { min-width: 0; }
+
+.disclosure > summary {
+  width: fit-content;
+  padding-block: var(--dreadnought-spacing-x2);
+  color: var(--dreadnought-color-text-primary);
+  font-size: var(--dreadnought-font-size-body-3);
+  cursor: pointer;
+}
+
+.disclosure > summary:focus-visible {
+  outline: var(--dreadnought-border-width-x2) solid var(--dreadnought-color-focus-ring);
+  outline-offset: var(--dreadnought-spacing-x1);
+}
+
+.disclosureContent { min-width: 0; padding-block-start: var(--dreadnought-spacing-x2); }
+
+.usage { max-width: 65ch; }
+
+.usage > p,
+.notes { margin: 0; }
+
+.notes > ul { margin: 0; padding-inline-start: 1.25em; }
+
+.notes > ul > li + li { margin-block-start: var(--dreadnought-spacing-x2); }
+
 .demoStack { display: flex; flex-direction: column; gap: var(--dreadnought-spacing-x4); }
 
 .demoStack > button { align-self: flex-start; }
