@@ -11,11 +11,17 @@ import mountCode from './ModalMountDemo.tsx?raw';
 export const modalDoc: ComponentDoc = {
   ...getCatalogDoc('modal'),
   title: 'Modal',
-  description:
-    'Модальное окно для формы или действия: шапка, содержимое и необязательный футер. Блокирует взаимодействие с фоном.',
+  usage:
+    'Когда нужно завершить или отменить отдельное действие перед возвратом к странице. Для необязательной вспомогательной панели используйте FloatingPanel.',
+  primaryProps: ['open', 'defaultOpen', 'onOpenChange', 'title', 'content', 'footer', 'closable'],
+  description: 'Модальное окно с шапкой, содержимым и необязательным футером.',
   adapterDescription: 'Адаптер сохраняет разметку и поведение без оформления темы.',
-  footnote:
-    'title задаёт шапку, content — содержимое, footer — действия. Передайте свойства триггера целиком в Button. closable=false скрывает только крестик; Escape и фон отключаются отдельно. Нужна поддержка dialog.showModal() в браузере.',
+  notes: [
+    'title задаёт шапку, content — содержимое, footer — действия.',
+    'Передайте свойства триггера целиком в Button.',
+    'closable=false скрывает только крестик; Escape и фон отключаются отдельно.',
+    'Нужна поддержка dialog.showModal() в браузере.',
+  ],
   examples: [
     {
       id: 'profile',

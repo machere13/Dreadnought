@@ -17,7 +17,7 @@ it('does not render empty optional explanations or notes', () => {
         description: 'Кнопка.',
         adapterDescription: '',
         logicDescription: undefined,
-        footnote: null,
+        notes: [],
         demo: <div>Пример кнопки</div>,
       }}
     />,
@@ -38,7 +38,7 @@ it('shows meaningful API descriptions without changing types and defaults', () =
         title: 'Select',
         description: 'Выбор.',
         adapterDescription: '',
-        footnote: null,
+        notes: [],
         demo: <div>Пример выбора</div>,
       }}
     />,
@@ -59,7 +59,7 @@ it('places API before alternative layers in both the article and outline', () =>
         title: 'Button',
         description: 'Кнопка.',
         adapterDescription: '',
-        footnote: null,
+        notes: [],
         demo: <div>Пример</div>,
       }}
     />,

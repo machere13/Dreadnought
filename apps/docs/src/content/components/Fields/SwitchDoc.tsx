@@ -11,12 +11,18 @@ import statesCode from './SwitchStatesDemo.tsx?raw';
 export const switchDoc: ComponentDoc = {
   ...getCatalogDoc('switch'),
   title: 'Switch',
-  description:
-    'Включает или выключает настройку сразу, без отдельной кнопки подтверждения. В отличие от Checkbox, у Switch нет промежуточного состояния.',
+  usage:
+    'Для настройки, которая включается и выключается сразу. Если изменение нужно подтвердить отправкой формы, используйте Checkbox.',
+  primaryProps: ['checked', 'defaultChecked', 'onChange', 'disabled', 'loading'],
+  description: 'Переключатель настройки между включённым и выключенным состояниями.',
   adapterDescription:
     'Адаптер использует общее поведение getCheckableState и нативный input с ролью switch. Оформление подключает только готовый компонент.',
-  footnote:
-    'Space переключает значение. onChange получает событие поля; новое состояние — event.currentTarget.checked. name, value, form и reset работают как у checkbox. ref указывает на input.',
+  notes: [
+    'Space переключает значение.',
+    'onChange получает событие поля; новое состояние — event.currentTarget.checked.',
+    'name, value, form и reset работают как у checkbox.',
+    'ref указывает на input.',
+  ],
   examples: [
     {
       id: 'basic',

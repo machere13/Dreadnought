@@ -11,11 +11,27 @@ import controlledCode from './DrawerControlledDemo.tsx?raw';
 export const drawerDoc: ComponentDoc = {
   ...getCatalogDoc('drawer'),
   title: 'Drawer',
-  description:
-    'Модальная панель у края экрана для настроек, формы или подробностей. Как Modal, блокирует фон; в отличие от Popover, не привязана к кнопке.',
+  usage:
+    'Для формы или подробностей в панели у края экрана с заблокированным фоном. Если работа со страницей должна продолжаться, используйте FloatingPanel.',
+  primaryProps: [
+    'open',
+    'defaultOpen',
+    'onOpenChange',
+    'content',
+    'placement',
+    'size',
+    'closeOnEscape',
+    'closeOnBackdrop',
+  ],
+  description: 'Модальная панель у края экрана, блокирующая взаимодействие с фоном.',
   adapterDescription: 'Адаптер сохраняет разметку и поведение без оформления темы.',
-  footnote:
-    'Заголовок и кнопку закрытия Drawer задаёт приложение в content; автоматической шапки и footer нет. Передайте свойства триггера целиком в Button. mountPolicy работает как у Modal. Нужна поддержка dialog.showModal() в браузере. Открытие без анимации.',
+  notes: [
+    'Заголовок и кнопку закрытия Drawer задаёт приложение в content; автоматической шапки и footer нет.',
+    'Передайте свойства триггера целиком в Button.',
+    'mountPolicy работает как у Modal.',
+    'Нужна поддержка dialog.showModal() в браузере.',
+    'Открытие без анимации.',
+  ],
   examples: [
     {
       id: 'profile',

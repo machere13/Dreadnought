@@ -9,11 +9,27 @@ import example1Code from './TreeCheckDemo.tsx?raw';
 export const treeDoc: ComponentDoc = {
   ...getCatalogDoc('tree'),
   title: 'Tree',
-  description:
-    'Вложенные разделы с раскрытием, выбором узла или чекбоксами. Эти режимы показаны отдельно, чтобы было понятно, какое действие выполняется.',
+  usage:
+    'Для просмотра и выбора узлов иерархии, например папок или разделов. Если выбор должен выглядеть как поле формы со списком, используйте TreeSelect.',
+  primaryProps: [
+    'records',
+    'getKey',
+    'getLabel',
+    'getChildren',
+    'selectedKeys',
+    'onSelectedKeysChange',
+    'checkable',
+    'checkedKeys',
+    'onCheckedKeysChange',
+  ],
+  description: 'Дерево с раскрытием ветвей, выбором узлов и чекбоксами.',
   adapterDescription: 'Адаптер сохраняет разметку и поведение без оформления темы.',
-  footnote:
-    'Стрелки перемещают фокус и раскрывают ветви; Enter выбирает узел, Space переключает отметку. Tab выходит из дерева. selectedKeys и checkedKeys управляются приложением; defaultSelectedKeys и defaultCheckedKeys задают начальное состояние. Загрузка, виртуализация и drag-and-drop пока не реализованы.',
+  notes: [
+    'Стрелки перемещают фокус и раскрывают ветви; Enter выбирает узел, Space переключает отметку.',
+    'Tab выходит из дерева.',
+    'selectedKeys и checkedKeys управляются приложением; defaultSelectedKeys и defaultCheckedKeys задают начальное состояние.',
+    'Загрузка, виртуализация и drag-and-drop пока не реализованы.',
+  ],
   examples: [
     {
       id: 'selection',

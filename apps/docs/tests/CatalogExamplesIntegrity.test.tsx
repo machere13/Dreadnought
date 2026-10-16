@@ -4,6 +4,7 @@ import { isValidElement } from 'react';
 import { expect, it } from 'vitest';
 import { componentTitles } from '../src/app/navigation.ts';
 import type { ComponentDoc } from '../src/shared/types.ts';
+import { getCatalogDoc } from '../src/data/catalog/getCatalogDoc.ts';
 
 const modules = import.meta.glob('../src/content/components/**/*Doc.tsx', { eager: true });
 const pages = Object.entries(modules).map(([path, module]) => {
@@ -17,6 +18,21 @@ const pages = Object.entries(modules).map(([path, module]) => {
 
 it('covers every component in the documentation navigation', () => {
   expect(pages.map(({ doc }) => doc.title).sort()).toEqual(Object.values(componentTitles).sort());
+});
+
+it.each(pages)('keeps the main API selection valid for $doc.title', ({ doc }) => {
+  expect(doc.primaryProps?.length).toBeGreaterThan(0);
+  expect(new Set(doc.primaryProps).size).toBe(doc.primaryProps!.length);
+  const names = doc.apiRows.map(([name]) => name);
+  for (const name of doc.primaryProps!) expect(names).toContain(name);
+});
+
+it.each(pages)('keeps all catalog properties available for $doc.title', ({ doc }) => {
+  expect(doc.apiRows.map(([name]) => name).sort()).toEqual(
+    getCatalogDoc(doc.title.toLowerCase())
+      .apiRows.map(([name]) => name)
+      .sort(),
+  );
 });
 
 it.each(pages)('copies the complete live example source for $doc.title', ({ path, doc }) => {

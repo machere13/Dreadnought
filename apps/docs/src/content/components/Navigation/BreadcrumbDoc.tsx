@@ -9,16 +9,21 @@ import anchorsCode from './BreadcrumbAnchorsDemo.tsx?raw';
 export const breadcrumbDoc: ComponentDoc = {
   ...getCatalogDoc('breadcrumb'),
   title: 'Breadcrumb',
-  description:
-    'Путь от главной страницы до текущей. Уровни с адресом становятся ссылками, а текущая страница помечается для вспомогательных технологий.',
+  usage:
+    'Для пути по вложенным страницам и возврата на уровень выше. Breadcrumb дополняет основную навигацию, а не заменяет её.',
+  primaryProps: ['items', 'aria-label'],
+  description: 'Навигационный путь от родительских разделов до текущей страницы.',
   adapterDescription:
     'Адаптер создаёт навигационный список со ссылками и обозначением текущей страницы, но оставляет оформление вам.',
-  footnote: (
+  notes: [
     <>
-      Последний элемент получает <code>aria-current="page"</code>. Без <code>href</code> элемент
-      выводится текстом; пустой список не создаёт навигационную область.
-    </>
-  ),
+      Последний элемент получает <code>aria-current="page"</code>.
+    </>,
+    <>
+      Без <code>href</code> элемент выводится текстом; пустой список не создаёт навигационную
+      область.
+    </>,
+  ],
   examples: [
     {
       id: 'breadcrumb-basic',

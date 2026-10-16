@@ -17,12 +17,18 @@ import linkCode from './ButtonLinkDemo.tsx?raw';
 export const buttonDoc: ComponentDoc = {
   ...getCatalogDoc('button'),
   title: 'Button',
-  description:
-    'Запускает действие, отправляет форму или ведёт по ссылке. Примеры ниже показывают разницу между оформлением, загрузкой, недоступностью и типом действия.',
+  usage:
+    'Для действия, отправки формы или перехода по ссылке. Если нужно выбрать значение, используйте Checkbox, Radio или Select.',
+  primaryProps: ['variant', 'size', 'icon', 'iconPosition', 'loading', 'disabled', 'href'],
+  description: 'Кнопка действия, отправки формы или перехода по ссылке.',
   adapterDescription:
     'Адаптер создаёт нативный button или a и сохраняет поведение без оформления темы.',
-  footnote:
-    'Без href поддерживаются нативные свойства button, включая type="submit" и type="reset". С href создаётся ссылка; type для неё не задавайте. loading блокирует активацию с сохранением фокуса, disabled отключает контроль. Для кнопки без текста задавайте aria-label.',
+  notes: [
+    'Без href поддерживаются нативные свойства button, включая type="submit" и type="reset".',
+    'С href создаётся ссылка; type для неё не задавайте.',
+    'loading блокирует активацию с сохранением фокуса, disabled отключает контроль.',
+    'Для кнопки без текста задавайте aria-label.',
+  ],
   examples: [
     {
       id: 'variants',

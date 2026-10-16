@@ -13,12 +13,25 @@ import statesCode from './CheckboxStatesDemo.tsx?raw';
 export const checkboxDoc: ComponentDoc = {
   ...getCatalogDoc('checkbox'),
   title: 'Checkbox',
-  description:
-    'Отмечает независимые пункты: можно выбрать один, несколько или ни одного. Для выбора только одного варианта используйте Radio.',
+  usage:
+    'Для независимых пунктов и множественного выбора, например каналов уведомлений. Для одного варианта из нескольких используйте Radio.',
+  primaryProps: [
+    'checked',
+    'defaultChecked',
+    'disabled',
+    'indeterminate',
+    'required',
+    'Checkbox.Group.options',
+    'Checkbox.Group.value',
+    'Checkbox.Group.onValueChange',
+  ],
+  description: 'Флажок или группа для выбора независимых пунктов.',
   adapterDescription:
     'Адаптер предоставляет разметку и поведение без оформления. Токены и CSS Modules подключает готовый компонент.',
-  footnote:
-    'checked управляет отдельным флажком; value группы — массив строк. ref отдельного компонента указывает на input, группы — на fieldset.',
+  notes: [
+    'checked управляет отдельным флажком; value группы — массив строк.',
+    'ref отдельного компонента указывает на input, группы — на fieldset.',
+  ],
   examples: [
     {
       id: 'basic',

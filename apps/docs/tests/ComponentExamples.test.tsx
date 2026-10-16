@@ -45,7 +45,7 @@ it('pairs each labelled example with its own code and navigation link', () => {
         apiRows: [],
         apiGroups: [],
         logicCode: undefined,
-        footnote: null,
+        notes: [],
       }}
     />,
   );

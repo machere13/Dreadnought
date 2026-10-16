@@ -11,14 +11,29 @@ import lifecycleCode from './AccordionLifecycleDemo.tsx?raw';
 export const accordionDoc: ComponentDoc = {
   ...getCatalogDoc('accordion'),
   title: 'Accordion',
+  usage:
+    'Для FAQ и дополнительных пояснений, которые не нужны одновременно. Важные условия и обязательные действия оставляйте видимыми.',
+  primaryProps: [
+    'multiple',
+    'value',
+    'defaultValue',
+    'onValueChange',
+    'Accordion.Item.value',
+    'Accordion.Trigger.disabled',
+    'Accordion.Panel.mountPolicy',
+  ],
   description:
     'Раскрывающиеся разделы для FAQ и пояснений. Поддерживает один или несколько открытых пунктов.',
   adapterDescription:
     'Адаптер даёт доступные кнопки и панели без библиотечного оформления или декоративного индикатора.',
   logicDescription:
     'Чистая функция переключает открытый пункт. Для собственного компонента разметку, ARIA и состояние нужно собрать отдельно.',
-  footnote:
-    'Каждому Item нужны один Trigger и один Panel. Используйте уникальные value и стабильные React keys. Скрытая панель сохраняет оболочку; сохранённое содержимое не приостанавливает эффекты. unmount очищает эффекты и локальное состояние, но не состояние родителя.',
+  notes: [
+    'Каждому Item нужны один Trigger и один Panel.',
+    'Используйте уникальные value и стабильные React keys.',
+    'Скрытая панель сохраняет оболочку; сохранённое содержимое не приостанавливает эффекты.',
+    'unmount очищает эффекты и локальное состояние, но не состояние родителя.',
+  ],
   examples: [
     {
       id: 'faq',

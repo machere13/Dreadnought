@@ -17,14 +17,28 @@ import tableCode from './MarkdownTableDemo.tsx?raw';
 export const markdownEditorDoc: ComponentDoc = {
   ...getCatalogDoc('markdowneditor'),
   title: 'MarkdownEditor',
-  description:
-    'Редактирует текст Markdown и показывает результат. Панель вставляет разметку для форматирования, ссылок, изображений и таблиц; история объединяет ручной ввод и команды.',
+  usage:
+    'Для редактирования документов и описаний в Markdown с предпросмотром. Для обычного многострочного текста достаточно TextArea.',
+  primaryProps: [
+    'value',
+    'defaultValue',
+    'onValueChange',
+    'preview',
+    'onPreviewChange',
+    'toolbar',
+    'readOnly',
+    'uploadImage',
+  ],
+  description: 'Редактор Markdown с форматированием, историей изменений и предпросмотром.',
   adapterDescription:
     'MarkdownEditorAdapter связывает textarea и команды core без стилей; свою панель передайте через renderToolbar.',
   logicDescription:
     'useMarkdownEditor возвращает execute, undo/redo, preview/setPreview, insertImage/cancelImageUpload, состояние загрузки, значение, выделение и свойства textarea для своей разметки.',
-  footnote:
-    'Ctrl/Cmd+Z — отмена; Ctrl/Cmd+Shift+Z или Ctrl+Y — повтор. В controlled-режиме синхронно принимайте onValueChange: внешняя замена текста сбрасывает историю. Preview не выполняет HTML; внешние изображения могут обращаться к сети.',
+  notes: [
+    'Ctrl/Cmd+Z — отмена; Ctrl/Cmd+Shift+Z или Ctrl+Y — повтор.',
+    'В controlled-режиме синхронно принимайте onValueChange: внешняя замена текста сбрасывает историю.',
+    'Preview не выполняет HTML; внешние изображения могут обращаться к сети.',
+  ],
   examples: [
     {
       id: 'editing',
@@ -38,7 +52,7 @@ export const markdownEditorDoc: ComponentDoc = {
       id: 'preview',
       title: 'Редактирование, предпросмотр и две панели',
       description:
-        'Изначально видны исходник и результат рядом. Переключите «Предпросмотр», затем «Редактирование» или «Текст и предпросмотр» на панели. Режим хранится отдельно через preview и onPreviewChange; текст при переключении не теряется. В режиме одного предпросмотра форматирование недоступно.',
+        'Переключайте «Предпросмотр», «Редактирование» и «Текст и предпросмотр» на панели. Текст сохранится при смене режима. В одном предпросмотре команды форматирования недоступны.',
       demo: <MarkdownPreviewDemo />,
       code: previewCode,
     },
@@ -46,7 +60,7 @@ export const markdownEditorDoc: ComponentDoc = {
       id: 'history',
       title: 'Отмена и повтор изменений',
       description:
-        'Измените текст или выделите его и примените форматирование. «Отменить» вернёт предыдущий текст, «Повторить» восстановит изменение. Ctrl/Cmd+Z отменяет, Ctrl/Cmd+Shift+Z или Ctrl+Y повторяет. В этом примере historyLimit хранит до 20 снимков; новая правка после отмены очищает повтор.',
+        'Измените текст или примените форматирование, затем попробуйте «Отменить» и «Повторить». Ctrl/Cmd+Z отменяет, Ctrl/Cmd+Shift+Z или Ctrl+Y повторяет. Здесь хранятся до 20 снимков; новая правка после отмены очищает повтор.',
       demo: <MarkdownHistoryDemo />,
       code: historyCode,
     },
@@ -62,7 +76,7 @@ export const markdownEditorDoc: ComponentDoc = {
       id: 'image',
       title: 'Изображение через обработчик загрузки',
       description:
-        'Перетащите одно изображение в поле или нажмите «Изображение» и выберите файл. Демонстрационный uploadImage возвращает URL тестового SVG, не отправляя файл. Редактор вставит Markdown и покажет картинку справа. Для своего проекта замените URL и подключите реальную загрузку; пример зависит от SVG в документации.',
+        'Перетащите изображение или выберите его кнопкой «Изображение». Пример вставит тестовый SVG и покажет результат справа, не отправляя файл. Для своего проекта замените тестовый URL и обработчик загрузки.',
       demo: <MarkdownImageDemo />,
       code: imageCode,
     },

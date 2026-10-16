@@ -17,8 +17,19 @@ import disabledCode from './SliderDisabledDemo.tsx?raw';
 export const sliderDoc: ComponentDoc = {
   ...getCatalogDoc('slider'),
   title: 'Slider',
-  description:
-    'Выбирает число или диапазон на шкале. Перетаскивайте бегунки, нажимайте на шкалу или используйте клавиатуру. Подсказка показывает значение с нужной единицей измерения.',
+  usage:
+    'Для выбора значения или диапазона, когда полезно видеть положение на шкале. Для точного ввода числа с клавиатуры используйте Input с type="number".',
+  primaryProps: [
+    'value',
+    'defaultValue',
+    'onValueChange',
+    'min',
+    'max',
+    'step',
+    'range',
+    'tooltip',
+  ],
+  description: 'Шкала с бегунками для выбора числа или диапазона.',
   adapterDescription:
     'SliderAdapter создаёт шкалу и бегунки без оформления; useSlider управляет шагом, диапазоном, клавиатурой и перетаскиванием.',
   examples: [
@@ -71,8 +82,13 @@ export const sliderDoc: ComponentDoc = {
       code: disabledCode,
     },
   ],
-  footnote:
-    'Для диапазона задавайте отдельные имена бегункам через slotProps.thumb. step=null требует хотя бы одну отметку внутри min/max. tooltip=false отключает подсказки, tooltip.placement меняет их сторону. В форме диапазон передаёт два значения с одним name: читайте их через FormData.getAll(name). ref указывает на первый бегунок.',
+  notes: [
+    'Для диапазона задавайте отдельные имена бегункам через slotProps.thumb.',
+    'step=null требует хотя бы одну отметку внутри min/max.',
+    'tooltip=false отключает подсказки, tooltip.placement меняет их сторону.',
+    'В форме диапазон передаёт два значения с одним name: читайте их через FormData.getAll(name).',
+    'ref указывает на первый бегунок.',
+  ],
 };
 
 export function SliderPage() {

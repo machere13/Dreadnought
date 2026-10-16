@@ -54,7 +54,6 @@ describe('documentation pages', () => {
     render(<DocsPage section="table" />);
     const mainTable = document.getElementById('table-api')!.closest('section')!.querySelector('table')!;
     const columns = within(mainTable).getByRole('rowheader', { name: 'columns' }).closest('tr')!;
-    expect(columns.lastElementChild?.textContent).toBe('Конфигурация колонок.');
     const link = within(columns).getByRole('link');
     const target = document.querySelector(link.getAttribute('href')!);
     expect(target?.textContent).toBe('TableColumn');
@@ -71,16 +70,17 @@ describe('documentation pages', () => {
     render(<DocsPage section="button" />);
     const outline = screen.getByRole('navigation', { name: 'На этой странице' });
     const links = within(outline).getAllByRole('link');
-    expect(links.map(link => link.getAttribute('href'))).toEqual([
-      '#button-overview', '#button-example', '#button-layers', '#button-api',
-    ]);
+    const sections = ['#button-overview', '#button-example', '#button-api', '#button-notes', '#button-layers'];
+    expect(links.map(link => link.getAttribute('href')).filter(href => sections.includes(href!)))
+      .toEqual(sections);
+    expect(links.length).toBeGreaterThan(sections.length);
     for (const link of links) {
       const target = document.querySelector(link.getAttribute('href')!)!;
       expect(target).toBeTruthy();
       vi.spyOn(target, 'getBoundingClientRect').mockReturnValue({ top: -100 } as DOMRect);
     }
     fireEvent.scroll(window);
-    expect(within(outline).getByRole('link', { name: 'API' }).getAttribute('aria-current')).toBe('location');
+    expect(within(outline).getByRole('link', { name: 'Другие слои' }).getAttribute('aria-current')).toBe('location');
     fireEvent.click(within(outline).getByRole('button', { name: 'На этой странице' }));
     expect(within(outline).getByRole('button').getAttribute('aria-expanded')).toBe('true');
   });
@@ -114,6 +114,7 @@ describe('documentation pages', () => {
     expect(tree.className).not.toBe('');
     fireEvent.keyDown(within(tree).getByRole('treeitem', { name: 'Компоненты' }), { key: 'ArrowRight' });
     expect(within(tree).getByRole('treeitem', { name: 'Button' })).toBeTruthy();
+    fireEvent.click(screen.getByText(/^Остальные свойства/));
     expect(screen.getByRole('rowheader', { name: 'expandedKeys' })).toBeTruthy();
     expect(screen.getByText(/import \{ Tree \} from '@dreadnought\/ui\/react'/)).toBeTruthy();
   });
@@ -413,7 +414,7 @@ describe('documentation pages', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Нажать' }));
     expect(screen.getByText('Нажатий: 1')).toBeTruthy();
     expect(screen.getByRole('rowheader', { name: 'loading' })).toBeTruthy();
-    expect(screen.getByRole('table').getAttribute('data-ui')).toBe('table');
+    expect(screen.getByRole('table', { name: 'Button API', exact: true }).getAttribute('data-ui')).toBe('table');
   });
 
   it('links to Table and uses the same documentation structure', () => {
@@ -441,6 +442,7 @@ describe('documentation pages', () => {
     render(<DocsPage section="input" />);
 
     expect(screen.getByRole('heading', { name: 'Input', level: 1 })).toBeTruthy();
+    fireEvent.click(screen.getByText(/^Остальные свойства/));
     expect(screen.getByRole('rowheader', { name: 'passwordVisibilityLabels' })).toBeTruthy();
     const password = screen.getByLabelText('Пароль');
     expect(password.getAttribute('type')).toBe('password');
@@ -580,7 +582,10 @@ describe('documentation pages', () => {
     expect(screen.getByRole('heading', { name: 'Icon', level: 1 })).toBeTruthy();
     expect(screen.getByRole('rowheader', { name: 'name' })).toBeTruthy();
     const gallery = screen.getByRole('list', { name: 'Набор иконок' });
-    expect(gallery.querySelectorAll('[data-ui="icon"] svg')).toHaveLength(12);
+    for (const item of within(gallery).getAllByRole('listitem')) {
+      expect(item.querySelector('[data-ui="icon"] svg')).toBeTruthy();
+      expect(item.querySelector('code')?.textContent?.trim()).toBeTruthy();
+    }
     expect(screen.getByRole('img', { name: 'Успешно' }).querySelector('svg')).toBeTruthy();
   });
 

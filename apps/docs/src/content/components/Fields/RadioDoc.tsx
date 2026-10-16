@@ -9,11 +9,25 @@ import example1Code from './RadioStandaloneDemo.tsx?raw';
 export const radioDoc: ComponentDoc = {
   ...getCatalogDoc('radio'),
   title: 'Radio',
-  description:
-    'Выбор ровно одного варианта. Обычно используйте Radio.Group; отдельные Radio удобны, когда нужна собственная разметка.',
+  usage:
+    'Для выбора одного варианта из небольшого видимого набора. Для длинного списка используйте Select, для независимых вариантов — Checkbox.',
+  primaryProps: [
+    'checked',
+    'disabled',
+    'value',
+    'Radio.Group.options',
+    'Radio.Group.value',
+    'Radio.Group.defaultValue',
+    'Radio.Group.onValueChange',
+    'Radio.Group.required',
+  ],
+  description: 'Группа переключателей для выбора одного варианта.',
   adapterDescription: 'Адаптер сохраняет разметку и поведение без оформления темы.',
-  footnote:
-    'Стрелки переключают варианты внутри группы. name связывает радиокнопки и задаёт имя поля формы. value отдельной Radio — значение для отправки; checked управляет её выбором, defaultChecked задаёт начальный выбор.',
+  notes: [
+    'Стрелки переключают варианты внутри группы.',
+    'name связывает радиокнопки и задаёт имя поля формы.',
+    'value отдельной Radio — значение для отправки; checked управляет её выбором, defaultChecked задаёт начальный выбор.',
+  ],
   examples: [
     {
       id: 'group',

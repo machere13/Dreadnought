@@ -23,11 +23,26 @@ import largeCode from './Select/SelectLargeDemo.tsx?raw';
 export const selectDoc: ComponentDoc = {
   ...getCatalogDoc('select'),
   title: 'Select',
-  description:
-    'Выбор одного или нескольких вариантов из списка. Начните с одиночного выбора, затем посмотрите поиск, группы и дополнительные настройки.',
+  usage:
+    'Для выбора из заранее заданного списка, в том числе с поиском и несколькими значениями. Для списка команд используйте Dropdown, для иерархии — TreeSelect.',
+  primaryProps: [
+    'options',
+    'value',
+    'onValueChange',
+    'multiple',
+    'showSearch',
+    'allowClear',
+    'disabled',
+    'loading',
+  ],
+  description: 'Поле выбора одного или нескольких вариантов из раскрывающегося списка.',
   adapterDescription: 'Адаптер сохраняет разметку и поведение выбора без оформления.',
-  footnote:
-    'value управляется приложением, defaultValue задаёт только начальный выбор. При одиночном выборе очистка возвращает null, при multiple — пустой массив. Не вкладывайте кнопки или ссылки в optionRender. Для вариантов произвольной высоты отключите виртуализацию через virtual={false}.',
+  notes: [
+    'value управляется приложением, defaultValue задаёт только начальный выбор.',
+    'При одиночном выборе очистка возвращает null, при multiple — пустой массив.',
+    'Не вкладывайте кнопки или ссылки в optionRender.',
+    'Для вариантов произвольной высоты отключите виртуализацию через virtual={false}.',
+  ],
   examples: [
     {
       id: 'basic',

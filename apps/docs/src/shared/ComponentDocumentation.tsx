@@ -17,7 +17,9 @@ export function ComponentDocumentation({
 }) {
   const primaryProps = doc.primaryProps;
   const primaryRows = primaryProps
-    ? doc.apiRows.filter(([name]) => primaryProps.includes(name))
+    ? primaryProps
+        .map((name) => doc.apiRows.find(([property]) => property === name))
+        .filter((row) => row !== undefined)
     : doc.apiRows;
   const otherRows = primaryProps
     ? doc.apiRows.filter(([name]) => !primaryProps.includes(name))
@@ -28,7 +30,7 @@ export function ComponentDocumentation({
         key={component}
         component={component}
         examples={doc.examples}
-        hasNotes={Boolean(doc.notes)}
+        hasNotes={Boolean(doc.notes.length)}
       />
       <article className={styles.article}>
         <Breadcrumb
@@ -58,7 +60,7 @@ export function ComponentDocumentation({
             </h2>
           </div>
           {doc.examples ? (
-            doc.examples.map((example) => (
+            doc.examples.map((example, index) => (
               <section
                 key={example.id}
                 className={styles.example}
@@ -69,7 +71,7 @@ export function ComponentDocumentation({
                 </h3>
                 <p className={styles.bodyText}>{example.description}</p>
                 <div className={styles.demo}>{example.demo}</div>
-                {example.collapseCode ? (
+                {index > 0 ? (
                   <details className={styles.disclosure}>
                     <summary>Код примера</summary>
                     <div className={styles.disclosureContent}>
@@ -131,24 +133,20 @@ export function ComponentDocumentation({
               />
             </div>
           ))}
-          {doc.footnote && (
-            <p
-              data-knowledge
-              data-knowledge-id={`${component}-api`}
-              data-knowledge-title={`${doc.title}: примечания`}
-              className={styles.footnote}
-            >
-              {doc.footnote}
-            </p>
-          )}
         </section>
 
-        {doc.notes && (
+        {doc.notes.length > 0 && (
           <section data-knowledge className={styles.section} aria-labelledby={`${component}-notes`}>
             <h2 id={`${component}-notes`} className={styles.sectionTitle}>
               Поведение и ограничения
             </h2>
-            <div className={`${styles.bodyText} ${styles.notes}`}>{doc.notes}</div>
+            <div className={`${styles.bodyText} ${styles.notes}`}>
+              <ul>
+                {doc.notes.map((note, index) => (
+                  <li key={index}>{note}</li>
+                ))}
+              </ul>
+            </div>
           </section>
         )}
 

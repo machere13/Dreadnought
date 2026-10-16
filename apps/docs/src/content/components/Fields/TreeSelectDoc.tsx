@@ -17,56 +17,34 @@ import { TreeSelectFormDemo } from './TreeSelectFormDemo.tsx';
 import formCode from './TreeSelectFormDemo.tsx?raw';
 
 const catalog = getCatalogDoc('treeselect');
-const apiNames = new Set([
-  'records',
-  'getKey',
-  'getChildren',
-  'getLabel',
-  'value',
-  'defaultValue',
-  'onValueChange',
-  'multiple',
-  'checkStrictly',
-  'showSearch',
-  'expandedKeys',
-  'defaultExpandedKeys',
-  'onExpandedKeysChange',
-  'getDisabled',
-  'getCheckDisabled',
-  'getSelectable',
-  'open',
-  'defaultOpen',
-  'onOpenChange',
-  'disabled',
-  'readOnly',
-  'required',
-  'invalid',
-  'allowClear',
-  'placement',
-  'autoAdjustOverflow',
-  'emptyContent',
-  'renderLabel',
-  'tagRender',
-]);
 export const treeSelectDoc: ComponentDoc = {
   ...catalog,
   title: 'TreeSelect',
-  description:
-    'Выбирает команды или другие элементы с вложенной структурой. По умолчанию возвращает один ключ; multiple позволяет выбрать несколько узлов.',
+  usage:
+    'Для выбора команды, папки или другого элемента иерархии в форме. Для плоского списка используйте Select, для постоянно видимого дерева — Tree.',
+  primaryProps: [
+    'records',
+    'getKey',
+    'getLabel',
+    'getChildren',
+    'value',
+    'onValueChange',
+    'multiple',
+    'showSearch',
+  ],
+  description: 'Поле выбора одного или нескольких элементов из дерева.',
   adapterDescription: 'Поле, дерево, клавиатура и связь с формой без оформления.',
   logicDescription:
     'useTreeSelect хранит выбор. getTreeSearchRows строит видимую часть; getTreeCheckState считает отметки на полном дереве.',
-  apiRows: catalog.apiRows
-    .filter((row) => apiNames.has(row[0]))
-    .map((row) => {
-      if (row[0] === 'value' || row[0] === 'defaultValue')
-        return [row[0], 'Key | null / readonly Key[]', row[2], 'Ключ; при multiple — массив'];
-      if (row[0] === 'showSearch')
-        return [row[0], 'boolean | SearchOptions', 'false', 'Поиск по подписи узла'];
-      if (row[0] === 'onValueChange')
-        return [row[0], '(Key | null) / (Key[]) → void', '—', 'Изменение выбора'];
-      return row;
-    }),
+  apiRows: catalog.apiRows.map((row) => {
+    if (row[0] === 'value' || row[0] === 'defaultValue')
+      return [row[0], 'Key | null / readonly Key[]', row[2], 'Ключ; при multiple — массив'];
+    if (row[0] === 'showSearch')
+      return [row[0], 'boolean | SearchOptions', 'false', 'Поиск по подписи узла'];
+    if (row[0] === 'onValueChange')
+      return [row[0], '(Key | null) / (Key[]) → void', '—', 'Изменение выбора'];
+    return row;
+  }),
   apiGroups: [
     {
       title: 'SearchOptions',
@@ -136,15 +114,17 @@ export const treeSelectDoc: ComponentDoc = {
       code: formCode,
     },
   ],
-  footnote: (
+  notes: [
     <>
       В связанном режиме значение содержит все отмеченные ключи, включая родителей; теги показывают
-      верхние узлы. Поиск не меняет выбор: отметка родителя действует и на скрытых детей.
-      Неизвестные ключи сохраняются. Native FormData передаёт ключи строками, Form сохраняет их
-      типы. Required в Form задаётся валидатором модели. Нет async-загрузки, виртуализации и
-      ограничения числа тегов.
-    </>
-  ),
+      верхние узлы.
+    </>,
+    <>Поиск не меняет выбор: отметка родителя действует и на скрытых детей.</>,
+    <>Неизвестные ключи сохраняются.</>,
+    <>Native FormData передаёт ключи строками, Form сохраняет их типы.</>,
+    <>Required в Form задаётся валидатором модели.</>,
+    <>Нет async-загрузки, виртуализации и ограничения числа тегов.</>,
+  ],
 };
 
 export function TreeSelectPage() {

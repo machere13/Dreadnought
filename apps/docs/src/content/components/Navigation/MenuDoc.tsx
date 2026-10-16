@@ -11,8 +11,10 @@ import navigationCode from './MenuNavigationDemo.tsx?raw';
 export const menuDoc: ComponentDoc = {
   ...getCatalogDoc('menu'),
   title: 'Menu',
-  description:
-    'Показывает действия или навигационные ссылки. Поддерживает группы, разделители и вложенные пункты. Само Menu не открывает всплывающее окно: для этого используйте Dropdown.',
+  usage:
+    'Для навигации или списка команд с группами и подменю. Если список нужно открыть поверх страницы по кнопке, используйте Dropdown.',
+  primaryProps: ['items', 'mode', 'onAction', 'selectedValue', 'openKeys', 'onOpenKeysChange'],
+  description: 'Список команд или навигационных ссылок с группами и подменю.',
   adapterDescription: 'MenuAdapter задаёт разметку, выбор и клавиатурную навигацию без оформления.',
   logicDescription:
     'getVisibleMenuRows рассчитывает видимость и ограничения пунктов; getTreeKeyAction, getNextEnabledValue и getTypeaheadValue задают клавиатурные правила.',
@@ -42,8 +44,13 @@ export const menuDoc: ComponentDoc = {
       code: navigationCode,
     },
   ],
-  footnote:
-    'В режиме действий стрелки, Home/End и поиск по буквам меняют фокус. ArrowRight раскрывает подменю, ArrowLeft возвращает к родителю. Группы и разделители не фокусируются. openKeys/onOpenKeysChange управляют раскрытием, defaultOpenKeys задаёт начальное состояние. Подменю раскрываются внутри списка, не в боковом всплывающем окне.',
+  notes: [
+    'В режиме действий стрелки, Home/End и поиск по буквам меняют фокус.',
+    'ArrowRight раскрывает подменю, ArrowLeft возвращает к родителю.',
+    'Группы и разделители не фокусируются.',
+    'openKeys/onOpenKeysChange управляют раскрытием, defaultOpenKeys задаёт начальное состояние.',
+    'Подменю раскрываются внутри списка, не в боковом всплывающем окне.',
+  ],
 };
 
 export function MenuPage() {

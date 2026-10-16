@@ -10,20 +10,32 @@ import balanceCode from './BarBalanceDemo.tsx?raw';
 export const barChartDoc: ComponentDoc = {
   ...getCatalogDoc('barchart'),
   title: 'BarChart',
-  description:
-    'Сравнивает числовые значения категорий. Серии располагаются рядом, а не складываются. Поддерживает вертикальные и горизонтальные столбцы.',
+  usage:
+    'Для сравнения величин по категориям, например плана и факта. Для изменения показателя по времени используйте LineChart; точные числа доступны в таблице графика.',
+  primaryProps: [
+    'categories',
+    'series',
+    'orientation',
+    'domain',
+    'minCategorySize',
+    'pageSize',
+    'label',
+  ],
+  description: 'Сравнение значений категорий вертикальными или горизонтальными столбцами.',
   adapterDescription:
     'BarChartAdapter строит SVG, связывает столбцы с Tooltip и клавиатурой, показывает легенду и полную таблицу без темы.',
   logicDescription:
     'buildBarLayout вычисляет координаты столбцов, нулевую ось и отметки шкалы. Расчёт не зависит от React, DOM или SVG.',
-  footnote: (
+  notes: [
+    <>domain должен включать ноль и все значения.</>,
+    <>Ключи values соответствуют id категорий; данные передавайте неизменяемыми.</>,
     <>
-      domain должен включать ноль и все значения. Ключи values соответствуют id категорий; данные
-      передавайте неизменяемыми. При нехватке места категории прокручиваются, minCategorySize задаёт
-      минимальное пространство на серию. Без ResizeObserver задайте width и height вместе; иначе
-      доступна таблица. Stacked, zoom и brush не поддерживаются.
-    </>
-  ),
+      При нехватке места категории прокручиваются, minCategorySize задаёт минимальное пространство
+      на серию.
+    </>,
+    <>Без ResizeObserver задайте width и height вместе; иначе доступна таблица.</>,
+    <>Stacked, zoom и brush не поддерживаются.</>,
+  ],
   examples: [
     {
       id: 'bar-comparison',

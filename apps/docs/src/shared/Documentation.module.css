@@ -109,7 +109,9 @@
 
 .example { display: grid; gap: var(--dreadnought-spacing-x4); min-width: 0; }
 
-.example > .bodyText { margin: 0; }
+.example > .bodyText { max-width: 65ch; margin: 0; }
+
+.example + .example { margin-block-start: var(--dreadnought-spacing-x4); }
 
 .disclosure { min-width: 0; }
 
@@ -128,7 +130,8 @@
 
 .disclosureContent { min-width: 0; padding-block-start: var(--dreadnought-spacing-x2); }
 
-.usage { max-width: 65ch; }
+.usage,
+.notes { max-width: 65ch; }
 
 .usage > p,
 .notes { margin: 0; }

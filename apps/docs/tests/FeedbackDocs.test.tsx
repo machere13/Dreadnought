@@ -31,7 +31,7 @@ it('toggles the loader over actual documentation content', () => {
   render(<DocsPage section="loader" />);
   expect(document.getElementById('loader-api')).toBeTruthy();
   fireEvent.click(screen.getByRole('button', { name: 'Начать загрузку' }));
-  const content = screen.getByText('Открыть проект').closest('[data-slot="content"]');
+  const content = screen.getByLabelText('Черновик проекта').closest('[data-slot="content"]');
   expect(content?.hasAttribute('inert')).toBe(true);
   expect(screen.queryByRole('status', { name: 'Загрузка данных' })).toBeNull();
   act(() => vi.advanceTimersByTime(199));

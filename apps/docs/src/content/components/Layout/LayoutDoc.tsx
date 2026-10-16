@@ -11,17 +11,29 @@ import controlledCode from './LayoutControlledDemo.tsx?raw';
 export const layoutDoc: ComponentDoc = {
   ...getCatalogDoc('layout'),
   title: 'Layout',
-  description:
-    'Каркас страницы из шапки, боковой области, содержимого и подвала. Боковая область умеет сворачиваться, в том числе на узком экране.',
+  usage:
+    'Для каркаса страницы с шапкой, боковой навигацией и подвалом. Для небольшого блока содержимого используйте обычную раскладку или Card.',
+  primaryProps: [
+    'direction',
+    'Layout.Header.children',
+    'Layout.Sidebar.collapsed',
+    'Layout.Sidebar.defaultCollapsed',
+    'Layout.Sidebar.onCollapsedChange',
+    'Layout.Content.children',
+    'Layout.Footer.children',
+  ],
+  description: 'Каркас страницы: шапка, сворачиваемая боковая область, содержимое и подвал.',
   adapterDescription:
     'Адаптеры сохраняют семантические области и переключение боковой панели, но не подключают оформление. Раскладку задайте своими стилями.',
-  footnote: (
+  notes: [
     <>
       Для кнопки боковой панели можно задать <code>expandLabel</code> и <code>collapseLabel</code>.
+    </>,
+    <>
       На экранах до 40rem оформленный Sidebar по умолчанию свёрнут и раскрывается поверх
       содержимого.
-    </>
-  ),
+    </>,
+  ],
   examples: [
     {
       id: 'layout-full-footer',

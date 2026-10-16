@@ -11,8 +11,19 @@ import appearanceCode from './TextAreaAppearanceDemo.tsx?raw';
 export const textareaDoc: ComponentDoc = {
   ...getCatalogDoc('textarea'),
   title: 'TextArea',
-  description:
-    'Многострочное поле для заметок и комментариев. Может расти по содержимому или позволять менять высоту вручную. Подпись, счётчик и очистка работают независимо от оформления.',
+  usage:
+    'Для заметок, комментариев и другого многострочного текста. Для форматированного документа с предпросмотром используйте MarkdownEditor.',
+  primaryProps: [
+    'rows',
+    'autoSize',
+    'minRows',
+    'maxRows',
+    'allowClear',
+    'showCount',
+    'disabled',
+    'readOnly',
+  ],
+  description: 'Многострочное текстовое поле с автоматической или ручной настройкой высоты.',
   adapterDescription:
     'Адаптер сохраняет нативное поле и управление высотой, но не задаёт оформление.',
   logicDescription:
@@ -43,8 +54,12 @@ export const textareaDoc: ComponentDoc = {
       code: appearanceCode,
     },
   ],
-  footnote:
-    'autoSize отключает ручное растягивание. rows, minRows и maxRows задаются положительными целыми числами; minRows не должен превышать maxRows. className, style и ref относятся к самому textarea. Счётчик использует длину UTF-16, как нативный maxLength.',
+  notes: [
+    'autoSize отключает ручное растягивание.',
+    'rows, minRows и maxRows задаются положительными целыми числами; minRows не должен превышать maxRows.',
+    'className, style и ref относятся к самому textarea.',
+    'Счётчик использует длину UTF-16, как нативный maxLength.',
+  ],
 };
 
 export function TextAreaPage() {

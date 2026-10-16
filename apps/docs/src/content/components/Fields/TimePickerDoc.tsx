@@ -11,42 +11,31 @@ import { TimePickerFormDemo } from './TimePickerFormDemo.tsx';
 import formCode from './TimePickerFormDemo.tsx?raw';
 
 const catalog = getCatalogDoc('timepicker');
-const apiNames = new Set([
-  'value',
-  'defaultValue',
-  'onChange',
-  'showSeconds',
-  'minTime',
-  'maxTime',
-  'hourStep',
-  'minuteStep',
-  'secondStep',
-  'disabledTime',
-  'open',
-  'onOpenChange',
-  'disabled',
-  'readOnly',
-  'required',
-  'invalid',
-  'allowClear',
-  'placement',
-]);
 
 export const timePickerDoc: ComponentDoc = {
   ...catalog,
   title: 'TimePicker',
-  description:
-    'Выберите время в панели или введите его вручную. Поле показывает HH:mm, а значение возвращается в формате HH:mm:ss. Для ввода секунд включите showSeconds.',
+  usage:
+    'Для времени встречи или расписания без даты и часового пояса. Для календарной даты используйте DatePicker. Ввод — HH:mm, значение — HH:mm:ss.',
+  primaryProps: [
+    'value',
+    'defaultValue',
+    'onChange',
+    'showSeconds',
+    'minTime',
+    'maxTime',
+    'disabledTime',
+    'minuteStep',
+  ],
+  description: 'Выбор времени в панели или ручным вводом, с необязательными секундами.',
   adapterDescription: 'Поле, доступная панель и связь с формой без оформления.',
   logicDescription:
     'useTimePicker управляет черновиком; расчёт времени и ограничений доступен отдельно в core.',
-  apiRows: catalog.apiRows
-    .filter((row) => apiNames.has(row[0]))
-    .map((row) =>
-      row[0] === 'disabledTime'
-        ? ['disabledTime', 'DisabledTime', '—', 'Недоступные часы, минуты и секунды']
-        : row,
-    ),
+  apiRows: catalog.apiRows.map((row) =>
+    row[0] === 'disabledTime'
+      ? ['disabledTime', 'DisabledTime', '—', 'Недоступные часы, минуты и секунды']
+      : row,
+  ),
   apiGroups: [
     {
       title: 'DisabledTime',
@@ -101,14 +90,13 @@ export const timePickerDoc: ComponentDoc = {
       code: formCode,
     },
   ],
-  footnote: (
-    <>
-      Значение — HH:mm:ss или null. Без секунд ввод отображается как HH:mm, секунды равны 00. Шаг
-      влияет на панель, но не округляет ручной ввод. Enter, подтверждение, уход фокуса или отправка
-      формы принимают ввод; Escape отменяет его. Ошибочный черновик блокирует обычную отправку
-      формы.
-    </>
-  ),
+  notes: [
+    <>Значение — HH:mm:ss или null.</>,
+    <>Без секунд ввод отображается как HH:mm, секунды равны 00.</>,
+    <>Шаг влияет на панель, но не округляет ручной ввод.</>,
+    <>Enter, подтверждение, уход фокуса или отправка формы принимают ввод; Escape отменяет его.</>,
+    <>Ошибочный черновик блокирует обычную отправку формы.</>,
+  ],
 };
 
 export function TimePickerPage() {

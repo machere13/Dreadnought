@@ -5,7 +5,7 @@ export type ComponentDoc = {
   title: string;
   description: string;
   usage?: ReactNode;
-  notes?: ReactNode;
+  notes: readonly ReactNode[];
   primaryProps?: readonly string[];
   readyCode?: string;
   adapterCode: string;
@@ -14,7 +14,6 @@ export type ComponentDoc = {
   logicDescription?: ReactNode;
   apiRows: readonly ApiRow[];
   apiGroups?: readonly ApiGroup[];
-  footnote: ReactNode;
   demo?: ReactNode;
   examples?: readonly {
     id: string;
@@ -22,6 +21,5 @@ export type ComponentDoc = {
     description: string;
     demo: ReactNode;
     code: string;
-    collapseCode?: boolean;
   }[];
 };

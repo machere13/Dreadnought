@@ -11,8 +11,10 @@ import statusCode from './ProgressStatusDemo.tsx?raw';
 export const progressDoc: ComponentDoc = {
   ...getCatalogDoc('progress'),
   title: 'Progress',
-  description:
-    'Показывает, какая часть работы выполнена. В отличие от Loader, требует известного общего объёма.',
+  usage:
+    'Для загрузки или обработки с известным общим объёмом. Если процент посчитать нельзя, используйте Loader.',
+  primaryProps: ['value', 'max', 'status', 'showPercent'],
+  description: 'Индикатор выполненной части работы с известным общим объёмом.',
   adapterDescription:
     'Адаптер использует числовой core, задаёт доступную разметку и точную ширину заполнения, без темы и визуальных состояний.',
   logicDescription: (
@@ -47,8 +49,12 @@ export const progressDoc: ComponentDoc = {
       code: statusCode,
     },
   ],
-  footnote:
-    'value и max должны быть конечными числами, max — больше нуля. Значение ограничивается диапазоном [0, max]. Процент в подписи округляется, заполнение — нет: 3 из 8 даёт 38% и ширину 37.5%. Доступное имя операции задавайте через aria-label или aria-labelledby.',
+  notes: [
+    'value и max должны быть конечными числами, max — больше нуля.',
+    'Значение ограничивается диапазоном [0, max].',
+    'Процент в подписи округляется, заполнение — нет: 3 из 8 даёт 38% и ширину 37.5%.',
+    'Доступное имя операции задавайте через aria-label или aria-labelledby.',
+  ],
 };
 
 export function ProgressPage() {

@@ -11,17 +11,21 @@ import retryCode from './AlertRetryDemo.tsx?raw';
 export const alertDoc: ComponentDoc = {
   ...getCatalogDoc('alert'),
   title: 'Alert',
-  description:
-    'Сообщение в контексте страницы: подсказка, результат операции, предупреждение или ошибка. Для краткого всплывающего уведомления используйте Toast.',
+  usage:
+    'Для сообщения, которое должно оставаться рядом с содержимым: ошибки формы, предупреждения или пояснения. Для временного результата действия используйте Toast.',
+  primaryProps: ['type', 'title', 'description', 'action', 'closable', 'variant'],
+  description: 'Информационное сообщение, предупреждение или ошибка внутри страницы.',
   adapterDescription:
     'Адаптер сохраняет семантику, структуру и локальное закрытие, но не подключает тему и стандартные иконки.',
-  footnote: (
+  notes: [
     <>
-      Нужен хотя бы <code>title</code> или <code>description</code>. Warning и error имеют роль{' '}
-      <code>alert</code>, info и success — <code>status</code>. Закрытое сообщение можно показать
-      снова только повторно смонтировав компонент.
-    </>
-  ),
+      Нужен хотя бы <code>title</code> или <code>description</code>.
+    </>,
+    <>
+      Warning и error имеют роль <code>alert</code>, info и success — <code>status</code>.
+    </>,
+    <>Закрытое сообщение можно показать снова только повторно смонтировав компонент.</>,
+  ],
   examples: [
     {
       id: 'types',

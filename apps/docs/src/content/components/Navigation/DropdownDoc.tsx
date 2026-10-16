@@ -11,17 +11,29 @@ import placementCode from './DropdownPlacementDemo.tsx?raw';
 export const dropdownDoc: ComponentDoc = {
   ...getCatalogDoc('dropdown'),
   title: 'Dropdown',
-  description:
-    'Меню действий по нажатию на кнопку. Используйте его для команд, а Select — для поля выбора в форме.',
+  usage:
+    'Для списка команд под кнопкой, например «Ещё». Для выбора значения формы используйте Select, для произвольного содержимого — Popover.',
+  primaryProps: [
+    'items',
+    'onAction',
+    'selectedValue',
+    'open',
+    'onOpenChange',
+    'placement',
+    'disabled',
+  ],
+  description: 'Меню команд, открывающееся по нажатию на кнопку.',
   adapterDescription:
     'DropdownAdapter связывает MenuAdapter и usePopover без оформления. Отдельные core и useDropdown не нужны: для собственной композиции используйте существующие behaviors, MenuAdapter и usePopover.',
-  footnote: (
+  notes: [
+    <>Передайте все свойства trigger одной кнопке.</>,
     <>
-      Передайте все свойства trigger одной кнопке. ArrowDown открывает меню с первого доступного
-      пункта, ArrowUp — с последнего; Escape закрывает его и возвращает фокус. Открытие по наведению
-      и вложенные подменю не поддерживаются. Для произвольного содержимого используйте Popover.
-    </>
-  ),
+      ArrowDown открывает меню с первого доступного пункта, ArrowUp — с последнего; Escape закрывает
+      его и возвращает фокус.
+    </>,
+    <>Открытие по наведению и вложенные подменю не поддерживаются.</>,
+    <>Для произвольного содержимого используйте Popover.</>,
+  ],
   examples: [
     {
       id: 'dropdown-actions',
