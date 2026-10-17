@@ -5,34 +5,59 @@ import { FormDemo } from '../src/content/components/Fields/Form/FormDemo.tsx';
 
 afterEach(cleanup);
 
-it('validates, submits and resets the complete documentation example', async () => {
+it('validates required fields and recovers from a reserved name on blur', async () => {
   render(<FormDemo />);
   const user = userEvent.setup();
   await user.click(screen.getByRole('button', { name: 'Сохранить' }));
   expect(await screen.findByText('Введите имя')).toBeTruthy();
+  expect(screen.getByText('Минимум 6 символов')).toBeTruthy();
+  expect(screen.getByText('Выберите роль')).toBeTruthy();
+  expect(screen.getByText('Нужно согласие')).toBeTruthy();
+  expect(screen.queryByRole('status')).toBeNull();
   const name = screen.getByRole('textbox', { name: 'Имя' });
   await user.type(name, 'admin');
   await user.tab();
   expect(await screen.findByText('Это имя занято')).toBeTruthy();
+  expect(name.getAttribute('aria-invalid')).toBe('true');
   await user.clear(name);
-  await user.type(screen.getByRole('textbox', { name: 'Имя' }), 'Ada');
-  await user.type(screen.getByLabelText(/^Пароль/, { selector: 'input' }), 'password');
-  await user.type(screen.getByLabelText(/^Подтверждение пароля/, { selector: 'input' }), 'other');
+  await user.type(name, 'Ada');
+  await user.tab();
+  await waitFor(() => expect(name.getAttribute('aria-invalid')).not.toBe('true'));
+  expect(screen.queryByText('Это имя занято')).toBeNull();
+  expect(screen.queryByRole('status')).toBeNull();
+});
+
+it('rejects mismatched passwords, submits valid values and resets the form', async () => {
+  render(<FormDemo />);
+  const user = userEvent.setup();
+  const name = screen.getByRole('textbox', { name: 'Имя' });
+  const password = screen.getByLabelText(/^Пароль/, { selector: 'input' });
+  const confirmation = screen.getByLabelText(/^Подтверждение пароля/, { selector: 'input' });
+  const consent = screen.getByRole('checkbox', { name: 'Принимаю условия' });
+  const save = screen.getByRole('button', { name: 'Сохранить' });
+  await user.type(name, 'Ada');
+  await user.click(password);
+  await user.paste('password');
+  await user.click(confirmation);
+  await user.paste('other');
   await user.click(screen.getByRole('combobox', { name: 'Роль' }));
   await user.click(await screen.findByRole('option', { name: 'Редактор' }));
-  await user.click(screen.getByRole('checkbox', { name: 'Принимаю условия' }));
-  await user.click(screen.getByRole('button', { name: 'Сохранить' }));
+  await user.click(consent);
+  await user.click(save);
   expect(await screen.findByText('Пароли не совпадают')).toBeTruthy();
-  await user.clear(screen.getByLabelText(/^Подтверждение пароля/, { selector: 'input' }));
-  await user.type(
-    screen.getByLabelText(/^Подтверждение пароля/, { selector: 'input' }),
-    'password',
-  );
-  await user.click(screen.getByRole('button', { name: 'Сохранить' }));
-  await waitFor(() => expect(screen.getByRole('status').textContent).toContain('Сохранено: Ada'));
-  expect(screen.getByRole('status').textContent).toContain('Роль: Редактор');
-  expect(screen.getByRole('status').textContent).not.toContain('password');
+  expect(confirmation.getAttribute('aria-invalid')).toBe('true');
+  expect(screen.queryByRole('status')).toBeNull();
+  await user.clear(confirmation);
+  await user.paste('password');
+  await user.click(save);
+  const status = await screen.findByRole('status');
+  expect(status.textContent).toContain('Сохранено: Ada');
+  expect(status.textContent).toContain('Роль: Редактор');
+  expect(status.textContent).not.toContain('password');
   await user.click(screen.getByRole('button', { name: 'Сбросить' }));
-  expect((screen.getByRole('textbox', { name: 'Имя' }) as HTMLInputElement).value).toBe('');
-  expect(screen.queryByText('Сохранено: Ada')).toBeNull();
+  expect(name).toHaveProperty('value', '');
+  expect(password).toHaveProperty('value', '');
+  expect(confirmation).toHaveProperty('value', '');
+  expect(consent).toHaveProperty('checked', false);
+  expect(screen.queryByRole('status')).toBeNull();
 });
