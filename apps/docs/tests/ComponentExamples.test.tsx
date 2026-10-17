@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
-import { selectDoc } from '../src/content/components/Fields/SelectDoc.tsx';
+import { selectDoc } from '../src/content/components/Fields/Select/SelectDoc.tsx';
 import { tableDoc } from '../src/content/components/DataDisplay/Table/TableDoc.tsx';
 import { SelectBasicDemo } from '../src/content/components/Fields/Select/SelectBasicDemo.tsx';
 import { SelectMultipleDemo } from '../src/content/components/Fields/Select/SelectMultipleDemo.tsx';

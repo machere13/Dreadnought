@@ -3,8 +3,8 @@ import { resolve } from 'node:path';
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
-import { sliderDoc } from '../src/content/components/Fields/SliderDoc.tsx';
-import { formDoc } from '../src/content/components/Fields/FormDoc.tsx';
+import { sliderDoc } from '../src/content/components/Fields/Slider/SliderDoc.tsx';
+import { formDoc } from '../src/content/components/Fields/Form/FormDoc.tsx';
 
 afterEach(cleanup);
 
@@ -16,7 +16,7 @@ it.each([
   for (const example of doc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components/Fields', `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components/Fields', doc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }

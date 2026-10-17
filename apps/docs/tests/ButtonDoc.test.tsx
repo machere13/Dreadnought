@@ -3,13 +3,13 @@ import { resolve } from 'node:path';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
-import { buttonDoc } from '../src/content/components/Controls/ButtonDoc.tsx';
-import { ButtonVariantsDemo } from '../src/content/components/Controls/ButtonVariantsDemo.tsx';
-import { ButtonSizesDemo } from '../src/content/components/Controls/ButtonSizesDemo.tsx';
-import { ButtonIconsDemo } from '../src/content/components/Controls/ButtonIconsDemo.tsx';
-import { ButtonLoadingDemo } from '../src/content/components/Controls/ButtonLoadingDemo.tsx';
-import { ButtonFormDemo } from '../src/content/components/Controls/ButtonFormDemo.tsx';
-import { ButtonLinkDemo } from '../src/content/components/Controls/ButtonLinkDemo.tsx';
+import { buttonDoc } from '../src/content/components/Controls/Button/ButtonDoc.tsx';
+import { ButtonVariantsDemo } from '../src/content/components/Controls/Button/ButtonVariantsDemo.tsx';
+import { ButtonSizesDemo } from '../src/content/components/Controls/Button/ButtonSizesDemo.tsx';
+import { ButtonIconsDemo } from '../src/content/components/Controls/Button/ButtonIconsDemo.tsx';
+import { ButtonLoadingDemo } from '../src/content/components/Controls/Button/ButtonLoadingDemo.tsx';
+import { ButtonFormDemo } from '../src/content/components/Controls/Button/ButtonFormDemo.tsx';
+import { ButtonLinkDemo } from '../src/content/components/Controls/Button/ButtonLinkDemo.tsx';
 
 afterEach(() => {
   cleanup();
@@ -21,7 +21,7 @@ it('pairs all six Button scenarios with their exact runnable source', () => {
   for (const example of buttonDoc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components/Controls', `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components/Controls', buttonDoc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
     expect(example.description).toBeTruthy();

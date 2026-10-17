@@ -2,9 +2,9 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
-import { badgeDoc } from '../src/content/components/DataDisplay/BadgeDoc.tsx';
-import { markDoc } from '../src/content/components/DataDisplay/MarkDoc.tsx';
-import { iconDoc } from '../src/content/components/DataDisplay/IconDoc.tsx';
+import { badgeDoc } from '../src/content/components/DataDisplay/Badge/BadgeDoc.tsx';
+import { markDoc } from '../src/content/components/DataDisplay/Mark/MarkDoc.tsx';
+import { iconDoc } from '../src/content/components/DataDisplay/Icon/IconDoc.tsx';
 
 afterEach(cleanup);
 
@@ -17,7 +17,7 @@ it.each([
   for (const example of doc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components/DataDisplay', `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components/DataDisplay', doc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }

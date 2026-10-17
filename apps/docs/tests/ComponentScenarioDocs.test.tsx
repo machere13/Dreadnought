@@ -2,19 +2,19 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
-import { treeDoc } from '../src/content/components/Navigation/TreeDoc.tsx';
-import { radioDoc } from '../src/content/components/Fields/RadioDoc.tsx';
-import { toastDoc } from '../src/content/components/Feedback/ToastDoc.tsx';
-import { modalDoc } from '../src/content/components/Overlays/ModalDoc.tsx';
-import { drawerDoc } from '../src/content/components/Overlays/DrawerDoc.tsx';
-import { TreeSelectionDemo } from '../src/content/components/Navigation/TreeSelectionDemo.tsx';
-import { TreeCheckDemo } from '../src/content/components/Navigation/TreeCheckDemo.tsx';
-import { RadioGroupDemo } from '../src/content/components/Fields/RadioGroupDemo.tsx';
-import { RadioStandaloneDemo } from '../src/content/components/Fields/RadioStandaloneDemo.tsx';
-import { ToastBasicDemo } from '../src/content/components/Feedback/ToastBasicDemo.tsx';
-import { ToastQueueDemo } from '../src/content/components/Feedback/ToastQueueDemo.tsx';
-import { ModalProfileDemo } from '../src/content/components/Overlays/ModalProfileDemo.tsx';
-import { DrawerProfileDemo } from '../src/content/components/Overlays/DrawerProfileDemo.tsx';
+import { treeDoc } from '../src/content/components/Navigation/Tree/TreeDoc.tsx';
+import { radioDoc } from '../src/content/components/Fields/Radio/RadioDoc.tsx';
+import { toastDoc } from '../src/content/components/Feedback/Toast/ToastDoc.tsx';
+import { modalDoc } from '../src/content/components/Overlays/Modal/ModalDoc.tsx';
+import { drawerDoc } from '../src/content/components/Overlays/Drawer/DrawerDoc.tsx';
+import { TreeSelectionDemo } from '../src/content/components/Navigation/Tree/TreeSelectionDemo.tsx';
+import { TreeCheckDemo } from '../src/content/components/Navigation/Tree/TreeCheckDemo.tsx';
+import { RadioGroupDemo } from '../src/content/components/Fields/Radio/RadioGroupDemo.tsx';
+import { RadioStandaloneDemo } from '../src/content/components/Fields/Radio/RadioStandaloneDemo.tsx';
+import { ToastBasicDemo } from '../src/content/components/Feedback/Toast/ToastBasicDemo.tsx';
+import { ToastQueueDemo } from '../src/content/components/Feedback/Toast/ToastQueueDemo.tsx';
+import { ModalProfileDemo } from '../src/content/components/Overlays/Modal/ModalProfileDemo.tsx';
+import { DrawerProfileDemo } from '../src/content/components/Overlays/Drawer/DrawerProfileDemo.tsx';
 
 afterEach(() => {
   cleanup();
@@ -34,7 +34,7 @@ it.each([
     for (const example of doc.examples!) {
       const name = (example.demo as { type: { name: string } }).type.name;
       expect(example.code).toBe(
-        readFileSync(resolve('apps/docs/src/content/components', folder, `${name}.tsx`), 'utf8'),
+        readFileSync(resolve('apps/docs/src/content/components', folder, doc.title, `${name}.tsx`), 'utf8'),
       );
       expect(example.code).not.toMatch(/from ['"]\./);
       expect(example.description).toBeTruthy();

@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
-import { markdownEditorDoc } from '../src/content/components/Fields/MarkdownEditorDoc.tsx';
+import { markdownEditorDoc } from '../src/content/components/Fields/MarkdownEditor/MarkdownEditorDoc.tsx';
 
 afterEach(cleanup);
 
@@ -12,7 +12,7 @@ it('pairs all editor scenarios with their complete runnable source', () => {
   for (const example of markdownEditorDoc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components/Fields', `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components/Fields', markdownEditorDoc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }

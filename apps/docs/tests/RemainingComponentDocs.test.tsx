@@ -2,11 +2,11 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
-import { accordionDoc } from '../src/content/components/Navigation/AccordionDoc.tsx';
-import { alertDoc } from '../src/content/components/Feedback/AlertDoc.tsx';
-import { progressDoc } from '../src/content/components/Feedback/ProgressDoc.tsx';
-import { markdownPreviewDoc } from '../src/content/components/DataDisplay/MarkdownPreviewDoc.tsx';
-import { floatingPanelDoc } from '../src/content/components/Overlays/FloatingPanelDoc.tsx';
+import { accordionDoc } from '../src/content/components/Navigation/Accordion/AccordionDoc.tsx';
+import { alertDoc } from '../src/content/components/Feedback/Alert/AlertDoc.tsx';
+import { progressDoc } from '../src/content/components/Feedback/Progress/ProgressDoc.tsx';
+import { markdownPreviewDoc } from '../src/content/components/DataDisplay/MarkdownPreview/MarkdownPreviewDoc.tsx';
+import { floatingPanelDoc } from '../src/content/components/Overlays/FloatingPanel/FloatingPanelDoc.tsx';
 
 afterEach(cleanup);
 
@@ -21,7 +21,7 @@ it.each([
   for (const example of doc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components', family, `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components', family, doc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }

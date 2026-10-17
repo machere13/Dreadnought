@@ -3,14 +3,14 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { treeSelectDoc } from '../src/content/components/Fields/TreeSelectDoc.tsx';
-import { TreeSelectFormDemo } from '../src/content/components/Fields/TreeSelectFormDemo.tsx';
-import { TreeSelectMultipleDemo } from '../src/content/components/Fields/TreeSelectMultipleDemo.tsx';
-import { TreeSelectStrictDemo } from '../src/content/components/Fields/TreeSelectStrictDemo.tsx';
-import { TreeSelectDemo } from '../src/content/components/Fields/TreeSelectDemo.tsx';
-import { TreeSelectSearchDemo } from '../src/content/components/Fields/TreeSelectSearchDemo.tsx';
-import { TreeSelectUnknownDemo } from '../src/content/components/Fields/TreeSelectUnknownDemo.tsx';
-import { TreeSelectStatesDemo } from '../src/content/components/Fields/TreeSelectStatesDemo.tsx';
+import { treeSelectDoc } from '../src/content/components/Fields/TreeSelect/TreeSelectDoc.tsx';
+import { TreeSelectFormDemo } from '../src/content/components/Fields/TreeSelect/TreeSelectFormDemo.tsx';
+import { TreeSelectMultipleDemo } from '../src/content/components/Fields/TreeSelect/TreeSelectMultipleDemo.tsx';
+import { TreeSelectStrictDemo } from '../src/content/components/Fields/TreeSelect/TreeSelectStrictDemo.tsx';
+import { TreeSelectDemo } from '../src/content/components/Fields/TreeSelect/TreeSelectDemo.tsx';
+import { TreeSelectSearchDemo } from '../src/content/components/Fields/TreeSelect/TreeSelectSearchDemo.tsx';
+import { TreeSelectUnknownDemo } from '../src/content/components/Fields/TreeSelect/TreeSelectUnknownDemo.tsx';
+import { TreeSelectStatesDemo } from '../src/content/components/Fields/TreeSelect/TreeSelectStatesDemo.tsx';
 
 afterEach(cleanup);
 
@@ -19,7 +19,7 @@ it('pairs every tree selection scenario with its complete portable source', () =
   for (const example of treeSelectDoc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components/Fields', `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components/Fields', treeSelectDoc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }

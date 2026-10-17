@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
-import { radarChartDoc } from '../src/content/components/Visualization/RadarChartDoc.tsx';
+import { radarChartDoc } from '../src/content/components/Visualization/RadarChart/RadarChartDoc.tsx';
 
 afterEach(cleanup);
 
@@ -12,7 +12,7 @@ it('pairs every RadarChart example with its complete source', () => {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
       readFileSync(
-        resolve('apps/docs/src/content/components/Visualization', `${name}.tsx`),
+        resolve('apps/docs/src/content/components/Visualization', radarChartDoc.title, `${name}.tsx`),
         'utf8',
       ),
     );

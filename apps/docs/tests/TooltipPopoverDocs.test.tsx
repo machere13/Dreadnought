@@ -2,8 +2,8 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
-import { tooltipDoc } from '../src/content/components/Overlays/TooltipDoc.tsx';
-import { popoverDoc } from '../src/content/components/Overlays/PopoverDoc.tsx';
+import { tooltipDoc } from '../src/content/components/Overlays/Tooltip/TooltipDoc.tsx';
+import { popoverDoc } from '../src/content/components/Overlays/Popover/PopoverDoc.tsx';
 
 afterEach(() => {
   cleanup();
@@ -18,7 +18,7 @@ it.each([
   for (const example of doc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components/Overlays', `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components/Overlays', doc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }

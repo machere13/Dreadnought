@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { DatePicker, Modal, Button } from '@dreadnought/ui/react';
 import type { CalendarDate } from '@dreadnought/ui/react';
-import { DatePickerFormDemo } from '../../docs/src/content/components/Fields/DatePickerDemo.tsx';
+import { DatePickerFormDemo } from '../../docs/src/content/components/Fields/DatePicker/DatePickerFormDemo.tsx';
 
 const meta = {
   title: 'Fields/DatePicker',

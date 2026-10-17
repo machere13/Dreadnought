@@ -2,8 +2,8 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
-import { cardDoc } from '../src/content/components/Surfaces/CardDoc.tsx';
-import { codeBlockDoc } from '../src/content/components/DataDisplay/CodeBlockDoc.tsx';
+import { cardDoc } from '../src/content/components/Surfaces/Card/CardDoc.tsx';
+import { codeBlockDoc } from '../src/content/components/DataDisplay/CodeBlock/CodeBlockDoc.tsx';
 
 afterEach(() => {
   cleanup();
@@ -19,7 +19,7 @@ it.each([
   for (const example of doc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components', folder, `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components', folder, doc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }

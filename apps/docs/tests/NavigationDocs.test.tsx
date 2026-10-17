@@ -3,8 +3,8 @@ import { resolve } from 'node:path';
 import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
-import { tabsDoc } from '../src/content/components/Navigation/TabsDoc.tsx';
-import { menuDoc } from '../src/content/components/Navigation/MenuDoc.tsx';
+import { tabsDoc } from '../src/content/components/Navigation/Tabs/TabsDoc.tsx';
+import { menuDoc } from '../src/content/components/Navigation/Menu/MenuDoc.tsx';
 
 const restorePopoverMethods: (() => void)[] = [];
 
@@ -22,7 +22,7 @@ it.each([
   for (const example of doc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components/Navigation', `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components/Navigation', doc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }

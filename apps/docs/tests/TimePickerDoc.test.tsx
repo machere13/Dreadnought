@@ -3,11 +3,11 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { timePickerDoc } from '../src/content/components/Fields/TimePickerDoc.tsx';
-import { TimePickerDemo } from '../src/content/components/Fields/TimePickerDemo.tsx';
-import { TimePickerFormDemo } from '../src/content/components/Fields/TimePickerFormDemo.tsx';
-import { TimePickerLimitsDemo } from '../src/content/components/Fields/TimePickerLimitsDemo.tsx';
-import { TimePickerSecondsDemo } from '../src/content/components/Fields/TimePickerSecondsDemo.tsx';
+import { timePickerDoc } from '../src/content/components/Fields/TimePicker/TimePickerDoc.tsx';
+import { TimePickerDemo } from '../src/content/components/Fields/TimePicker/TimePickerDemo.tsx';
+import { TimePickerFormDemo } from '../src/content/components/Fields/TimePicker/TimePickerFormDemo.tsx';
+import { TimePickerLimitsDemo } from '../src/content/components/Fields/TimePicker/TimePickerLimitsDemo.tsx';
+import { TimePickerSecondsDemo } from '../src/content/components/Fields/TimePicker/TimePickerSecondsDemo.tsx';
 
 afterEach(cleanup);
 
@@ -16,7 +16,7 @@ it('pairs each time example with its complete portable source', () => {
   for (const example of timePickerDoc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components/Fields', `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components/Fields', timePickerDoc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }

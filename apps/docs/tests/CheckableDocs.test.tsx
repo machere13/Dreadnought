@@ -3,8 +3,8 @@ import { resolve } from 'node:path';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import { checkboxDoc } from '../src/content/components/Fields/CheckboxDoc.tsx';
-import { switchDoc } from '../src/content/components/Fields/SwitchDoc.tsx';
+import { checkboxDoc } from '../src/content/components/Fields/Checkbox/CheckboxDoc.tsx';
+import { switchDoc } from '../src/content/components/Fields/Switch/SwitchDoc.tsx';
 
 afterEach(() => {
   cleanup();
@@ -19,7 +19,7 @@ it.each([
   for (const example of doc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components/Fields', `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components/Fields', doc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }

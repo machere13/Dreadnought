@@ -3,13 +3,13 @@ import { resolve } from 'node:path';
 import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
-import { dropdownDoc } from '../src/content/components/Navigation/DropdownDoc.tsx';
-import { breadcrumbDoc } from '../src/content/components/Navigation/BreadcrumbDoc.tsx';
-import { DropdownActionsDemo } from '../src/content/components/Navigation/DropdownActionsDemo.tsx';
-import { DropdownControlledDemo } from '../src/content/components/Navigation/DropdownControlledDemo.tsx';
-import { DropdownPlacementDemo } from '../src/content/components/Navigation/DropdownPlacementDemo.tsx';
-import { BreadcrumbBasicDemo } from '../src/content/components/Navigation/BreadcrumbBasicDemo.tsx';
-import { BreadcrumbAnchorsDemo } from '../src/content/components/Navigation/BreadcrumbAnchorsDemo.tsx';
+import { dropdownDoc } from '../src/content/components/Navigation/Dropdown/DropdownDoc.tsx';
+import { breadcrumbDoc } from '../src/content/components/Navigation/Breadcrumb/BreadcrumbDoc.tsx';
+import { DropdownActionsDemo } from '../src/content/components/Navigation/Dropdown/DropdownActionsDemo.tsx';
+import { DropdownControlledDemo } from '../src/content/components/Navigation/Dropdown/DropdownControlledDemo.tsx';
+import { DropdownPlacementDemo } from '../src/content/components/Navigation/Dropdown/DropdownPlacementDemo.tsx';
+import { BreadcrumbBasicDemo } from '../src/content/components/Navigation/Breadcrumb/BreadcrumbBasicDemo.tsx';
+import { BreadcrumbAnchorsDemo } from '../src/content/components/Navigation/Breadcrumb/BreadcrumbAnchorsDemo.tsx';
 
 afterEach(cleanup);
 
@@ -21,7 +21,7 @@ it.each([
   for (const example of doc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components/Navigation', `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components/Navigation', doc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }

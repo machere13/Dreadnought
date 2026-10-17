@@ -20,6 +20,18 @@ it('covers every component in the documentation navigation', () => {
   expect(pages.map(({ doc }) => doc.title).sort()).toEqual(Object.values(componentTitles).sort());
 });
 
+it('keeps each component page and its demos in a dedicated component directory', () => {
+  for (const { path, doc } of pages) {
+    expect(basename(dirname(path))).toBe(doc.title);
+    expect(basename(path)).toBe(`${doc.title}Doc.tsx`);
+    for (const example of doc.examples ?? []) {
+      if (!isValidElement(example.demo) || typeof example.demo.type !== 'function') continue;
+      const files = readdirSync(resolve('apps/docs/tests', dirname(path)));
+      expect(files).toContain(`${example.demo.type.name}.tsx`);
+    }
+  }
+});
+
 it.each(pages)('keeps the main API selection valid for $doc.title', ({ doc }) => {
   expect(doc.primaryProps?.length).toBeGreaterThan(0);
   expect(new Set(doc.primaryProps).size).toBe(doc.primaryProps!.length);

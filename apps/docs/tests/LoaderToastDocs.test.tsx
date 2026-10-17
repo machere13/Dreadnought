@@ -2,8 +2,8 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
-import { loaderDoc } from '../src/content/components/Feedback/LoaderDoc.tsx';
-import { toastDoc } from '../src/content/components/Feedback/ToastDoc.tsx';
+import { loaderDoc } from '../src/content/components/Feedback/Loader/LoaderDoc.tsx';
+import { toastDoc } from '../src/content/components/Feedback/Toast/ToastDoc.tsx';
 
 afterEach(() => {
   cleanup();
@@ -15,7 +15,7 @@ it('pairs each Loader example with its full portable source', () => {
   for (const example of loaderDoc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components/Feedback', `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components/Feedback', loaderDoc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }

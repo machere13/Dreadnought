@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it } from 'vitest';
-import { modalDoc } from '../src/content/components/Overlays/ModalDoc.tsx';
-import { drawerDoc } from '../src/content/components/Overlays/DrawerDoc.tsx';
+import { modalDoc } from '../src/content/components/Overlays/Modal/ModalDoc.tsx';
+import { drawerDoc } from '../src/content/components/Overlays/Drawer/DrawerDoc.tsx';
 
 const showModal = Object.getOwnPropertyDescriptor(HTMLDialogElement.prototype, 'showModal');
 const close = Object.getOwnPropertyDescriptor(HTMLDialogElement.prototype, 'close');

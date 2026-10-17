@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DocsPage } from './helpers/DocsPage.tsx';
-import { InputPage } from '../src/content/components/Fields/InputDoc.tsx';
+import { InputPage } from '../src/content/components/Fields/Input/InputDoc.tsx';
 
 vi.mock('../src/data/knowledge/useKnowledge.ts', () => {
   const state = { entries: [{ id: 'catalog:table:sticky', sourceKind: 'catalog', sourceId: 'catalog:table', title: 'Table · sticky', url: '/components/table/#table-api', text: 'sticky: закреплённая шапка', code: [] }], loading: false, error: null, retry: vi.fn() };

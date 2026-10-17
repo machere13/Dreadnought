@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button, Modal, TimePicker } from '@dreadnought/ui/react';
-import { TimePickerFormDemo } from '../../docs/src/content/components/Fields/TimePickerDemo.tsx';
+import { TimePickerFormDemo } from '../../docs/src/content/components/Fields/TimePicker/TimePickerFormDemo.tsx';
 
 const meta = {
   title: 'Fields/TimePicker',

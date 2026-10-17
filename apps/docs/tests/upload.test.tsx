@@ -3,11 +3,11 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { uploadDoc } from '../src/content/components/Fields/UploadDoc.tsx';
-import { UploadDemo } from '../src/content/components/Fields/UploadDemo.tsx';
-import { UploadFormDemo } from '../src/content/components/Fields/UploadFormDemo.tsx';
-import { UploadLimitsDemo } from '../src/content/components/Fields/UploadLimitsDemo.tsx';
-import { UploadLifecycleDemo } from '../src/content/components/Fields/UploadLifecycleDemo.tsx';
+import { uploadDoc } from '../src/content/components/Fields/Upload/UploadDoc.tsx';
+import { UploadDemo } from '../src/content/components/Fields/Upload/UploadDemo.tsx';
+import { UploadFormDemo } from '../src/content/components/Fields/Upload/UploadFormDemo.tsx';
+import { UploadLimitsDemo } from '../src/content/components/Fields/Upload/UploadLimitsDemo.tsx';
+import { UploadLifecycleDemo } from '../src/content/components/Fields/Upload/UploadLifecycleDemo.tsx';
 
 afterEach(cleanup);
 
@@ -16,7 +16,7 @@ it('pairs each upload scenario with its complete portable source', () => {
   for (const example of uploadDoc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components/Fields', `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components/Fields', uploadDoc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }

@@ -3,10 +3,10 @@ import { resolve } from 'node:path';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
-import { toolbarDoc } from '../src/content/components/Controls/ToolbarDoc.tsx';
-import { ToolbarFormatDemo } from '../src/content/components/Controls/ToolbarFormatDemo.tsx';
-import { ToolbarFiltersDemo } from '../src/content/components/Controls/ToolbarFiltersDemo.tsx';
-import { ToolbarVerticalDemo } from '../src/content/components/Controls/ToolbarVerticalDemo.tsx';
+import { toolbarDoc } from '../src/content/components/Controls/Toolbar/ToolbarDoc.tsx';
+import { ToolbarFormatDemo } from '../src/content/components/Controls/Toolbar/ToolbarFormatDemo.tsx';
+import { ToolbarFiltersDemo } from '../src/content/components/Controls/Toolbar/ToolbarFiltersDemo.tsx';
+import { ToolbarVerticalDemo } from '../src/content/components/Controls/Toolbar/ToolbarVerticalDemo.tsx';
 
 afterEach(cleanup);
 
@@ -15,7 +15,7 @@ it('shows the exact portable source for all three Toolbar scenarios', () => {
   for (const example of toolbarDoc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components/Controls', `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components/Controls', toolbarDoc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
     expect(example.description).toBeTruthy();

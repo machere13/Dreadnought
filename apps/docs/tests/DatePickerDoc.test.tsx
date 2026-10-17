@@ -3,10 +3,10 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { datePickerDoc } from '../src/content/components/Fields/DatePickerDoc.tsx';
-import { DatePickerDemo } from '../src/content/components/Fields/DatePickerDemo.tsx';
-import { DatePickerFormDemo } from '../src/content/components/Fields/DatePickerFormDemo.tsx';
-import { DatePickerRangeDemo } from '../src/content/components/Fields/DatePickerRangeDemo.tsx';
+import { datePickerDoc } from '../src/content/components/Fields/DatePicker/DatePickerDoc.tsx';
+import { DatePickerDemo } from '../src/content/components/Fields/DatePicker/DatePickerDemo.tsx';
+import { DatePickerFormDemo } from '../src/content/components/Fields/DatePicker/DatePickerFormDemo.tsx';
+import { DatePickerRangeDemo } from '../src/content/components/Fields/DatePicker/DatePickerRangeDemo.tsx';
 import { ComponentDocumentation } from '../src/shared/ComponentDocumentation.tsx';
 
 afterEach(cleanup);
@@ -16,7 +16,7 @@ it('pairs each date example with its complete portable source', () => {
   for (const example of datePickerDoc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components/Fields', `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components/Fields', datePickerDoc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }

@@ -2,8 +2,8 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
-import { paginationDoc } from '../src/content/components/Navigation/PaginationDoc.tsx';
-import { layoutDoc } from '../src/content/components/Layout/LayoutDoc.tsx';
+import { paginationDoc } from '../src/content/components/Navigation/Pagination/PaginationDoc.tsx';
+import { layoutDoc } from '../src/content/components/Layout/Layout/LayoutDoc.tsx';
 
 afterEach(cleanup);
 
@@ -15,7 +15,7 @@ it.each([
   for (const example of doc.examples!) {
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
-      readFileSync(resolve('apps/docs/src/content/components', folder, `${name}.tsx`), 'utf8'),
+      readFileSync(resolve('apps/docs/src/content/components', folder, doc.title, `${name}.tsx`), 'utf8'),
     );
     expect(example.code).not.toMatch(/from ['"]\./);
   }

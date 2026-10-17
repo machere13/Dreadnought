@@ -2,8 +2,8 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
-import { lineChartDoc } from '../src/content/components/Visualization/LineChartDoc.tsx';
-import { barChartDoc } from '../src/content/components/Visualization/BarChartDoc.tsx';
+import { lineChartDoc } from '../src/content/components/Visualization/LineChart/LineChartDoc.tsx';
+import { barChartDoc } from '../src/content/components/Visualization/BarChart/BarChartDoc.tsx';
 
 afterEach(cleanup);
 
@@ -16,7 +16,7 @@ it.each([
     const name = (example.demo as { type: { name: string } }).type.name;
     expect(example.code).toBe(
       readFileSync(
-        resolve('apps/docs/src/content/components/Visualization', `${name}.tsx`),
+        resolve('apps/docs/src/content/components/Visualization', doc.title, `${name}.tsx`),
         'utf8',
       ),
     );
