@@ -10,7 +10,6 @@ export function compactContext(response) {
       ...(item.parts.length ? {parts: item.parts.map(part => part.propertyPath.join('.'))} : {}),
       ...(item.slots.length ? {slots: item.slots} : {}),
       example: item.example?.code,
-      // Preserve overload and union boundaries. '?' encodes optional, as in TypeScript.
       contracts: item.variants?.map(overload => overload.map(variant => Object.fromEntries(variant.map(property => [property.name + (property.required ? '' : '?'),property.type])))),
     })),
   };

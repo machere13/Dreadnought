@@ -13,7 +13,6 @@ HTMLDialogElement.prototype.close = function () {
 afterEach(cleanup);
 const searchInput = () => screen.getByLabelText<HTMLInputElement>('Поиск задач');
 
-// Read the nearest numerical counter beside its visible label, regardless of markup.
 function count(label: string) {
   const labels = screen.getAllByText(label, {exact: true}).filter(node => !node.closest('table, [role=tab], select'));
   for (const labelNode of labels) {

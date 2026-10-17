@@ -8,7 +8,6 @@ afterEach(() => {
 });
 
 it('allows exactly one value and supports keyboard movement across enabled radios', async () => {
-  // jsdom lacks CSS.escape; this fixture uses the plain identifier "plan".
   vi.stubGlobal('CSS', { escape: (value: string) => value });
   render(
     <adapters.RadioGroupAdapter

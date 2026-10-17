@@ -27,7 +27,6 @@ it('provides a serialized JSON schema required by WebLLM 0.2.85 and delivers the
       { role: 'assistant', content: 'Используйте Button.' },
     ]);
     expect(request.messages.at(-1).content).toContain('Question: А как отключить её?');
-    // 0.2.85 calls compileJSONSchema even for json_object without a schema.
     if (typeof request.response_format.schema !== 'string')
       throw new Error('Cannot pass non-string to std::string');
     const schema = JSON.parse(request.response_format.schema);

@@ -3,7 +3,6 @@ import { CatalogQueryError } from './errors.mjs';
 const fail = (code, message, details = {}) => { throw new CatalogQueryError(code, message, details); };
 const bytes = (value) => Buffer.byteLength(JSON.stringify(value), 'utf8');
 
-// These are usage hints, not a flattened replacement for union/overload contracts.
 function primitiveChoices(binding) {
   const properties = new Map();
   for (const property of binding.contracts.flatMap(contract => contract.variants.flatMap(variant => variant.properties))) {
@@ -55,7 +54,6 @@ export function getContext(catalog, {components, layer = 3, framework, maxBytes 
   })), truncated: false};
   if (bytes(result) > maxBytes) fail('BUDGET_TOO_SMALL', 'Context summary exceeds maxBytes', {requiredBytes: bytes(result)});
 
-  // Add optional detail only while the complete JSON reply stays inside the byte cap.
   const details = selected.map(({entry, binding, bindings}) => ({
     description: entry.kind !== 'component' && format === 'usage' ? entry.description : undefined,
     constraints: entry.kind !== 'component' ? entry.constraints : undefined,

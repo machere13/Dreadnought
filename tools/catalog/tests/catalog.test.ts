@@ -27,7 +27,6 @@ beforeAll(async () => {
   catalog = generateCatalog(context, metadata);
 });
 
-// Compiler checks are synchronous; let the worker report results between tests.
 beforeEach(() => setImmediate());
 afterEach(() => setImmediate());
 
@@ -523,7 +522,6 @@ export function pick(kind: 'a' | 'b', options: { mode?: 'a' | 'b'; disabled?: bo
     const current = createContext(directory, [{ directory: '.', entrypoints: ['.'] }]);
     const contracts = describeContract(current, { importPath: '@test/core', exportName: 'getState' });
     expect(contracts[0].variants[0].properties.map((prop) => prop.name)).toEqual(['active']);
-    // Renaming the actual prop changes the extracted contract on the next build.
     writeFileSync(path.join(directory, 'src/index.ts'), 'export function getState(options: { renamed?: boolean }) { return options; }');
     const changed = createContext(directory, [{ directory: '.', entrypoints: ['.'] }]);
     expect(describeContract(changed, { importPath: '@test/core', exportName: 'getState' })[0].variants[0].properties.map((prop) => prop.name)).toEqual(['renamed']);

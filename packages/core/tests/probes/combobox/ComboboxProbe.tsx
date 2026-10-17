@@ -1,4 +1,3 @@
-// Throwaway feasibility probe, not a public component or adapter.
 import { useId, useRef, useState } from 'react';
 import type { KeyboardEventHandler } from 'react';
 import {

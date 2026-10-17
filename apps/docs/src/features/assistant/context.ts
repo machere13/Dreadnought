@@ -71,7 +71,6 @@ export function buildContext(hits: KnowledgeEntry[], budget = 2400): AssistantCo
   let text = '';
   for (const hit of hits) {
     const header = JSON.stringify({ id: hit.id, title: hit.title });
-    // Text may be excerpted; a code example is either included whole or omitted.
     let fragment = `${header}\n${excerpt(hit.text, 800)}\n`;
     if (bytes(text + fragment) > budget) continue;
     for (const code of hit.code) {
@@ -90,7 +89,6 @@ export function validQuestion(question: string) {
 
 export function parseAnswer(raw: string, sources: KnowledgeEntry[]) {
   let parsed: unknown;
-  // Qwen emits an empty thinking header even with enable_thinking: false.
   const json = raw.trim().replace(/^<think>\s*<\/think>\s*/, '');
   try {
     parsed = JSON.parse(json);

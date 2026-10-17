@@ -1,6 +1,5 @@
 import {readFile, writeFile} from 'node:fs/promises';
 
-// Read only the two explicitly selected benchmark sessions, excluding approval agents.
 const paths = process.argv.slice(2);
 if (paths.length !== 2) throw new Error('Expected framework and scratch session paths');
 const reports = [];

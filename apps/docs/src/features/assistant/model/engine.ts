@@ -20,7 +20,6 @@ export function supportsWebGPU() {
   return typeof navigator !== 'undefined' && 'gpu' in navigator;
 }
 
-/** Constructed only after the visitor explicitly consents to the model download. */
 export function createEngine(onEvent: (event: EngineEvent) => void): EngineSession {
   const worker = new Worker(new URL('./model.worker.ts', import.meta.url), { type: 'module' });
   let disposed = false;
@@ -43,7 +42,6 @@ export function createEngine(onEvent: (event: EngineEvent) => void): EngineSessi
       if (!disposed)
         worker.postMessage({ type: 'generate', id, question, context, history, sourceIds });
     },
-    // Termination also cancels fetches during loading and releases the GPU engine.
     dispose() {
       disposed = true;
       worker.terminate();

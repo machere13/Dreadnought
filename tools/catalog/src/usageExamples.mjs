@@ -1,4 +1,3 @@
-// Agent-facing examples, type-checked during catalog generation. No screen logic.
 export const usageExamples = {
   DatePicker: `import { DatePicker } from '@dreadnought/ui/react';
 export function Example() {

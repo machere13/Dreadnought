@@ -4,7 +4,6 @@ import type { EngineEvent } from './engine.ts';
 
 const send = (event: EngineEvent) => self.postMessage(event);
 const MODEL_ID = 'Qwen3-1.7B-q4f16_1-MLC';
-// WebLLM 0.2.85 requires a serialized schema for json_object responses.
 const answerSchema = (sourceIds: string[]) =>
   JSON.stringify({
     type: 'object',

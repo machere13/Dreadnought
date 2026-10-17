@@ -5,7 +5,6 @@ export const packages = [
   { name: '@dreadnought/themes', directory: 'packages/themes', entrypoints: [] },
 ];
 
-// Explicit inputs: adding a file elsewhere never publishes it automatically.
 const core = 'packages/core/src/components';
 const adapter = 'packages/adapters/react/src';
 const ui = 'packages/ui/src/adapters/react/components';

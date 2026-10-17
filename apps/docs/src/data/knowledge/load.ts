@@ -4,7 +4,6 @@ type Expected = { buildId: string; packageVersions: Record<string, string> };
 let pending: Promise<KnowledgeManifest> | undefined;
 let pendingKey: string | undefined;
 
-/** No persistent cache: a failed request is evicted, and a changed build never reuses entries. */
 export async function loadKnowledge(expected?: Expected, fetcher: typeof fetch = fetch): Promise<KnowledgeManifest> {
   const pageBuild = typeof document === 'undefined' ? null : document.querySelector<HTMLMetaElement>('meta[name="knowledge-build"]')?.content;
   const pageVersions = typeof document === 'undefined' ? null : document.querySelector<HTMLMetaElement>('meta[name="knowledge-versions"]')?.content;

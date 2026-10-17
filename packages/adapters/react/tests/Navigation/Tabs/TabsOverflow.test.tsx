@@ -78,7 +78,6 @@ beforeEach(() => {
       ? this.hasAttribute('data-test-open')
       : matches.call(this, selector);
   });
-  // jsdom has no Popover API; emulate its open/close state, not Tabs behavior.
   Object.defineProperty(HTMLElement.prototype, 'showPopover', {
     configurable: true,
     value(this: HTMLElement) {

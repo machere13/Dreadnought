@@ -83,7 +83,6 @@ export function catalogChunks(catalog, pages) {
   const entries = [];
   for (const entity of catalog.entries) {
     if (!entity.docsUrl) continue;
-    // A declared public docs URL must work; records with no docsUrl remain catalog-only.
     validateLink(entity.docsUrl, pages);
     const sourceId = `catalog:${entity.id}`;
     const base = { sourceKind: 'catalog', sourceId, url: entity.docsUrl };
