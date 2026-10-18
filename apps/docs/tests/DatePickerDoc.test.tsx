@@ -28,24 +28,24 @@ it('keeps advanced API and example code available through explicit disclosure', 
   const api = screen.getByRole('table', { name: 'DatePicker API', exact: true });
   expect(within(api).getByRole('rowheader', { name: 'value', exact: true })).toBeTruthy();
   expect(within(api).queryByRole('rowheader', { name: 'slotClassNames' })).toBeNull();
-  const allTypes = api.closest('section')!.querySelector('details')!;
-  expect(allTypes).not.toBeNull();
-  expect(allTypes.open).toBe(false);
-  await user.click(within(allTypes).getByText(/Остальные свойства/));
+  const allTypes = screen.getByRole('button', { name: /Остальные свойства/ });
+  expect(allTypes.getAttribute('aria-expanded')).toBe('false');
+  await user.click(allTypes);
   const otherApi = screen.getByRole('table', { name: 'DatePicker: остальные свойства' });
   const properties = [
     ...within(api).getAllByRole('rowheader'),
     ...within(otherApi).getAllByRole('rowheader'),
   ].map((cell) => cell.textContent);
   expect(properties.sort()).toEqual(datePickerDoc.apiRows.map(([name]) => name).sort());
-  expect(within(allTypes).getByRole('rowheader', { name: 'slotClassNames' })).toBeTruthy();
+  expect(within(otherApi).getByRole('rowheader', { name: 'slotClassNames' })).toBeTruthy();
 
   const range = screen.getByRole('region', { name: datePickerDoc.examples![1].title });
-  const code = range.querySelector('details')!;
-  expect(code.open).toBe(false);
-  await user.click(within(range).getByText('Код примера'));
-  expect(code.open).toBe(true);
-  expect(code.querySelector('pre')?.textContent).toBe(datePickerDoc.examples![1].code);
+  const code = within(range).getByRole('button', { name: 'Код примера' });
+  expect(code.getAttribute('aria-expanded')).toBe('false');
+  await user.click(code);
+  expect(code.getAttribute('aria-expanded')).toBe('true');
+  const panel = document.getElementById(code.getAttribute('aria-controls')!)!;
+  expect(panel.querySelector('pre')?.textContent).toBe(datePickerDoc.examples![1].code);
 
   const outline = within(screen.getByRole('navigation', { name: 'На этой странице' }));
   const notes = outline.getByRole('link', { name: 'Поведение и ограничения', hidden: true });

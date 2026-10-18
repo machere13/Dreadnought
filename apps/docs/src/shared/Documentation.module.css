@@ -115,21 +115,6 @@
 
 .disclosure { min-width: 0; }
 
-.disclosure > summary {
-  width: fit-content;
-  padding-block: var(--dreadnought-spacing-x2);
-  color: var(--dreadnought-color-text-primary);
-  font-size: var(--dreadnought-font-size-body-3);
-  cursor: pointer;
-}
-
-.disclosure > summary:focus-visible {
-  outline: var(--dreadnought-border-width-x2) solid var(--dreadnought-color-focus-ring);
-  outline-offset: var(--dreadnought-spacing-x1);
-}
-
-.disclosureContent { min-width: 0; padding-block-start: var(--dreadnought-spacing-x2); }
-
 .usage,
 .notes { max-width: 65ch; }
 
@@ -221,11 +206,9 @@
 
 .apiTable a { color: inherit; text-underline-offset: 0.2em; }
 
-.apiType summary { cursor: pointer; text-decoration: underline; text-underline-offset: 0.2em; }
+.apiType { min-width: 0; }
 
-.apiType summary:focus-visible { outline: var(--dreadnought-border-width-x2) solid var(--dreadnought-color-focus-ring); }
-
-.apiType code { display: block; margin-block-start: var(--dreadnought-spacing-x2); }
+.apiType code { display: block; }
 
 .apiTable a:focus-visible { outline: var(--dreadnought-border-width-x2) solid var(--dreadnought-color-focus-ring); }
 

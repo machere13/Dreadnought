@@ -1,4 +1,4 @@
-import { Table } from '@dreadnought/ui/react';
+import { Accordion, Table } from '@dreadnought/ui/react';
 import type { ApiGroup, ApiRow } from '../data/catalog/getCatalogDoc.ts';
 import styles from './Documentation.module.css';
 
@@ -42,10 +42,14 @@ export function ApiTable({
                       <code>{values}</code>
                     </a>
                   ) : values.length > 160 ? (
-                    <details className={styles.apiType}>
-                      <summary>Полный тип</summary>
-                      <code>{values}</code>
-                    </details>
+                    <Accordion className={styles.apiType}>
+                      <Accordion.Item value="type">
+                        <Accordion.Trigger headingLevel={4}>Полный тип</Accordion.Trigger>
+                        <Accordion.Panel>
+                          <code>{values}</code>
+                        </Accordion.Panel>
+                      </Accordion.Item>
+                    </Accordion>
                   ) : (
                     <code>{values}</code>
                   )}

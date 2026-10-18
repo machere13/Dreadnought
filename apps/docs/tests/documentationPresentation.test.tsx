@@ -124,7 +124,7 @@ it('uses specific concise explanations for previously vague properties', () => {
 
 it('collapses long inline types without truncating them or hiding enum values', () => {
   const value = `{ callback: (${Array.from({ length: 25 }, (_, i) => `arg${i}: string`).join(', ')}) => void }`;
-  const { container } = render(
+  render(
     <ApiTable
       component="example"
       label="Пример API"
@@ -134,12 +134,13 @@ it('collapses long inline types without truncating them or hiding enum values', 
       ]}
     />,
   );
-  const details = container.querySelector('details')!;
-  expect(details.open).toBe(false);
-  expect(details.querySelector('code')?.textContent).toBe(value);
+  const toggle = screen.getByRole('button', { name: 'Полный тип' });
+  const panel = document.getElementById(toggle.getAttribute('aria-controls')!)!;
+  expect(panel.hidden).toBe(true);
+  expect(panel.querySelector('code')?.textContent).toBe(value);
   expect(within(screen.getByRole('table')).getByText('top | bottom')).toBeTruthy();
-  fireEvent.click(screen.getByText('Полный тип'));
-  expect(details.open).toBe(true);
+  fireEvent.click(toggle);
+  expect(panel.hidden).toBe(false);
 });
 
 it('keeps links to documented type groups instead of collapsing them', () => {

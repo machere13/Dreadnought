@@ -1,4 +1,4 @@
-import { Breadcrumb, CodeBlock } from '@dreadnought/ui/react';
+import { Accordion, Breadcrumb, CodeBlock } from '@dreadnought/ui/react';
 import type { ComponentSection } from '../app/navigation.ts';
 import type { ComponentDoc } from './types.ts';
 import { PageHeading } from './PageHeading.tsx';
@@ -72,12 +72,14 @@ export function ComponentDocumentation({
                 <p className={styles.bodyText}>{example.description}</p>
                 <div className={styles.demo}>{example.demo}</div>
                 {index > 0 ? (
-                  <details className={styles.disclosure}>
-                    <summary>Код примера</summary>
-                    <div className={styles.disclosureContent}>
-                      <CodeBlock code={example.code} language="tsx" copyLabels={copyLabels} />
-                    </div>
-                  </details>
+                  <Accordion className={styles.disclosure}>
+                    <Accordion.Item value="code">
+                      <Accordion.Trigger headingLevel={4}>Код примера</Accordion.Trigger>
+                      <Accordion.Panel>
+                        <CodeBlock code={example.code} language="tsx" copyLabels={copyLabels} />
+                      </Accordion.Panel>
+                    </Accordion.Item>
+                  </Accordion>
                 ) : (
                   <CodeBlock code={example.code} language="tsx" copyLabels={copyLabels} />
                 )}
@@ -108,17 +110,21 @@ export function ComponentDocumentation({
             groups={doc.apiGroups}
           />
           {otherRows.length > 0 && (
-            <details className={styles.disclosure}>
-              <summary>Остальные свойства ({otherRows.length})</summary>
-              <div className={styles.disclosureContent}>
-                <ApiTable
-                  component={component}
-                  label={`${doc.title}: остальные свойства`}
-                  rows={otherRows}
-                  groups={doc.apiGroups}
-                />
-              </div>
-            </details>
+            <Accordion className={styles.disclosure}>
+              <Accordion.Item value="api">
+                <Accordion.Trigger headingLevel={3}>
+                  Остальные свойства ({otherRows.length})
+                </Accordion.Trigger>
+                <Accordion.Panel>
+                  <ApiTable
+                    component={component}
+                    label={`${doc.title}: остальные свойства`}
+                    rows={otherRows}
+                    groups={doc.apiGroups}
+                  />
+                </Accordion.Panel>
+              </Accordion.Item>
+            </Accordion>
           )}
           {doc.apiGroups?.map((group) => (
             <div key={group.title} className={styles.apiGroup}>
