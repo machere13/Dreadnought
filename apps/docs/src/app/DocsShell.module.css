@@ -86,6 +86,15 @@
   font-size: var(--dreadnought-font-size-caption-2);
 }
 
+.navigationMenu {
+  --dreadnought-menu-bg: transparent;
+  --dreadnought-menu-border-width: 0;
+  --dreadnought-menu-padding: 0;
+  --dreadnought-font-size-menu-item: var(--dreadnought-font-size-label-2);
+  width: 100%;
+  min-width: 0;
+}
+
 .navigationFamilies {
   --dreadnought-accordion-root-gap: var(--dreadnought-spacing-x1);
   --dreadnought-accordion-border-width: 0;
@@ -98,26 +107,6 @@
   --dreadnought-font-weight-accordion-trigger: var(--dreadnought-font-weight-body-2);
 }
 
-.familyLinks:not([hidden]) {
-  display: grid;
-  gap: var(--dreadnought-spacing-x1);
-}
-
-.navigationLink {
-  display: block;
-  padding: var(--dreadnought-spacing-x2) var(--dreadnought-spacing-x4);
-  border-radius: var(--dreadnought-border-radius-x1);
-  color: var(--dreadnought-color-text-placeholder);
-  font-size: var(--dreadnought-font-size-label-2);
-  text-decoration: none;
-}
-
-.navigationLink:hover,
-.navigationLink[aria-current="page"] { background: var(--dreadnought-color-surface-default); }
-
-.navigationLink[aria-current="page"] { color: var(--dreadnought-color-text-primary); font-weight: var(--dreadnought-font-weight-label-2); }
-
-.navigationLink:focus-visible,
 .brand a:focus-visible { outline: var(--dreadnought-border-width-x2) solid var(--dreadnought-color-focus-ring); }
 
 .footer { --dreadnought-layout-footer-padding: var(--dreadnought-spacing-x4); }

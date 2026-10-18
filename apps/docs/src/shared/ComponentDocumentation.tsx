@@ -1,4 +1,4 @@
-import { Accordion, Breadcrumb, CodeBlock } from '@dreadnought/ui/react';
+import { Accordion, Breadcrumb, Card, CodeBlock } from '@dreadnought/ui/react';
 import type { ComponentSection } from '../app/navigation.ts';
 import type { ComponentDoc } from './types.ts';
 import { PageHeading } from './PageHeading.tsx';
@@ -70,7 +70,7 @@ export function ComponentDocumentation({
                   {example.title}
                 </h3>
                 <p className={styles.bodyText}>{example.description}</p>
-                <div className={styles.demo}>{example.demo}</div>
+                <Card className={styles.demo}>{example.demo}</Card>
                 {index > 0 ? (
                   <Accordion className={styles.disclosure}>
                     <Accordion.Item value="code">

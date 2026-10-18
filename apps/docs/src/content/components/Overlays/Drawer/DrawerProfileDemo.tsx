@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Input, Drawer } from '@dreadnought/ui/react';
+import { Button, Input, Drawer, Form, FormField } from '@dreadnought/ui/react';
 
 export function DrawerProfileDemo() {
   const [open, setOpen] = useState(false);
@@ -17,7 +17,7 @@ export function DrawerProfileDemo() {
           setOpen(next);
         }}
         content={({ close }) => (
-          <form
+          <Form
             id="drawer-profile-form"
             onSubmit={(event) => {
               event.preventDefault();
@@ -28,14 +28,17 @@ export function DrawerProfileDemo() {
             style={{ display: 'grid', gap: 16 }}
           >
             <h2>Профиль</h2>
-            <label htmlFor="drawer-profile-name">Имя профиля</label>
-            <Input
-              id="drawer-profile-name"
-              required
-              value={draft}
-              onChange={(event) => setDraft(event.target.value)}
-              placeholder="Ваше имя"
-            />
+            <FormField label="Имя профиля" required>
+              {(props) => (
+                <Input
+                  {...props}
+                  required
+                  value={draft}
+                  onChange={(event) => setDraft(event.target.value)}
+                  placeholder="Ваше имя"
+                />
+              )}
+            </FormField>
             <div style={{ display: 'flex', gap: 8 }}>
               <Button variant="secondary" onClick={close}>
                 Отмена
@@ -44,7 +47,7 @@ export function DrawerProfileDemo() {
                 Сохранить профиль
               </Button>
             </div>
-          </form>
+          </Form>
         )}
       >
         {(trigger) => <Button {...trigger}>Настроить профиль</Button>}

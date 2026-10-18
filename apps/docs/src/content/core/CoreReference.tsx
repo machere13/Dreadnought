@@ -1,4 +1,4 @@
-import { Accordion, Breadcrumb, CodeBlock, Table } from '@dreadnought/ui/react';
+import { Accordion, Breadcrumb, Card, CodeBlock, Table } from '@dreadnought/ui/react';
 import { DocsShell } from '../../app/DocsShell.tsx';
 import { coreTitles, type CoreSection } from '../../app/navigation.ts';
 import data from '../../data/catalog/generated/catalog-docs.json';
@@ -60,8 +60,10 @@ export function CoreReference({ kind }: { kind: CoreSection }) {
       <nav aria-label="Функции раздела">
         <ul className={styles.specimenGrid}>
           {entries.map((entry) => (
-            <li key={entry.name} className={styles.specimen}>
-              <a href={`#${entry.name}`}><code>{entry.name}</code></a>
+            <li key={entry.name}>
+              <Card size="compact" className={styles.specimen}>
+                <a href={`#${entry.name}`}><code>{entry.name}</code></a>
+              </Card>
             </li>
           ))}
         </ul>

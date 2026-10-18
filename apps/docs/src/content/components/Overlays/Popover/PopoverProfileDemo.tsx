@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Input, Popover } from '@dreadnought/ui/react';
+import { Button, Form, FormField, Input, Popover } from '@dreadnought/ui/react';
 
 export function PopoverProfileDemo() {
   const [name, setName] = useState('Анна');
@@ -12,7 +12,7 @@ export function PopoverProfileDemo() {
           if (open) setDraft(name);
         }}
         content={({ close }) => (
-          <form
+          <Form
             style={{ display: 'grid', gap: 12 }}
             onSubmit={(event) => {
               event.preventDefault();
@@ -20,14 +20,18 @@ export function PopoverProfileDemo() {
               close();
             }}
           >
-            <Input
-              aria-label="Имя профиля"
-              value={draft}
-              onChange={(event) => setDraft(event.target.value)}
-              required
-            />
+            <FormField label="Имя профиля" required>
+              {(props) => (
+                <Input
+                  {...props}
+                  value={draft}
+                  onChange={(event) => setDraft(event.target.value)}
+                  required
+                />
+              )}
+            </FormField>
             <Button type="submit">Готово</Button>
-          </form>
+          </Form>
         )}
       >
         {(trigger) => <Button {...trigger}>Настройки профиля</Button>}

@@ -1,7 +1,7 @@
 import { DocsShell } from '../../app/DocsShell.tsx';
 import { useState } from 'react';
 import { copy, getButtonState, getSelectionValue } from '@dreadnought/core';
-import { Breadcrumb, CodeBlock } from '@dreadnought/ui/react';
+import { Breadcrumb, Card, CodeBlock } from '@dreadnought/ui/react';
 import styles from '../../shared/Documentation.module.css';
 import { DisclosureDemo } from './DisclosureDemo.tsx';
 import { disclosureCode } from './disclosureCode.ts';
@@ -66,7 +66,7 @@ function CoreDemo() {
     }
   }
 
-  return <div className={styles.demo}>
+  return <Card className={styles.demo}>
     <div className={styles.demoRow}>
       <button type="button" className={styles.coreDemoButton}
         disabled={state.disabled}
@@ -77,7 +77,7 @@ function CoreDemo() {
       </button>
       <span role="status" className={styles.demoResult}>{message}</span>
     </div>
-  </div>;
+  </Card>;
 }
 
 const choices = [{ value: 'news', label: 'Новости' }, { value: 'updates', label: 'Обновления' }, { value: 'archive', label: 'Архив', disabled: true }];
@@ -98,7 +98,7 @@ export function TopicPicker() {
 
 function SelectionDemo() {
   const [selected, setSelected] = useState<string[]>([]);
-  return <div className={styles.demo}>
+  return <Card className={styles.demo}>
     <div role="group" aria-label="Темы" className={styles.demoRow}>
       {choices.map(choice => <button key={choice.value} type="button" className={styles.coreDemoButton}
         aria-pressed={selected.includes(choice.value)} disabled={choice.disabled}
@@ -108,7 +108,7 @@ function SelectionDemo() {
       </button>)}
     </div>
     <p role="status" className={styles.demoResult}>Выбрано: {choices.filter(choice => selected.includes(choice.value)).map(choice => choice.label).join(', ') || 'ничего'}</p>
-  </div>;
+  </Card>;
 }
 
 export function CustomComponentsGuide() {

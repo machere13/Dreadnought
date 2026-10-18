@@ -98,11 +98,9 @@
 }
 
 .demo {
+  --dreadnought-card-bg: var(--dreadnought-code-block-bg);
+  --dreadnought-card-padding: calc(var(--dreadnought-spacing-x4) * 2);
   min-width: 0;
-  padding: calc(var(--dreadnought-spacing-x4) * 2);
-  border: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle);
-  border-radius: var(--dreadnought-border-radius-x1);
-  background: var(--dreadnought-code-block-bg);
 }
 
 .demoRow { display: flex; flex-wrap: wrap; align-items: center; gap: var(--dreadnought-spacing-x4); }
@@ -148,7 +146,7 @@
 
 .specimenGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: var(--dreadnought-spacing-x2); margin: 0; padding: 0; list-style: none; }
 
-.specimen { display: flex; align-items: center; gap: var(--dreadnought-spacing-x4); min-width: 0; padding: var(--dreadnought-spacing-x4); border: var(--dreadnought-border-width-outline) solid var(--dreadnought-color-border-subtle); border-radius: var(--dreadnought-border-radius-x1); color: var(--dreadnought-color-text-primary); }
+.specimen { min-width: 0; height: 100%; }
 
 .specimen code { overflow-wrap: anywhere; }
 

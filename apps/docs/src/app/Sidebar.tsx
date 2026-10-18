@@ -1,4 +1,4 @@
-import { Accordion, Layout } from '@dreadnought/ui/react';
+import { Accordion, Layout, Menu } from '@dreadnought/ui/react';
 import type { useKnowledge } from '../data/knowledge/useKnowledge.ts';
 import { DocsSearch } from '../features/search/DocsSearch.tsx';
 import { componentFamilies, componentTitles, coreTitles, type DocsSection } from './navigation.ts';
@@ -22,45 +22,30 @@ export function Sidebar({
       <DocsSearch knowledge={knowledge}>
         <nav className={styles.navigation} aria-label="Страницы документации">
           <span className={styles.navigationGroup}>Начало</span>
-          <a
-            className={styles.navigationLink}
-            href="/"
-            aria-current={section === 'overview' ? 'page' : undefined}
-          >
-            Обзор
-          </a>
-          <a
-            className={styles.navigationLink}
-            href="/getting-started/"
-            aria-current={section === 'getting-started' ? 'page' : undefined}
-          >
-            Начало работы
-          </a>
-          <a
-            className={styles.navigationLink}
-            href="/theming/"
-            aria-current={section === 'theming' ? 'page' : undefined}
-          >
-            Тема и токены
-          </a>
-          <a
-            className={styles.navigationLink}
-            href="/custom-components/"
-            aria-current={section === 'custom-components' ? 'page' : undefined}
-          >
-            Свой компонент
-          </a>
+          <Menu
+            className={styles.navigationMenu}
+            mode="navigation"
+            aria-label="Начало"
+            selectedValue={section}
+            items={[
+              { value: 'overview', label: 'Обзор', href: '/' },
+              { value: 'getting-started', label: 'Начало работы', href: '/getting-started/' },
+              { value: 'theming', label: 'Тема и токены', href: '/theming/' },
+              { value: 'custom-components', label: 'Свой компонент', href: '/custom-components/' },
+            ]}
+          />
           <span className={styles.navigationGroup}>Core</span>
-          {Object.entries(coreTitles).map(([kind, title]) => (
-            <a
-              key={kind}
-              className={styles.navigationLink}
-              href={`/core/${kind}/`}
-              aria-current={section === `core-${kind}` ? 'page' : undefined}
-            >
-              {title}
-            </a>
-          ))}
+          <Menu
+            className={styles.navigationMenu}
+            mode="navigation"
+            aria-label="Core"
+            selectedValue={section}
+            items={Object.entries(coreTitles).map(([kind, title]) => ({
+              value: `core-${kind}`,
+              label: title,
+              href: `/core/${kind}/`,
+            }))}
+          />
           <span className={styles.navigationGroup}>Компоненты</span>
           <Accordion
             key={section}
@@ -73,17 +58,18 @@ export function Sidebar({
             {componentFamilies.map((family) => (
               <Accordion.Item key={family.name} value={family.name}>
                 <Accordion.Trigger headingLevel={2}>{family.name}</Accordion.Trigger>
-                <Accordion.Panel className={styles.familyLinks}>
-                  {family.sections.map((component) => (
-                    <a
-                      key={component}
-                      className={styles.navigationLink}
-                      href={`/components/${component}/`}
-                      aria-current={section === component ? 'page' : undefined}
-                    >
-                      {componentTitles[component]}
-                    </a>
-                  ))}
+                <Accordion.Panel mountPolicy="lazy">
+                  <Menu
+                    className={styles.navigationMenu}
+                    mode="navigation"
+                    aria-label={`Компоненты ${family.name}`}
+                    selectedValue={section}
+                    items={family.sections.map((component) => ({
+                      value: component,
+                      label: componentTitles[component],
+                      href: `/components/${component}/`,
+                    }))}
+                  />
                 </Accordion.Panel>
               </Accordion.Item>
             ))}

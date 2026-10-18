@@ -1,5 +1,5 @@
 import { DocsShell } from '../../app/DocsShell.tsx';
-import { Breadcrumb, Button, CodeBlock } from '@dreadnought/ui/react';
+import { Breadcrumb, Button, Card, CodeBlock } from '@dreadnought/ui/react';
 import styles from '../../shared/Documentation.module.css';
 
 const copyLabels = { copy: 'Копировать', copied: 'Скопировано', error: 'Ошибка копирования' };
@@ -30,14 +30,14 @@ import styles from './Navigation.module.css';
 <Breadcrumb items={items} slotClassNames={{ current: styles.current }} />`;
 
 function TokenDemo() {
-  return <div className={styles.demo}>
+  return <Card className={styles.demo}>
     <div className={styles.themeDemoScope}>
       <Button>Кнопка в области</Button>
       <Button variant="secondary">Другая кнопка</Button>
       <Button className={styles.special}>Одна кнопка</Button>
     </div>
     <p className={styles.demoResult}>В области изменён токен отступа Button; у последней кнопки он задан отдельно через className.</p>
-  </div>;
+  </Card>;
 }
 
 export function ThemingGuide() {

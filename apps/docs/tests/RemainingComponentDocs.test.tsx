@@ -139,9 +139,8 @@ it('accepts parent opening and closing while page controls remain available', ()
   const root = dialog.parentElement!;
   const originalPlacement = root.className;
   expect(root.style.top).toBe('80px');
-  fireEvent.change(screen.getByRole('combobox', { name: 'Положение панели' }), {
-    target: { value: 'bottom-right' },
-  });
+  fireEvent.click(screen.getByRole('combobox', { name: 'Положение панели' }));
+  fireEvent.click(screen.getByRole('option', { name: 'Снизу справа' }));
   expect(screen.getByRole('dialog')).toBe(dialog);
   expect(root.className).not.toBe(originalPlacement);
   expect(root.style.bottom).toBe('160px');

@@ -217,10 +217,11 @@ describe('documentation assistant', () => {
     load();
     expect(mocked.create).toHaveBeenCalledTimes(1);
     act(() => listener({ type: 'progress', progress: 0.35 }));
-    expect(screen.getByRole('progressbar').getAttribute('value')).toBe('35');
+    expect(screen.getByRole('progressbar', { name: 'Загрузка модели' }).getAttribute('aria-valuenow')).toBe('35');
     ready();
     expect(generate).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: 'Ответить по источникам' }));
+    expect(screen.getByRole('status', { name: 'Подготовка ответа' })).toBeTruthy();
     answer(generate.mock.calls[0][0]);
     expect(screen.getByText('Используйте type=password.')).toBeTruthy();
     expect(

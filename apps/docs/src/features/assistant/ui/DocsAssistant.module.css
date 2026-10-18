@@ -81,10 +81,6 @@
 .sendIcon {
   transform: rotate(-90deg);
 }
-.panel progress {
-  width: 100%;
-  accent-color: var(--dreadnought-color-focus-ring);
-}
 .composer {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;

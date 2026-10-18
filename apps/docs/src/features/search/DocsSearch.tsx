@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { Button, Input } from '@dreadnought/ui/react';
+import { Alert, Button, Input, Loader, Menu } from '@dreadnought/ui/react';
 import { searchKnowledge } from '../../data/knowledge/search.ts';
 import type { useKnowledge } from '../../data/knowledge/useKnowledge.ts';
 import styles from './DocsSearch.module.css';
@@ -26,23 +26,40 @@ export function DocsSearch({
       </div>
       {query.trim() ? (
         <div className={styles.searchResults}>
-          <span className={styles.navigationGroup} role="status">
-            {knowledge.loading ? 'Загрузка поиска…' : `Результаты поиска: ${results.length}`}
-          </span>
+          {knowledge.loading ? (
+            <Loader size="small" label="Загрузка поиска…" showLabel />
+          ) : (
+            <span className={styles.navigationGroup} role="status">
+              Результаты поиска: {results.length}
+            </span>
+          )}
           {knowledge.error ? (
-            <div role="alert">
-              <p>{knowledge.error}</p>
-              <Button size="compact" variant="secondary" onClick={knowledge.retry}>
-                Повторить
-              </Button>
-            </div>
+            <Alert
+              type="error"
+              description={knowledge.error}
+              action={
+                <Button size="compact" variant="secondary" onClick={knowledge.retry}>
+                  Повторить
+                </Button>
+              }
+            />
           ) : results.length ? (
-            results.map((result) => (
-              <a key={result.id} className={styles.searchResult} href={result.url}>
-                <strong>{result.title}</strong>
-                <span>{result.text.slice(0, 150)}</span>
-              </a>
-            ))
+            <Menu
+              className={styles.resultsMenu}
+              mode="navigation"
+              aria-label="Результаты поиска"
+              items={results.map((result) => ({
+                value: result.id,
+                href: result.url,
+                ariaLabel: result.title,
+                label: (
+                  <div className={styles.resultText}>
+                    <strong>{result.title}</strong>
+                    <span>{result.text.slice(0, 150)}</span>
+                  </div>
+                ),
+              }))}
+            />
           ) : (
             !knowledge.loading && <p className={styles.searchEmpty}>Ничего не найдено</p>
           )}

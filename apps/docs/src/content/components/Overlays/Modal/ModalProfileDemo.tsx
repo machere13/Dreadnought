@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Input, Modal } from '@dreadnought/ui/react';
+import { Button, Form, FormField, Input, Modal } from '@dreadnought/ui/react';
 
 export function ModalProfileDemo() {
   const [open, setOpen] = useState(false);
@@ -17,7 +17,7 @@ export function ModalProfileDemo() {
           setOpen(next);
         }}
         content={({ close }) => (
-          <form
+          <Form
             id="modal-profile-form"
             onSubmit={(event) => {
               event.preventDefault();
@@ -27,15 +27,18 @@ export function ModalProfileDemo() {
             }}
             style={{ display: 'grid', gap: 16 }}
           >
-            <label htmlFor="modal-profile-name">Имя профиля</label>
-            <Input
-              id="modal-profile-name"
-              required
-              value={draft}
-              onChange={(event) => setDraft(event.target.value)}
-              placeholder="Ваше имя"
-            />
-          </form>
+            <FormField label="Имя профиля" required>
+              {(props) => (
+                <Input
+                  {...props}
+                  required
+                  value={draft}
+                  onChange={(event) => setDraft(event.target.value)}
+                  placeholder="Ваше имя"
+                />
+              )}
+            </FormField>
+          </Form>
         )}
         footer={({ close }) => (
           <>

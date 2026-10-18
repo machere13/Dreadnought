@@ -1,5 +1,13 @@
 import { useEffect, useId, useRef } from 'react';
-import { Button, FloatingPanel, Icon, TextArea } from '@dreadnought/ui/react';
+import {
+  Button,
+  FloatingPanel,
+  Form,
+  Icon,
+  Loader,
+  Progress,
+  TextArea,
+} from '@dreadnought/ui/react';
 import type { KnowledgeEntry } from '../../../data/knowledge/types.ts';
 import { safeSourceUrl, validQuestion } from '../context.ts';
 import { useDocsAssistant } from '../useDocsAssistant.ts';
@@ -92,7 +100,12 @@ export function DocsAssistant({
             {phase === 'loading' && (
               <>
                 <p>Загрузка модели: {progress}%</p>
-                <progress value={progress} max={100} aria-label="Загрузка модели" />
+                <Progress
+                  value={progress}
+                  max={100}
+                  showPercent={false}
+                  aria-label="Загрузка модели"
+                />
               </>
             )}
             {phase === 'ready' && !notice && (
@@ -101,7 +114,7 @@ export function DocsAssistant({
             {phase === 'generating' && (
               <>
                 <p>Готовим ответ… Это может занять несколько минут.</p>
-                <progress aria-label="Подготовка ответа" />
+                <Loader size="small" label="Подготовка ответа" />
               </>
             )}
             {notice && <p>{notice}</p>}
@@ -127,7 +140,7 @@ export function DocsAssistant({
         </>
       }
       footer={
-        <form
+        <Form
           className={styles.composer}
           onSubmit={(event) => {
             event.preventDefault();
@@ -166,7 +179,7 @@ export function DocsAssistant({
               icon={<Icon name="down" className={styles.sendIcon} />}
             />
           )}
-        </form>
+        </Form>
       }
     >
       {(triggerProps) => <Button {...triggerProps}>Спросить документацию</Button>}

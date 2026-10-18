@@ -320,17 +320,20 @@ describe('documentation pages', () => {
   it('groups component links by family and opens the current family', () => {
     render(<DocsPage section="table" />);
 
-    const dataDisplay = screen.getByRole('button', { name: 'DataDisplay' });
-    const controls = screen.getByRole('button', { name: 'Controls' });
+    const navigation = within(screen.getByRole('navigation', { name: 'Страницы документации' }));
+    const dataDisplay = navigation.getByRole('button', { name: 'DataDisplay' });
+    const controls = navigation.getByRole('button', { name: 'Controls' });
     expect(dataDisplay.getAttribute('aria-expanded')).toBe('true');
     expect(controls.getAttribute('aria-expanded')).toBe('false');
-    expect(screen.getByRole('link', { name: 'Table' }).getAttribute('aria-current')).toBe('page');
+    expect(navigation.queryByRole('navigation', { name: 'Компоненты Controls', hidden: true })).toBeNull();
+    expect(navigation.getByRole('link', { name: 'Table' }).getAttribute('aria-current')).toBe('page');
     fireEvent.click(controls);
     expect(controls.getAttribute('aria-expanded')).toBe('true');
-    expect(screen.getByRole('link', { name: 'Button' })).toBeTruthy();
+    expect(navigation.getByRole('link', { name: 'Button' })).toBeTruthy();
     expect(dataDisplay.getAttribute('aria-expanded')).toBe('true');
     fireEvent.click(controls);
-    expect(screen.queryByRole('link', { name: 'Button' })).toBeNull();
+    expect(navigation.queryByRole('link', { name: 'Button' })).toBeNull();
+    expect(navigation.getByRole('navigation', { name: 'Компоненты Controls', hidden: true })).toBeTruthy();
   });
 
   it('searches page content and API properties without losing the regular navigation', () => {

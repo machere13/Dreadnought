@@ -1,5 +1,6 @@
 import { useId, useLayoutEffect, useRef, useState } from 'react';
 import type { MouseEventHandler } from 'react';
+import { Card } from '@dreadnought/ui/react';
 import { getDisclosureOpen, getDisclosureState } from '@dreadnought/core';
 import type { DisclosureAction } from '@dreadnought/core';
 import styles from '../../shared/Documentation.module.css';
@@ -38,7 +39,7 @@ export function DisclosureDemo({ open, defaultOpen = false, disabled = false,
     onOpenChange?.(next);
   }
 
-  return <div className={styles.demo}>
+  return <Card className={styles.demo}>
     <button {...state.triggerProps} ref={triggerRef} className={styles.coreDemoButton} onClick={event => {
       onTriggerClick?.(event);
       if (!event.defaultPrevented) request('toggle');
@@ -48,5 +49,5 @@ export function DisclosureDemo({ open, defaultOpen = false, disabled = false,
       <button type="button" className={styles.coreDemoButton} disabled={disabled}
         onClick={() => request('close')}>Закрыть настройки</button>
     </div>
-  </div>;
+  </Card>;
 }
