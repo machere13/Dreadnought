@@ -292,10 +292,13 @@ export async function syncLibrary(figma, data, progress = () => {}, icons = null
   progress('Исправляю компоненты и стенды…');
   const repairs = await repairComponents(figma, page, tokens.byCss);
   const additions = icons ? await addComponents(figma, page, tokens.byCss, icons, progress) : null;
-  const review = page.children.find(
-    (n) =>
-      n.name === (additions ? 'Dreadnought / Checkbox / Review' : 'Dreadnought / Button / Review'),
-  );
+  const firstCreated = additions?.componentSets.find((set) => set.created);
+  const reviewName = firstCreated
+    ? firstCreated.name.replace('Dreadnought/', 'Dreadnought / ') + ' / Review'
+    : additions
+      ? 'Dreadnought / Checkbox / Review'
+      : 'Dreadnought / Button / Review';
+  const review = page.children.find((n) => n.name === reviewName);
   if (review) figma.viewport.scrollAndZoomIntoView([review]);
   return {
     tokens: tokens.byCss.size,

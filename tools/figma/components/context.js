@@ -259,6 +259,13 @@ export async function reviewBoard(ctx, spec, set, x, y) {
         );
         if (clearKey && !main.name.includes('selection=empty'))
           instance.setProperties({ [clearKey]: true });
+        for (const [name, value] of Object.entries(spec.reviewProperties || {})) {
+          const key = Object.keys(set.componentPropertyDefinitions).find((key) =>
+            key.startsWith(name + '#'),
+          );
+          if (!key) throw new Error('Нет свойства стенда ' + name);
+          instance.setProperties({ [key]: value });
+        }
       }
     }
     return root;

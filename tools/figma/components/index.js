@@ -2,6 +2,13 @@ import { componentContext, ensureSet, reviewBoard } from './context.js';
 import { checkableSpecs, renderCheckable } from './checkable.js';
 import { markSpec, renderMark, badgeSpec, badgeIcon, renderBadge } from './badge.js';
 import {
+  feedbackSpecs,
+  alertFilledColors,
+  renderNotice,
+  renderLoader,
+  renderLoaderOverlay,
+} from './feedback.js';
+import {
   selectSpecs,
   optionSpec,
   popupSpec,
@@ -17,6 +24,7 @@ export const componentSpecs = [
   ...selectSpecs,
   popupSpec,
   badgeSpec,
+  ...feedbackSpecs,
 ];
 export const componentReviewNames = componentSpecs.map(
   (spec) => spec.name.replace('Dreadnought/', 'Dreadnought / ') + ' / Review',
@@ -66,13 +74,24 @@ export async function addComponents(figma, page, variables, icons, progress = ()
     },
     (node, properties) => renderBadge(ctx, node, properties, mark, icon),
   );
+  const filled = await alertFilledColors(ctx);
+  await add(feedbackSpecs[0], (node, properties) =>
+    renderNotice(ctx, node, properties, 'alert', filled),
+  );
+  await add(feedbackSpecs[1], (node, properties) => renderNotice(ctx, node, properties, 'toast'));
+  const loader = await add(feedbackSpecs[2], (node, properties) =>
+    renderLoader(ctx, node, properties),
+  );
+  await add(feedbackSpecs[3], (node, properties) =>
+    renderLoaderOverlay(ctx, node, properties, loader),
+  );
   const reviewX = Math.max(0, ...page.children.map((n) => n.x + n.width)) + 160;
   let reviewY = 40;
   const frames = [];
   for (const { spec, set } of results) {
     const frame = await reviewBoard(ctx, spec, set, reviewX, reviewY);
     frames.push({ id: frame.id, name: frame.name });
-    reviewY += frame.height + 100;
+    if (frame.x === reviewX) reviewY += frame.height + 100;
   }
   const createdNodes = await Promise.all(ctx.created.map((id) => figma.getNodeByIdAsync(id)));
   return {

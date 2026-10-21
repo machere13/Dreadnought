@@ -8,6 +8,10 @@ const definitions = {
   down: 'DownOutlined',
   close: 'CloseOutlined',
   plus: 'PlusOutlined',
+  info: 'InfoCircleOutlined',
+  success: 'CheckCircleOutlined',
+  warning: 'WarningOutlined',
+  error: 'CloseCircleOutlined',
 };
 function xml(node) {
   const attrs = Object.entries(node.attrs || {})
