@@ -3,7 +3,19 @@ import { mockFigma } from './figmaMock.mjs';
 export function canvasMock(opacityScale = 1) {
   const mock = mockFigma(opacityScale);
   const { api, page, styles } = mock;
+  const availableFonts = api.listAvailableFontsAsync;
+  api.listAvailableFontsAsync = async () => [
+    ...(await availableFonts()),
+    { fontName: { family: 'Roboto Mono', style: 'Regular' } },
+  ];
   const nodes = new Map([[page.id, page]]);
+  const effects = [];
+  api.getLocalEffectStylesAsync = async () => effects;
+  api.createEffectStyle = () => {
+    const style = { id: 'effect-' + effects.length, name: '', effects: [] };
+    effects.push(style);
+    return style;
+  };
   let next = 0;
   function descendants(node) {
     return node.children.flatMap((child) => [child, ...descendants(child)]);
@@ -83,6 +95,12 @@ export function canvasMock(opacityScale = 1) {
           lineHeight: style.lineHeight,
         });
       },
+      async setEffectStyleIdAsync(id) {
+        const style = effects.find((s) => s.id === id);
+        if (!style) throw new Error('Missing effect style');
+        this.effectStyleId = id;
+        this.effects = style.effects;
+      },
       getStyledTextSegments() {
         return [{ fontName: this.fontName }];
       },
@@ -96,6 +114,11 @@ export function canvasMock(opacityScale = 1) {
       },
       async getMainComponentAsync() {
         return this.main;
+      },
+      swapComponent(main) {
+        this.main = main;
+        for (const child of [...this.children]) child.remove();
+        for (const child of main.children) this.appendChild(clone(child));
       },
       createInstance() {
         const instance = clone(this, 'INSTANCE');
@@ -172,6 +195,7 @@ export function canvasMock(opacityScale = 1) {
       'itemSpacing',
       'minHeight',
       'opacity',
+      'main',
     ])
       if (source[key] !== undefined) n[key] = source[key];
     for (const child of source.children) n.appendChild(clone(child));
@@ -184,6 +208,7 @@ export function canvasMock(opacityScale = 1) {
   api.createEllipse = () => create('ELLIPSE');
   api.createNodeFromSvg = (svg) => {
     const root = create('FRAME');
+    root.svgSource = svg;
     for (const match of svg.matchAll(/<path\b/g)) root.appendChild(create('VECTOR'));
     return root;
   };

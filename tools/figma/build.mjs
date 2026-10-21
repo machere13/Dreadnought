@@ -7,6 +7,39 @@ import { icons } from './icons.mjs';
 const require = createRequire(import.meta.url);
 const { build } = createRequire(require.resolve('vite/package.json'))('esbuild');
 const output = new URL('../../output/figma-plugin/', import.meta.url);
+const registry = await build({
+  entryPoints: [fileURLToPath(new URL('./components/index.js', import.meta.url))],
+  bundle: true,
+  write: false,
+  format: 'esm',
+  platform: 'node',
+});
+const { componentSpecs } = await import(
+  'data:text/javascript;base64,' + Buffer.from(registry.outputFiles[0].text).toString('base64')
+);
+const entrySource = await readFile(
+  new URL('../../packages/ui/src/adapters/react/components/index.ts', import.meta.url),
+  'utf8',
+);
+const publicFamilies = entrySource
+  .trim()
+  .split('\n')
+  .map((line) => line.split('/').at(-2));
+const covered = new Set(componentSpecs.map((spec) => spec.name.split('/')[1]));
+const missing = publicFamilies.filter((name) => !covered.has(name));
+if (missing.length) throw new Error('Не покрыты компоненты: ' + missing.join(', '));
+const inventory = {
+  publicFamilies,
+  missing,
+  totalSets: componentSpecs.length,
+  totalVariants: componentSpecs.reduce((sum, spec) => sum + spec.variants.length, 0),
+  visualVerification: 'pending — run plugin in Figma and export the selected review frame',
+  components: componentSpecs.map(({ name, variants, description }) => ({
+    name,
+    variants,
+    description,
+  })),
+};
 await mkdir(output, { recursive: true });
 let pluginId = 'dreadnought-local-sync';
 try {
@@ -25,6 +58,7 @@ await build({
   legalComments: 'none',
 });
 await writeFile(new URL('ui.html', output), await readFile(new URL('./ui.html', import.meta.url)));
+await writeFile(new URL('inventory.json', output), JSON.stringify(inventory, null, 2));
 await writeFile(
   new URL('README.md', output),
   await readFile(new URL('./README.md', import.meta.url)),
@@ -48,3 +82,6 @@ await writeFile(
 );
 console.log(`Figma plugin: ${fileURLToPath(new URL('manifest.json', output))}`);
 console.log(`${data.tokens.length} tokens, ${data.styles.length} text styles.`);
+console.log(
+  `${publicFamilies.length} component families, ${inventory.totalSets} sets, ${inventory.totalVariants} variants; no missing public families.`,
+);

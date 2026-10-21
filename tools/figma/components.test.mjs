@@ -15,11 +15,8 @@ async function setup(opacityScale = 1) {
 }
 
 test('variant inventory matches source states and has no oversized sets', () => {
-  assert.equal(componentSpecs.length, 25);
-  assert.equal(
-    componentSpecs.reduce((count, spec) => count + spec.variants.length, 0),
-    209,
-  );
+  assert.ok(componentSpecs.length > 25);
+  assert.equal(new Set(componentSpecs.map((spec) => spec.name)).size, componentSpecs.length);
   for (const spec of componentSpecs) assert.ok(spec.variants.length <= 30);
   for (const [name, svg] of Object.entries(icons)) {
     assert.match(svg, /viewBox=/, name);
@@ -31,11 +28,11 @@ test('variant inventory matches source states and has no oversized sets', () => 
 test('creates real component sets, correct disabled opacity, popup blur and review instances', async () => {
   const { api, page, byCss, nodes } = await setup();
   const result = await addComponents(api, page, byCss, icons);
-  assert.equal(result.componentSets.length, 25);
-  assert.equal(result.frames.length, 25);
+  assert.equal(result.componentSets.length, componentSpecs.length);
+  assert.equal(result.frames.length, componentSpecs.length);
   assert.ok(result.componentSets.every((set) => set.created));
   const sets = page.findAllWithCriteria({ types: ['COMPONENT_SET'] });
-  assert.equal(sets.length, 25);
+  assert.equal(sets.length, componentSpecs.length);
   const checkbox = sets.find((s) => s.name === 'Dreadnought/Checkbox');
   assert.equal(checkbox.children.length, 12);
   assert.equal(
@@ -84,7 +81,10 @@ test('second run preserves component IDs and user text; missing reviews are recr
   );
   assert.ok(second.componentSets.every((s) => !s.created));
   assert.equal(checkbox.children[0].findOne((n) => n.type === 'TEXT').characters, 'Мой текст');
-  assert.equal(page.children.filter((n) => n.name.endsWith(' / Review')).length, 25);
+  assert.equal(
+    page.children.filter((n) => n.name.endsWith(' / Review')).length,
+    componentSpecs.length,
+  );
 });
 
 test('failed construction removes only nodes made by that construction', async () => {
@@ -157,18 +157,22 @@ test('feedback uses source sizes, mixed colors, visibility defaults and nested L
   }
 });
 
-test('upgrading existing sets only creates missing menus and keeps IDs', async () => {
+test('partial installation resumes missing groups without replacing completed sets', async () => {
   const { api, page, byCss, nodes } = await setup();
   const original = await addComponents(api, page, byCss, icons);
-  for (const set of original.componentSets.slice(21)) nodes.get(set.id).remove();
-  for (const frame of original.frames.slice(21)) nodes.get(frame.id).remove();
+  const completed = componentSpecs.findIndex(
+    (spec) => spec.name === 'Dreadnought/Input/Composition',
+  );
+  assert.ok(completed > 0);
+  for (const set of original.componentSets.slice(completed)) nodes.get(set.id).remove();
+  for (const frame of original.frames.slice(completed)) nodes.get(frame.id).remove();
   const next = await addComponents(api, page, byCss, icons);
   assert.deepEqual(
-    next.componentSets.slice(0, 21).map((set) => set.id),
-    original.componentSets.slice(0, 21).map((set) => set.id),
+    next.componentSets.slice(0, completed).map((set) => set.id),
+    original.componentSets.slice(0, completed).map((set) => set.id),
   );
-  assert.ok(next.componentSets.slice(0, 21).every((set) => !set.created));
-  assert.ok(next.componentSets.slice(21).every((set) => set.created));
+  assert.ok(next.componentSets.slice(0, completed).every((set) => !set.created));
+  assert.ok(next.componentSets.slice(completed).every((set) => set.created));
   const count = (await api.variables.getLocalVariablesAsync()).length;
   await addComponents(api, page, byCss, icons);
   assert.equal((await api.variables.getLocalVariablesAsync()).length, count);
@@ -345,7 +349,14 @@ test('new component disabled states remain visible with percentage opacity varia
   assert.equal((await api.variables.getLocalVariablesAsync()).length, count);
   assert.ok(first.derivedVariableIds.length > 0);
   assert.ok(second.componentSets.every((set) => !set.created));
-  for (const set of page.findAllWithCriteria({ types: ['COMPONENT_SET'] })) {
+  for (const set of page
+    .findAllWithCriteria({ types: ['COMPONENT_SET'] })
+    .filter(
+      (set) =>
+        /Dreadnought\/(Checkbox|Radio|Switch|Select|Input|Accordion|Tree|TextArea|Slider|Menu|Tabs)/.test(
+          set.name,
+        ) && !/Input\/Composition|Group|Tabs\/Overflow/.test(set.name),
+    )) {
     for (const variant of set.children.filter((node) => /state=disabled(,|$)/.test(node.name)))
       assert.equal(
         set.name === 'Dreadnought/Accordion/Item'

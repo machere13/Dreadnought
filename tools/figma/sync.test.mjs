@@ -131,6 +131,33 @@ test('export reads only the known review frames on the target page', async () =>
   assert.deepEqual(exports[0].bytes, [1, 2]);
 });
 
+test('selected PNG export excludes unselected reviews and unrelated artwork', async () => {
+  const mock = mockFigma();
+  const exports = [];
+  const selected = {
+    name: 'Dreadnought / DatePicker / Review',
+    type: 'FRAME',
+    exportAsync: async () => Uint8Array.of(7),
+  };
+  const unrelated = {
+    name: 'User artwork',
+    type: 'FRAME',
+    exportAsync: () => {
+      throw new Error('Not allowed');
+    },
+  };
+  mock.page.children = [selected, unrelated];
+  mock.page.selection = [selected, unrelated];
+  await exportPreviews(mock.api, (image) => exports.push(image), true);
+  assert.equal(exports.length, 1);
+  assert.deepEqual(exports[0].bytes, [7]);
+  mock.page.selection = [unrelated];
+  await assert.rejects(
+    exportPreviews(mock.api, () => {}, true),
+    /Выберите стенд/,
+  );
+});
+
 test('recalculates Card padding while preserving the existing source expression and derived variable ID', async () => {
   const mock = mockFigma();
   const { byCss } = await syncTokens(mock.api, data);

@@ -1,5 +1,5 @@
 import { createOpacityBinder } from './opacity.js';
-import { addComponents, componentReviewNames } from './components/index.js';
+import { addComponents, componentReviewNames, componentSpecs } from './components/index.js';
 
 const fileKey = 'wpjgUf13LJaogeTFapW8w9';
 const pageId = '1161:2';
@@ -314,11 +314,22 @@ export async function syncLibrary(figma, data, progress = () => {}, icons = null
   };
 }
 
-export async function exportPreviews(figma, send) {
+export async function exportPreviews(figma, send, selected = false) {
   const page = await targetPage(figma);
-  const frames = page.children.filter(
+  let frames = page.children.filter(
     (n) => n.type === 'FRAME' && [...reviewNames, ...componentReviewNames].includes(n.name),
   );
+  if (selected) {
+    const knownSets = new Set(componentSpecs.map((spec) => spec.name));
+    frames = (page.selection || []).filter(
+      (node) =>
+        frames.includes(node) ||
+        (node.type === 'COMPONENT_SET' && knownSets.has(node.name)) ||
+        (node.type === 'COMPONENT' && knownSets.has(node.parent?.name)),
+    );
+    if (!frames.length)
+      throw new Error('Выберите стенд Review или набор Dreadnought на странице «1 module».');
+  }
   if (!frames.length) throw new Error('Стенды не найдены. Плагин не создаёт их заново.');
   for (const frame of frames) {
     const bytes = await frame.exportAsync({

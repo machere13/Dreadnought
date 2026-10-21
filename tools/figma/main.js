@@ -1,11 +1,20 @@
 import { syncLibrary, exportPreviews } from './sync.js';
 
+if (!Object.hasOwn)
+  Object.defineProperty(Object, 'hasOwn', {
+    value: (object, key) => Object.prototype.hasOwnProperty.call(object, key),
+  });
+
 figma.showUI(__html__, { width: 440, height: 520, themeColors: true });
 let busy = false;
 let report;
 const send = (message) => figma.ui.postMessage(message);
 figma.ui.onmessage = async (message) => {
-  if (!message || !['sync', 'components', 'previews', 'report'].includes(message.type)) return;
+  if (
+    !message ||
+    !['sync', 'components', 'previews', 'selectedPreviews', 'report'].includes(message.type)
+  )
+    return;
   if (message.type === 'report') {
     if (report) send({ type: 'report', report });
     return;
@@ -25,7 +34,11 @@ figma.ui.onmessage = async (message) => {
       );
       send({ type: 'done', report });
     } else {
-      await exportPreviews(figma, (image) => send({ type: 'image', ...image }));
+      await exportPreviews(
+        figma,
+        (image) => send({ type: 'image', ...image }),
+        message.type === 'selectedPreviews',
+      );
       send({ type: 'status', status: 'PNG переданы для сохранения.' });
     }
   } catch (error) {

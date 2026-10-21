@@ -4,10 +4,12 @@ export async function componentContext(figma, page, variables, icons) {
   const styles = new Map((await figma.getLocalTextStylesAsync()).map((s) => [s.name, s]));
   const created = [],
     updated = new Set();
+  const createdNodes = [];
   const derived = new Map();
   const opacity = createOpacityBinder(figma, { repaired: updated, derived });
   const track = (node) => {
     created.push(node.id);
+    createdNodes.push(node);
     return node;
   };
   const token = (name) => {
@@ -109,6 +111,7 @@ export async function componentContext(figma, page, variables, icons) {
     page,
     styles,
     created,
+    createdNodes,
     updated,
     track,
     token,

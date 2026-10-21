@@ -1,6 +1,13 @@
 import { componentContext, ensureSet, reviewBoard } from './context.js';
 import { checkableSpecs, renderCheckable } from './checkable.js';
 import { markSpec, renderMark, badgeSpec, badgeIcon, renderBadge } from './badge.js';
+import { iconSpecs, legacySpecs } from './foundations.js';
+import { fieldSpecs } from './fields.js';
+import { pickerSpecs } from './pickers.js';
+import { overlaySpecs } from './overlays.js';
+import { layoutSpecs } from './layout.js';
+import { dataSpecs } from './data.js';
+import { chartSpecs } from './charts.js';
 import {
   menuSpecs,
   renderMenuItem,
@@ -34,6 +41,8 @@ import {
 } from './select.js';
 
 export const componentSpecs = [
+  ...iconSpecs,
+  ...legacySpecs,
   markSpec,
   ...checkableSpecs,
   optionSpec,
@@ -43,6 +52,12 @@ export const componentSpecs = [
   ...feedbackSpecs,
   ...navigationSpecs,
   ...menuSpecs,
+  ...fieldSpecs,
+  ...pickerSpecs,
+  ...overlaySpecs,
+  ...layoutSpecs,
+  ...dataSpecs,
+  ...chartSpecs,
 ];
 export const componentReviewNames = componentSpecs.map(
   (spec) => spec.name.replace('Dreadnought/', 'Dreadnought / ') + ' / Review',
@@ -50,13 +65,19 @@ export const componentReviewNames = componentSpecs.map(
 
 export async function addComponents(figma, page, variables, icons, progress = () => {}) {
   const ctx = await componentContext(figma, page, variables, icons);
+  ctx.catalog = new Map(
+    page.findAllWithCriteria({ types: ['COMPONENT_SET'] }).map((set) => [set.name, set]),
+  );
   const results = [];
   async function add(spec, render) {
     progress('Компонент ' + spec.name);
     const result = await ensureSet(ctx, spec, render);
     results.push({ spec, ...result });
+    ctx.catalog.set(spec.name, result.set);
     return result.set;
   }
+  for (const spec of [...iconSpecs, ...legacySpecs])
+    await add(spec, (node, props) => spec.render(ctx, node, props));
   const mark = await add(markSpec, (node, properties) => renderMark(ctx, node, properties));
   for (const spec of checkableSpecs)
     await add(spec, (node, properties) =>
@@ -122,6 +143,15 @@ export async function addComponents(figma, page, variables, icons, progress = ()
   await add(menuSpecs[3], (node, props) =>
     renderTabsOverflow(ctx, node, props, tab, more, dropdown),
   );
+  for (const spec of [
+    ...fieldSpecs,
+    ...pickerSpecs,
+    ...overlaySpecs,
+    ...layoutSpecs,
+    ...dataSpecs,
+    ...chartSpecs,
+  ])
+    await add(spec, (node, props) => spec.render(ctx, node, props));
   const reviewX = Math.max(0, ...page.children.map((n) => n.x + n.width)) + 160;
   let reviewY = 40;
   const frames = [];
@@ -130,7 +160,6 @@ export async function addComponents(figma, page, variables, icons, progress = ()
     frames.push({ id: frame.id, name: frame.name });
     if (frame.x === reviewX) reviewY += frame.height + 100;
   }
-  const createdNodes = await Promise.all(ctx.created.map((id) => figma.getNodeByIdAsync(id)));
   return {
     componentSets: results.map(({ set, created }) => ({
       id: set.id,
@@ -138,9 +167,12 @@ export async function addComponents(figma, page, variables, icons, progress = ()
       variants: set.children.length,
       created,
     })),
-    createdNodeIds: createdNodes.filter(Boolean).map((node) => node.id),
+    createdNodeIds: [
+      ...new Set(ctx.createdNodes.filter((node) => !node.removed).map((node) => node.id)),
+    ],
     updatedNodeIds: [...ctx.updated],
     derivedVariableIds: [...ctx.derived.values()].map((variable) => variable.id),
+    effectStyleIds: ctx.popupEffect ? [ctx.popupEffect.id] : [],
     frames,
     visualVerification: 'pending — rerun the local plugin and inspect exported PNG',
   };
