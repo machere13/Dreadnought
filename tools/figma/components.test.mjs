@@ -15,10 +15,10 @@ async function setup(opacityScale = 1) {
 }
 
 test('variant inventory matches source states and has no oversized sets', () => {
-  assert.equal(componentSpecs.length, 14);
+  assert.equal(componentSpecs.length, 21);
   assert.equal(
     componentSpecs.reduce((count, spec) => count + spec.variants.length, 0),
-    141,
+    181,
   );
   for (const spec of componentSpecs) assert.ok(spec.variants.length <= 30);
   for (const [name, svg] of Object.entries(icons)) {
@@ -31,11 +31,11 @@ test('variant inventory matches source states and has no oversized sets', () => 
 test('creates real component sets, correct disabled opacity, popup blur and review instances', async () => {
   const { api, page, byCss, nodes } = await setup();
   const result = await addComponents(api, page, byCss, icons);
-  assert.equal(result.componentSets.length, 14);
-  assert.equal(result.frames.length, 14);
+  assert.equal(result.componentSets.length, 21);
+  assert.equal(result.frames.length, 21);
   assert.ok(result.componentSets.every((set) => set.created));
   const sets = page.findAllWithCriteria({ types: ['COMPONENT_SET'] });
-  assert.equal(sets.length, 14);
+  assert.equal(sets.length, 21);
   const checkbox = sets.find((s) => s.name === 'Dreadnought/Checkbox');
   assert.equal(checkbox.children.length, 12);
   assert.equal(
@@ -84,7 +84,7 @@ test('second run preserves component IDs and user text; missing reviews are recr
   );
   assert.ok(second.componentSets.every((s) => !s.created));
   assert.equal(checkbox.children[0].findOne((n) => n.type === 'TEXT').characters, 'Мой текст');
-  assert.equal(page.children.filter((n) => n.name.endsWith(' / Review')).length, 14);
+  assert.equal(page.children.filter((n) => n.name.endsWith(' / Review')).length, 21);
 });
 
 test('failed construction removes only nodes made by that construction', async () => {
@@ -157,21 +157,96 @@ test('feedback uses source sizes, mixed colors, visibility defaults and nested L
   }
 });
 
-test('upgrading an existing first group only creates missing feedback sets and keeps IDs', async () => {
+test('upgrading existing controls and feedback only creates missing navigation sets and keeps IDs', async () => {
   const { api, page, byCss, nodes } = await setup();
   const original = await addComponents(api, page, byCss, icons);
-  for (const set of original.componentSets.slice(10)) nodes.get(set.id).remove();
-  for (const frame of original.frames.slice(10)) nodes.get(frame.id).remove();
+  for (const set of original.componentSets.slice(14)) nodes.get(set.id).remove();
+  for (const frame of original.frames.slice(14)) nodes.get(frame.id).remove();
   const next = await addComponents(api, page, byCss, icons);
   assert.deepEqual(
-    next.componentSets.slice(0, 10).map((set) => set.id),
-    original.componentSets.slice(0, 10).map((set) => set.id),
+    next.componentSets.slice(0, 14).map((set) => set.id),
+    original.componentSets.slice(0, 14).map((set) => set.id),
   );
-  assert.ok(next.componentSets.slice(0, 10).every((set) => !set.created));
-  assert.ok(next.componentSets.slice(10).every((set) => set.created));
+  assert.ok(next.componentSets.slice(0, 14).every((set) => !set.created));
+  assert.ok(next.componentSets.slice(14).every((set) => set.created));
   const count = (await api.variables.getLocalVariablesAsync()).length;
   await addComponents(api, page, byCss, icons);
   assert.equal((await api.variables.getLocalVariablesAsync()).length, count);
+});
+
+test('navigation preserves source states and builds compositions from real instances', async () => {
+  const { api, page, byCss } = await setup();
+  await addComponents(api, page, byCss, icons);
+  const sets = page.findAllWithCriteria({ types: ['COMPONENT_SET'] });
+  const get = (name) => sets.find((set) => set.name === 'Dreadnought/' + name);
+  const item = get('Accordion/Item');
+  for (const node of item.children) {
+    const trigger = node.findOne((n) => n.name === 'trigger');
+    assert.equal(trigger.minHeight, 44);
+    assert.equal(trigger.paddingLeft, 16);
+    assert.equal(
+      trigger.paddingTop,
+      byCss.get('--dreadnought-accordion-trigger-padding-y').resolveForConsumer(trigger).value,
+    );
+    assert.equal(
+      node.findOne((n) => n.name === 'panel').visible,
+      node.name.startsWith('open=true'),
+    );
+    assert.equal(
+      node.findOne((n) => n.name === 'down').rotation,
+      node.name.startsWith('open=true') ? 180 : 0,
+    );
+    assert.equal(node.opacity, 1);
+    assert.equal(trigger.opacity, node.name.endsWith('state=disabled') ? 0.55 : 1);
+    if (node.name.endsWith('state=focused'))
+      assert.equal(trigger.findOne((n) => n.name === 'focus-ring').strokeAlign, 'INSIDE');
+  }
+  for (const node of get('Accordion').children) {
+    assert.equal(node.children.length, 3);
+    assert.ok(node.children.every((n) => n.type === 'INSTANCE'));
+    const mains = await Promise.all(node.children.map((n) => n.getMainComponentAsync()));
+    assert.ok(mains.every((n) => n.parent === item));
+    const count = node.name.endsWith('none') ? 0 : node.name.endsWith('one') ? 1 : 2;
+    assert.equal(mains.filter((n) => n.name.startsWith('open=true')).length, count);
+  }
+  for (const node of get('Breadcrumb/Item').children) {
+    const text = node.findOne((n) => n.name === 'label');
+    if (node.name.startsWith('kind=current'))
+      assert.equal(
+        text.boundVariables.fontWeight.id,
+        byCss.get('--dreadnought-font-weight-breadcrumb-current').id,
+      );
+    if (node.name.endsWith('state=hover')) assert.equal(text.textDecoration, 'UNDERLINE');
+    if (node.name.endsWith('state=focused'))
+      assert.equal(node.findOne((n) => n.name === 'focus-ring').strokeAlign, 'OUTSIDE');
+  }
+  for (const node of get('Breadcrumb').children) {
+    const count = Number(node.name.slice(-1));
+    assert.equal(node.findAllWithCriteria({ types: ['INSTANCE'] }).length, count);
+    const separators = node.children.filter((n) => n.name === 'separator');
+    assert.equal(separators.length, count - 1);
+    assert.ok(separators.every((n) => n.characters === '/'));
+  }
+  const tab = get('Tabs/Tab');
+  const selectedHover = tab.children.find((n) => n.name === 'selected=true, state=hover');
+  assert.equal(
+    selectedHover.fills[0].boundVariables.color.id,
+    byCss.get('--dreadnought-tabs-tab-bg-selected-hover').id,
+  );
+  assert.equal(get('Tabs/More').children.length, 4);
+  assert.ok(get('Tabs/More').children.every((n) => n.findOne((n) => n.name === 'ellipsis')));
+  for (const node of get('Tabs').children) {
+    const vertical = node.name.startsWith('orientation=vertical');
+    assert.equal(node.layoutMode, vertical ? 'HORIZONTAL' : 'VERTICAL');
+    const list = node.findOne((n) => n.name === 'list');
+    assert.equal(list.layoutMode, vertical ? 'VERTICAL' : 'HORIZONTAL');
+    assert.equal(list.children.length, 3);
+    const mains = await Promise.all(list.children.map((n) => n.getMainComponentAsync()));
+    assert.ok(mains.every((n) => n.parent === tab));
+    assert.equal(mains.filter((n) => n.name.startsWith('selected=true')).length, 1);
+    assert.ok(mains[Number(node.name.slice(-1)) - 1].name.startsWith('selected=true'));
+    assert.equal(node.findOne((n) => n.name === 'panel').paddingTop, vertical ? 0 : 16);
+  }
 });
 
 test('existing incompatible sets are not deleted or replaced', async () => {
@@ -196,6 +271,11 @@ test('new component disabled states remain visible with percentage opacity varia
   assert.ok(second.componentSets.every((set) => !set.created));
   for (const set of page.findAllWithCriteria({ types: ['COMPONENT_SET'] })) {
     for (const variant of set.children.filter((node) => /state=disabled(,|$)/.test(node.name)))
-      assert.equal(variant.opacity, 0.55);
+      assert.equal(
+        set.name === 'Dreadnought/Accordion/Item'
+          ? variant.findOne((n) => n.name === 'trigger').opacity
+          : variant.opacity,
+        0.55,
+      );
   }
 });

@@ -2,6 +2,15 @@ import { componentContext, ensureSet, reviewBoard } from './context.js';
 import { checkableSpecs, renderCheckable } from './checkable.js';
 import { markSpec, renderMark, badgeSpec, badgeIcon, renderBadge } from './badge.js';
 import {
+  navigationSpecs,
+  renderAccordionItem,
+  renderAccordion,
+  renderBreadcrumbItem,
+  renderBreadcrumb,
+  renderTab,
+  renderTabs,
+} from './navigation.js';
+import {
   feedbackSpecs,
   alertFilledColors,
   renderNotice,
@@ -25,6 +34,7 @@ export const componentSpecs = [
   popupSpec,
   badgeSpec,
   ...feedbackSpecs,
+  ...navigationSpecs,
 ];
 export const componentReviewNames = componentSpecs.map(
   (spec) => spec.name.replace('Dreadnought/', 'Dreadnought / ') + ' / Review',
@@ -85,6 +95,19 @@ export async function addComponents(figma, page, variables, icons, progress = ()
   await add(feedbackSpecs[3], (node, properties) =>
     renderLoaderOverlay(ctx, node, properties, loader),
   );
+  const accordionItem = await add(navigationSpecs[0], (node, props) =>
+    renderAccordionItem(ctx, node, props),
+  );
+  await add(navigationSpecs[1], (node, props) => renderAccordion(ctx, node, props, accordionItem));
+  const breadcrumbItem = await add(navigationSpecs[2], (node, props) =>
+    renderBreadcrumbItem(ctx, node, props),
+  );
+  await add(navigationSpecs[3], (node, props) =>
+    renderBreadcrumb(ctx, node, props, breadcrumbItem),
+  );
+  const tab = await add(navigationSpecs[4], (node, props) => renderTab(ctx, node, props));
+  await add(navigationSpecs[5], (node, props) => renderTab(ctx, node, props, true));
+  await add(navigationSpecs[6], (node, props) => renderTabs(ctx, node, props, tab));
   const reviewX = Math.max(0, ...page.children.map((n) => n.x + n.width)) + 160;
   let reviewY = 40;
   const frames = [];

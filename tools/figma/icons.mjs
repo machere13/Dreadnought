@@ -12,6 +12,7 @@ const definitions = {
   success: 'CheckCircleOutlined',
   warning: 'WarningOutlined',
   error: 'CloseCircleOutlined',
+  ellipsis: 'EllipsisOutlined',
 };
 function xml(node) {
   const attrs = Object.entries(node.attrs || {})
