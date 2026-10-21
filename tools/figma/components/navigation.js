@@ -85,7 +85,7 @@ export const navigationSpecs = [
   },
 ];
 
-function outline(ctx, node, prefix, radius = null, align = 'INSIDE') {
+export function outline(ctx, node, prefix, radius = null, align = 'INSIDE') {
   const ring = ctx.shape(node, 'focus-ring', node.width, node.height);
   ring.layoutPositioning = 'ABSOLUTE';
   ring.x = ring.y = 0;
@@ -97,7 +97,7 @@ function outline(ctx, node, prefix, radius = null, align = 'INSIDE') {
   if (radius) ctx.bind(ring, 'cornerRadius', radius);
 }
 
-function instance(ctx, parent, set, properties, label) {
+export function instance(ctx, parent, set, properties, label) {
   const main = set.children.find((n) => n.name === variantName(properties));
   if (!main) throw new Error('Нет варианта ' + set.name + ': ' + variantName(properties));
   const node = ctx.track(main.createInstance());

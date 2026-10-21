@@ -2,6 +2,13 @@ import { componentContext, ensureSet, reviewBoard } from './context.js';
 import { checkableSpecs, renderCheckable } from './checkable.js';
 import { markSpec, renderMark, badgeSpec, badgeIcon, renderBadge } from './badge.js';
 import {
+  menuSpecs,
+  renderMenuItem,
+  renderMenu,
+  renderDropdown,
+  renderTabsOverflow,
+} from './menus.js';
+import {
   navigationSpecs,
   renderAccordionItem,
   renderAccordion,
@@ -35,6 +42,7 @@ export const componentSpecs = [
   badgeSpec,
   ...feedbackSpecs,
   ...navigationSpecs,
+  ...menuSpecs,
 ];
 export const componentReviewNames = componentSpecs.map(
   (spec) => spec.name.replace('Dreadnought/', 'Dreadnought / ') + ' / Review',
@@ -106,8 +114,14 @@ export async function addComponents(figma, page, variables, icons, progress = ()
     renderBreadcrumb(ctx, node, props, breadcrumbItem),
   );
   const tab = await add(navigationSpecs[4], (node, props) => renderTab(ctx, node, props));
-  await add(navigationSpecs[5], (node, props) => renderTab(ctx, node, props, true));
+  const more = await add(navigationSpecs[5], (node, props) => renderTab(ctx, node, props, true));
   await add(navigationSpecs[6], (node, props) => renderTabs(ctx, node, props, tab));
+  const menuItem = await add(menuSpecs[0], (node, props) => renderMenuItem(ctx, node, props));
+  const menu = await add(menuSpecs[1], (node, props) => renderMenu(ctx, node, props, menuItem));
+  const dropdown = await add(menuSpecs[2], (node, props) => renderDropdown(ctx, node, props, menu));
+  await add(menuSpecs[3], (node, props) =>
+    renderTabsOverflow(ctx, node, props, tab, more, dropdown),
+  );
   const reviewX = Math.max(0, ...page.children.map((n) => n.x + n.width)) + 160;
   let reviewY = 40;
   const frames = [];

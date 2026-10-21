@@ -15,10 +15,10 @@ async function setup(opacityScale = 1) {
 }
 
 test('variant inventory matches source states and has no oversized sets', () => {
-  assert.equal(componentSpecs.length, 21);
+  assert.equal(componentSpecs.length, 25);
   assert.equal(
     componentSpecs.reduce((count, spec) => count + spec.variants.length, 0),
-    181,
+    209,
   );
   for (const spec of componentSpecs) assert.ok(spec.variants.length <= 30);
   for (const [name, svg] of Object.entries(icons)) {
@@ -31,11 +31,11 @@ test('variant inventory matches source states and has no oversized sets', () => 
 test('creates real component sets, correct disabled opacity, popup blur and review instances', async () => {
   const { api, page, byCss, nodes } = await setup();
   const result = await addComponents(api, page, byCss, icons);
-  assert.equal(result.componentSets.length, 21);
-  assert.equal(result.frames.length, 21);
+  assert.equal(result.componentSets.length, 25);
+  assert.equal(result.frames.length, 25);
   assert.ok(result.componentSets.every((set) => set.created));
   const sets = page.findAllWithCriteria({ types: ['COMPONENT_SET'] });
-  assert.equal(sets.length, 21);
+  assert.equal(sets.length, 25);
   const checkbox = sets.find((s) => s.name === 'Dreadnought/Checkbox');
   assert.equal(checkbox.children.length, 12);
   assert.equal(
@@ -84,7 +84,7 @@ test('second run preserves component IDs and user text; missing reviews are recr
   );
   assert.ok(second.componentSets.every((s) => !s.created));
   assert.equal(checkbox.children[0].findOne((n) => n.type === 'TEXT').characters, 'Мой текст');
-  assert.equal(page.children.filter((n) => n.name.endsWith(' / Review')).length, 21);
+  assert.equal(page.children.filter((n) => n.name.endsWith(' / Review')).length, 25);
 });
 
 test('failed construction removes only nodes made by that construction', async () => {
@@ -157,18 +157,18 @@ test('feedback uses source sizes, mixed colors, visibility defaults and nested L
   }
 });
 
-test('upgrading existing controls and feedback only creates missing navigation sets and keeps IDs', async () => {
+test('upgrading existing sets only creates missing menus and keeps IDs', async () => {
   const { api, page, byCss, nodes } = await setup();
   const original = await addComponents(api, page, byCss, icons);
-  for (const set of original.componentSets.slice(14)) nodes.get(set.id).remove();
-  for (const frame of original.frames.slice(14)) nodes.get(frame.id).remove();
+  for (const set of original.componentSets.slice(21)) nodes.get(set.id).remove();
+  for (const frame of original.frames.slice(21)) nodes.get(frame.id).remove();
   const next = await addComponents(api, page, byCss, icons);
   assert.deepEqual(
-    next.componentSets.slice(0, 14).map((set) => set.id),
-    original.componentSets.slice(0, 14).map((set) => set.id),
+    next.componentSets.slice(0, 21).map((set) => set.id),
+    original.componentSets.slice(0, 21).map((set) => set.id),
   );
-  assert.ok(next.componentSets.slice(0, 14).every((set) => !set.created));
-  assert.ok(next.componentSets.slice(14).every((set) => set.created));
+  assert.ok(next.componentSets.slice(0, 21).every((set) => !set.created));
+  assert.ok(next.componentSets.slice(21).every((set) => set.created));
   const count = (await api.variables.getLocalVariablesAsync()).length;
   await addComponents(api, page, byCss, icons);
   assert.equal((await api.variables.getLocalVariablesAsync()).length, count);
@@ -246,6 +246,82 @@ test('navigation preserves source states and builds compositions from real insta
     assert.equal(mains.filter((n) => n.name.startsWith('selected=true')).length, 1);
     assert.ok(mains[Number(node.name.slice(-1)) - 1].name.startsWith('selected=true'));
     assert.equal(node.findOne((n) => n.name === 'panel').paddingTop, vertical ? 0 : 16);
+  }
+});
+
+test('Menu and Dropdown use source colors, nested items and existing Tabs atoms', async () => {
+  const { api, page, byCss } = await setup();
+  await addComponents(api, page, byCss, icons);
+  const sets = page.findAllWithCriteria({ types: ['COMPONENT_SET'] });
+  const get = (name) => sets.find((set) => set.name === 'Dreadnought/' + name);
+  const items = get('Menu/Item');
+  for (const node of items.children) {
+    const kind = node.name.match(/kind=([\w-]+)/)[1];
+    const state = node.name.match(/state=(\w+)/)[1];
+    assert.equal(node.minHeight, 44);
+    if (state === 'hover' || kind === 'selected')
+      assert.equal(
+        node.fills[0].boundVariables.color.id,
+        byCss.get('--dreadnought-menu-item-bg-' + (state === 'hover' ? 'hover' : 'selected')).id,
+      );
+    else assert.equal(node.fills.length, 0);
+    assert.equal(node.findOne((n) => n.name === 'label').maxLines, 1);
+    if (kind.startsWith('submenu-'))
+      assert.equal(
+        node.findOne((n) => n.name === 'down').rotation,
+        kind === 'submenu-open' ? 0 : 90,
+      );
+    if (state === 'disabled') assert.equal(node.opacity, 0.55);
+    if (state === 'focused')
+      assert.equal(node.findOne((n) => n.name === 'focus-ring').strokeAlign, 'INSIDE');
+  }
+  const menu = get('Menu');
+  for (const main of menu.children) {
+    const nested = main.findAllWithCriteria({ types: ['INSTANCE'] });
+    for (const child of nested) assert.equal((await child.getMainComponentAsync()).parent, items);
+  }
+  const opened = menu.children.find((n) => n.name === 'content=open');
+  const submenu = opened.findOne((n) => n.name === 'submenu');
+  assert.equal(submenu.paddingLeft, 16);
+  assert.equal(submenu.children.length, 2);
+  assert.equal(
+    menu.children.find((n) => n.name === 'content=closed').findOne((n) => n.name === 'submenu'),
+    null,
+  );
+  assert.ok(
+    menu.children.find((n) => n.name === 'content=grouped').findOne((n) => n.name === 'divider'),
+  );
+  const dropdown = get('Dropdown');
+  for (const node of dropdown.children) {
+    assert.equal(node.effects[0].type, 'BACKGROUND_BLUR');
+    assert.equal(node.effects[0].radius, 24);
+    assert.equal(node.fills[0].boundVariables.color.id, byCss.get('--dreadnought-popover-bg').id);
+    assert.equal(node.strokeWeight, 1);
+    const inner = node.children[0];
+    assert.equal((await inner.getMainComponentAsync()).parent, menu);
+    assert.equal(inner.strokeWeight, 0);
+    assert.deepEqual(inner.fills, []);
+    assert.deepEqual(inner.strokes, []);
+    assert.equal(node.paddingLeft, 0);
+  }
+  for (const node of get('Tabs/Overflow').children) {
+    const list = node.findOne((n) => n.name === 'list');
+    const mains = await Promise.all(list.children.map((n) => n.getMainComponentAsync()));
+    assert.deepEqual(
+      mains.map((n) => n.parent),
+      [get('Tabs/Tab'), get('Tabs/Tab'), get('Tabs/More')],
+    );
+    const popup = node.findOne((n) => n.name === 'popup');
+    const main = await popup.getMainComponentAsync();
+    assert.equal(main.parent, dropdown);
+    assert.equal(main.name, 'content=overflow');
+    assert.equal(popup.visible, node.name === 'open=true');
+    assert.equal(popup.parent.visible, popup.visible);
+    assert.equal(popup.parent.paddingRight, list.paddingRight);
+    assert.equal(
+      node.itemSpacing,
+      byCss.get('--dreadnought-popover-gap').resolveForConsumer(node).value,
+    );
   }
 });
 
