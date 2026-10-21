@@ -1,3 +1,6 @@
+import { createOpacityBinder } from './opacity.js';
+import { addComponents, componentReviewNames } from './components/index.js';
+
 const fileKey = 'wpjgUf13LJaogeTFapW8w9';
 const pageId = '1161:2';
 const setNames = [
@@ -204,48 +207,7 @@ export async function repairComponents(figma, page, byCss) {
       }
     }
   }
-  async function repairOpacity(node, variable) {
-    const expected = variable.resolveForConsumer(node).value;
-    if (typeof expected !== 'number' || expected < 0 || expected > 1)
-      throw new Error('Некорректная CSS opacity: ' + variable.name);
-    node.setBoundVariable('opacity', variable);
-    if (Math.abs(node.opacity - expected) > 0.0001) {
-      if (Math.abs(node.opacity * 100 - expected) > 0.0001)
-        throw new Error(`Неизвестная шкала opacity: ${node.name} = ${node.opacity}`);
-      let percentage = derived.get(variable.id);
-      if (!percentage) {
-        const collections = await figma.variables.getLocalVariableCollectionsAsync();
-        resolvedCollection = collections.find((c) => c.name === 'Dreadnought / Figma resolved');
-        if (!resolvedCollection) {
-          resolvedCollection = figma.variables.createVariableCollection(
-            'Dreadnought / Figma resolved',
-          );
-          resolvedCollection.renameMode(resolvedCollection.defaultModeId, 'Default');
-        }
-        const name = 'Opacity/' + variable.name.split('/').pop();
-        percentage = (await figma.variables.getLocalVariablesAsync()).find(
-          (v) => v.variableCollectionId === resolvedCollection.id && v.name === name,
-        );
-        if (percentage && percentage.resolvedType !== 'FLOAT')
-          throw new Error('Конфликт вычисляемой opacity');
-        if (!percentage)
-          percentage = figma.variables.createVariable(name, resolvedCollection, 'FLOAT');
-        percentage.scopes = ['OPACITY'];
-        percentage.setVariableCodeSyntax('WEB', variable.codeSyntax.WEB);
-        percentage.description =
-          'Figma percentage conversion of ' +
-          variable.codeSyntax.WEB +
-          '; source opacity remains 0–1. Resync after source changes.';
-        percentage.setValueForMode(resolvedCollection.defaultModeId, expected * 100);
-        derived.set(variable.id, percentage);
-      }
-      node.setBoundVariable('opacity', percentage);
-    }
-    if (Math.abs(node.opacity - expected) > 0.0001)
-      throw new Error(`Opacity не восстановлена: ${node.name}`);
-    opacitySamples.push({ id: node.id, expected, actual: node.opacity });
-    repaired.add(node.id);
-  }
+  const repairOpacity = createOpacityBinder(figma, { derived, samples: opacitySamples, repaired });
   const buttonVariants = new Map();
   function repairIconVectors(button, variant) {
     for (const slot of button.children.filter((n) => n.name === 'icon' || n.name === 'spinner')) {
@@ -321,7 +283,7 @@ export async function repairComponents(figma, page, byCss) {
   };
 }
 
-export async function syncLibrary(figma, data, progress = () => {}) {
+export async function syncLibrary(figma, data, progress = () => {}, icons = null) {
   const page = await targetPage(figma);
   progress('Обновляю токены…');
   const tokens = await syncTokens(figma, data);
@@ -329,7 +291,11 @@ export async function syncLibrary(figma, data, progress = () => {}) {
   const styleIds = await syncTextStyles(figma, data, tokens.byCss);
   progress('Исправляю компоненты и стенды…');
   const repairs = await repairComponents(figma, page, tokens.byCss);
-  const review = page.children.find((n) => n.name === 'Dreadnought / Button / Review');
+  const additions = icons ? await addComponents(figma, page, tokens.byCss, icons, progress) : null;
+  const review = page.children.find(
+    (n) =>
+      n.name === (additions ? 'Dreadnought / Checkbox / Review' : 'Dreadnought / Button / Review'),
+  );
   if (review) figma.viewport.scrollAndZoomIntoView([review]);
   return {
     tokens: tokens.byCss.size,
@@ -340,13 +306,16 @@ export async function syncLibrary(figma, data, progress = () => {}) {
     createdCollectionIds: tokens.createdCollectionIds,
     styleIds,
     ...repairs,
+    additions,
     visualVerification: 'pending — export PNG and inspect in Figma',
   };
 }
 
 export async function exportPreviews(figma, send) {
   const page = await targetPage(figma);
-  const frames = page.children.filter((n) => n.type === 'FRAME' && reviewNames.includes(n.name));
+  const frames = page.children.filter(
+    (n) => n.type === 'FRAME' && [...reviewNames, ...componentReviewNames].includes(n.name),
+  );
   if (!frames.length) throw new Error('Стенды не найдены. Плагин не создаёт их заново.');
   for (const frame of frames) {
     const bytes = await frame.exportAsync({

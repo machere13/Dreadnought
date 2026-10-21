@@ -5,7 +5,7 @@ let busy = false;
 let report;
 const send = (message) => figma.ui.postMessage(message);
 figma.ui.onmessage = async (message) => {
-  if (!message || !['sync', 'previews', 'report'].includes(message.type)) return;
+  if (!message || !['sync', 'components', 'previews', 'report'].includes(message.type)) return;
   if (message.type === 'report') {
     if (report) send({ type: 'report', report });
     return;
@@ -14,10 +14,15 @@ figma.ui.onmessage = async (message) => {
   busy = true;
   send({ type: 'busy', value: true });
   try {
-    if (message.type === 'sync') {
+    if (message.type === 'sync' || message.type === 'components') {
       report = undefined;
       send({ type: 'reset' });
-      report = await syncLibrary(figma, __TOKENS__, (status) => send({ type: 'status', status }));
+      report = await syncLibrary(
+        figma,
+        __TOKENS__,
+        (status) => send({ type: 'status', status }),
+        message.type === 'components' ? __ICONS__ : null,
+      );
       send({ type: 'done', report });
     } else {
       await exportPreviews(figma, (image) => send({ type: 'image', ...image }));
