@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dreadnought Local Sync</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: var(--figma-color-bg, #171717);
+      color: var(--figma-color-text, #ededed);
+      font:
+        14px/1.5 system-ui,
+        sans-serif;
+    }
+    h1 {
+      font-size: 22px;
+      margin: 0 0 12px;
+    }
+    p {
+      margin: 0 0 16px;
+    }
+    button {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--figma-color-border, #525252);
+      border-radius: 10px;
+      background: var(--figma-color-bg-secondary, #282828);
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+    button:focus-visible {
+      outline: 2px solid var(--figma-color-text, #ededed);
+      outline-offset: 2px;
+    }
+    #sync {
+      background: #fff;
+      color: #171717;
+    }
+    #status {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    small {
+      display: block;
+      color: var(--figma-color-text-secondary, #b0b0b0);
+    }
+  </style>
+  <h1>Dreadnought</h1>
+  <p>Обновление токенов и исправление существующих Button, Input и Card на странице «1 module».</p>
+  <button id="sync">Обновить и исправить</button>
+  <button id="previews">Сохранить PNG образцов</button>
+  <button id="report" disabled>Сохранить отчёт</button>
+  <p id="status" role="status" aria-live="polite">
+    Файл Diploma должен быть открыт. Изменения начнутся только после нажатия кнопки.
+  </p>
+  <small
+    >Без сети, API-ключей и сервера. Плагин не удаляет страницы и компоненты. Полная библиотека и
+    вайрфреймы не создаются этим запуском.</small
+  >
+  <script>
+    const buttons = [...document.querySelectorAll('button')];
+    const status = document.getElementById('status');
+    let hasReport = false;
+    for (const button of buttons)
+      button.onclick = () => parent.postMessage({ pluginMessage: { type: button.id } }, '*');
+    function save(name, blob) {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = name;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+    onmessage = (event) => {
+      if (event.source !== parent) return;
+      const message = event.data.pluginMessage;
+      if (!message) return;
+      if (message.type === 'reset') hasReport = false;
+      if (message.type === 'busy')
+        for (const button of buttons)
+          button.disabled = message.value || (button.id === 'report' && !hasReport);
+      if (message.type === 'status') status.textContent = message.status;
+      if (message.type === 'error')
+        status.textContent =
+          'Не завершено: ' +
+          message.error +
+          '\nУже применённые изменения сохранены; повторный запуск обновит их без дублей.';
+      if (message.type === 'done') {
+        hasReport = true;
+        const report = message.report;
+        status.textContent =
+          'Синхронизация завершена.\nТокенов: ' +
+          report.tokens +
+          '\nСтилей: ' +
+          report.styles +
+          '\nИсправленных узлов: ' +
+          report.repairedNodeIds.length +
+          '\nПредупреждения: ' +
+          (report.warnings.join('; ') || 'нет') +
+          '\nСохраните PNG для визуальной проверки.';
+      }
+      if (message.type === 'report')
+        save(
+          'dreadnought-figma-report.json',
+          new Blob([JSON.stringify(message.report, null, 2)], { type: 'application/json' }),
+        );
+      if (message.type === 'image')
+        save(message.name, new Blob([new Uint8Array(message.bytes)], { type: 'image/png' }));
+    };
+  </script>
+</html>
