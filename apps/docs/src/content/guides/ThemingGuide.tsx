@@ -50,9 +50,9 @@ export function ThemingGuide() {
 
     <section data-knowledge className={styles.section} aria-labelledby="library-settings">
       <h2 id="library-settings" className={styles.sectionTitle}>Настройки библиотеки</h2>
-      <p className={styles.bodyText}>Настройки применяются ко всей странице и не зависят от адаптера. По умолчанию заголовки и Button используют широкую ось шрифта <code>"wdth" 150</code>. Для отключения вызовите в браузерной точке входа:</p>
-      <CodeBlock code={`import { configureDreadnought } from '@dreadnought/ui';\n\nconfigureDreadnought({ wideTypography: false });`} language="ts" copyLabels={copyLabels} />
-      <p className={styles.footnote}>Значение true включает стиль обратно. Стандартная тема подключает Roboto Flex с осью wdth; если заменить шрифт своим, он тоже должен поддерживать эту ось. При SSR настройка применяется после запуска браузерного кода.</p>
+      <p className={styles.bodyText}>Настройки применяются ко всей странице и не зависят от адаптера. По умолчанию заголовки и Button используют обычную ширину шрифта. Чтобы включить широкую ось <code>"wdth" 150</code>, вызовите в браузерной точке входа:</p>
+      <CodeBlock code={`import { configureDreadnought } from '@dreadnought/ui';\n\nconfigureDreadnought({ wideTypography: true });`} language="ts" copyLabels={copyLabels} />
+      <p className={styles.footnote}>Значение false возвращает обычную ширину. Стандартная тема подключает Roboto Flex с осью wdth; если заменить шрифт своим, он тоже должен поддерживать эту ось. При SSR настройка применяется после запуска браузерного кода.</p>
     </section>
 
     <section data-knowledge className={styles.section} aria-labelledby="token-chain">

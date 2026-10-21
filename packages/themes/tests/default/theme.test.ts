@@ -25,15 +25,15 @@ const componentFamilies = {
 } as const;
 
 describe('default theme', () => {
-  it('enables the wide axis only for headings and Button and supports the page setting', () => {
+  it('uses normal width by default and enables the wide axis only with the page setting', () => {
     const tokens = css('tokens/global/typography.tokens.css');
     expect(tokens).toContain(
       "--dreadnought-font-family-ui: 'Roboto Flex Variable', system-ui, sans-serif",
     );
     expect(css('index.css')).toContain("@import '@fontsource-variable/roboto-flex/wdth.css'");
-    expect(tokens).toMatch(/--dreadnought-font-variation-wide:\s*(['"])wdth\1 150/);
+    expect(tokens.split('}')[0]).toMatch(/--dreadnought-font-variation-wide:\s*normal;/);
     expect(tokens).toMatch(
-      /:root\[data-dreadnought-wide-typography='false'\]\s*\{\s*--dreadnought-font-variation-wide: normal;/,
+      /:root\[data-dreadnought-wide-typography='true'\]\s*\{\s*--dreadnought-font-variation-wide:\s*(['"])wdth\1 150;/,
     );
     expect(css('typography.css')).toContain(':where(h1, h2, h3, h4, h5, h6)');
     expect(css('components/Controls/Button/typography.css')).toContain(

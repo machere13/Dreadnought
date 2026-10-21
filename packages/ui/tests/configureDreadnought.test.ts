@@ -14,6 +14,8 @@ it('switches the page-wide setting and leaves it unchanged for omitted settings'
   expect(document.documentElement.getAttribute('data-dreadnought-wide-typography')).toBe('false');
   configureDreadnought({ wideTypography: true });
   expect(document.documentElement.getAttribute('data-dreadnought-wide-typography')).toBe('true');
+  configureDreadnought({ wideTypography: false });
+  expect(document.documentElement.getAttribute('data-dreadnought-wide-typography')).toBe('false');
 });
 
 it('does not require a DOM on the server and rejects invalid values', () => {

@@ -13,7 +13,7 @@ function Probe() {
   const [events, setEvents] = useState<string[]>([]);
   const [check, setCheck] = useState('Not checked');
   const [styles, setStyles] = useState('Not checked');
-  const [wide, setWide] = useState(true);
+  const [wide, setWide] = useState(false);
   useAnchoredPopover(open, anchor, popup);
   return (
     <>
