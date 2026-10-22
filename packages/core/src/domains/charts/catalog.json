@@ -1,4 +1,31 @@
 [
+{
+  "id": "domain:build-scatter-layout",
+  "kind": "domain",
+  "name": "buildScatterLayout",
+  "family": "Charts",
+  "description": "Чистый расчёт линейных координат и радиусов точек/пузырьков без React и SVG.",
+  "docsUrl": "/components/scatterchart/#scatterchart-logic",
+  "constraints": [
+    "Уникальные ID серий и точек внутри серии, конечные координаты внутри явных диапазонов min < max. Размер неотрицателен. Совпадение координат допустимо. Вход не изменяется; выход содержит копии точек.",
+    "Площадь пузырька пропорциональна size, единая шкала всех входных серий. Нулевой размер даёт радиус 0. Отсутствующий size даёт pointRadius. Пустые данные допустимы; ширина, высота и радиусы конечные и положительные."
+  ],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "buildScatterLayout",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { buildScatterLayout } from '@dreadnought/core';\nconst series = [{ id: 'a', label: 'Кампании', data: [{ id: 'one', label: 'Поиск', x: 20, y: 40, size: 100 }, { id: 'two', label: 'Соцсети', x: 40, y: 60, size: 200 }] }];\nconst layout = buildScatterLayout({series, xDomain:[0,100], yDomain:[0,100], width:500, height:300});"
+        }
+      ]
+    }
+  ]
+},
   {
     "id": "domain:sample-line-layout", "kind": "domain", "name": "sampleLineLayout", "family": "Charts",
     "description": "Разрешение-зависимое сокращение подготовленного LineLayout с сохранением экстремумов и разрывов.",

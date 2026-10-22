@@ -1,0 +1,53 @@
+{
+  "componentId": "component:scatter-chart",
+  "constraints": [
+    "До шести серий получают разные цвета. Перестановка и скрытие сохраняют цвет; изменение набора ID может перераспределить палитру. Тема: --dreadnought-scatter-chart-*."
+  ],
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "ScatterChart",
+      "description": "Готовая точечная и пузырьковая диаграмма с темой.",
+      "defaults": {
+        "pointRadius": 5,
+        "maxBubbleRadius": 24,
+        "pageSize": 50,
+        "xLabel": "X",
+        "yLabel": "Y",
+        "sizeLabel": "Размер"
+      },
+      "propertyDescriptions": {
+        "series": "Серии с уникальными id; точки: id, label, x, y и необязательный size. ID точки уникален внутри серии.",
+        "label": "Доступное название диаграммы.",
+        "description": "Краткое пояснение данных.",
+        "xDomain": "Явный диапазон X [min,max], min < max.",
+        "yDomain": "Явный диапазон Y [min,max], min < max.",
+        "pointRadius": "Радиус обычной точки без size.",
+        "maxBubbleRadius": "Максимальный радиус пузырька. Площадь пропорциональна size.",
+        "xLabel": "Название оси X.",
+        "yLabel": "Название оси Y.",
+        "sizeLabel": "Название показателя размера.",
+        "formatX": "Формат X на оси, в таблице и Tooltip.",
+        "formatY": "Формат Y на оси, в таблице и Tooltip.",
+        "formatSize": "Формат размера в таблице и Tooltip.",
+        "width": "Фиксированная ширина вместе с height.",
+        "height": "Фиксированная высота вместе с width.",
+        "visibleSeries": "Управляемые видимые ID серий.",
+        "defaultVisibleSeries": "Начальные видимые серии; по умолчанию все начальные ID.",
+        "onVisibleSeriesChange": "Запрос изменения видимых серий; controlled-значение обновляет приложение.",
+        "pageSize": "Число строк исходной таблицы на странице; не ограничивает число точек.",
+        "labels": "Подписи легенды, колонок, таблицы и пустого состояния.",
+        "slotProps": "Свойства частей диаграммы."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { ScatterChart } from '@dreadnought/ui/react';\nconst series = [{ id: 'a', label: 'Кампании', data: [{ id: 'one', label: 'Поиск', x: 20, y: 40, size: 100 }, { id: 'two', label: 'Соцсети', x: 40, y: 60, size: 200 }] }];\nexport function Example() { return <ScatterChart label=\"Эффективность кампаний\" series={series} xDomain={[0, 100]} yDomain={[0, 100]} xLabel=\"Бюджет\" yLabel=\"Заказы\" sizeLabel=\"Выручка\" />; }"
+        }
+      ]
+    }
+  ]
+}

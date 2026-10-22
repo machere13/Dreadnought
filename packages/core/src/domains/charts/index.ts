@@ -1,4 +1,6 @@
 export { buildRadarLayout } from './buildRadarLayout.ts';
+export { buildScatterLayout } from './buildScatterLayout.ts';
+export type { ScatterDatum, ScatterSeries, ScatterPoint, ScatterLayout, ScatterLayoutOptions } from './buildScatterLayout.ts';
 export { buildLineLayout } from './buildLineLayout.ts';
 export { sampleLineLayout } from './sampleLineLayout.ts';
 export { getLinePointAtX } from './getLinePointAtX.ts';

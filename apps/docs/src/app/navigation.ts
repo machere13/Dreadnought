@@ -41,7 +41,7 @@ export const componentFamilies: readonly { name: string; sections: readonly Comp
       sections: ['accordion', 'breadcrumb', 'tabs', 'menu', 'dropdown', 'pagination', 'tree'],
     },
     { name: 'Surfaces', sections: ['card'] },
-    { name: 'Visualization', sections: ['radarchart', 'linechart', 'barchart'] },
+    { name: 'Visualization', sections: ['radarchart', 'linechart', 'barchart', 'scatterchart'] },
     { name: 'Overlays', sections: ['tooltip', 'popover', 'modal', 'drawer', 'floatingpanel'] },
   ];
 
@@ -83,6 +83,7 @@ export const componentTitles = {
   radarchart: 'RadarChart',
   linechart: 'LineChart',
   barchart: 'BarChart',
+  scatterchart: 'ScatterChart',
   tooltip: 'Tooltip',
   popover: 'Popover',
   modal: 'Modal',

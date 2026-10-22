@@ -1,0 +1,52 @@
+:root {
+  --dreadnought-scatter-chart-text: var(--dreadnought-color-text-primary);
+  --dreadnought-scatter-chart-description-text: var(--dreadnought-color-text-placeholder);
+  --dreadnought-scatter-chart-grid-color: var(--dreadnought-color-border-subtle);
+  --dreadnought-scatter-chart-border: var(--dreadnought-color-border-default);
+  --dreadnought-scatter-chart-legend-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-scatter-chart-legend-bg-hover: var(--dreadnought-color-surface-hover);
+  --dreadnought-scatter-chart-focus-color: var(--dreadnought-color-focus-ring);
+  --dreadnought-scatter-chart-point-border: var(--dreadnought-color-surface-default);
+  --dreadnought-scatter-chart-series-1-color: var(--dreadnought-color-chart-series-1);
+  --dreadnought-scatter-chart-series-2-color: var(--dreadnought-color-chart-series-2);
+  --dreadnought-scatter-chart-series-3-color: var(--dreadnought-color-chart-series-3);
+  --dreadnought-scatter-chart-series-4-color: var(--dreadnought-color-chart-series-4);
+  --dreadnought-scatter-chart-series-5-color: var(--dreadnought-color-chart-series-5);
+  --dreadnought-scatter-chart-series-6-color: var(--dreadnought-color-chart-series-6);
+}
+:root {
+  --dreadnought-scatter-chart-dash-solid: var(--dreadnought-stroke-dash-solid);
+  --dreadnought-scatter-chart-dash-short: var(--dreadnought-stroke-dash-short);
+  --dreadnought-scatter-chart-dash-dot: var(--dreadnought-stroke-dash-dot);
+  --dreadnought-scatter-chart-dash-long: var(--dreadnought-stroke-dash-long);
+}
+:root {
+  --dreadnought-scatter-chart-page-input-width: var(--dreadnought-size-x2);
+  --dreadnought-scatter-chart-plot-max-width: var(--dreadnought-size-x4);
+  --dreadnought-scatter-chart-legend-min-height: var(--dreadnought-size-control-compact-min-height);
+  --dreadnought-scatter-chart-legend-radius: var(--dreadnought-border-radius-pill);
+  --dreadnought-scatter-chart-swatch-width: var(--dreadnought-spacing-x3);
+  --dreadnought-scatter-chart-border-width: var(--dreadnought-border-width-outline);
+  --dreadnought-scatter-chart-grid-width: var(--dreadnought-border-width-outline);
+  --dreadnought-scatter-chart-series-width: var(--dreadnought-border-width-x2);
+  --dreadnought-scatter-chart-focus-width: var(--dreadnought-border-width-x2);
+  --dreadnought-scatter-chart-point-border-width: var(--dreadnought-border-width-outline);
+}
+:root {
+  --dreadnought-scatter-chart-gap: var(--dreadnought-spacing-x4);
+  --dreadnought-scatter-chart-legend-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-scatter-chart-legend-padding-block: var(--dreadnought-spacing-x2);
+  --dreadnought-scatter-chart-legend-padding-inline: var(--dreadnought-spacing-x4);
+  --dreadnought-scatter-chart-focus-offset: var(--dreadnought-spacing-x1);
+  --dreadnought-scatter-chart-tooltip-row-gap: var(--dreadnought-spacing-x1);
+  --dreadnought-scatter-chart-tooltip-column-gap: var(--dreadnought-spacing-x2);
+}
+:root {
+  --dreadnought-scatter-chart-title-font-weight: var(--dreadnought-font-weight-label-1);
+  --dreadnought-scatter-chart-label-font-size: var(--dreadnought-font-size-caption-2);
+  --dreadnought-scatter-chart-legend-font-variation: var(--dreadnought-font-variation-wide);
+}
+
+:root {
+  --dreadnought-scatter-chart-point-opacity: 0.65;
+}
