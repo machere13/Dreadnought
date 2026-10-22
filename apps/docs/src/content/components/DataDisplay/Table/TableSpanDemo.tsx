@@ -1,8 +1,10 @@
 import { Table } from '@dreadnought/ui/react';
 
+type Member = { id: number; team: string; name: string };
+
 export function TableSpanDemo() {
   return (
-    <Table
+    <Table<Member>
       aria-label="Объединённые ячейки"
       rowKey="id"
       pagination={false}
