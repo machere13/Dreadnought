@@ -27,6 +27,15 @@
   ]
 },
   {
+    "id": "domain:build-pie-layout", "kind": "domain", "name": "buildPieLayout", "family": "Charts",
+    "description": "Чистая модель секторов круга или кольца: доли, углы и радиусы без React, DOM или SVG.",
+    "docsUrl": "/components/piechart/#piechart-logic",
+    "constraints": ["Уникальные непустые ID, строковые label, конечные неотрицательные value и конечная сумма. radius > 0, innerRadius — отношение в [0,1). Нулевые значения не создают секторы. Пустые данные допустимы. Углы в радианах по часовой стрелке от -PI/2 в системе с y вниз; share в [0,1]. Выходной innerRadius — абсолютный радиус. Вход не изменяется."],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "buildPieLayout",
+      "examples": [{ "id": "basic", "code": "import { buildPieLayout } from '@dreadnought/core';\nconst layout = buildPieLayout({data:[{id:'a',label:'A',value:30},{id:'b',label:'B',value:70}],radius:100,innerRadius:0.6});\nconst slices = layout.slices;" }]
+    }]
+  },
+  {
     "id": "domain:sample-line-layout", "kind": "domain", "name": "sampleLineLayout", "family": "Charts",
     "description": "Разрешение-зависимое сокращение подготовленного LineLayout с сохранением экстремумов и разрывов.",
     "docsUrl": "/components/linechart/#linechart-logic",

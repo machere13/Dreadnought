@@ -1,0 +1,18 @@
+:root {
+  --dreadnought-pie-chart-text: var(--dreadnought-color-text-primary);
+  --dreadnought-pie-chart-muted: var(--dreadnought-color-text-placeholder);
+  --dreadnought-pie-chart-separator: var(--dreadnought-color-surface-default);
+  --dreadnought-pie-chart-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-pie-chart-border-width: var(--dreadnought-border-width-outline);
+  --dreadnought-pie-chart-focus-width: var(--dreadnought-border-width-x2);
+  --dreadnought-pie-chart-gap: var(--dreadnought-spacing-x4);
+  --dreadnought-pie-chart-small-gap: var(--dreadnought-spacing-x2);
+  --dreadnought-pie-chart-max-width: var(--dreadnought-size-x4);
+  --dreadnought-pie-chart-marker-size: var(--dreadnought-spacing-x3);
+  --dreadnought-pie-chart-color-1: var(--dreadnought-color-chart-series-1);
+  --dreadnought-pie-chart-color-2: var(--dreadnought-color-chart-series-2);
+  --dreadnought-pie-chart-color-3: var(--dreadnought-color-chart-series-3);
+  --dreadnought-pie-chart-color-4: var(--dreadnought-color-chart-series-4);
+  --dreadnought-pie-chart-color-5: var(--dreadnought-color-chart-series-5);
+  --dreadnought-pie-chart-color-6: var(--dreadnought-color-chart-series-6);
+}

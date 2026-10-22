@@ -29,6 +29,7 @@ export const components = [
   { family: 'Visualization', name: 'RadarChart', sources: [adapter, ui] },
   { family: 'Visualization', name: 'LineChart', sources: [adapter, ui] },
   { family: 'Visualization', name: 'BarChart', sources: [adapter, ui] },
+  { family: 'Visualization', name: 'PieChart', sources: [adapter, ui] },
   { family: 'Visualization', name: 'ScatterChart', sources: [adapter, ui] },
   { family: 'Controls', name: 'Button', sources: [core, adapter, ui] },
   { family: 'Controls', name: 'Toolbar', sources: [core, adapter, ui] },

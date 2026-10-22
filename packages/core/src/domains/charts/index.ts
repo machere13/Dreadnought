@@ -1,6 +1,8 @@
 export { buildRadarLayout } from './buildRadarLayout.ts';
+export { buildPieLayout } from './buildPieLayout.ts';
 export { buildScatterLayout } from './buildScatterLayout.ts';
 export type { ScatterDatum, ScatterSeries, ScatterPoint, ScatterLayout, ScatterLayoutOptions } from './buildScatterLayout.ts';
+export type { PieDatum, PieSlice, PieLayoutOptions, PieLayout } from './buildPieLayout.ts';
 export { buildLineLayout } from './buildLineLayout.ts';
 export { sampleLineLayout } from './sampleLineLayout.ts';
 export { getLinePointAtX } from './getLinePointAtX.ts';

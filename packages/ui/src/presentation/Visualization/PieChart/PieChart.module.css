@@ -1,0 +1,154 @@
+@layer dreadnought {
+  .root {
+    display: grid;
+    gap: var(--dreadnought-pie-chart-gap);
+    min-width: 0;
+    margin: 0;
+    color: var(--dreadnought-pie-chart-text);
+    font-family: var(--dreadnought-font-family-ui);
+    font-size: var(--dreadnought-font-size-body-3);
+    font-weight: var(--dreadnought-font-weight-body-3);
+    line-height: var(--dreadnought-line-height-body-3);
+  }
+  .root > figcaption {
+    font-weight: var(--dreadnought-font-weight-label-1);
+  }
+  .root > p {
+    margin: 0;
+    color: var(--dreadnought-pie-chart-muted);
+  }
+  .plotContainer {
+    width: 100%;
+    max-width: var(--dreadnought-pie-chart-max-width);
+    min-width: 0;
+    margin-inline: auto;
+  }
+  .plot {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+  .slice {
+    fill: var(--pie-color);
+    stroke: var(--dreadnought-pie-chart-separator);
+    stroke-width: var(--dreadnought-pie-chart-border-width);
+    cursor: help;
+  }
+  .slice:is(:hover, :focus-visible, [data-active='true']) {
+    stroke: var(--dreadnought-pie-chart-focus);
+    stroke-width: var(--dreadnought-pie-chart-focus-width);
+    outline: none;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dreadnought-pie-chart-small-gap);
+  }
+  .legendButton {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--dreadnought-pie-chart-small-gap);
+    min-height: var(--dreadnought-size-control-compact-min-height);
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    padding: var(--dreadnought-pie-chart-small-gap) var(--dreadnought-pie-chart-gap);
+    border: var(--dreadnought-pie-chart-border-width) solid var(--dreadnought-color-border-default);
+    border-radius: var(--dreadnought-border-radius-pill);
+    background: var(--dreadnought-color-surface-default);
+    color: inherit;
+    font: inherit;
+    font-variation-settings: var(--dreadnought-font-variation-wide);
+    cursor: pointer;
+  }
+  .legendButton::before {
+    content: '';
+    width: var(--dreadnought-pie-chart-marker-size);
+    height: var(--dreadnought-pie-chart-marker-size);
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--pie-color);
+  }
+  .legendButton:hover {
+    background: var(--dreadnought-color-surface-hover);
+  }
+  .legendButton[aria-pressed='false'] {
+    text-decoration: line-through;
+    color: var(--dreadnought-pie-chart-muted);
+  }
+  .legendButton:focus-visible {
+    outline: var(--dreadnought-pie-chart-focus-width) solid var(--dreadnought-pie-chart-focus);
+    outline-offset: var(--dreadnought-spacing-x1);
+  }
+  .tooltipTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .tooltipTable :is(th, td) {
+    padding: var(--dreadnought-spacing-x1);
+    text-align: start;
+  }
+  .tooltipTable th {
+    font-weight: inherit;
+    overflow-wrap: anywhere;
+  }
+  .tooltipTable td {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .tooltipMark {
+    --dreadnought-mark-color: var(--pie-color);
+  }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .table caption {
+    text-align: start;
+    padding-block: var(--dreadnought-pie-chart-small-gap);
+  }
+  .table :is(th, td) {
+    padding: var(--dreadnought-table-active-padding-block)
+      var(--dreadnought-table-active-padding-inline);
+    border: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border);
+    text-align: start;
+    overflow-wrap: anywhere;
+  }
+  .table th {
+    font-weight: var(--dreadnought-table-header-font-weight);
+  }
+  .table thead th {
+    background: var(--dreadnought-table-header-bg);
+  }
+  .color1 {
+    --pie-color: var(--dreadnought-pie-chart-color-1);
+  }
+  .color2 {
+    --pie-color: var(--dreadnought-pie-chart-color-2);
+  }
+  .color3 {
+    --pie-color: var(--dreadnought-pie-chart-color-3);
+  }
+  .color4 {
+    --pie-color: var(--dreadnought-pie-chart-color-4);
+  }
+  .color5 {
+    --pie-color: var(--dreadnought-pie-chart-color-5);
+  }
+  .color6 {
+    --pie-color: var(--dreadnought-pie-chart-color-6);
+  }
+  @media (forced-colors: active) {
+    .slice {
+      fill: Canvas;
+      stroke: CanvasText;
+    }
+    .slice:is(:hover, :focus-visible, [data-active='true']) {
+      fill: Highlight;
+      stroke: HighlightText;
+    }
+    .legendButton::before {
+      background: CanvasText;
+    }
+  }
+}

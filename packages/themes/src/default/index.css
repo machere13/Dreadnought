@@ -35,6 +35,7 @@
 @import './components/Fields/Radio/index.css';
 @import './components/Fields/Select/index.css';
 @import './components/Visualization/RadarChart/index.css';
+@import './components/Visualization/PieChart/index.css';
 @import './components/Visualization/ScatterChart/index.css';
 @import './components/Visualization/LineChart/index.css';
 @import './components/Visualization/BarChart/index.css';

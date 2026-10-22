@@ -1,0 +1,37 @@
+{
+  "componentId": "component:pie-chart",
+  "constraints": [
+    "Для одного набора ID цвета сохраняются при перестановке и скрытии. До шести категорий получают разные цвета; дальше цвета повторяются. Добавление или удаление ID может перераспределить палитру.",
+    "Тема настраивается токенами --dreadnought-pie-chart-*. Появление секторов и подсказок без добавленной анимации."
+  ],
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "PieChart",
+      "defaults": { "innerRadius": 0 },
+      "description": "Готовый PieChart с темой, интерактивной легендой и Tooltip.",
+      "propertyDescriptions": {
+        "data": "Категории с уникальным id, label и конечным неотрицательным value.",
+        "label": "Непустое доступное название графика.",
+        "description": "Необязательное пояснение.",
+        "innerRadius": "Внутренний радиус как доля внешнего: 0 — круг, 0.6 — кольцо. Допустимо [0, 1).",
+        "width": "Фиксированная ширина; задаётся вместе с height.",
+        "height": "Фиксированная высота; задаётся вместе с width.",
+        "visibleItems": "Управляемые видимые ID. Доли пересчитываются среди них.",
+        "defaultVisibleItems": "Начальные видимые ID; по умолчанию все начальные категории.",
+        "onVisibleItemsChange": "Запрос нового набора видимых ID.",
+        "labels": "Подписи легенды, таблицы и пустого состояния.",
+        "slotProps": "Нативные свойства частей без замены геометрии и доступности."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { PieChart } from '@dreadnought/ui/react';\nconst data = [{id:'a',label:'Прямые',value:60},{id:'b',label:'Поиск',value:40}];\nexport function Example() { return <PieChart label=\"Источники посещений\" data={data} innerRadius={0.6} />; }"
+        }
+      ]
+    }
+  ]
+}

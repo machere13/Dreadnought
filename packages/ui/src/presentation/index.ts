@@ -23,6 +23,7 @@ export * from './Fields/Switch/index.ts';
 export * from './Fields/Radio/index.ts';
 export * from './Fields/Select/index.ts';
 export * from './Visualization/RadarChart/index.ts';
+export * from './Visualization/PieChart/index.ts';
 export * from './Visualization/ScatterChart/index.ts';
 export * from './Visualization/LineChart/index.ts';
 export * from './Visualization/BarChart/index.ts';
