@@ -37,6 +37,7 @@
 @import './components/Visualization/RadarChart/index.css';
 @import './components/Visualization/PieChart/index.css';
 @import './components/Visualization/ScatterChart/index.css';
+@import './components/Visualization/Heatmap/index.css';
 @import './components/Visualization/LineChart/index.css';
 @import './components/Visualization/BarChart/index.css';
 @import './components/Overlays/Tooltip/index.css';

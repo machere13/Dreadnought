@@ -1,0 +1,42 @@
+{
+  "componentId": "component:heatmap",
+  "constraints": [
+    "colorScale=sequential — последовательная шкала; diverging — два цвета со светлой серединой domain. Для центра 0 задайте симметричный domain. Тема --dreadnought-heatmap-*; при изменении палитры сохраняйте контраст текста.",
+    "Узкая матрица прокручивается внутри viewport, высота ограничена токеном max-height; фокус раскрывает ячейку. Пунктир и тире отличают пропуск от нуля."
+  ],
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Heatmap",
+      "description": "Готовая тепловая карта с цветовой шкалой и темой.",
+      "defaults": {
+        "showValues": true,
+        "pageSize": 50,
+        "colorScale": "sequential"
+      },
+      "propertyDescriptions": {
+        "columns": "Категории столбцов в порядке отображения: уникальный id и label.",
+        "rows": "Категории строк в порядке отображения: уникальный id и label.",
+        "data": "Записи { column, row, value }; value — конечное число или null. Пара координат уникальна.",
+        "domain": "Фиксированный диапазон [min,max], min < max. Без него — минимум и максимум измеренных значений.",
+        "label": "Доступное название тепловой карты.",
+        "description": "Краткое пояснение данных.",
+        "formatValue": "Формат чисел в ячейках, шкале, Tooltip и таблице.",
+        "showValues": "Показывать числа в ячейках. Доступные подписи и таблица остаются.",
+        "pageSize": "Строки таблицы на странице. Не ограничивает ячейки матрицы.",
+        "labels": "Подписи осей, показателя, пропусков, шкалы, таблицы и пустого состояния.",
+        "slotProps": "Свойства внутренних частей. Геометрия и доступность остаются под управлением адаптера.",
+        "colorScale": "sequential для величины; diverging для отклонений от середины domain."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Heatmap } from '@dreadnought/ui/react';\nconst columns = [{ id: 'mon', label: 'Пн' }, { id: 'tue', label: 'Вт' }];\nconst rows = [{ id: 'team', label: 'Команда' }];\nconst data = [{ column: 'mon', row: 'team', value: 0 }, { column: 'tue', row: 'team', value: 10 }];\nexport function Example() { return <Heatmap label=\"Закрытые задачи\" columns={columns} rows={rows} data={data} domain={[0, 10]} />; }"
+        }
+      ]
+    }
+  ]
+}

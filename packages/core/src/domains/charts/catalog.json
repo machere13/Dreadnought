@@ -1,5 +1,31 @@
 [
 {
+  "id": "domain:build-heatmap-layout",
+  "kind": "domain",
+  "name": "buildHeatmapLayout",
+  "family": "Charts",
+  "description": "Чистая матрица категорий: проверка данных, пропуски и нормализация чисел в интенсивность 0–1.",
+  "docsUrl": "/components/heatmap/#heatmap-logic",
+  "constraints": [
+    "Уникальные ID категорий по осям, уникальная пара координат, конечные числа или null. Пропуск не равен нулю. Явный domain: min < max; значения внутри. Автодиапазон допускает одинаковые числа с интенсивностью 0.5. Пустые измерения дают domain null. Ячейки идут по строкам, затем столбцам. Входы не изменяются. Размер результата rows × columns."
+  ],
+  "bindings": [
+    {
+      "id": "core",
+      "layer": 1,
+      "framework": null,
+      "importPath": "@dreadnought/core",
+      "exportName": "buildHeatmapLayout",
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { buildHeatmapLayout } from '@dreadnought/core';\nconst layout = buildHeatmapLayout({ columns: [{ id: 'mon', label: 'Пн' }], rows: [{ id: 'team', label: 'Команда' }], data: [{ row: 'team', column: 'mon', value: 10 }] });\nconst cells = layout.cells;"
+        }
+      ]
+    }
+  ]
+},
+{
   "id": "domain:build-scatter-layout",
   "kind": "domain",
   "name": "buildScatterLayout",

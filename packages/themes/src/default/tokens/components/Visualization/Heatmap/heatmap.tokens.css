@@ -1,0 +1,21 @@
+:root {
+  --dreadnought-heatmap-text: var(--dreadnought-color-text-primary);
+  --dreadnought-heatmap-muted-text: var(--dreadnought-color-text-placeholder);
+  --dreadnought-heatmap-missing-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-heatmap-border: var(--dreadnought-color-border-default);
+  --dreadnought-heatmap-focus-color: var(--dreadnought-color-focus-ring);
+  --dreadnought-heatmap-low: #243849;
+  --dreadnought-heatmap-high: #72dde0;
+  --dreadnought-heatmap-negative: #4a9ce8;
+  --dreadnought-heatmap-middle: #e2e8f0;
+  --dreadnought-heatmap-positive: #f2a65a;
+  --dreadnought-heatmap-text-on-light: #000000;
+  --dreadnought-heatmap-text-on-dark: #ffffff;
+  --dreadnought-heatmap-gap: var(--dreadnought-spacing-x4);
+  --dreadnought-heatmap-grid-gap: var(--dreadnought-spacing-x1);
+  --dreadnought-heatmap-radius: var(--dreadnought-border-radius-choice);
+  --dreadnought-heatmap-cell-min-width: 44px;
+  --dreadnought-heatmap-cell-min-height: 44px;
+  --dreadnought-heatmap-label-max-width: 8rem;
+  --dreadnought-heatmap-max-height: 32rem;
+}

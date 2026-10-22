@@ -1,5 +1,6 @@
 [
   "/components/scatterchart/",
+  "/components/heatmap/",
   "/components/piechart/",
   "/", "/getting-started/", "/theming/", "/custom-components/",
   "/core/actions/", "/core/behaviors/", "/core/patterns/", "/core/domains/", "/core/components/",

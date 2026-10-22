@@ -1,0 +1,51 @@
+{
+  "id": "component:heatmap",
+  "kind": "component",
+  "name": "Heatmap",
+  "family": "Visualization",
+  "description": "Матричная тепловая карта: категории по двум осям, значения по цвету, Tooltip и таблица.",
+  "docsUrl": "/components/heatmap/#heatmap-api",
+  "states": [],
+  "composesWith": ["domain:build-heatmap-layout"],
+  "constraints": [
+    "Категории rows и columns имеют уникальные ID внутри оси. Порядок не сортируется. data содержит уникальные пары row/column, ссылающиеся на эти ID. Значения конечные или null.",
+    "Ноль — измеренное значение. null и отсутствующая пара дают пропуск, исключённый из диапазона. Автодиапазон равен min/max; одинаковые числа получают интенсивность 0.5. Нет измерений — domain null и шкала скрыта.",
+    "Явный domain требует min < max и включает все значения. Выход за него — ошибка, без обрезания.",
+    "Один Tab-вход в матрицу; стрелки идут по двум осям без зацикливания, Home/End — внутри строки. Escape закрывает Tooltip. Нажатие ячейки переводит фокус для сенсорного ввода.",
+    "Матрица создаёт rows × columns ячеек, включая пропуски. pageSize ограничивает только таблицу. Виртуализации, выборки и агрегации нет; крупные наборы агрегирует приложение.",
+    "showValues скрывает только видимый текст чисел. Подписи скринридера, Tooltip и таблица сохраняют точные значения."
+  ],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "HeatmapAdapter",
+      "description": "Матрица, общий Tooltip, навигация и таблица без оформления.",
+      "defaults": {
+        "showValues": true,
+        "pageSize": 50
+      },
+      "propertyDescriptions": {
+        "columns": "Категории столбцов в порядке отображения: уникальный id и label.",
+        "rows": "Категории строк в порядке отображения: уникальный id и label.",
+        "data": "Записи { column, row, value }; value — конечное число или null. Пара координат уникальна.",
+        "domain": "Фиксированный диапазон [min,max], min < max. Без него — минимум и максимум измеренных значений.",
+        "label": "Доступное название тепловой карты.",
+        "description": "Краткое пояснение данных.",
+        "formatValue": "Формат чисел в ячейках, шкале, Tooltip и таблице.",
+        "showValues": "Показывать числа в ячейках. Доступные подписи и таблица остаются.",
+        "pageSize": "Строки таблицы на странице. Не ограничивает ячейки матрицы.",
+        "labels": "Подписи осей, показателя, пропусков, шкалы, таблицы и пустого состояния.",
+        "slotProps": "Свойства внутренних частей. Геометрия и доступность остаются под управлением адаптера."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { HeatmapAdapter } from '@dreadnought/react/unstyled';\nconst columns = [{ id: 'mon', label: 'Пн' }, { id: 'tue', label: 'Вт' }];\nconst rows = [{ id: 'team', label: 'Команда' }];\nconst data = [{ column: 'mon', row: 'team', value: 0 }, { column: 'tue', row: 'team', value: 10 }];\nexport function Example() { return <HeatmapAdapter label=\"Закрытые задачи\" columns={columns} rows={rows} data={data} domain={[0, 10]} />; }"
+        }
+      ]
+    }
+  ]
+}

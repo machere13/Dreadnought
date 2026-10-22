@@ -28,3 +28,5 @@ export type {
   RadarLayoutOptions,
   RadarLayout,
 } from './buildRadarLayout.ts';
+export { buildHeatmapLayout } from './buildHeatmapLayout.ts';
+export type { HeatmapCategory, HeatmapDatum, HeatmapCell, HeatmapLayout, HeatmapLayoutOptions } from './buildHeatmapLayout.ts';

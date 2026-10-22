@@ -1,0 +1,168 @@
+@layer dreadnought {
+  .root {
+    display: grid;
+    gap: var(--dreadnought-heatmap-gap);
+    min-width: 0;
+    margin: 0;
+    color: var(--dreadnought-heatmap-text);
+    font: inherit;
+  }
+  .root > figcaption {
+    font-weight: var(--dreadnought-font-weight-label-1);
+  }
+  .root > p {
+    margin: 0;
+    color: var(--dreadnought-heatmap-muted-text);
+  }
+  .viewport {
+    max-width: 100%;
+    max-height: var(--dreadnought-heatmap-max-height);
+    overflow: auto;
+    padding: var(--dreadnought-heatmap-grid-gap);
+  }
+  .grid {
+    gap: var(--dreadnought-heatmap-grid-gap);
+    align-items: stretch;
+    width: max-content;
+    min-width: 100%;
+  }
+  .axisLabel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--dreadnought-spacing-x2);
+    max-width: var(--dreadnought-heatmap-label-max-width);
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font-size: var(--dreadnought-font-size-caption-2);
+    color: var(--dreadnought-heatmap-muted-text);
+  }
+  .cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--dreadnought-heatmap-cell-min-height);
+    min-width: 0;
+    padding: var(--dreadnought-spacing-x2);
+    box-sizing: border-box;
+    background: var(--heatmap-cell-bg);
+    color: var(--heatmap-cell-text);
+    border: 1px solid transparent;
+    border-radius: var(--dreadnought-heatmap-radius);
+    font-size: var(--dreadnought-font-size-caption-2);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+    cursor: help;
+    scroll-margin: var(--dreadnought-heatmap-grid-gap);
+  }
+  .cell[data-missing='true'] {
+    border: 1px dashed var(--dreadnought-heatmap-border);
+  }
+  .cell:is(:hover, :focus-visible, [data-active='true']) {
+    outline: 2px solid var(--dreadnought-heatmap-focus-color);
+    outline-offset: 1px;
+  }
+  .legend {
+    display: grid;
+    grid-template-columns: minmax(0, max-content) minmax(40px, 1fr) minmax(0, max-content);
+    max-width: 24rem;
+    align-items: center;
+    gap: var(--dreadnought-spacing-x2);
+  }
+  .legend > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .legend > span:first-child {
+    grid-column: 1 / -1;
+  }
+  .scale {
+    display: inline-block;
+    height: var(--dreadnought-spacing-x3);
+    border-radius: var(--dreadnought-heatmap-radius);
+    background: linear-gradient(
+      to right,
+      var(--dreadnought-heatmap-low),
+      var(--dreadnought-heatmap-high)
+    );
+  }
+  .scale[data-constant='true'] {
+    background: color-mix(
+      in srgb,
+      var(--dreadnought-heatmap-low),
+      var(--dreadnought-heatmap-high) 50%
+    );
+  }
+  .root[data-color-scale='diverging'] .scale {
+    background: linear-gradient(
+      to right,
+      var(--dreadnought-heatmap-negative),
+      var(--dreadnought-heatmap-middle),
+      var(--dreadnought-heatmap-positive)
+    );
+  }
+  .root[data-color-scale='diverging'] .scale[data-constant='true'] {
+    background: var(--dreadnought-heatmap-middle);
+  }
+  .tooltipTable {
+    border-collapse: collapse;
+  }
+  .tooltipTable :is(th, td) {
+    text-align: start;
+    padding: var(--dreadnought-spacing-x1);
+    font-weight: inherit;
+  }
+  .tooltipTable td:last-child {
+    font-variant-numeric: tabular-nums;
+  }
+  .tableContainer {
+    max-width: 100%;
+    overflow: auto;
+  }
+  .table {
+    width: 100%;
+  }
+  .table caption {
+    text-align: start;
+    padding-block: var(--dreadnought-spacing-x2);
+  }
+  .table :is(th, td) {
+    padding: var(--dreadnought-table-active-padding-block)
+      var(--dreadnought-table-active-padding-inline);
+    border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border);
+  }
+  .table thead th {
+    background: var(--dreadnought-table-header-bg);
+    color: var(--dreadnought-table-header-text);
+  }
+  .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--dreadnought-spacing-x2);
+  }
+  .pageInput {
+    width: 4rem;
+    padding: var(--dreadnought-spacing-x2);
+    border: 1px solid var(--dreadnought-heatmap-border);
+    background: var(--dreadnought-heatmap-missing-bg);
+    color: var(--dreadnought-heatmap-text);
+    font: inherit;
+  }
+  .pageInput:focus-visible {
+    outline: 2px solid var(--dreadnought-heatmap-focus-color);
+  }
+  @media (forced-colors: active) {
+    .cell {
+      border: 1px solid CanvasText;
+      background: Canvas;
+      color: CanvasText;
+    }
+    .cell:is(:hover, :focus-visible, [data-active='true']) {
+      outline-color: Highlight;
+    }
+    .scale {
+      border: 1px solid CanvasText;
+    }
+  }
+}
