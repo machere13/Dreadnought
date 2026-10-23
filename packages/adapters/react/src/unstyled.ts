@@ -127,3 +127,4 @@ export * from './Visualization/FunnelChart/index.ts';
 export * from './Visualization/Treemap/index.ts';
 export * from './Visualization/WaterfallChart/index.ts';
 export type { BoxPlotAdapterProps, BoxPlotSlotProps, BoxPlotLabels } from './Visualization/BoxPlot/index.ts';
+export * from './Visualization/Sankey/index.ts';

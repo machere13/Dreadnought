@@ -33,6 +33,8 @@ export { buildHistogram } from './buildHistogram.ts';
 export { buildBoxPlotLayout } from './buildBoxPlotLayout.ts';
 export { buildFunnelLayout } from './buildFunnelLayout.ts';
 export { buildWaterfallLayout } from './buildWaterfallLayout.ts';
+export { buildSankeyLayout } from './buildSankeyLayout.ts';
+export type { SankeyNode, SankeyLink, SankeyNodeRect, SankeyFlow, SankeyItem, SankeyLayout, SankeyLayoutOptions } from './sankey.types.ts';
 export type {
   WaterfallDatum,
   WaterfallStep,

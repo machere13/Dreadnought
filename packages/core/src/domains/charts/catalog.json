@@ -1,5 +1,34 @@
 [
   {
+    "id": "domain:build-sankey-layout",
+    "kind": "domain",
+    "name": "buildSankeyLayout",
+    "family": "Charts",
+    "description": "Чистый расчёт узлов и потоков Sankey: топологические колонки, общий масштаб, входящие/исходящие суммы и координаты.",
+    "docsUrl": "/components/sankey/#sankey-logic",
+    "constraints": [
+      "Вход nodes {id,label}, links {id,source,target,value}. Граф без циклов; уникальные ID внутри каждого массива, существующие endpoints, конечные положительные значения и суммы. До 200 узлов и 1000 связей. Разреженные массивы отклоняются.",
+      "Узлы: value=max(incoming,outgoing), layer, x/y/width/height. Связи: sourceX/sourceY/targetX/targetY и width в пикселях. Узел без потока имеет height=0. Пустые массивы допустимы. Вход не изменяется.",
+      "width/height автоматически подбираются по числу колонок и узлов. Явные размеры, nodeWidth (16) и nodeGap (24) должны быть конечными и положительными; недостаточный размер отклоняется. Масштаб нормализован для очень маленьких значений.",
+      "O(nodes+links) время и память. Порядок внутри колонок и порядок потоков сохраняется; минимизации пересечений нет. Без React, SVG, DOM и стороннего layout-движка."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "buildSankeyLayout",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { buildSankeyLayout } from '@dreadnought/core';\nconst layout = buildSankeyLayout({ nodes: [{id:'a',label:'A'},{id:'b',label:'B'}], links: [{id:'ab',source:'a',target:'b',value:70}] });"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "domain:build-waterfall-layout", "kind": "domain", "name": "buildWaterfallLayout", "family": "Charts",
     "description": "Чистый расчёт накопленных изменений, промежуточных итогов, прямоугольников и общей шкалы Waterfall.",
     "docsUrl": "/components/waterfallchart/#waterfallchart-logic",

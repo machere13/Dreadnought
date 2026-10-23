@@ -1,0 +1,36 @@
+{
+  "componentId": "component:sankey",
+  "constraints": [
+    "Тема через --dreadnought-sankey-*. Шесть цветов повторяются, цвет связи соответствует источнику. Для тонких потоков используйте фокус с клавиатуры и точную таблицу."
+  ],
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Sankey",
+      "defaults": {
+        "pageSize": 20,
+        "nodeGap": 24
+      },
+      "propertyDescriptions": {
+        "nodes": "Категории {id,label}. ID уникальны и непусты; порядок внутри колонок сохраняется.",
+        "links": "Потоки {id,source,target,value}. Конечное value > 0; source/target ссылаются на nodes. Граф без циклов.",
+        "label": "Доступное название диаграммы.",
+        "description": "Контекст и единицы измерения.",
+        "nodeGap": "Вертикальный промежуток между узлами в пикселях, по умолчанию 24.",
+        "formatValue": "Формат чисел в Tooltip и таблице, не меняющий расчёт.",
+        "pageSize": "Число строк таблицы на странице. Граф всегда показывается целиком.",
+        "labels": "Подписи колонок, числовых показателей и пустого состояния.",
+        "slotProps": "Нативные свойства графа, узлов и связей, Tooltip, Mark, таблицы и пагинации."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Sankey } from '@dreadnought/ui/react';\nconst nodes = [{ id: 'a', label: 'Поиск' }, { id: 'b', label: 'Сайт' }];\nconst links = [{ id: 'ab', source: 'a', target: 'b', value: 70 }];\nexport function Example() { return <Sankey label=\"Переходы\" nodes={nodes} links={links} />; }"
+        }
+      ]
+    }
+  ]
+}

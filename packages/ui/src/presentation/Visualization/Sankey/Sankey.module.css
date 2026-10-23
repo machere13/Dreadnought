@@ -1,0 +1,152 @@
+@layer dreadnought {
+  .root {
+    display: grid;
+    gap: var(--dreadnought-sankey-gap);
+    min-width: 0;
+    margin: 0;
+    color: var(--dreadnought-sankey-text);
+  }
+  .root > figcaption {
+    font-weight: var(--dreadnought-font-weight-label-1);
+  }
+  .root > p {
+    margin: 0;
+    color: var(--dreadnought-sankey-muted);
+    overflow-wrap: anywhere;
+  }
+  .root [data-color='0'],
+  .tooltip [data-color='0'] {
+    --sankey-active: var(--dreadnought-sankey-color-1);
+  }
+  .root [data-color='1'],
+  .tooltip [data-color='1'] {
+    --sankey-active: var(--dreadnought-sankey-color-2);
+  }
+  .root [data-color='2'],
+  .tooltip [data-color='2'] {
+    --sankey-active: var(--dreadnought-sankey-color-3);
+  }
+  .root [data-color='3'],
+  .tooltip [data-color='3'] {
+    --sankey-active: var(--dreadnought-sankey-color-4);
+  }
+  .root [data-color='4'],
+  .tooltip [data-color='4'] {
+    --sankey-active: var(--dreadnought-sankey-color-5);
+  }
+  .root [data-color='5'],
+  .tooltip [data-color='5'] {
+    --sankey-active: var(--dreadnought-sankey-color-6);
+  }
+  .plot {
+    min-width: 0;
+    max-width: 100%;
+    max-height: 40rem;
+    overflow: auto;
+    padding: 4px;
+  }
+  .item {
+    display: block;
+    color: var(--sankey-active);
+    cursor: help;
+  }
+  .item[data-kind='link'] path {
+    stroke-opacity: 0.4;
+  }
+  .item[data-kind='link']:is(:hover, :focus) path {
+    stroke-opacity: 0.85;
+  }
+  .item:focus-visible {
+    outline: 2px solid var(--dreadnought-sankey-focus);
+    outline-offset: 2px;
+  }
+  .item [data-ui='sankey-node-label'] {
+    color: var(--dreadnought-sankey-text);
+    font-size: var(--dreadnought-font-size-caption-2);
+    text-shadow: 0 1px 3px var(--dreadnought-sankey-bg);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .item [data-ui='sankey-node-label'][data-side='left'] {
+    text-align: end;
+  }
+  .tooltip {
+    max-width: min(26rem, calc(100vw - 24px));
+  }
+  .tooltip [data-ui='sankey-tooltip-content'] {
+    max-height: min(30rem, calc(100vh - 24px));
+    overflow: auto;
+    overflow-wrap: anywhere;
+  }
+  .tooltip [data-ui='sankey-tooltip-content'] > span {
+    display: flex;
+    align-items: center;
+    gap: var(--dreadnought-spacing-x2);
+  }
+  .tooltipTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .tooltipTable :is(th, td) {
+    text-align: start;
+    padding: var(--dreadnought-spacing-x1);
+    font-weight: inherit;
+  }
+  .tooltipTable td {
+    font-variant-numeric: tabular-nums;
+  }
+  .mark {
+    --dreadnought-mark-color: var(--sankey-active);
+  }
+  .tableContainer {
+    min-width: 0;
+    max-width: 100%;
+    overflow: auto;
+  }
+  .table {
+    width: 100%;
+    min-width: 28rem;
+  }
+  .table caption {
+    text-align: start;
+    padding-block: var(--dreadnought-spacing-x2);
+  }
+  .table :is(th, td) {
+    padding: var(--dreadnought-table-active-padding-block)
+      var(--dreadnought-table-active-padding-inline);
+    border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border);
+  }
+  .table thead th {
+    background: var(--dreadnought-table-header-bg);
+    color: var(--dreadnought-table-header-text);
+  }
+  .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dreadnought-spacing-x2);
+    align-items: center;
+  }
+  .pageInput {
+    width: 4rem;
+    padding: var(--dreadnought-spacing-x2);
+    background: var(--dreadnought-sankey-bg);
+    border: 1px solid var(--dreadnought-sankey-border);
+    color: var(--dreadnought-sankey-text);
+    font: inherit;
+  }
+  .pageInput:focus-visible {
+    outline: 2px solid var(--dreadnought-sankey-focus);
+  }
+  @media (forced-colors: active) {
+    .item {
+      color: CanvasText;
+    }
+    .item[data-kind='link'] path {
+      stroke-opacity: 1;
+    }
+    .item:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

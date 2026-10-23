@@ -1,0 +1,14 @@
+:root {
+  --dreadnought-sankey-text: var(--dreadnought-color-text-primary);
+  --dreadnought-sankey-muted: var(--dreadnought-color-text-placeholder);
+  --dreadnought-sankey-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-sankey-border: var(--dreadnought-color-border-default);
+  --dreadnought-sankey-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-sankey-gap: var(--dreadnought-spacing-x4);
+  --dreadnought-sankey-color-1: #72dde0;
+  --dreadnought-sankey-color-2: #edbc72;
+  --dreadnought-sankey-color-3: #a6a5ff;
+  --dreadnought-sankey-color-4: #f194be;
+  --dreadnought-sankey-color-5: #8fca9c;
+  --dreadnought-sankey-color-6: #94b9ed;
+}
