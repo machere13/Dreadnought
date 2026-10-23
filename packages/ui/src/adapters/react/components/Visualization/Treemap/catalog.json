@@ -1,0 +1,35 @@
+{
+  "componentId": "component:treemap",
+  "constraints": [
+    "Оформление через --dreadnought-treemap-*. Геометрия не зависит от темы. Маленькие подписи скрываются, точные значения доступны в таблице."
+  ],
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Treemap",
+      "defaults": {
+        "pageSize": 20
+      },
+      "propertyDescriptions": {
+        "data": "Корневая группа {id,label,children}. Лист {id,label,value}, группа без value; ID уникальны во всём дереве. Значения конечные и неотрицательные. Данные неизменяемые.",
+        "label": "Доступное название диаграммы.",
+        "description": "Контекст данных и единицы измерения.",
+        "onRootChange": "Уведомление об ID группы после перехода пользователя; не управляет текущим уровнем.",
+        "formatValue": "Формат суммы группы и значения листа без изменения расчёта.",
+        "formatPercent": "Формат отношения 0–1. Не вызывается для неопределённой доли.",
+        "pageSize": "Число строк таблицы на странице. Не ограничивает диаграмму и не меняет площади.",
+        "labels": "Подписи пути, столбцов и пустого состояния.",
+        "slotProps": "Свойства плиток, Breadcrumb, кнопок перехода, Tooltip, Mark, таблицы и пагинации."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Treemap } from '@dreadnought/ui/react';\nconst data = { id: 'all', label: 'Бюджет', children: [{ id: 'team', label: 'Команда', children: [{ id: 'web', label: 'Web', value: 60 }, { id: 'api', label: 'API', value: 40 }] }] };\nexport function Example() { return <Treemap label=\"Бюджет команды\" data={data} />; }"
+        }
+      ]
+    }
+  ]
+}

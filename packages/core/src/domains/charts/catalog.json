@@ -1,5 +1,24 @@
 [
   {
+    "id": "domain:build-treemap-layout",
+    "kind": "domain",
+    "name": "buildTreemapLayout",
+    "family": "Charts",
+    "description": "Чистый расчёт вложенных прямоугольников, сумм групп, пути и долей Treemap.",
+    "docsUrl": "/components/treemap/#treemap-logic",
+    "constraints": [
+      "data — корневая группа с children; лист содержит value, группа не содержит value. Глобально уникальные непустые ID и label, конечные неотрицательные значения, конечные суммы. Циклы и глубина больше 64 отклоняются.",
+      "rootId выбирает существующую группу, по умолчанию корень. Положительные конечные width/height, по умолчанию 100/60. Вход не изменяется.",
+      "Бинарное разбиение по длинной стороне сохраняет порядок детей. Возвращает текущий уровень и прямоугольники его детей в локальных координатах. Нулевые значения имеют rect=null; share и totalShare используют текущую группу и полный корень, нулевой знаменатель даёт null.",
+      "Обход дерева O(n), разбиение видимых узлов O(m log m), память O(n). Нет DOM, React, CSS или стороннего layout-движка."
+    ],
+    "bindings": [{
+      "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core",
+      "exportName": "buildTreemapLayout",
+      "examples": [{"id": "basic", "code": "import { buildTreemapLayout } from '@dreadnought/core';\nconst layout = buildTreemapLayout({ data: { id: 'all', label: 'Бюджет', children: [{ id: 'web', label: 'Web', value: 60 }, { id: 'api', label: 'API', value: 40 }] }, width: 100, height: 60 });"}]
+    }]
+  },
+  {
     "id": "domain:build-funnel-layout", "kind": "domain", "name": "buildFunnelLayout", "family": "Charts",
     "description": "Этапы воронки, нормализованные ширины, две конверсии и потери без React и DOM.",
     "docsUrl": "/components/funnelchart/#funnelchart-logic",

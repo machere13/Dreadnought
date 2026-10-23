@@ -1,0 +1,15 @@
+:root {
+  --dreadnought-treemap-text: var(--dreadnought-color-text-primary);
+  --dreadnought-treemap-muted: var(--dreadnought-color-text-placeholder);
+  --dreadnought-treemap-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-treemap-border: var(--dreadnought-color-border-default);
+  --dreadnought-treemap-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-treemap-gap: var(--dreadnought-spacing-x4);
+  --dreadnought-treemap-radius: var(--dreadnought-border-radius-choice);
+  --dreadnought-treemap-color-1: #72dde0;
+  --dreadnought-treemap-color-2: #a6a5ff;
+  --dreadnought-treemap-color-3: #edbc72;
+  --dreadnought-treemap-color-4: #e497c5;
+  --dreadnought-treemap-color-5: #82c5f3;
+  --dreadnought-treemap-color-6: #a7d58c;
+}

@@ -45,3 +45,4 @@ export * from './Overlays/FloatingPanel/index.ts';
 export * from './Visualization/Histogram/index.ts';
 export * from './Visualization/BoxPlot/index.ts';
 export * from './Visualization/FunnelChart/index.ts';
+export * from './Visualization/Treemap/index.ts';
