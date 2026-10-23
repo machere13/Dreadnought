@@ -44,3 +44,4 @@ export * from './Fields/Upload/index.ts';
 export * from './Fields/DatePicker/index.ts';
 export * from './Fields/TimePicker/index.ts';
 export * from './Fields/TreeSelect/index.ts';
+export * from './Visualization/BoxPlot/index.ts';

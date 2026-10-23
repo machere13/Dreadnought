@@ -1,0 +1,10 @@
+:root {
+  --dreadnought-box-plot-text: var(--dreadnought-color-text-primary);
+  --dreadnought-box-plot-muted: var(--dreadnought-color-text-placeholder);
+  --dreadnought-box-plot-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-box-plot-border: var(--dreadnought-color-border-default);
+  --dreadnought-box-plot-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-box-plot-color: #72dde0;
+  --dreadnought-box-plot-gap: var(--dreadnought-spacing-x4);
+  --dreadnought-box-plot-radius: var(--dreadnought-border-radius-choice);
+}

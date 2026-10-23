@@ -43,3 +43,4 @@ export * from './Fields/TimePicker/index.ts';
 export * from './Fields/TreeSelect/index.ts';
 export * from './Overlays/FloatingPanel/index.ts';
 export * from './Visualization/Histogram/index.ts';
+export * from './Visualization/BoxPlot/index.ts';

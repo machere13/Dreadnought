@@ -1,5 +1,18 @@
 [
   {
+    "id": "domain:build-box-plot-layout", "kind": "domain", "name": "buildBoxPlotLayout", "family": "Charts",
+    "description": "Квартили type 7, медиана, наблюдаемые усы 1.5 IQR, выбросы и общая нормализованная шкала.",
+    "docsUrl": "/components/boxplot/#boxplot-logic",
+    "constraints": [
+      "Группы {id,label,values}: уникальные непустые ID, непустые подписи, конечные числа. Вход не меняется. Квартили интерполируются по позиции p*(n−1). Выбросы строго за Q1−1.5 IQR и Q3+1.5 IQR; усы равны крайним наблюдениям внутри границ включительно.",
+      "Пустая группа: summary/positions null. Все группы пусты без domain: domain null. Постоянная выборка расширяет шкалу на max(abs(value)*0.01,0.5), в пределах конечных чисел. Явный domain min<max включает все наблюдения.",
+      "Возвращает groups, domain, ticks; positions в 0–1. Повторные выбросы агрегируются с count. O(n log n) на выборку, память O(n). Нет DOM, React или CSS."
+    ],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "buildBoxPlotLayout",
+      "examples": [{ "id": "basic", "code": "import { buildBoxPlotLayout } from '@dreadnought/core';\nconst layout = buildBoxPlotLayout({data:[{id:'a',label:'A',values:[1,2,3,4,5,6,7,100]}]});\nconst median = layout.groups[0].summary?.median;" }]
+    }]
+  },
+  {
     "id": "domain:build-histogram",
     "kind": "domain",
     "name": "buildHistogram",

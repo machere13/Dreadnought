@@ -1,0 +1,129 @@
+@layer dreadnought {
+  .root {
+    display: grid;
+    gap: var(--dreadnought-box-plot-gap);
+    min-width: 0;
+    margin: 0;
+    color: var(--dreadnought-box-plot-text);
+  }
+  .root > figcaption {
+    font-weight: var(--dreadnought-font-weight-label-1);
+  }
+  .root > p {
+    margin: 0;
+    color: var(--dreadnought-box-plot-muted);
+  }
+  .plot {
+    display: grid;
+    gap: var(--dreadnought-box-plot-gap);
+    min-width: 0;
+  }
+  .plot > div {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .group {
+    display: block;
+    color: var(--dreadnought-box-plot-color);
+    border-radius: var(--dreadnought-box-plot-radius);
+    cursor: help;
+  }
+  .group > svg {
+    display: block;
+  }
+  .group:is(:hover, :focus-visible) {
+    outline: 2px solid var(--dreadnought-box-plot-focus);
+    outline-offset: 1px;
+  }
+  .axis {
+    container-type: inline-size;
+    color: var(--dreadnought-box-plot-muted);
+    font-size: var(--dreadnought-font-size-caption-2);
+  }
+  .axis > svg {
+    display: block;
+    border-top: 1px solid var(--dreadnought-box-plot-border);
+  }
+  .axis span {
+    overflow-wrap: anywhere;
+    min-width: 0;
+  }
+  .tooltip {
+    max-width: min(24rem, calc(100vw - 24px));
+  }
+  .tooltip [data-ui='box-plot-tooltip-content'] {
+    max-height: min(32rem, calc(100vh - 24px));
+    overflow: auto;
+  }
+  .tooltip [data-ui='box-plot-tooltip-content'] > span {
+    display: flex;
+    align-items: center;
+    gap: var(--dreadnought-spacing-x2);
+  }
+  .tooltipTable {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  .tooltipTable :is(th, td) {
+    text-align: start;
+    padding: var(--dreadnought-spacing-x1);
+    font-weight: inherit;
+  }
+  .tooltipTable td {
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+  .mark {
+    --dreadnought-mark-color: var(--dreadnought-box-plot-color);
+  }
+  .tableContainer {
+    max-width: 100%;
+    overflow: auto;
+  }
+  .table {
+    width: 100%;
+  }
+  .table caption {
+    text-align: start;
+    padding-block: var(--dreadnought-spacing-x2);
+  }
+  .table :is(th, td) {
+    padding: var(--dreadnought-table-active-padding-block)
+      var(--dreadnought-table-active-padding-inline);
+    border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border);
+  }
+  .table thead th {
+    background: var(--dreadnought-table-header-bg);
+    color: var(--dreadnought-table-header-text);
+  }
+  .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dreadnought-spacing-x2);
+    align-items: center;
+  }
+  .pageInput {
+    width: 4rem;
+    padding: var(--dreadnought-spacing-x2);
+    background: var(--dreadnought-box-plot-bg);
+    border: 1px solid var(--dreadnought-box-plot-border);
+    color: var(--dreadnought-box-plot-text);
+    font: inherit;
+  }
+  .pageInput:focus-visible {
+    outline: 2px solid var(--dreadnought-box-plot-focus);
+  }
+  @container (max-width: 22rem) {
+    .axis text:nth-child(even) {
+      display: none;
+    }
+  }
+  @media (forced-colors: active) {
+    .group {
+      color: CanvasText;
+    }
+    .group:is(:hover, :focus-visible) {
+      outline-color: Highlight;
+    }
+  }
+}

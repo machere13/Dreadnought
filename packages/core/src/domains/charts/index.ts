@@ -30,5 +30,7 @@ export type {
 } from './buildRadarLayout.ts';
 export { buildHeatmapLayout } from './buildHeatmapLayout.ts';
 export { buildHistogram } from './buildHistogram.ts';
+export { buildBoxPlotLayout } from './buildBoxPlotLayout.ts';
+export type { BoxPlotDatum, BoxPlotOptions, BoxPlotSummary, BoxPlotGroup, BoxPlotLayout } from './buildBoxPlotLayout.ts';
 export type { HistogramOptions, HistogramBin, HistogramLayout } from './buildHistogram.ts';
 export type { HeatmapCategory, HeatmapDatum, HeatmapCell, HeatmapLayout, HeatmapLayoutOptions } from './buildHeatmapLayout.ts';

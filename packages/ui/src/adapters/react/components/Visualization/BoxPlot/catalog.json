@@ -1,0 +1,36 @@
+{
+  "componentId": "component:box-plot",
+  "constraints": [
+    "Оформление управляется токенами --dreadnought-box-plot-*. Геометрия не зависит от CSS."
+  ],
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "BoxPlot",
+      "defaults": {
+        "pageSize": 20,
+        "valueLabel": "Значение"
+      },
+      "propertyDescriptions": {
+        "data": "Группы { id, label, values }. values — исходные конечные числа; ID уникальны. Не изменяйте массивы на месте.",
+        "domain": "Общая шкала [min,max], min < max, включает все наблюдения и выбросы. По умолчанию min/max данных.",
+        "label": "Доступное название графика.",
+        "description": "Краткое пояснение выборки.",
+        "valueLabel": "Подпись числовой оси, например «Время, мс».",
+        "formatValue": "Формат значений в шкале, Tooltip и таблице; не влияет на расчёт.",
+        "pageSize": "Число групп одновременно в графике и таблице. По умолчанию 20.",
+        "labels": "Подписи статистик, таблицы и пустого состояния.",
+        "slotProps": "Свойства графика, геометрических частей, Tooltip, Mark, таблицы и пагинации."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { BoxPlot } from '@dreadnought/ui/react';\nconst data = [{ id: 'a', label: 'Группа A', values: [1,2,3,4,5,6,7,100,100] }];\nexport function Example() { return <BoxPlot label=\"Распределение\" data={data} />; }"
+        }
+      ]
+    }
+  ]
+}
