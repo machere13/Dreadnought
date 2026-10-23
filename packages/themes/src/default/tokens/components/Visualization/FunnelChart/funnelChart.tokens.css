@@ -1,0 +1,10 @@
+:root {
+  --dreadnought-funnel-chart-text: var(--dreadnought-color-text-primary);
+  --dreadnought-funnel-chart-muted: var(--dreadnought-color-text-placeholder);
+  --dreadnought-funnel-chart-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-funnel-chart-border: var(--dreadnought-color-border-default);
+  --dreadnought-funnel-chart-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-funnel-chart-color: #72dde0;
+  --dreadnought-funnel-chart-gap: var(--dreadnought-spacing-x4);
+  --dreadnought-funnel-chart-radius: var(--dreadnought-border-radius-choice);
+}

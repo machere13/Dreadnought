@@ -1,0 +1,45 @@
+{
+  "id": "component:funnel-chart",
+  "kind": "component",
+  "name": "FunnelChart",
+  "family": "Visualization",
+  "description": "Воронка последовательных этапов: количество, конверсия от первого и предыдущего этапа, потери, Tooltip и таблица.",
+  "docsUrl": "/components/funnelchart/#funnelchart-api",
+  "states": [],
+  "composesWith": ["domain:build-funnel-layout"],
+  "constraints": [
+    "Вертикальная воронка сохраняет порядок data. Значения не возрастают; увеличивающийся ряд — ошибка, для него используйте BarChart. Нет сортировки или фильтра этапов, который меняет знаменатель.",
+    "Верхняя ширина этапа пропорциональна value/first, нижняя — следующему этапу; у последнего обе ширины равны. Площадь трапеции не кодирует количество. Подписи расположены вне геометрии.",
+    "От первого = value/first, от предыдущего = value/previous. Первый этап не имеет previous; нулевой знаменатель даёт «—». Нулевые этапы не удаляются и не рисуют фиктивную фигуру.",
+    "Tab входит в этапы один раз; ↑/↓ и Home/End перемещают фокус в текущей странице без зацикливания. Escape закрывает Tooltip; нажатие переводит фокус для touch. Точная таблица доступна без наведения.",
+    "Расчёт O(n), память O(n), модель кешируется по ссылке data. pageSize ограничивает SVG и строки таблицы одновременно; доли и ширины не пересчитываются относительно страницы."
+  ],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "FunnelChartAdapter",
+      "defaults": {
+        "pageSize": 20
+      },
+      "propertyDescriptions": {
+        "data": "Этапы {id,label,value} в порядке процесса. Уникальные непустые ID, конечные неотрицательные значения без роста. Массивы неизменяемые.",
+        "label": "Доступное название воронки.",
+        "description": "Контекст: период и группа пользователей.",
+        "formatValue": "Формат количества и абсолютной потери; расчёт не меняется.",
+        "formatPercent": "Формат отношения 0–1, не числа 0–100. Не вызывается для неопределённой конверсии.",
+        "pageSize": "Число этапов одновременно в графике и таблице. Шкала и конверсии всегда по всему набору.",
+        "labels": "Подписи столбцов, конверсий и пустого состояния.",
+        "slotProps": "Нативные свойства этапов, SVG-фигуры, Tooltip, Mark, таблицы и пагинации."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { FunnelChartAdapter } from '@dreadnought/react/unstyled';\nconst data = [{ id: 'visit', label: 'Визиты', value: 1000 }, { id: 'cart', label: 'Корзина', value: 400 }, { id: 'paid', label: 'Оплата', value: 100 }];\nexport function Example() { return <FunnelChartAdapter label=\"Путь к покупке\" data={data} />; }"
+        }
+      ]
+    }
+  ]
+}

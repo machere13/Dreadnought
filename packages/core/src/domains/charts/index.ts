@@ -31,6 +31,8 @@ export type {
 export { buildHeatmapLayout } from './buildHeatmapLayout.ts';
 export { buildHistogram } from './buildHistogram.ts';
 export { buildBoxPlotLayout } from './buildBoxPlotLayout.ts';
+export { buildFunnelLayout } from './buildFunnelLayout.ts';
+export type { FunnelDatum, FunnelStage, FunnelLayout, FunnelLayoutOptions } from './buildFunnelLayout.ts';
 export type { BoxPlotDatum, BoxPlotOptions, BoxPlotSummary, BoxPlotGroup, BoxPlotLayout } from './buildBoxPlotLayout.ts';
 export type { HistogramOptions, HistogramBin, HistogramLayout } from './buildHistogram.ts';
 export type { HeatmapCategory, HeatmapDatum, HeatmapCell, HeatmapLayout, HeatmapLayoutOptions } from './buildHeatmapLayout.ts';

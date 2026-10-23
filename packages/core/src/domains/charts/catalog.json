@@ -1,5 +1,17 @@
 [
   {
+    "id": "domain:build-funnel-layout", "kind": "domain", "name": "buildFunnelLayout", "family": "Charts",
+    "description": "Этапы воронки, нормализованные ширины, две конверсии и потери без React и DOM.",
+    "docsUrl": "/components/funnelchart/#funnelchart-logic",
+    "constraints": [
+      "data — этапы {id,label,value} с уникальными непустыми ID и подписями. Значения конечные, неотрицательные, не возрастают. Пустой массив допустим; разреженные массивы отклоняются. Порядок и вход не изменяются.",
+      "stages содержат width=value/first, nextWidth=next/first (у последнего width), fromFirst, fromPrevious, drop=previous−value. Первый drop/fromPrevious и отношения с нулевым знаменателем — null. Нулевая ширина остаётся 0. O(n) время и память."
+    ],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "buildFunnelLayout",
+      "examples": [{ "id": "basic", "code": "import { buildFunnelLayout } from '@dreadnought/core';\nconst layout = buildFunnelLayout({data:[{id:'a',label:'Визиты',value:100},{id:'b',label:'Оплата',value:25}]});\nconst conversion = layout.stages[1].fromPrevious;" }]
+    }]
+  },
+  {
     "id": "domain:build-box-plot-layout", "kind": "domain", "name": "buildBoxPlotLayout", "family": "Charts",
     "description": "Квартили type 7, медиана, наблюдаемые усы 1.5 IQR, выбросы и общая нормализованная шкала.",
     "docsUrl": "/components/boxplot/#boxplot-logic",

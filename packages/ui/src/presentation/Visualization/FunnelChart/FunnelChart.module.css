@@ -1,0 +1,127 @@
+@layer dreadnought {
+  .root {
+    display: grid;
+    gap: var(--dreadnought-funnel-chart-gap);
+    min-width: 0;
+    margin: 0;
+    color: var(--dreadnought-funnel-chart-text);
+  }
+  .root > figcaption {
+    font-weight: var(--dreadnought-font-weight-label-1);
+  }
+  .root > p {
+    margin: 0;
+    color: var(--dreadnought-funnel-chart-muted);
+  }
+  .plot {
+    display: grid;
+    gap: var(--dreadnought-funnel-chart-gap);
+    min-width: 0;
+    container-type: inline-size;
+  }
+  .plot > div {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .plot [data-ui='funnel-stage-label'] {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--dreadnought-spacing-x2);
+    padding-block-end: var(--dreadnought-spacing-x2);
+  }
+  .plot [data-ui='funnel-stage-label'] > span:last-child {
+    color: var(--dreadnought-funnel-chart-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .stage {
+    display: block;
+    color: var(--dreadnought-funnel-chart-color);
+    border-radius: var(--dreadnought-funnel-chart-radius);
+    cursor: help;
+  }
+  .stage > svg {
+    display: block;
+  }
+  .stage:is(:hover, :focus-visible) {
+    outline: 2px solid var(--dreadnought-funnel-chart-focus);
+    outline-offset: 1px;
+  }
+  .tooltip {
+    max-width: min(24rem, calc(100vw - 24px));
+  }
+  .tooltip [data-ui='funnel-tooltip-content'] {
+    max-height: min(32rem, calc(100vh - 24px));
+    overflow: auto;
+    overflow-wrap: anywhere;
+  }
+  .tooltip [data-ui='funnel-tooltip-content'] > span {
+    display: flex;
+    align-items: center;
+    gap: var(--dreadnought-spacing-x2);
+  }
+  .tooltipTable {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  .tooltipTable :is(th, td) {
+    text-align: start;
+    padding: var(--dreadnought-spacing-x1);
+    font-weight: inherit;
+  }
+  .tooltipTable td {
+    font-variant-numeric: tabular-nums;
+  }
+  .mark {
+    --dreadnought-mark-color: var(--dreadnought-funnel-chart-color);
+  }
+  .tableContainer {
+    max-width: 100%;
+    overflow: auto;
+  }
+  .table {
+    width: 100%;
+  }
+  .table caption {
+    text-align: start;
+    padding-block: var(--dreadnought-spacing-x2);
+  }
+  .table :is(th, td) {
+    padding: var(--dreadnought-table-active-padding-block)
+      var(--dreadnought-table-active-padding-inline);
+    border-block-end: var(--dreadnought-table-border-width) solid var(--dreadnought-table-border);
+  }
+  .table thead th {
+    background: var(--dreadnought-table-header-bg);
+    color: var(--dreadnought-table-header-text);
+  }
+  .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dreadnought-spacing-x2);
+    align-items: center;
+  }
+  .pageInput {
+    width: 4rem;
+    padding: var(--dreadnought-spacing-x2);
+    background: var(--dreadnought-funnel-chart-bg);
+    border: 1px solid var(--dreadnought-funnel-chart-border);
+    color: var(--dreadnought-funnel-chart-text);
+    font: inherit;
+  }
+  .pageInput:focus-visible {
+    outline: 2px solid var(--dreadnought-funnel-chart-focus);
+  }
+  @container (max-width: 24rem) {
+    .plot [data-ui='funnel-stage-label'] {
+      flex-direction: column;
+    }
+  }
+  @media (forced-colors: active) {
+    .stage {
+      color: CanvasText;
+    }
+    .stage:is(:hover, :focus-visible) {
+      outline-color: Highlight;
+    }
+  }
+}

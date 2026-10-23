@@ -1,0 +1,34 @@
+{
+  "componentId": "component:funnel-chart",
+  "constraints": [
+    "Оформление через --dreadnought-funnel-chart-*. Геометрия задаётся core и не зависит от темы."
+  ],
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "FunnelChart",
+      "defaults": {
+        "pageSize": 20
+      },
+      "propertyDescriptions": {
+        "data": "Этапы {id,label,value} в порядке процесса. Уникальные непустые ID, конечные неотрицательные значения без роста. Массивы неизменяемые.",
+        "label": "Доступное название воронки.",
+        "description": "Контекст: период и группа пользователей.",
+        "formatValue": "Формат количества и абсолютной потери; расчёт не меняется.",
+        "formatPercent": "Формат отношения 0–1, не числа 0–100. Не вызывается для неопределённой конверсии.",
+        "pageSize": "Число этапов одновременно в графике и таблице. Шкала и конверсии всегда по всему набору.",
+        "labels": "Подписи столбцов, конверсий и пустого состояния.",
+        "slotProps": "Нативные свойства этапов, SVG-фигуры, Tooltip, Mark, таблицы и пагинации."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { FunnelChart } from '@dreadnought/ui/react';\nconst data = [{ id: 'visit', label: 'Визиты', value: 1000 }, { id: 'cart', label: 'Корзина', value: 400 }, { id: 'paid', label: 'Оплата', value: 100 }];\nexport function Example() { return <FunnelChart label=\"Путь к покупке\" data={data} />; }"
+        }
+      ]
+    }
+  ]
+}
