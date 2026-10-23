@@ -41,6 +41,7 @@ export type BarChartAdapterProps = Native<
     categoryLabel?: string;
     valueLabel?: string;
     formatValue?: (value: number) => string;
+    formatTick?: (value: number) => string;
     visibleSeries?: readonly string[];
     defaultVisibleSeries?: readonly string[];
     onVisibleSeriesChange?: (series: string[]) => void;

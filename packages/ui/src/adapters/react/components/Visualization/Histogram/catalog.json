@@ -1,0 +1,44 @@
+{
+  "componentId": "component:histogram",
+  "constraints": [
+    "Переиспользует оформление, слоты и токены --dreadnought-bar-chart-*; цвет маркера совпадает со столбцами."
+  ],
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Histogram",
+      "description": "Готовая гистограмма с оформлением BarChart.",
+      "defaults": {
+        "categoryLabel": "Интервал",
+        "valueLabel": "Наблюдения",
+        "pageSize": 50,
+        "minCategorySize": 96
+      },
+      "propertyDescriptions": {
+        "data": "Исходные конечные числа. Не изменяйте массив на месте.",
+        "bins": "Число равных интервалов, целое 1–1000. Автоматически ceil(log₂(n)) + 1, максимум 100.",
+        "domain": "Общий диапазон [min,max], min < max. Все данные должны быть внутри. Без него — min/max выборки.",
+        "label": "Доступное название гистограммы.",
+        "description": "Пояснение данных.",
+        "categoryLabel": "Название оси интервалов и колонки таблицы.",
+        "valueLabel": "Название наблюдений для числовой оси, Tooltip и таблицы.",
+        "formatBoundary": "Формат числовых границ, по умолчанию String. Не меняет группировку.",
+        "pageSize": "Число интервалов на странице таблицы, по умолчанию 50.",
+        "minCategorySize": "Минимальная ширина интервала в пикселях, по умолчанию 96. При нехватке места — прокрутка.",
+        "width": "Фиксированная ширина, только вместе с height. Без размеров измеряется контейнер.",
+        "height": "Фиксированная высота, только вместе с width.",
+        "labels": "Подписи таблицы и пустого состояния; легенда у Histogram скрыта.",
+        "slotProps": "Слоты BarChart: столбцы, оси, Tooltip, Mark, таблица и пагинация. Геометрия задаётся Histogram."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Histogram } from '@dreadnought/ui/react';\nconst data = [42, 65, 110, 125, 180, 210, 320, 580];\nexport function Example() { return <Histogram label=\"Время ответа\" data={data} bins={6} domain={[0,600]} categoryLabel=\"Время, мс\" valueLabel=\"Запросы\" />; }"
+        }
+      ]
+    }
+  ]
+}

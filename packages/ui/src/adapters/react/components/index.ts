@@ -27,6 +27,7 @@ export * from './Visualization/RadarChart/index.ts';
 export * from './Visualization/PieChart/index.ts';
 export * from './Visualization/ScatterChart/index.ts';
 export * from './Visualization/Heatmap/index.ts';
+export * from './Visualization/Histogram/index.ts';
 export * from './Visualization/LineChart/index.ts';
 export * from './Visualization/BarChart/index.ts';
 export * from './Overlays/Tooltip/index.ts';

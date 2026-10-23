@@ -1,0 +1,8 @@
+@layer dreadnought {
+  .root .table {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    overflow-wrap: anywhere;
+  }
+}

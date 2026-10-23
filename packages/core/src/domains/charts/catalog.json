@@ -1,4 +1,33 @@
 [
+  {
+    "id": "domain:build-histogram",
+    "kind": "domain",
+    "name": "buildHistogram",
+    "family": "Charts",
+    "description": "Группировка числовых наблюдений в равные интервалы с количеством и долей.",
+    "docsUrl": "/components/histogram/#histogram-logic",
+    "constraints": [
+      "data — массив конечных чисел; null, NaN, Infinity и пропуски в массиве отклоняются. bins — целое 1–1000, по умолчанию min(100, ceil(log₂(n)) + 1). Интервалы равной ширины; произвольных границ и режима плотности нет.",
+      "domain — конечные min < max, все наблюдения внутри. Без него берутся min/max выборки. Одинаковое значение расширяет диапазон на max(abs(value)*0.01,0.5) с каждой стороны в пределах конечных чисел. Пустая выборка без domain даёт пустой график; с domain сохраняет нулевые интервалы.",
+      "Интервалы [a;b), последний [a;b]. Внутренняя граница принадлежит следующему интервалу, максимум — последнему. Пустые интервалы сохраняются. Сливающиеся из-за точности чисел границы — ошибка: уменьшите bins или расширьте domain.",
+      "Чистая функция без React/DOM; возвращает bins {lower,upper,count,proportion,inclusiveUpper}, total и domain. O(n log bins), память O(bins), вход не меняется."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "buildHistogram",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { buildHistogram } from '@dreadnought/core';\nconst result = buildHistogram({ data: [0, 1, 2, 3, 4], bins: 2, domain: [0, 4] });\nconst intervals = result.bins;"
+          }
+        ]
+      }
+    ]
+  },
 {
   "id": "domain:build-heatmap-layout",
   "kind": "domain",

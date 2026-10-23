@@ -16,6 +16,7 @@ type Props = Pick<
   slotProps: NonNullable<BarChartAdapterProps['slotProps']>;
   minCategorySize: number;
   formatValue: (value: number) => string;
+  formatTick: (value: number) => string;
   categoryLabel: string;
   valueLabel: string;
 };
@@ -30,6 +31,7 @@ export function BarPlot({
   visible,
   slotProps,
   formatValue,
+  formatTick,
   categoryLabel,
   valueLabel,
   minCategorySize,
@@ -370,7 +372,7 @@ export function BarPlot({
                       }
                       data-ui="bar-axis-label"
                     >
-                      {formatValue(tick.value)}
+                      {formatTick(tick.value)}
                     </text>
                   ))}
                   <g clipPath={`url(#${clipId}-labels)`}>

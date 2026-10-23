@@ -29,4 +29,6 @@ export type {
   RadarLayout,
 } from './buildRadarLayout.ts';
 export { buildHeatmapLayout } from './buildHeatmapLayout.ts';
+export { buildHistogram } from './buildHistogram.ts';
+export type { HistogramOptions, HistogramBin, HistogramLayout } from './buildHistogram.ts';
 export type { HeatmapCategory, HeatmapDatum, HeatmapCell, HeatmapLayout, HeatmapLayoutOptions } from './buildHeatmapLayout.ts';

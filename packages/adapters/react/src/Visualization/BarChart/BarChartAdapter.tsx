@@ -22,6 +22,7 @@ export function BarChartAdapter({
   categoryLabel = 'Категория',
   valueLabel = 'Значение',
   formatValue = String,
+  formatTick = formatValue,
   visibleSeries,
   defaultVisibleSeries,
   onVisibleSeriesChange,
@@ -50,7 +51,7 @@ export function BarChartAdapter({
   if (description !== undefined && typeof description !== 'string') {
     throw new TypeError('Bar description must be a string');
   }
-  if (typeof formatValue !== 'function') {
+  if (typeof formatValue !== 'function' || typeof formatTick !== 'function') {
     throw new TypeError('Bar formatters must be functions');
   }
   if (width !== undefined || height !== undefined) {
@@ -114,6 +115,7 @@ export function BarChartAdapter({
             minCategorySize={minCategorySize}
             slotProps={slotProps}
             formatValue={formatValue}
+            formatTick={formatTick}
             categoryLabel={categoryLabel}
             valueLabel={valueLabel}
           />
@@ -160,7 +162,8 @@ export function BarChartAdapter({
             <TableAdapter.HeaderCell scope="col">{categoryLabel}</TableAdapter.HeaderCell>
             {series.map((item) => (
               <TableAdapter.HeaderCell key={item.id} scope="col">
-                {item.label || item.id} ({valueLabel})
+                {item.label || item.id}
+                {(item.label || item.id) !== valueLabel && ` (${valueLabel})`}
               </TableAdapter.HeaderCell>
             ))}
           </TableAdapter.Row>
