@@ -1,12 +1,17 @@
 import { useId, useMemo, useState } from 'react';
 import { buildCandlestickLayout } from '@dreadnought/core';
-import { ChartPagination, useChartPage } from '../../shared/useChartPage.tsx';
+import { useChartPage } from '../../shared/useChartPage.tsx';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
-import { CandlestickPlot } from './CandlestickPlot.tsx';
-import { CandlestickDataTable, candlestickLabels } from './CandlestickStatistics.tsx';
+import { candlestickLabels } from './CandlestickStatistics.tsx';
+import { CandlestickChartContext } from './CandlestickChartContext.tsx';
+import {
+  CandlestickChartPlotAdapter,
+  CandlestickChartTableAdapter,
+  CandlestickChartPaginationAdapter,
+} from './CandlestickChartParts.tsx';
 import type { CandlestickChartAdapterProps } from './candlestickChart.types.ts';
 
-export function CandlestickChartAdapter({
+function CandlestickChartRootAdapter({
   data,
   domain,
   label,
@@ -15,6 +20,7 @@ export function CandlestickChartAdapter({
   pageSize = 12,
   labels: overrides = {},
   slotProps = {},
+  children,
   ...rest
 }: CandlestickChartAdapterProps) {
   const layout = useMemo(() => buildCandlestickLayout({ data, domain }), [data, domain]);
@@ -33,7 +39,16 @@ export function CandlestickChartAdapter({
     throw new TypeError('Candlestick description must be a string');
   const id = useId();
   const page = useChartPage(layout.candles, pageSize);
-  const statistics = { labels, formatValue, slotProps };
+  const context = {
+    layout,
+    candles: page.rows,
+    page,
+    label,
+    labels,
+    formatValue,
+    slotProps,
+    plotKey: `${revision}:${page.page}:${pageSize}`,
+  };
   return (
     <figure
       {...native(rest, ['role'])}
@@ -43,18 +58,23 @@ export function CandlestickChartAdapter({
     >
       <figcaption id={`${id}-label`}>{label}</figcaption>
       {description !== undefined && <p id={`${id}-description`}>{description}</p>}
-      {layout.candles.length ? (
-        <CandlestickPlot
-          key={`${revision}:${page.page}`}
-          layout={layout}
-          candles={page.rows}
-          {...statistics}
-        />
-      ) : (
-        <p>{labels.empty}</p>
-      )}
-      <CandlestickDataTable candles={page.rows} label={label} {...statistics} />
-      <ChartPagination {...page} slotProps={slotProps} />
+      <CandlestickChartContext.Provider value={context}>
+        {children === undefined ? (
+          <>
+            <CandlestickChartPlotAdapter />
+            <CandlestickChartTableAdapter />
+            <CandlestickChartPaginationAdapter />
+          </>
+        ) : (
+          children
+        )}
+      </CandlestickChartContext.Provider>
     </figure>
   );
 }
+
+export const CandlestickChartAdapter = Object.assign(CandlestickChartRootAdapter, {
+  Plot: CandlestickChartPlotAdapter,
+  Table: CandlestickChartTableAdapter,
+  Pagination: CandlestickChartPaginationAdapter,
+});

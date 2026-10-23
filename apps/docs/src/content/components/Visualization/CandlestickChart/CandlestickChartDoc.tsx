@@ -9,6 +9,8 @@ import { CandlestickChartStatesDemo } from './CandlestickChartStatesDemo.tsx';
 import statesCode from './CandlestickChartStatesDemo.tsx?raw';
 import { CandlestickChartManyDemo } from './CandlestickChartManyDemo.tsx';
 import manyCode from './CandlestickChartManyDemo.tsx?raw';
+import { CandlestickChartCompositionDemo } from './CandlestickChartCompositionDemo.tsx';
+import compositionCode from './CandlestickChartCompositionDemo.tsx?raw';
 
 export const candlestickChartDoc: ComponentDoc = {
   ...getCatalogDoc('candlestickchart'),
@@ -22,6 +24,20 @@ export const candlestickChartDoc: ComponentDoc = {
   logicDescription:
     'buildCandlestickLayout проверяет OHLC, рассчитывает общую шкалу, тело и тени свечей, определяет рост, падение и отсутствие изменения без React и DOM.',
   notes: [
+    <>
+      Без children график собирает Plot, Table и Pagination автоматически. Передайте свои части,
+      чтобы менять порядок или заменять их; children=null оставляет только подпись. В обоих слоях
+      доступны CandlestickChart[Adapter].Plot, .Table, .Pagination и useCandlestickChart: layout —
+      полный ряд и шкала, candles — текущая страница, page.change — переход.
+    </>,
+    <>
+      Plot принимает height (положительное конечное число, по умолчанию 240), children для рисунка
+      периода и tooltipContent для содержимого подсказки. Оба callback получают candle, height,
+      labels, formatValue и defaultContent. null/undefined/false из tooltipContent отключают
+      подсказку. Фокус, доступное OHLC-описание и события остаются на внешней обёртке: не добавляйте
+      интерактивные элементы внутрь рисунка. Части и хук работают только внутри своего графика. Если
+      заменяете Table, сохраните доступное представление всех четырёх цен.
+    </>,
     <>
       Каждый элемент data содержит уникальный id, название периода label и числа open, high, low,
       close. Требуется low ≤ open/close ≤ high; значения должны быть конечными. Порядок сохраняется:
@@ -85,6 +101,14 @@ export const candlestickChartDoc: ComponentDoc = {
         'На странице 20 свечей и 20 строк. Перейдите на страницу 500: появятся периоды 9981–10000, а шкала останется прежней. ←/→ и Home/End помогают просматривать свечи при горизонтальной прокрутке.',
       demo: <CandlestickChartManyDemo />,
       code: manyCode,
+    },
+    {
+      id: 'composition',
+      title: 'Заменить свечи OHLC-барами и собрать свою таблицу',
+      description:
+        'Вертикаль показывает минимум и максимум, левая риска — открытие, правая — закрытие. Рисунок и таблица заменены, Tooltip дополнен. Клавиатура, форматирование, общая шкала и пагинация остались готовыми. Кнопка над таблицей и нижняя пагинация управляют одной страницей.',
+      demo: <CandlestickChartCompositionDemo />,
+      code: compositionCode,
     },
   ],
 };

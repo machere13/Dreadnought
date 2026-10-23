@@ -8,6 +8,8 @@
   "states": [],
   "composesWith": ["domain:build-candlestick-layout"],
   "constraints": [
+    "Композиция: без children выводятся Plot, Table, Pagination; свои children заменяют набор и порядок частей, null оставляет подпись. Части и useCandlestickChart работают только внутри своего root. Хук возвращает layout полного ряда, candles текущей страницы, page:{page,count,change}, label, labels, formatValue, slotProps. При замене Table сохраните доступное представление всех OHLC-цен.",
+    "Plot.children и tooltipContent получают {candle,height,labels,formatValue,defaultContent}. Рендер меняет содержимое, а не фокусируемую обёртку с событиями и доступным OHLC-описанием; не вкладывайте интерактивные элементы. null/undefined/false из tooltipContent отключают подсказку. height — положительное конечное число, по умолчанию 240.",
     "data — уже упорядоченный массив {id,label,open,high,low,close}. Уникальные непустые ID и названия, конечные числа, low ≤ open/close ≤ high. Нулевые и отрицательные цены допустимы, разреженные массивы отклоняются. Компонент не парсит и не сортирует даты.",
     "Общая шкала полного ряда включает все low/high, не обязана включать ноль. Явный domain не может обрезать данные. Пустой ряд имеет автоматический domain [0,1]; равные цены расширяют шкалу на 1% (не менее 1) с каждой стороны в пределах конечных чисел.",
     "Рост — полое тело, падение — заполненное, open=close — линия doji. Тени показывают low/high. Значения и направление движения доступны в Tooltip и таблице. Подпись под периодом — цена закрытия.",
@@ -26,6 +28,7 @@
         "pageSize": 12
       },
       "propertyDescriptions": {
+        "children": "Своя композиция Plot, Table, Pagination и компонентов с useCandlestickChart. undefined — готовая композиция, null — только подпись.",
         "data": "Периоды {id,label,open,high,low,close} в нужном порядке. low ≤ open/close ≤ high, конечные числа и уникальные ID.",
         "domain": "Общие границы [min,max], включающие все low/high. По умолчанию шкала полного ряда.",
         "label": "Доступное название графика.",
@@ -37,10 +40,54 @@
       },
       "examples": [
         {
+          "id": "compound",
+          "code": "import { CandlestickChartAdapter, useCandlestickChart } from '@dreadnought/react/unstyled';\nconst data = [{id:'a',label:'Пн',open:100,high:120,low:90,close:110}];\nfunction Summary() { const {candles,page} = useCandlestickChart(); return <p>{candles.length} периодов; страница {page.page}</p>; }\nexport function Example() { return <CandlestickChartAdapter data={data} label=\"Котировки\"><Summary /><CandlestickChartAdapter.Plot height={180} tooltipContent={({defaultContent}) => <div>OHLC{defaultContent}</div>}>{({defaultContent}) => defaultContent}</CandlestickChartAdapter.Plot><CandlestickChartAdapter.Table /><CandlestickChartAdapter.Pagination /></CandlestickChartAdapter>; }"
+        },
+        {
           "id": "basic",
           "code": "import { CandlestickChartAdapter } from '@dreadnought/react/unstyled';\nconst data = [{ id: 'a', label: 'Пн', open: 100, high: 114, low: 96, close: 110 }, { id: 'b', label: 'Вт', open: 110, high: 117, low: 99, close: 103 }];\nexport function Example() { return <CandlestickChartAdapter label=\"Котировки\" data={data} formatValue={value => value.toFixed(2)} />; }"
         }
       ]
+    },
+    {
+      "id": "react-adapter-plot",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "CandlestickChartAdapter",
+      "propertyPath": ["Plot"],
+      "defaults": { "height": 240 },
+      "propertyDescriptions": {
+        "height": "Высота рисунка и шкалы в px: положительное конечное число, по умолчанию 240.",
+        "children": "Рисунок периода: ({candle,height,labels,formatValue,defaultContent}) => ReactNode. Внешняя обёртка сохраняет фокус, навигацию и OHLC-описание. Без интерактивных потомков.",
+        "tooltipContent": "Содержимое Tooltip: ({candle,height,labels,formatValue,defaultContent}) => ReactNode. null/undefined/false отключают подсказку."
+      }
+    },
+    {
+      "id": "react-adapter-table",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "CandlestickChartAdapter",
+      "propertyPath": ["Table"],
+      "description": "Доступная таблица OHLC текущей страницы; оформление через slotProps корня."
+    },
+    {
+      "id": "react-adapter-pagination",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "CandlestickChartAdapter",
+      "propertyPath": ["Pagination"],
+      "description": "Пагинация общего состояния; при одной странице скрыта."
+    },
+    {
+      "id": "react-adapter-context",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "useCandlestickChart",
+      "description": "Контекст ближайшего CandlestickChartAdapter: layout, candles, page:{page,count,change}, label, labels, formatValue, slotProps. Вне корня выбрасывает ошибку."
     }
   ]
 }

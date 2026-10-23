@@ -1,4 +1,5 @@
-import type { CandlestickDatum, CandlestickCandle } from '@dreadnought/core';
+import type { ReactNode } from 'react';
+import type { CandlestickDatum, CandlestickCandle, CandlestickLayout } from '@dreadnought/core';
 import type { ChartNative as Native } from '../../shared/chartNativeProps.ts';
 import type { ChartPaginationSlots } from '../../shared/useChartPage.tsx';
 
@@ -26,10 +27,32 @@ export interface CandlestickChartSlotProps extends ChartPaginationSlots {
   tableContainer?: Native<'div'>;
   table?: Native<'table', 'role' | 'hidden' | 'aria-hidden'>;
 }
-export type CandlestickChartAdapterProps = Native<
-  'figure',
-  'role' | 'aria-labelledby' | 'aria-describedby'
+export interface CandlestickChartRenderContext {
+  candle: CandlestickCandle;
+  height: number;
+  labels: Required<CandlestickChartLabels>;
+  formatValue: (value: number) => string;
+  defaultContent: ReactNode;
+}
+export interface CandlestickChartPlotProps {
+  height?: number;
+  children?: (context: CandlestickChartRenderContext) => ReactNode;
+  tooltipContent?: (context: CandlestickChartRenderContext) => ReactNode;
+}
+export interface CandlestickChartContextValue {
+  layout: CandlestickLayout;
+  candles: CandlestickCandle[];
+  page: { page: number; count: number; change: (page: number) => void };
+  label: string;
+  labels: Required<CandlestickChartLabels>;
+  formatValue: (value: number) => string;
+  slotProps: CandlestickChartSlotProps;
+}
+export type CandlestickChartAdapterProps = Omit<
+  Native<'figure', 'role' | 'aria-labelledby' | 'aria-describedby'>,
+  'children'
 > & {
+  children?: ReactNode;
   data: readonly CandlestickDatum[];
   domain?: readonly [number, number];
   label: string;

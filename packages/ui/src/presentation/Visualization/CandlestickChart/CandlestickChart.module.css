@@ -33,7 +33,6 @@
   }
   .plot [data-ui='candlestick-axis'] {
     position: relative;
-    height: 240px;
     color: var(--dreadnought-candlestick-chart-muted);
     font-size: var(--dreadnought-font-size-caption-2);
   }

@@ -11,7 +11,7 @@ import { buttonPresentation } from '#presentation/Controls/Button/buttonPresenta
 export type CandlestickChartProps = CandlestickChartAdapterProps;
 const classes = (...values: (string | undefined)[]) => values.filter(Boolean).join(' ');
 
-export function CandlestickChart({ className, slotProps = {}, ...props }: CandlestickChartProps) {
+function CandlestickChartRoot({ className, slotProps = {}, ...props }: CandlestickChartProps) {
   return (
     <CandlestickChartAdapter
       {...props}
@@ -77,3 +77,13 @@ export function CandlestickChart({ className, slotProps = {}, ...props }: Candle
     />
   );
 }
+
+export const CandlestickChart: typeof CandlestickChartRoot &
+  Pick<typeof CandlestickChartAdapter, 'Plot' | 'Table' | 'Pagination'> = Object.assign(
+  CandlestickChartRoot,
+  {
+    Plot: CandlestickChartAdapter.Plot,
+    Table: CandlestickChartAdapter.Table,
+    Pagination: CandlestickChartAdapter.Pagination,
+  },
+);

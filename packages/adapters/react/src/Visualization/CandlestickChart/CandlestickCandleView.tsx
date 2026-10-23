@@ -1,4 +1,4 @@
-import type { ComponentProps, RefObject } from 'react';
+import type { ComponentProps, RefObject, ReactNode } from 'react';
 import type { CandlestickCandle } from '@dreadnought/core';
 import { TooltipAdapter } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
@@ -8,7 +8,7 @@ import type { CandlestickChartSlotProps } from './candlestickChart.types.ts';
 interface Props {
   candle: CandlestickCandle;
   tabIndex: number;
-  value: string;
+  children: ReactNode;
   description: string;
   slotProps: CandlestickChartSlotProps;
   elements: RefObject<Map<string, HTMLSpanElement>>;
@@ -20,7 +20,7 @@ interface Props {
 export function CandlestickCandleView({
   candle,
   tabIndex,
-  value,
+  children,
   description,
   slotProps,
   elements,
@@ -84,60 +84,7 @@ export function CandlestickCandleView({
             if (!event.defaultPrevented && navigate(event.key)) event.preventDefault();
           }}
         >
-          <svg
-            width="100%"
-            height="240"
-            viewBox="0 -2 100 104"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-            style={{ display: 'block', overflow: 'visible' }}
-          >
-            <line
-              x1="50"
-              x2="50"
-              y1={candle.highY}
-              y2={candle.y}
-              stroke="currentColor"
-              strokeWidth="1.5"
-              vectorEffect="non-scaling-stroke"
-            />
-            <line
-              x1="50"
-              x2="50"
-              y1={candle.y + candle.height}
-              y2={candle.lowY}
-              stroke="currentColor"
-              strokeWidth="1.5"
-              vectorEffect="non-scaling-stroke"
-            />
-            <rect
-              x="20"
-              width="60"
-              y={candle.y}
-              height={candle.height}
-              fill={candle.trend === 'up' ? 'none' : 'currentColor'}
-              stroke="currentColor"
-              strokeWidth="1.5"
-              vectorEffect="non-scaling-stroke"
-              data-ui="candlestick-body"
-            />
-            {candle.height === 0 && (
-              <line
-                x1="20"
-                x2="80"
-                y1={candle.y}
-                y2={candle.y}
-                stroke="currentColor"
-                strokeWidth="1.5"
-                vectorEffect="non-scaling-stroke"
-                data-ui="candlestick-doji"
-              />
-            )}
-          </svg>
-          <span data-ui="candlestick-candle-label">
-            {candle.label}
-            <span>{value}</span>
-          </span>
+          {children}
         </span>
       )}
     </TooltipAdapter>
