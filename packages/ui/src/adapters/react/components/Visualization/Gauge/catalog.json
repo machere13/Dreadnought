@@ -1,0 +1,38 @@
+{
+  "componentId": "component:gauge",
+  "constraints": [
+    "Стили через --dreadnought-gauge-*: цвета шести диапазонов повторяются, размер значения, шкала, стрелка и фокус. Именованные диапазоны видны в списке; состояние дублируется текстом."
+  ],
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Gauge",
+      "defaults": {
+        "min": 0,
+        "max": 100,
+        "variant": "semicircle"
+      },
+      "propertyDescriptions": {
+        "value": "Текущее конечное число в диапазоне min/max. null показывает отсутствие данных без стрелки.",
+        "min": "Нижняя граница, по умолчанию 0; должна быть меньше max.",
+        "max": "Верхняя граница, по умолчанию 100.",
+        "variant": "semicircle — 180°, circle — 270° с разрывом между минимумом и максимумом.",
+        "thresholds": "Упорядоченные {id,label,to}; уникальные ID, непустые названия, возрастающие границы. Последний to равен max.",
+        "label": "Доступное название показателя.",
+        "description": "Контекст и единицы измерения.",
+        "formatValue": "Форматирует значение и все границы, например число с % или °C.",
+        "labels": "Подписи Tooltip, списка диапазонов и пустого состояния.",
+        "slotProps": "Нативные свойства шкалы, сегментов, списка диапазонов, Mark и Tooltip."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { Gauge } from '@dreadnought/ui/react';\nconst thresholds = [{ id: 'normal', label: 'Норма', to: 60 }, { id: 'warning', label: 'Внимание', to: 80 }, { id: 'critical', label: 'Критично', to: 100 }];\nexport function Example() { return <Gauge value={72} label=\"Загрузка сервера\" thresholds={thresholds} formatValue={value => `${value}%`} />; }"
+        }
+      ]
+    }
+  ]
+}

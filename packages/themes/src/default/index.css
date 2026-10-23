@@ -43,6 +43,7 @@
 @import './components/Visualization/Treemap/index.css';
 @import './components/Visualization/WaterfallChart/index.css';
 @import './components/Visualization/Sankey/index.css';
+@import './components/Visualization/Gauge/index.css';
 @import './components/Visualization/LineChart/index.css';
 @import './components/Visualization/BarChart/index.css';
 @import './components/Overlays/Tooltip/index.css';

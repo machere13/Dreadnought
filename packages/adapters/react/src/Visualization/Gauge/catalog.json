@@ -1,0 +1,49 @@
+{
+  "id": "component:gauge",
+  "kind": "component",
+  "name": "Gauge",
+  "family": "Visualization",
+  "description": "Показатель со стрелкой и шкалой: полукруг или круговая дуга, именованные пороги, Tooltip и список диапазонов.",
+  "docsUrl": "/components/gauge/#gauge-api",
+  "states": [],
+  "composesWith": ["domain:build-gauge-layout"],
+  "constraints": [
+    "value — конечное число внутри min/max или null. min/max конечны и min < max. Ноль допустим; числа вне диапазона и NaN/Infinity отклоняются. При null остаётся шкала и явное пустое состояние, стрелка и Tooltip отсутствуют.",
+    "thresholds — возрастающие {id,label,to} с уникальными непустыми ID и названиями. Первый диапазон начинается в min, последний заканчивается в max. Граница относится к следующему диапазону, сам max — к последнему. Пустой массив включает одноцветное заполнение до value.",
+    "semicircle — 180°, circle — 270° с разрывом 90°. Шкала read-only: это показатель, а не Slider. Направление стрелки и все сегменты рассчитывает core, без стороннего движка и анимации.",
+    "Tab фокусирует шкалу и открывает Tooltip; Escape закрывает. Наведение и нажатие также показывают подробности. Новое value сохраняет DOM-узел фокуса и обновляет открытую подсказку. Переход на null закрывает Tooltip.",
+    "Названия и числовые границы диапазонов, текущее значение и состояние доступны независимо от цвета. formatValue форматирует все числа. labels задаёт локализованные подписи."
+  ],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "GaugeAdapter",
+      "defaults": {
+        "min": 0,
+        "max": 100,
+        "variant": "semicircle"
+      },
+      "propertyDescriptions": {
+        "value": "Текущее конечное число в диапазоне min/max. null показывает отсутствие данных без стрелки.",
+        "min": "Нижняя граница, по умолчанию 0; должна быть меньше max.",
+        "max": "Верхняя граница, по умолчанию 100.",
+        "variant": "semicircle — 180°, circle — 270° с разрывом между минимумом и максимумом.",
+        "thresholds": "Упорядоченные {id,label,to}; уникальные ID, непустые названия, возрастающие границы. Последний to равен max.",
+        "label": "Доступное название показателя.",
+        "description": "Контекст и единицы измерения.",
+        "formatValue": "Форматирует значение и все границы, например число с % или °C.",
+        "labels": "Подписи Tooltip, списка диапазонов и пустого состояния.",
+        "slotProps": "Нативные свойства шкалы, сегментов, списка диапазонов, Mark и Tooltip."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { GaugeAdapter } from '@dreadnought/react/unstyled';\nconst thresholds = [{ id: 'normal', label: 'Норма', to: 60 }, { id: 'warning', label: 'Внимание', to: 80 }, { id: 'critical', label: 'Критично', to: 100 }];\nexport function Example() { return <GaugeAdapter value={72} label=\"Загрузка сервера\" thresholds={thresholds} formatValue={value => `${value}%`} />; }"
+        }
+      ]
+    }
+  ]
+}

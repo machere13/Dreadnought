@@ -48,3 +48,4 @@ export * from './Visualization/FunnelChart/index.ts';
 export * from './Visualization/Treemap/index.ts';
 export * from './Visualization/WaterfallChart/index.ts';
 export * from './Visualization/Sankey/index.ts';
+export * from './Visualization/Gauge/index.ts';

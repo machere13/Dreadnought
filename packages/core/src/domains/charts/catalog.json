@@ -1,5 +1,34 @@
 [
   {
+    "id": "domain:build-gauge-layout",
+    "kind": "domain",
+    "name": "buildGaugeLayout",
+    "family": "Charts",
+    "description": "Чистый расчёт доли диапазона, углов шкалы и порогов, направления стрелки и текущего состояния Gauge.",
+    "docsUrl": "/components/gauge/#gauge-logic",
+    "constraints": [
+      "value — null или конечное число внутри конечного min/max, min < max. По умолчанию 0/100. variant semicircle (180°) или circle (270°). Некорректные входы отклоняются, значение не обрезается.",
+      "thresholds — возрастающие {id,label,to} с уникальными непустыми ID и названиями. Последняя граница совпадает с max; диапазоны покрывают всю шкалу. Вход не меняется, порядок сохраняется.",
+      "Граница относится к следующему диапазону, max — к последнему. При null ratio/needle/activeSegmentId равны null, геометрия диапазонов сохраняется. needle содержит единичные x/y направления; углы в радианах.",
+      "O(n) время и память по числу диапазонов, без React, DOM и SVG. Нормализация переиспользует linearFraction и поддерживает конечные min/max с переполнением их разности."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "buildGaugeLayout",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { buildGaugeLayout } from '@dreadnought/core';\nconst layout = buildGaugeLayout({ value: 72, min: 0, max: 100, thresholds: [{id:'normal',label:'Норма',to:60},{id:'warning',label:'Внимание',to:100}] });"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "domain:build-sankey-layout",
     "kind": "domain",
     "name": "buildSankeyLayout",

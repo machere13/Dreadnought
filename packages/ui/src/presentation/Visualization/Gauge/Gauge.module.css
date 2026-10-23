@@ -1,0 +1,180 @@
+@layer dreadnought {
+  .root {
+    display: grid;
+    gap: var(--dreadnought-gauge-gap);
+    min-width: 0;
+    margin: 0;
+    color: var(--dreadnought-gauge-text);
+  }
+  .root > figcaption {
+    font-weight: var(--dreadnought-font-weight-label-1);
+    overflow-wrap: anywhere;
+  }
+  .root > p {
+    margin: 0;
+    color: var(--dreadnought-gauge-muted);
+    overflow-wrap: anywhere;
+  }
+  .root,
+  .tooltip {
+    --gauge-active: var(--dreadnought-gauge-fill);
+  }
+  .root [data-color='0'],
+  .tooltip [data-color='0'] {
+    --gauge-active: var(--dreadnought-gauge-color-1);
+  }
+  .root [data-color='1'],
+  .tooltip [data-color='1'] {
+    --gauge-active: var(--dreadnought-gauge-color-2);
+  }
+  .root [data-color='2'],
+  .tooltip [data-color='2'] {
+    --gauge-active: var(--dreadnought-gauge-color-3);
+  }
+  .root [data-color='3'],
+  .tooltip [data-color='3'] {
+    --gauge-active: var(--dreadnought-gauge-color-4);
+  }
+  .root [data-color='4'],
+  .tooltip [data-color='4'] {
+    --gauge-active: var(--dreadnought-gauge-color-5);
+  }
+  .root [data-color='5'],
+  .tooltip [data-color='5'] {
+    --gauge-active: var(--dreadnought-gauge-color-6);
+  }
+  .plot {
+    display: grid;
+    gap: var(--dreadnought-spacing-x2);
+    width: 100%;
+    max-width: 22rem;
+    min-width: 0;
+    margin-inline: auto;
+    border-radius: var(--dreadnought-spacing-x2);
+    cursor: help;
+  }
+  .plot > svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .plot [data-ui='gauge-track'] {
+    stroke: var(--dreadnought-gauge-track);
+  }
+  .segment,
+  .plot [data-ui='gauge-fill'] {
+    stroke: var(--gauge-active);
+  }
+  .plot [data-ui='gauge-needle'] {
+    color: var(--dreadnought-gauge-needle);
+  }
+  .plot:focus-visible {
+    outline: 2px solid var(--dreadnought-gauge-focus);
+    outline-offset: 4px;
+  }
+  .plot [data-ui='gauge-limits'] {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--dreadnought-spacing-x4);
+    color: var(--dreadnought-gauge-muted);
+    font-size: var(--dreadnought-font-size-caption-2);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+  .plot [data-ui='gauge-limits'] > span {
+    max-width: 48%;
+  }
+  .plot [data-ui='gauge-limits'] > span:last-child {
+    text-align: end;
+  }
+  .plot [data-ui='gauge-value'] {
+    text-align: center;
+    font-size: var(--dreadnought-gauge-value-size);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  .plot [data-ui='gauge-status'] {
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+  .legend {
+    container: dreadnought-gauge-legend / inline-size;
+    display: grid;
+    gap: var(--dreadnought-spacing-x2);
+    width: 100%;
+    max-width: 22rem;
+    min-width: 0;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+  }
+  .band {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--dreadnought-spacing-x2);
+    align-items: center;
+    overflow-wrap: anywhere;
+  }
+  .band[aria-current='true'] {
+    font-weight: var(--dreadnought-font-weight-label-1);
+  }
+  .band > span:last-child {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+    color: var(--dreadnought-gauge-muted);
+  }
+  @container dreadnought-gauge-legend (max-width: 18rem) {
+    .band {
+      grid-template-columns: auto minmax(0, 1fr);
+      row-gap: var(--dreadnought-spacing-x1);
+    }
+    .band > span:last-child {
+      grid-column: 2;
+      text-align: start;
+    }
+  }
+  .mark {
+    --dreadnought-mark-color: var(--gauge-active);
+  }
+  .tooltip {
+    max-width: min(26rem, calc(100vw - 24px));
+  }
+  .tooltip [data-ui='gauge-tooltip-content'] {
+    max-height: min(30rem, calc(100vh - 24px));
+    overflow: auto;
+    overflow-wrap: anywhere;
+  }
+  .tooltip [data-ui='gauge-tooltip-content'] > span {
+    display: flex;
+    align-items: center;
+    gap: var(--dreadnought-spacing-x2);
+  }
+  .tooltipTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .tooltipTable :is(th, td) {
+    text-align: start;
+    padding: var(--dreadnought-spacing-x1);
+    font-weight: inherit;
+  }
+  .tooltipTable td {
+    font-variant-numeric: tabular-nums;
+  }
+  @media (forced-colors: active) {
+    .segment,
+    .plot [data-ui='gauge-fill'] {
+      stroke: Highlight;
+    }
+    .plot [data-ui='gauge-track'] {
+      stroke: GrayText;
+    }
+    .plot [data-ui='gauge-needle'] {
+      color: CanvasText;
+    }
+    .plot:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

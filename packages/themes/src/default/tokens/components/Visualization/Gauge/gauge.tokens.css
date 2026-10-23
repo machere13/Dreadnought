@@ -1,0 +1,16 @@
+:root {
+  --dreadnought-gauge-text: var(--dreadnought-color-text-primary);
+  --dreadnought-gauge-muted: var(--dreadnought-color-text-placeholder);
+  --dreadnought-gauge-track: var(--dreadnought-color-border-default);
+  --dreadnought-gauge-needle: var(--dreadnought-color-text-primary);
+  --dreadnought-gauge-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-gauge-gap: var(--dreadnought-spacing-x4);
+  --dreadnought-gauge-value-size: 2rem;
+  --dreadnought-gauge-fill: #72dde0;
+  --dreadnought-gauge-color-1: #8fca9c;
+  --dreadnought-gauge-color-2: #edbc72;
+  --dreadnought-gauge-color-3: #ef9790;
+  --dreadnought-gauge-color-4: #a6a5ff;
+  --dreadnought-gauge-color-5: #72dde0;
+  --dreadnought-gauge-color-6: #94b9ed;
+}
