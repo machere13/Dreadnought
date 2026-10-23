@@ -1,5 +1,18 @@
 [
   {
+    "id": "domain:build-waterfall-layout", "kind": "domain", "name": "buildWaterfallLayout", "family": "Charts",
+    "description": "Чистый расчёт накопленных изменений, промежуточных итогов, прямоугольников и общей шкалы Waterfall.",
+    "docsUrl": "/components/waterfallchart/#waterfallchart-logic",
+    "constraints": [
+      "data — упорядоченные шаги {id,label,kind}. start только первым, change прибавляет value, total без value показывает текущую сумму без сброса. Без start накопление с нуля. ID уникальны, label непустой; значения и накопленные суммы конечны.",
+      "Шкала включает ноль и все from/to. Явный domain [min,max] проверяется без clipping. Для пустого или полностью нулевого набора автоматический domain [0,1]. width/height конечные положительные, по умолчанию 100/100.",
+      "steps возвращает before/after, from/to, value (у total сумма), tone и прямоугольник; endY служит для соединителей. Начало и total рисуются от нуля. Нулевой шаг имеет нулевую высоту. Вход не меняется, O(n), без DOM, SVG, React."
+    ],
+    "bindings": [{ "id": "core", "layer": 1, "framework": null, "importPath": "@dreadnought/core", "exportName": "buildWaterfallLayout",
+      "examples": [{"id": "basic", "code": "import { buildWaterfallLayout } from '@dreadnought/core';\nconst layout = buildWaterfallLayout({ data: [{ id: 'a', label: 'Начало', kind: 'start', value: 100 }, { id: 'b', label: 'Расход', kind: 'change', value: -25 }, { id: 'c', label: 'Итог', kind: 'total' }] });"}]
+    }]
+  },
+  {
     "id": "domain:build-treemap-layout",
     "kind": "domain",
     "name": "buildTreemapLayout",

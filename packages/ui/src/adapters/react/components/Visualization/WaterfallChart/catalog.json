@@ -1,0 +1,34 @@
+{
+  "componentId": "component:waterfall-chart",
+  "constraints": [
+    "Тема через --dreadnought-waterfall-chart-*. Рост — бирюзовый, падение — янтарный, начало и итог — фиолетовые; знаки чисел и типы шагов доступны независимо от цвета."
+  ],
+  "bindings": [
+    {
+      "id": "react-ui",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "WaterfallChart",
+      "defaults": {
+        "pageSize": 12
+      },
+      "propertyDescriptions": {
+        "data": "Шаги {id,label,kind}. start и change содержат value; total — без value. start допустим только первым, total показывает накопленную сумму без сброса.",
+        "domain": "Общая шкала [min,max], включающая ноль и все накопленные значения. По умолчанию вычисляется по всему data.",
+        "label": "Доступное название диаграммы.",
+        "description": "Контекст, период и единицы измерения.",
+        "formatValue": "Формат чисел. У change знак добавляется компонентом, formatter получает модуль; остальные значения передаются со знаком.",
+        "pageSize": "Число шагов одновременно в диаграмме и таблице. Накопленные суммы и шкала остаются общими.",
+        "labels": "Подписи типов шагов, столбцов и пустого состояния.",
+        "slotProps": "Нативные свойства областей диаграммы, шагов, Tooltip, Mark, таблицы и пагинации."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { WaterfallChart } from '@dreadnought/ui/react';\nconst data = [{ id: 'start', label: 'Начало', kind: 'start', value: 100 }, { id: 'income', label: 'Доход', kind: 'change', value: 40 }, { id: 'subtotal', label: 'Подытог', kind: 'total' }, { id: 'cost', label: 'Расходы', kind: 'change', value: -25 }, { id: 'total', label: 'Остаток', kind: 'total' }] as const;\nexport function Example() { return <WaterfallChart label=\"Бюджет\" data={data} />; }"
+        }
+      ]
+    }
+  ]
+}

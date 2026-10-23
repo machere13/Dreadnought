@@ -41,7 +41,7 @@ export const componentFamilies: readonly { name: string; sections: readonly Comp
       sections: ['accordion', 'breadcrumb', 'tabs', 'menu', 'dropdown', 'pagination', 'tree'],
     },
     { name: 'Surfaces', sections: ['card'] },
-    { name: 'Visualization', sections: ['radarchart', 'linechart', 'barchart', 'piechart', 'scatterchart', 'heatmap', 'histogram', 'boxplot', 'funnelchart', 'treemap'] },
+    { name: 'Visualization', sections: ['radarchart', 'linechart', 'barchart', 'piechart', 'scatterchart', 'heatmap', 'histogram', 'boxplot', 'funnelchart', 'treemap', 'waterfallchart'] },
     { name: 'Overlays', sections: ['tooltip', 'popover', 'modal', 'drawer', 'floatingpanel'] },
   ];
 
@@ -90,6 +90,7 @@ export const componentTitles = {
   boxplot: 'BoxPlot',
   funnelchart: 'FunnelChart',
   treemap: 'Treemap',
+  waterfallchart: 'WaterfallChart',
   tooltip: 'Tooltip',
   popover: 'Popover',
   modal: 'Modal',

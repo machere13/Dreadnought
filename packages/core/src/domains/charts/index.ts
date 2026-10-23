@@ -32,6 +32,13 @@ export { buildHeatmapLayout } from './buildHeatmapLayout.ts';
 export { buildHistogram } from './buildHistogram.ts';
 export { buildBoxPlotLayout } from './buildBoxPlotLayout.ts';
 export { buildFunnelLayout } from './buildFunnelLayout.ts';
+export { buildWaterfallLayout } from './buildWaterfallLayout.ts';
+export type {
+  WaterfallDatum,
+  WaterfallStep,
+  WaterfallLayout,
+  WaterfallLayoutOptions,
+} from './waterfall.types.ts';
 export { buildTreemapLayout } from './buildTreemapLayout.ts';
 export type {
   TreemapNode,

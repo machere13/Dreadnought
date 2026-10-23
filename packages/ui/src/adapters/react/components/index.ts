@@ -47,3 +47,4 @@ export * from './Fields/TreeSelect/index.ts';
 export * from './Visualization/BoxPlot/index.ts';
 export * from './Visualization/FunnelChart/index.ts';
 export * from './Visualization/Treemap/index.ts';
+export * from './Visualization/WaterfallChart/index.ts';

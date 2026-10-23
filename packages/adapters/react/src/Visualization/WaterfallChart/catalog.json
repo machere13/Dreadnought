@@ -1,0 +1,46 @@
+{
+  "id": "component:waterfall-chart",
+  "kind": "component",
+  "name": "WaterfallChart",
+  "family": "Visualization",
+  "description": "Каскадная диаграмма: положительные и отрицательные изменения, начальное значение и промежуточные итоги, соединители, Tooltip и таблица.",
+  "docsUrl": "/components/waterfallchart/#waterfallchart-api",
+  "states": [],
+  "composesWith": ["domain:build-waterfall-layout"],
+  "constraints": [
+    "Порядок data сохраняется. Без start накопление начинается с нуля. start задаёт начальное значение и разрешён только первым; change прибавляет value; total отображает текущую накопленную сумму от нуля, не изменяя её.",
+    "Для промежуточного и окончательного итога используется kind='total' без value. Отрицательные значения и переход через ноль допустимы. Уникальные непустые id/label; конечные value и суммы, неизвестные kind отклоняются.",
+    "Шкала вычисляется по полному набору, включает ноль и накопленные значения. Явный domain не может обрезать данные. Ноль изображается линией без искусственной высоты.",
+    "Tab входит в шаги один раз; ←/→ и Home/End перемещают фокус в текущей странице без зацикливания. Escape закрывает Tooltip, нажатие фокусирует шаг. Знак и таблица дополняют цвет.",
+    "pageSize ограничивает диаграмму и таблицу. Соединители только между соседями одной страницы. На узком экране диаграмма и таблица прокручиваются отдельно; фокусируемый шаг раскрывается прокруткой.",
+    "Расчёт и память O(n), видимых шагов не больше pageSize. data и domain неизменяемые; новая ссылка сбрасывает страницу и Tooltip. Нет фильтрации шагов, меняющей накопление."
+  ],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "WaterfallChartAdapter",
+      "defaults": {
+        "pageSize": 12
+      },
+      "propertyDescriptions": {
+        "data": "Шаги {id,label,kind}. start и change содержат value; total — без value. start допустим только первым, total показывает накопленную сумму без сброса.",
+        "domain": "Общая шкала [min,max], включающая ноль и все накопленные значения. По умолчанию вычисляется по всему data.",
+        "label": "Доступное название диаграммы.",
+        "description": "Контекст, период и единицы измерения.",
+        "formatValue": "Формат чисел. У change знак добавляется компонентом, formatter получает модуль; остальные значения передаются со знаком.",
+        "pageSize": "Число шагов одновременно в диаграмме и таблице. Накопленные суммы и шкала остаются общими.",
+        "labels": "Подписи типов шагов, столбцов и пустого состояния.",
+        "slotProps": "Нативные свойства областей диаграммы, шагов, Tooltip, Mark, таблицы и пагинации."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { WaterfallChartAdapter } from '@dreadnought/react/unstyled';\nconst data = [{ id: 'start', label: 'Начало', kind: 'start', value: 100 }, { id: 'income', label: 'Доход', kind: 'change', value: 40 }, { id: 'subtotal', label: 'Подытог', kind: 'total' }, { id: 'cost', label: 'Расходы', kind: 'change', value: -25 }, { id: 'total', label: 'Остаток', kind: 'total' }] as const;\nexport function Example() { return <WaterfallChartAdapter label=\"Бюджет\" data={data} />; }"
+        }
+      ]
+    }
+  ]
+}
