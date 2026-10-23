@@ -1,0 +1,11 @@
+:root {
+  --dreadnought-candlestick-chart-text: var(--dreadnought-color-text-primary);
+  --dreadnought-candlestick-chart-muted: var(--dreadnought-color-text-placeholder);
+  --dreadnought-candlestick-chart-bg: var(--dreadnought-color-surface-default);
+  --dreadnought-candlestick-chart-border: var(--dreadnought-color-border-default);
+  --dreadnought-candlestick-chart-focus: var(--dreadnought-color-focus-ring);
+  --dreadnought-candlestick-chart-gap: var(--dreadnought-spacing-x4);
+  --dreadnought-candlestick-chart-up: #72dde0;
+  --dreadnought-candlestick-chart-down: #edbc72;
+  --dreadnought-candlestick-chart-flat: #b6b6b6;
+}

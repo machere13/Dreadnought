@@ -1,5 +1,34 @@
 [
   {
+    "id": "domain:build-candlestick-layout",
+    "kind": "domain",
+    "name": "buildCandlestickLayout",
+    "family": "Charts",
+    "description": "Чистый расчёт OHLC-свечей, теней, направления движения и общей шкалы для всего ряда.",
+    "docsUrl": "/components/candlestickchart/#candlestickchart-logic",
+    "constraints": [
+      "data {id,label,open,high,low,close} с уникальными непустыми ID и названиями, конечными числами и low ≤ open/close ≤ high. Порядок и вход сохраняются; разреженные массивы отклоняются.",
+      "domain включает все low/high; ноль не добавляется автоматически. Для пустого ряда [0,1]; при совпадении всех цен расширение на 1%, не менее 1, с каждой стороны в пределах конечных чисел. Явный domain и положительные width/height (по умолчанию 100/100) проверяются.",
+      "candles возвращает исходные OHLC, trend up/down/flat, x/width, y/height тела, openY/closeY/highY/lowY. Doji имеет height=0. ticks и domain общие для всего data.",
+      "O(n) время и память. Нормализация через linearFraction поддерживает экстремальные конечные диапазоны. Нет React, DOM, SVG, агрегации или сортировки."
+    ],
+    "bindings": [
+      {
+        "id": "core",
+        "layer": 1,
+        "framework": null,
+        "importPath": "@dreadnought/core",
+        "exportName": "buildCandlestickLayout",
+        "examples": [
+          {
+            "id": "basic",
+            "code": "import { buildCandlestickLayout } from '@dreadnought/core';\nconst layout = buildCandlestickLayout({ data: [{id:'a',label:'Пн',open:100,high:114,low:96,close:110}] });"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "domain:build-gauge-layout",
     "kind": "domain",
     "name": "buildGaugeLayout",

@@ -35,6 +35,13 @@ export { buildFunnelLayout } from './buildFunnelLayout.ts';
 export { buildWaterfallLayout } from './buildWaterfallLayout.ts';
 export { buildSankeyLayout } from './buildSankeyLayout.ts';
 export { buildGaugeLayout } from './buildGaugeLayout.ts';
+export { buildCandlestickLayout } from './buildCandlestickLayout.ts';
+export type {
+  CandlestickDatum,
+  CandlestickCandle,
+  CandlestickLayoutOptions,
+  CandlestickLayout,
+} from './candlestick.types.ts';
 export type {
   GaugeThreshold,
   GaugeVariant,

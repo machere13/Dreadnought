@@ -38,6 +38,7 @@ export const components = [
   { family: 'Visualization', name: 'WaterfallChart', sources: [adapter, ui] },
   { family: 'Visualization', name: 'Sankey', sources: [adapter, ui] },
   { family: 'Visualization', name: 'Gauge', sources: [adapter, ui] },
+  { family: 'Visualization', name: 'CandlestickChart', sources: [adapter, ui] },
   { family: 'Visualization', name: 'Histogram', sources: [adapter, ui], tokenSource: 'BarChart' },
   { family: 'Controls', name: 'Button', sources: [core, adapter, ui] },
   { family: 'Controls', name: 'Toolbar', sources: [core, adapter, ui] },

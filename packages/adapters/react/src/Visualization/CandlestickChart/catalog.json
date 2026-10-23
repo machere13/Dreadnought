@@ -1,0 +1,46 @@
+{
+  "id": "component:candlestick-chart",
+  "kind": "component",
+  "name": "CandlestickChart",
+  "family": "Visualization",
+  "description": "Свечной график OHLC: открытие, закрытие, минимум и максимум периода, полые/заполненные свечи и doji, Tooltip, таблица и страницы длинного ряда.",
+  "docsUrl": "/components/candlestickchart/#candlestickchart-api",
+  "states": [],
+  "composesWith": ["domain:build-candlestick-layout"],
+  "constraints": [
+    "data — уже упорядоченный массив {id,label,open,high,low,close}. Уникальные непустые ID и названия, конечные числа, low ≤ open/close ≤ high. Нулевые и отрицательные цены допустимы, разреженные массивы отклоняются. Компонент не парсит и не сортирует даты.",
+    "Общая шкала полного ряда включает все low/high, не обязана включать ноль. Явный domain не может обрезать данные. Пустой ряд имеет автоматический domain [0,1]; равные цены расширяют шкалу на 1% (не менее 1) с каждой стороны в пределах конечных чисел.",
+    "Рост — полое тело, падение — заполненное, open=close — линия doji. Тени показывают low/high. Значения и направление движения доступны в Tooltip и таблице. Подпись под периодом — цена закрытия.",
+    "Tab входит один раз; ←/→ и Home/End переключают свечи текущей страницы без зацикливания. Escape закрывает Tooltip, наведение и нажатие раскрывают данные. Фокус прокручивает свечу в видимую область.",
+    "pageSize ограничивает одновременно свечи и строки таблицы. Шкала не меняется при перелистывании. График и таблица прокручиваются отдельно на узком экране. Новые ссылки data/domain сбрасывают страницу и Tooltip.",
+    "O(n) расчёт и память полного ряда, в DOM не более pageSize свечей и строк. Периоды не усредняются и не отбрасываются. Используйте неизменяемые массивы."
+  ],
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "CandlestickChartAdapter",
+      "defaults": {
+        "pageSize": 12
+      },
+      "propertyDescriptions": {
+        "data": "Периоды {id,label,open,high,low,close} в нужном порядке. low ≤ open/close ≤ high, конечные числа и уникальные ID.",
+        "domain": "Общие границы [min,max], включающие все low/high. По умолчанию шкала полного ряда.",
+        "label": "Доступное название графика.",
+        "description": "Контекст и единицы измерения.",
+        "formatValue": "Форматирует OHLC-значения, шкалу и цену закрытия под свечой.",
+        "pageSize": "Число свечей и строк таблицы на странице, по умолчанию 12. Общая шкала не меняется.",
+        "labels": "Подписи OHLC, движения, таблицы и пустого состояния.",
+        "slotProps": "Нативные свойства графика, свечей, Tooltip, Mark, таблицы и пагинации."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { CandlestickChartAdapter } from '@dreadnought/react/unstyled';\nconst data = [{ id: 'a', label: 'Пн', open: 100, high: 114, low: 96, close: 110 }, { id: 'b', label: 'Вт', open: 110, high: 117, low: 99, close: 103 }];\nexport function Example() { return <CandlestickChartAdapter label=\"Котировки\" data={data} formatValue={value => value.toFixed(2)} />; }"
+        }
+      ]
+    }
+  ]
+}
