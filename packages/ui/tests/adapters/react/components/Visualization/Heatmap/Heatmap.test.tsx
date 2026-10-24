@@ -4,6 +4,50 @@ import * as ui from '@dreadnought/ui/react';
 import { tablePresentation } from '@dreadnought/ui';
 
 afterEach(cleanup);
+it('themes custom cells, tooltip and composed table controls from one context', () => {
+  function Controls() {
+    const { page } = ui.useHeatmap();
+    return <button onClick={() => page.change(2)}>Next</button>;
+  }
+  render(
+    <ui.Heatmap
+      label="Composed"
+      columns={[{ id: 'x', label: 'X' }]}
+      rows={[
+        { id: 'a', label: 'A' },
+        { id: 'b', label: 'B' },
+      ]}
+      data={[
+        { column: 'x', row: 'a', value: 0 },
+        { column: 'x', row: 'b', value: 10 },
+      ]}
+      pageSize={1}
+    >
+      <Controls />
+      <ui.Heatmap.Legend />
+      <ui.Heatmap.Plot tooltipContent={({ defaultContent }) => <div>Custom{defaultContent}</div>}>
+        {({ defaultContent }) => <strong>{defaultContent}</strong>}
+      </ui.Heatmap.Plot>
+      <ui.Heatmap.Table />
+      <ui.Heatmap.Pagination />
+      <ui.Heatmap.Empty />
+    </ui.Heatmap>,
+  );
+  const [first, last] = screen.getAllByRole('img');
+  expect(first.className).toBeTruthy();
+  expect(first.style.getPropertyValue('--heatmap-cell-bg')).not.toBe(
+    last.style.getPropertyValue('--heatmap-cell-bg'),
+  );
+  fireEvent.focus(first);
+  expect(screen.getByRole('tooltip').className).toBeTruthy();
+  expect(screen.getByRole('tooltip').textContent).toContain('Custom');
+  fireEvent.click(screen.getByRole('button', { name: 'Next', exact: true }));
+  expect(screen.getByRole('table', { name: 'Composed: Все данные' }).textContent).toContain('BX10');
+  expect(screen.getByRole('table', { name: 'Composed: Все данные' }).className).toContain(
+    tablePresentation.root,
+  );
+  expect(screen.getAllByRole('img')).toHaveLength(2);
+});
 it('styles values and the matching tooltip marker without overriding consumer slots', () => {
   expect(ui).toHaveProperty('Heatmap');
   const props = {

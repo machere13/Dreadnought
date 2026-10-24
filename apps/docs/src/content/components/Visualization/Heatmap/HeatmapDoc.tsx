@@ -9,6 +9,8 @@ import { HeatmapMissingDemo } from './HeatmapMissingDemo.tsx';
 import missingCode from './HeatmapMissingDemo.tsx?raw';
 import { HeatmapWideDemo } from './HeatmapWideDemo.tsx';
 import wideCode from './HeatmapWideDemo.tsx?raw';
+import { HeatmapCompositionDemo } from './HeatmapCompositionDemo.tsx';
+import compositionCode from './HeatmapCompositionDemo.tsx?raw';
 
 export const heatmapDoc: ComponentDoc = {
   ...getCatalogDoc('heatmap'),
@@ -22,6 +24,22 @@ export const heatmapDoc: ComponentDoc = {
   logicDescription:
     'buildHeatmapLayout проверяет категории и значения, заполняет пропуски и вычисляет интенсивность 0–1 без React и DOM.',
   notes: [
+    <>
+      Композиция: Heatmap.Plot, Legend, Table, Pagination и Empty можно переставлять и опускать.
+      useHeatmap внутри корня даёт layout, hasValues, page, подписи и форматирование.
+      children=undefined оставляет стандартный набор, null убирает части.
+    </>,
+    <>
+      Plot.children меняет декоративное содержимое ячейки, tooltipContent — подсказку. Оба callback
+      получают cell, active, labels, formatValue, showValues и defaultContent. Внешний span
+      сохраняет фон, координаты, ref, фокус, доступное название и обработчики; рисунок не содержит
+      интерактивных элементов. null из tooltipContent отключает подсказку.
+    </>,
+    <>
+      Table и Pagination используют общую page из контекста. Листается только таблица: полный набор
+      ячеек, фокус и общая шкала не сбрасываются. Legend.children позволяет заменить содержимое
+      шкалы, получая domain, labels, formatValue и defaultContent.
+    </>,
     <>
       columns и rows задают порядок категорий. Каждая запись data содержит column, row и value.
       Повтор одной пары координат — ошибка; агрегируйте такие записи заранее.
@@ -87,6 +105,14 @@ export const heatmapDoc: ComponentDoc = {
         'Прокрутите матрицу или перейдите стрелками к последнему часу. Значения спрятаны в ячейках, но доступны в Tooltip и таблице; перелистывание таблицы не меняет график.',
       demo: <HeatmapWideDemo />,
       code: wideCode,
+    },
+    {
+      id: 'composition',
+      title: 'Свой рисунок ячеек и управление таблицей',
+      description:
+        'Размер круга дополняет цвет: ноль — маленький круг, пропуск — тире. Кнопка и нижняя пагинация листают общую таблицу, но все 12 ячеек остаются в матрице. Tab входит в неё один раз; стрелки и Home/End перемещают фокус, Escape закрывает Tooltip. Код ниже соответствует примеру.',
+      demo: <HeatmapCompositionDemo />,
+      code: compositionCode,
     },
   ],
 };

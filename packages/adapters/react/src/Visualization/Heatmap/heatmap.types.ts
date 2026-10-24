@@ -1,4 +1,5 @@
-import type { HeatmapCell, HeatmapLayoutOptions } from '@dreadnought/core';
+import type { ReactNode } from 'react';
+import type { HeatmapCell, HeatmapLayout, HeatmapLayoutOptions } from '@dreadnought/core';
 import type { ChartNative as Native } from '../../shared/chartNativeProps.ts';
 import type { ChartPaginationSlots } from '../../shared/useChartPage.tsx';
 
@@ -28,11 +29,12 @@ export interface HeatmapLabels {
   dataTable?: string;
 }
 
-export type HeatmapAdapterProps = Native<
-  'figure',
-  'role' | 'aria-labelledby' | 'aria-describedby'
+export type HeatmapAdapterProps = Omit<
+  Native<'figure', 'role' | 'aria-labelledby' | 'aria-describedby'>,
+  'children'
 > &
   HeatmapLayoutOptions & {
+    children?: ReactNode;
     label: string;
     description?: string;
     formatValue?: (value: number) => string;
@@ -41,3 +43,34 @@ export type HeatmapAdapterProps = Native<
     labels?: HeatmapLabels;
     slotProps?: HeatmapSlotProps;
   };
+
+export interface HeatmapContextValue {
+  layout: HeatmapLayout;
+  hasValues: boolean;
+  label: string;
+  labels: Required<HeatmapLabels>;
+  formatValue: (value: number) => string;
+  showValues: boolean;
+  slotProps: HeatmapSlotProps;
+  page: { rows: HeatmapCell[]; page: number; count: number; change: (page: number) => void };
+}
+export interface HeatmapCellContext {
+  cell: HeatmapCell;
+  active: boolean;
+  showValues: boolean;
+  labels: Required<HeatmapLabels>;
+  formatValue: (value: number) => string;
+  defaultContent: ReactNode;
+}
+export interface HeatmapPlotProps {
+  children?: (context: HeatmapCellContext) => ReactNode;
+  tooltipContent?: (context: HeatmapCellContext) => ReactNode;
+}
+export interface HeatmapLegendProps {
+  children?: (context: {
+    domain: readonly [number, number];
+    labels: Required<HeatmapLabels>;
+    formatValue: (value: number) => string;
+    defaultContent: ReactNode;
+  }) => ReactNode;
+}

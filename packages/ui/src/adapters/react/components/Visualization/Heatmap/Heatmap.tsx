@@ -12,7 +12,7 @@ import { buttonPresentation } from '#presentation/Controls/Button/buttonPresenta
 export type HeatmapProps = HeatmapAdapterProps & { colorScale?: HeatmapColorScale };
 const classes = (...values: (string | undefined)[]) => values.filter(Boolean).join(' ');
 
-export function Heatmap({
+function HeatmapRoot({
   colorScale = 'sequential',
   className,
   slotProps = {},
@@ -107,3 +107,15 @@ export function Heatmap({
     />
   );
 }
+
+export const Heatmap: typeof HeatmapRoot &
+  Pick<typeof HeatmapAdapter, 'Plot' | 'Legend' | 'Table' | 'Pagination' | 'Empty'> = Object.assign(
+  HeatmapRoot,
+  {
+    Plot: HeatmapAdapter.Plot,
+    Legend: HeatmapAdapter.Legend,
+    Table: HeatmapAdapter.Table,
+    Pagination: HeatmapAdapter.Pagination,
+    Empty: HeatmapAdapter.Empty,
+  },
+);

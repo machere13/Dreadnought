@@ -4,7 +4,7 @@ import { TooltipAdapter } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
 import { MarkAdapter } from '../../DataDisplay/Mark/MarkAdapter.tsx';
 import { attachRef } from '../../shared/attachRef.ts';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
-import type { HeatmapLabels, HeatmapSlotProps } from './heatmap.types.ts';
+import type { HeatmapLabels, HeatmapSlotProps, HeatmapPlotProps } from './heatmap.types.ts';
 
 type Target = { id: string; element: HTMLSpanElement };
 export function HeatmapGrid({
@@ -14,6 +14,8 @@ export function HeatmapGrid({
   formatValue,
   showValues,
   slotProps,
+  children,
+  tooltipContent,
 }: {
   layout: HeatmapLayout;
   label: string;
@@ -21,7 +23,7 @@ export function HeatmapGrid({
   formatValue: (value: number) => string;
   showValues: boolean;
   slotProps: HeatmapSlotProps;
-}) {
+} & HeatmapPlotProps) {
   const [active, setActive] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [tabStop, setTabStop] = useState<string | null>(null);
@@ -41,7 +43,7 @@ export function HeatmapGrid({
       anchor.current(target.element);
     }
   }
-  const content = item ? (
+  const defaultContent = item ? (
     <table {...native(slotProps.tooltipTable, ['role', 'hidden', 'aria-hidden'])}>
       <tbody>
         <tr>
@@ -67,11 +69,24 @@ export function HeatmapGrid({
       </tbody>
     </table>
   ) : null;
+  const content =
+    item && tooltipContent
+      ? tooltipContent({
+          cell: item,
+          active: true,
+          labels,
+          formatValue,
+          showValues,
+          defaultContent,
+        })
+      : defaultContent;
+  const hasContent = content !== null && content !== undefined && content !== false;
+  if (!hasContent && open) setOpen(false);
   return (
     <TooltipAdapter
       {...native(slotProps.tooltip, ['ref'])}
       content={content}
-      open={!!item && open}
+      open={!!item && open && hasContent}
       onOpenChange={setOpen}
       onPointerLeave={(event) => {
         slotProps.tooltip?.onPointerLeave?.(event);
@@ -199,7 +214,27 @@ export function HeatmapGrid({
                       }
                     }}
                   >
-                    {cell.value === null ? '—' : showValues ? formatValue(cell.value) : null}
+                    {children ? (
+                      <span
+                        inert
+                        aria-hidden="true"
+                        style={{ display: 'contents', pointerEvents: 'none' }}
+                      >
+                        {children({
+                          cell,
+                          active: selected && open && hasContent,
+                          labels,
+                          formatValue,
+                          showValues,
+                          defaultContent:
+                            cell.value === null ? '—' : showValues ? formatValue(cell.value) : null,
+                        })}
+                      </span>
+                    ) : cell.value === null ? (
+                      '—'
+                    ) : showValues ? (
+                      formatValue(cell.value)
+                    ) : null}
                   </span>
                 );
               })}

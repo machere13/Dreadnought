@@ -2,7 +2,8 @@
   "componentId": "component:heatmap",
   "constraints": [
     "colorScale=sequential — последовательная шкала; diverging — два цвета со светлой серединой domain. Для центра 0 задайте симметричный domain. Тема --dreadnought-heatmap-*; при изменении палитры сохраняйте контраст текста.",
-    "Узкая матрица прокручивается внутри viewport, высота ограничена токеном max-height; фокус раскрывает ячейку. Пунктир и тире отличают пропуск от нуля."
+    "Узкая матрица прокручивается внутри viewport, высота ограничена токеном max-height; фокус раскрывает ячейку. Пунктир и тире отличают пропуск от нуля.",
+    "Композиция: Plot, Legend, Table, Pagination и Empty работают внутри Heatmap[Adapter]. useHeatmap даёт полный layout, hasValues, page:{rows,page,count,change}, label, labels, formatValue, showValues и slotProps. Пагинация меняет только таблицу, не матрицу и не её фокус. Plot.children декоративен, без вложенных интерактивных элементов: родной span сохраняет координаты, фон, ref, события и доступное название. null/undefined/false из tooltipContent отключают подсказку."
   ],
   "bindings": [
     {
@@ -29,14 +30,74 @@
         "pageSize": "Строки таблицы на странице. Не ограничивает ячейки матрицы.",
         "labels": "Подписи осей, показателя, пропусков, шкалы, таблицы и пустого состояния.",
         "slotProps": "Свойства внутренних частей. Геометрия и доступность остаются под управлением адаптера.",
-        "colorScale": "sequential для величины; diverging для отклонений от середины domain."
+        "colorScale": "sequential для величины; diverging для отклонений от середины domain.",
+        "children": "Своя композиция Plot, Legend, Table, Pagination, Empty и компонентов с useHeatmap. undefined — готовый набор; null — только подпись."
       },
       "examples": [
         {
           "id": "basic",
           "code": "import { Heatmap } from '@dreadnought/ui/react';\nconst columns = [{ id: 'mon', label: 'Пн' }, { id: 'tue', label: 'Вт' }];\nconst rows = [{ id: 'team', label: 'Команда' }];\nconst data = [{ column: 'mon', row: 'team', value: 0 }, { column: 'tue', row: 'team', value: 10 }];\nexport function Example() { return <Heatmap label=\"Закрытые задачи\" columns={columns} rows={rows} data={data} domain={[0, 10]} />; }"
+        },
+        {
+          "id": "compound",
+          "code": "import { Heatmap, useHeatmap } from '@dreadnought/ui/react';\nconst columns = [{id:'x',label:'X'}]; const rows = [{id:'a',label:'A'},{id:'b',label:'B'}]; const data = [{row:'a',column:'x',value:0},{row:'b',column:'x',value:10}];\nfunction Controls() { const {page}=useHeatmap(); return <button disabled={page.page===page.count} onClick={()=>page.change(page.page+1)}>Следующая страница</button>; }\nexport function Example() { return <Heatmap label=\"Активность\" columns={columns} rows={rows} data={data} pageSize={1}><Controls /><Heatmap.Legend /><Heatmap.Plot tooltipContent={({defaultContent})=><div>{defaultContent}</div>}>{({defaultContent})=><strong>{defaultContent}</strong>}</Heatmap.Plot><Heatmap.Table /><Heatmap.Pagination /><Heatmap.Empty /></Heatmap>; }"
         }
       ]
+    },
+    {
+      "id": "react-ui-plot",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Heatmap",
+      "propertyPath": ["Plot"],
+      "propertyDescriptions": {
+        "children": "Рисунок содержимого ячейки: ({cell,active,labels,formatValue,showValues,defaultContent}) => ReactNode. Внешний span и навигация сохраняются.",
+        "tooltipContent": "Содержимое Tooltip: ({cell,active,labels,formatValue,showValues,defaultContent}) => ReactNode. null/undefined/false скрывают подсказку."
+      }
+    },
+    {
+      "id": "react-ui-legend",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Heatmap",
+      "propertyPath": ["Legend"],
+      "propertyDescriptions": {
+        "children": "Содержимое шкалы: ({domain,labels,formatValue,defaultContent}) => ReactNode. Без измеренных значений шкала не показывается."
+      }
+    },
+    {
+      "id": "react-ui-table",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Heatmap",
+      "propertyPath": ["Table"]
+    },
+    {
+      "id": "react-ui-pagination",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Heatmap",
+      "propertyPath": ["Pagination"]
+    },
+    {
+      "id": "react-ui-empty",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Heatmap",
+      "propertyPath": ["Empty"]
+    },
+    {
+      "id": "react-ui-context",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "useHeatmap",
+      "description": "Контекст ближайшего Heatmap[Adapter]: layout, hasValues, page, label, labels, formatValue, showValues, slotProps. Вне корня выбрасывает ошибку."
     }
   ]
 }

@@ -1,8 +1,15 @@
 import { useId, useMemo } from 'react';
 import { buildHeatmapLayout } from '@dreadnought/core';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
-import { HeatmapGrid } from './HeatmapGrid.tsx';
-import { HeatmapDataTable } from './HeatmapDataTable.tsx';
+import { useChartPage } from '../../shared/useChartPage.tsx';
+import { HeatmapContext } from './HeatmapContext.tsx';
+import {
+  HeatmapPlotAdapter,
+  HeatmapLegendAdapter,
+  HeatmapTableAdapter,
+  HeatmapPaginationAdapter,
+  HeatmapEmptyAdapter,
+} from './HeatmapParts.tsx';
 import type { HeatmapAdapterProps, HeatmapLabels } from './heatmap.types.ts';
 
 const defaults: Required<HeatmapLabels> = {
@@ -15,7 +22,7 @@ const defaults: Required<HeatmapLabels> = {
   dataTable: 'Все данные',
 };
 
-export function HeatmapAdapter({
+function HeatmapRootAdapter({
   columns,
   rows,
   data,
@@ -27,6 +34,7 @@ export function HeatmapAdapter({
   pageSize = 50,
   labels: customLabels = {},
   slotProps = {},
+  children,
   ...rest
 }: HeatmapAdapterProps) {
   const layout = useMemo(
@@ -46,6 +54,7 @@ export function HeatmapAdapter({
     throw new TypeError('Heatmap formatter must be a function');
   const id = useId();
   const hasValues = layout.cells.some((cell) => cell.value !== null);
+  const page = useChartPage(layout.cells, pageSize);
   return (
     <figure
       {...native(rest, ['role'])}
@@ -55,41 +64,29 @@ export function HeatmapAdapter({
     >
       <figcaption id={`${id}-label`}>{label}</figcaption>
       {description !== undefined && <p id={`${id}-description`}>{description}</p>}
-      <HeatmapGrid
-        layout={layout}
-        labels={labels}
-        label={label}
-        formatValue={formatValue}
-        showValues={showValues}
-        slotProps={slotProps}
-      />
-      {!hasValues && <p>{labels.empty}</p>}
-      {layout.domain && hasValues && (
-        <div
-          {...native(slotProps.legend)}
-          role="group"
-          aria-label={labels.legend}
-          data-ui="heatmap-legend"
-        >
-          <span>{labels.value}</span>
-          <span>{formatValue(layout.domain[0])}</span>
-          <span
-            {...native(slotProps.scale)}
-            aria-hidden="true"
-            data-ui="heatmap-scale"
-            data-constant={layout.domain[0] === layout.domain[1] || undefined}
-          />
-          {layout.domain[0] !== layout.domain[1] && <span>{formatValue(layout.domain[1])}</span>}
-        </div>
-      )}
-      <HeatmapDataTable
-        cells={layout.cells}
-        label={label}
-        labels={labels}
-        formatValue={formatValue}
-        slotProps={slotProps}
-        pageSize={pageSize}
-      />
+      <HeatmapContext.Provider
+        value={{ layout, hasValues, label, labels, formatValue, showValues, slotProps, page }}
+      >
+        {children === undefined ? (
+          <>
+            <HeatmapPlotAdapter />
+            <HeatmapEmptyAdapter />
+            <HeatmapLegendAdapter />
+            <HeatmapTableAdapter />
+            <HeatmapPaginationAdapter />
+          </>
+        ) : (
+          children
+        )}
+      </HeatmapContext.Provider>
     </figure>
   );
 }
+
+export const HeatmapAdapter = Object.assign(HeatmapRootAdapter, {
+  Plot: HeatmapPlotAdapter,
+  Legend: HeatmapLegendAdapter,
+  Table: HeatmapTableAdapter,
+  Pagination: HeatmapPaginationAdapter,
+  Empty: HeatmapEmptyAdapter,
+});
