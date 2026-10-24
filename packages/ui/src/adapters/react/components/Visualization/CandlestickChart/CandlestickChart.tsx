@@ -79,11 +79,12 @@ function CandlestickChartRoot({ className, slotProps = {}, ...props }: Candlesti
 }
 
 export const CandlestickChart: typeof CandlestickChartRoot &
-  Pick<typeof CandlestickChartAdapter, 'Plot' | 'Table' | 'Pagination'> = Object.assign(
+  Pick<typeof CandlestickChartAdapter, 'Plot' | 'Table' | 'Pagination' | 'Empty'> = Object.assign(
   CandlestickChartRoot,
   {
     Plot: CandlestickChartAdapter.Plot,
     Table: CandlestickChartAdapter.Table,
     Pagination: CandlestickChartAdapter.Pagination,
+    Empty: CandlestickChartAdapter.Empty,
   },
 );

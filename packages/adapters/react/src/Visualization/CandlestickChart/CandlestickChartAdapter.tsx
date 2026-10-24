@@ -8,6 +8,7 @@ import {
   CandlestickChartPlotAdapter,
   CandlestickChartTableAdapter,
   CandlestickChartPaginationAdapter,
+  CandlestickChartEmptyAdapter,
 } from './CandlestickChartParts.tsx';
 import type { CandlestickChartAdapterProps } from './candlestickChart.types.ts';
 
@@ -62,6 +63,7 @@ function CandlestickChartRootAdapter({
         {children === undefined ? (
           <>
             <CandlestickChartPlotAdapter />
+            <CandlestickChartEmptyAdapter />
             <CandlestickChartTableAdapter />
             <CandlestickChartPaginationAdapter />
           </>
@@ -77,4 +79,5 @@ export const CandlestickChartAdapter = Object.assign(CandlestickChartRootAdapter
   Plot: CandlestickChartPlotAdapter,
   Table: CandlestickChartTableAdapter,
   Pagination: CandlestickChartPaginationAdapter,
+  Empty: CandlestickChartEmptyAdapter,
 });

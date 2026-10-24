@@ -25,9 +25,9 @@ export const candlestickChartDoc: ComponentDoc = {
     'buildCandlestickLayout проверяет OHLC, рассчитывает общую шкалу, тело и тени свечей, определяет рост, падение и отсутствие изменения без React и DOM.',
   notes: [
     <>
-      Без children график собирает Plot, Table и Pagination автоматически. Передайте свои части,
+      Без children график собирает Plot, Empty, Table и Pagination автоматически. Передайте свои части,
       чтобы менять порядок или заменять их; children=null оставляет только подпись. В обоих слоях
-      доступны CandlestickChart[Adapter].Plot, .Table, .Pagination и useCandlestickChart: layout —
+      доступны CandlestickChart[Adapter].Plot, .Empty, .Table, .Pagination и useCandlestickChart: layout —
       полный ряд и шкала, candles — текущая страница, page.change — переход.
     </>,
     <>

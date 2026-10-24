@@ -107,13 +107,15 @@ export function ScatterPlot({
     item && group && tooltipContent
       ? tooltipContent({ point: item.original, series: group, format, defaultContent })
       : defaultContent;
+  const hasContent = content !== null && content !== undefined && content !== false;
+  if (!hasContent && tooltipOpen) setTooltipOpen(false);
+  if (active !== null && !item) setActive(null);
   return (
     <TooltipAdapter
       {...native(slotProps.tooltip, ['ref'])}
       content={content}
-      open={tooltipOpen && content !== null && content !== undefined && content !== false}
+      open={tooltipOpen && hasContent}
       onOpenChange={setTooltipOpen}
-      disabled={active !== null && !item}
       onPointerLeave={(event) => {
         slotProps.tooltip?.onPointerLeave?.(event);
         if (!event.defaultPrevented) restore(focused.current);

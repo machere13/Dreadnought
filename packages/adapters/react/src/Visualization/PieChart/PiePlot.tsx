@@ -45,13 +45,15 @@ export function PiePlot({ layout, slotProps, width, height, children, tooltipCon
     item && tooltipContent
       ? tooltipContent({ slice: item, layout, defaultContent })
       : defaultContent;
+  const hasContent = content !== null && content !== undefined && content !== false;
+  if (!hasContent && tooltipOpen) setTooltipOpen(false);
+  if (active !== null && !item) setActive(null);
   return (
     <TooltipAdapter
       {...native(slotProps.tooltip, ['ref'])}
       content={content}
-      open={tooltipOpen && content !== null && content !== undefined && content !== false}
+      open={tooltipOpen && hasContent}
       onOpenChange={setTooltipOpen}
-      disabled={active !== null && !item}
     >
       {({ ref: attach, ...trigger }) => {
         const restore = (target: Target | null) => {

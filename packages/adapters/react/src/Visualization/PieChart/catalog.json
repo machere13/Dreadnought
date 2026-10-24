@@ -14,7 +14,7 @@
     "width и height задаются вместе положительными конечными числами. Без них ResizeObserver измеряет контейнер; высота 80% ширины. Без ResizeObserver остаются легенда и таблица.",
     "Controlled visibleItems меняется только новым пропсом. defaultVisibleItems применяется при монтировании; неизвестные ID игнорируются.",
     "Сумма значений должна быть конечной. Рекомендуется небольшое число категорий; автоматической агрегации, виртуализации и скрытия данных нет.",
-    "Композиция: Plot, Legend, Table и usePieChart используют ближайший корень. Свои children заменяют порядок и набор частей; null оставляет подпись. toggle игнорирует неизвестный ID. Plot включает пустое состояние; таблица без пагинации. Данные передавайте неизменяемыми.",
+    "Композиция: Plot, Legend, Table, Empty и usePieChart используют ближайший корень. Свои children заменяют порядок и набор частей; null оставляет подпись. toggle игнорирует неизвестный ID. Empty выводит пустое состояние отдельно от Plot; таблица без пагинации. Данные передавайте неизменяемыми.",
     "Plot.children заменяет только декоративный SVG, tooltipContent — содержимое подсказки, Legend.children — содержимое готовой кнопки. defaultContent позволяет дополнить стандартный рисунок. Исходный path остаётся поверх декоративного рисунка: сохраняет refs, события, доступное имя и focus ring UI. Рисунок скрыт от скринридера и указателя; вписывайте его в исходную область и не добавляйте интерактивных потомков. При замене Table сохраняйте все исходные данные, включая скрытые и нулевые."
   ],
   "bindings": [
@@ -40,7 +40,7 @@
         "onVisibleItemsChange": "Запрос нового набора видимых ID.",
         "labels": "Подписи легенды, таблицы и пустого состояния.",
         "slotProps": "Нативные свойства частей без замены геометрии и доступности.",
-        "children": "Своя композиция Plot, Legend, Table и компонентов с usePieChart. undefined — готовая сборка, null — только подпись. Части используют состояние ближайшего корня."
+        "children": "Своя композиция Plot, Legend, Table, Empty и компонентов с usePieChart. undefined — готовая сборка, null — только подпись. Части используют состояние ближайшего корня."
       },
       "examples": [
         {
@@ -49,7 +49,7 @@
         },
         {
           "id": "compound",
-          "code": "import { PieChartAdapter, usePieChart } from '@dreadnought/react/unstyled';\nconst data=[{id:'a',label:'A',value:60},{id:'b',label:'B',value:40}];\nfunction Summary(){const {visible}=usePieChart();return <p>Видимых: {visible.length}</p>;}\nexport function Example(){return <PieChartAdapter label=\"Данные\" data={data} innerRadius={0.6}><Summary/><PieChartAdapter.Legend>{({defaultContent})=><span>{defaultContent}</span>}</PieChartAdapter.Legend><PieChartAdapter.Plot tooltipContent={({defaultContent})=><div>{defaultContent}</div>}>{({defaultContent})=>defaultContent}</PieChartAdapter.Plot><PieChartAdapter.Table/></PieChartAdapter>;}"
+          "code": "import { PieChartAdapter, usePieChart } from '@dreadnought/react/unstyled';\nconst data=[{id:'a',label:'A',value:60},{id:'b',label:'B',value:40}];\nfunction Summary(){const {visible}=usePieChart();return <p>Видимых: {visible.length}</p>;}\nexport function Example(){return <PieChartAdapter label=\"Данные\" data={data} innerRadius={0.6}><Summary/><PieChartAdapter.Legend>{({defaultContent})=><span>{defaultContent}</span>}</PieChartAdapter.Legend><PieChartAdapter.Plot tooltipContent={({defaultContent})=><div>{defaultContent}</div>}>{({defaultContent})=>defaultContent}</PieChartAdapter.Plot><PieChartAdapter.Empty/><PieChartAdapter.Table/></PieChartAdapter>;}"
         }
       ]
     },
@@ -60,7 +60,7 @@
       "importPath": "@dreadnought/react/unstyled",
       "exportName": "PieChartAdapter",
       "propertyPath": ["Plot"],
-      "description": "Готовая область графика с измерением и заменяемым SVG-рисунком. Включает пустое состояние.",
+      "description": "Готовая область графика с измерением и заменяемым SVG-рисунком. Пустое состояние выводит отдельная часть Empty.",
       "propertyDescriptions": {
         "children": "Рисунок сектора: ({slice,path,radius,innerRadius,active,defaultContent}) => ReactNode. Координаты нормализованы к radius=100, innerRadius абсолютный. Исходный path поверх рисунка сохраняет ref, фокус и область наведения.",
         "tooltipContent": "Содержимое Tooltip: ({slice,layout,defaultContent}) => ReactNode. null/undefined/false скрывают подсказку. Доли считаются среди видимых категорий."
@@ -86,6 +86,15 @@
       "exportName": "PieChartAdapter",
       "propertyPath": ["Table"],
       "description": "Полная исходная таблица, включая скрытые и нулевые категории."
+    },
+    {
+      "id": "react-adapter-empty",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "PieChartAdapter",
+      "propertyPath": ["Empty"],
+      "description": "Пустое состояние ближайшего графика; независимо от Plot и только при отсутствии отображаемых данных."
     },
     {
       "id": "react-adapter-context",

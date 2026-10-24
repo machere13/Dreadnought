@@ -14,7 +14,7 @@
         "pageSize": 12
       },
       "propertyDescriptions": {
-        "children": "Своя композиция Plot, Table, Pagination и компонентов с useCandlestickChart. undefined — готовая композиция, null — только подпись. Части наследуют тему root.",
+        "children": "Своя композиция Plot, Table, Pagination, Empty и компонентов с useCandlestickChart. undefined — готовая композиция, null — только подпись. Части наследуют тему root.",
         "data": "Периоды {id,label,open,high,low,close} в нужном порядке. low ≤ open/close ≤ high, конечные числа и уникальные ID.",
         "domain": "Общие границы [min,max], включающие все low/high. По умолчанию шкала полного ряда.",
         "label": "Доступное название графика.",
@@ -27,7 +27,7 @@
       "examples": [
         {
           "id": "compound",
-          "code": "import { CandlestickChart, useCandlestickChart } from '@dreadnought/ui/react';\nconst data = [{id:'a',label:'Пн',open:100,high:120,low:90,close:110}];\nfunction Summary() { const {candles,page} = useCandlestickChart(); return <p>{candles.length} периодов; страница {page.page}</p>; }\nexport function Example() { return <CandlestickChart data={data} label=\"Котировки\"><Summary /><CandlestickChart.Plot height={180} tooltipContent={({defaultContent}) => <div>OHLC{defaultContent}</div>}>{({defaultContent}) => defaultContent}</CandlestickChart.Plot><CandlestickChart.Table /><CandlestickChart.Pagination /></CandlestickChart>; }"
+          "code": "import { CandlestickChart, useCandlestickChart } from '@dreadnought/ui/react';\nconst data = [{id:'a',label:'Пн',open:100,high:120,low:90,close:110}];\nfunction Summary() { const {candles,page} = useCandlestickChart(); return <p>{candles.length} периодов; страница {page.page}</p>; }\nexport function Example() { return <CandlestickChart data={data} label=\"Котировки\"><Summary /><CandlestickChart.Plot height={180} tooltipContent={({defaultContent}) => <div>OHLC{defaultContent}</div>}>{({defaultContent}) => defaultContent}</CandlestickChart.Plot><CandlestickChart.Empty /><CandlestickChart.Table /><CandlestickChart.Pagination /></CandlestickChart>; }"
         },
         {
           "id": "basic",
@@ -42,7 +42,9 @@
       "importPath": "@dreadnought/ui/react",
       "exportName": "CandlestickChart",
       "propertyPath": ["Plot"],
-      "defaults": { "height": 240 },
+      "defaults": {
+        "height": 240
+      },
       "propertyDescriptions": {
         "height": "Высота рисунка и шкалы в px: положительное конечное число, по умолчанию 240.",
         "children": "Рисунок периода: ({candle,height,labels,formatValue,defaultContent}) => ReactNode. Внешняя обёртка сохраняет фокус, навигацию и OHLC-описание. Без интерактивных потомков.",
@@ -66,6 +68,15 @@
       "exportName": "CandlestickChart",
       "propertyPath": ["Pagination"],
       "description": "Оформленная пагинация общего состояния; при одной странице скрыта."
+    },
+    {
+      "id": "react-ui-empty",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "CandlestickChart",
+      "propertyPath": ["Empty"],
+      "description": "Пустое состояние ближайшего графика; независимо от Plot и только при отсутствии отображаемых данных."
     },
     {
       "id": "react-ui-context",

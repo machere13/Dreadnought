@@ -9,7 +9,7 @@ import type { PieChartPlotProps, PieChartLegendProps } from './pieChart.types.ts
 
 export function PieChartPlotAdapter(props: PieChartPlotProps) {
   const context = usePieChart();
-  const { width, height, slotProps, layout, labels } = context;
+  const { width, height, slotProps, layout } = context;
   const plotRef = useRef<HTMLDivElement>(null);
   const consumerRef = slotProps.plotContainer?.ref;
   const attachPlot = useCallback(
@@ -26,13 +26,13 @@ export function PieChartPlotAdapter(props: PieChartPlotProps) {
   const viewport = measured;
   return (
     <div {...native(slotProps.plotContainer)} ref={attachPlot} data-ui="pie-plot-container">
-      {!layout.slices.length ? (
-        <p role="status">{labels.empty}</p>
-      ) : (
-        viewport && <PiePlot {...context} {...viewport} {...props} />
-      )}
+      {!!layout.slices.length && viewport && <PiePlot {...context} {...viewport} {...props} />}
     </div>
   );
+}
+export function PieChartEmptyAdapter() {
+  const { layout, labels } = usePieChart();
+  return layout.slices.length ? null : <p role="status">{labels.empty}</p>;
 }
 export function PieChartLegendAdapter({ children }: PieChartLegendProps) {
   const { data, visible, toggle, labels, slotProps } = usePieChart();

@@ -62,6 +62,7 @@ export function PieCompositionDemo() {
       >
         {(context) => <HatchedSlice {...context} />}
       </PieChart.Plot>
+      <PieChart.Empty />
       <PieChart.Table />
     </PieChart>
   );

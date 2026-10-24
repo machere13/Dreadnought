@@ -3,6 +3,7 @@ import {
   PieChartPlotAdapter,
   PieChartLegendAdapter,
   PieChartTableAdapter,
+  PieChartEmptyAdapter,
 } from './PieChartParts.tsx';
 import { useId, useMemo } from 'react';
 import { buildPieLayout } from '@dreadnought/core';
@@ -106,6 +107,7 @@ function PieChartRootAdapter({
         {children === undefined ? (
           <>
             <PieChartPlotAdapter />
+            <PieChartEmptyAdapter />
             <PieChartLegendAdapter />
             <PieChartTableAdapter />
           </>
@@ -121,4 +123,5 @@ export const PieChartAdapter = Object.assign(PieChartRootAdapter, {
   Plot: PieChartPlotAdapter,
   Legend: PieChartLegendAdapter,
   Table: PieChartTableAdapter,
+  Empty: PieChartEmptyAdapter,
 });

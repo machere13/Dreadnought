@@ -256,6 +256,9 @@ export function BarPlot({
     bar && category && tooltipContent
       ? tooltipContent({ bar, category, rows, formatValue, defaultContent })
       : defaultContent;
+  const hasContent = content !== null && content !== undefined && content !== false;
+  if (!hasContent && tooltipOpen) setTooltipOpen(false);
+  if (active !== undefined && !bar) setActive(undefined);
   const plotSlot = nativeProps(slotProps.plot, ['tabIndex', 'aria-hidden']);
   const scrollSlot = nativeProps(slotProps.scrollContainer);
   return (
@@ -295,9 +298,8 @@ export function BarPlot({
         <TooltipAdapter
           {...nativeProps(slotProps.tooltip, ['ref'])}
           content={content}
-          open={tooltipOpen && content !== null && content !== undefined && content !== false}
+          open={tooltipOpen && hasContent}
           onOpenChange={setTooltipOpen}
-          disabled={active !== undefined && !bar}
           onPointerLeave={(event) => {
             slotProps.tooltip?.onPointerLeave?.(event);
             if (!event.defaultPrevented) {

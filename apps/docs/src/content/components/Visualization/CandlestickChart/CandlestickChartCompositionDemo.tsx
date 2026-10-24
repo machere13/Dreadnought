@@ -85,6 +85,7 @@ export function CandlestickChartCompositionDemo() {
           </>
         )}
       </CandlestickChart.Plot>
+      <CandlestickChart.Empty />
       <Prices />
       <CandlestickChart.Pagination />
     </CandlestickChart>

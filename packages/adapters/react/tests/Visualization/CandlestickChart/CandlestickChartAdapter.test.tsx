@@ -58,6 +58,7 @@ it('composes shared page state with custom candles and tooltips without losing n
   rerender(
     <Chart data={[]} label="Композиция">
       <Chart.Plot />
+      <Chart.Empty />
       <Chart.Table />
       <Chart.Pagination />
     </Chart>,

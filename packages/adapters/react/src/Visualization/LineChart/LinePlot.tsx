@@ -176,14 +176,16 @@ export function LinePlot({
     point && tooltipContent
       ? tooltipContent({ point, rows, formatX, formatY, defaultContent })
       : defaultContent;
+  const hasContent = content !== null && content !== undefined && content !== false;
+  if (!hasContent && tooltipOpen) setTooltipOpen(false);
+  if (active !== undefined && !point) setActive(undefined);
   const plotSlot = nativeProps(slotProps.plot, ['tabIndex', 'aria-hidden']);
   return (
     <TooltipAdapter
       {...nativeProps(slotProps.tooltip, ['ref'])}
       content={content}
-      open={tooltipOpen && content !== null && content !== undefined && content !== false}
+      open={tooltipOpen && hasContent}
       onOpenChange={setTooltipOpen}
-      disabled={active !== undefined && !point}
       onPointerLeave={(event) => {
         slotProps.tooltip?.onPointerLeave?.(event);
         if (!event.defaultPrevented) {

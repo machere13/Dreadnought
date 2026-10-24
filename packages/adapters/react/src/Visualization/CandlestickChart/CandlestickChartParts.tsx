@@ -10,8 +10,13 @@ export function CandlestickChartPlotAdapter(props: CandlestickChartPlotProps) {
   if (!Number.isFinite(height) || height <= 0) {
     throw new RangeError('CandlestickChart plot height must be positive and finite');
   }
-  if (!context.candles.length) return <p>{context.labels.empty}</p>;
+  if (!context.candles.length) return null;
   return <CandlestickPlot key={plotKey} {...context} {...props} height={height} />;
+}
+
+export function CandlestickChartEmptyAdapter() {
+  const { candles, labels } = useCandlestickContext();
+  return candles.length ? null : <p>{labels.empty}</p>;
 }
 
 export function CandlestickChartTableAdapter() {

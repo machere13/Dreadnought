@@ -76,8 +76,12 @@ function PieChartRoot({ className, slotProps = {}, ...props }: PieChartProps) {
 }
 
 export const PieChart: typeof PieChartRoot &
-  Pick<typeof PieChartAdapter, 'Plot' | 'Legend' | 'Table'> = Object.assign(PieChartRoot, {
-  Plot: PieChartAdapter.Plot,
-  Legend: PieChartAdapter.Legend,
-  Table: PieChartAdapter.Table,
-});
+  Pick<typeof PieChartAdapter, 'Plot' | 'Legend' | 'Table' | 'Empty'> = Object.assign(
+  PieChartRoot,
+  {
+    Plot: PieChartAdapter.Plot,
+    Legend: PieChartAdapter.Legend,
+    Table: PieChartAdapter.Table,
+    Empty: PieChartAdapter.Empty,
+  },
+);

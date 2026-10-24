@@ -156,6 +156,7 @@ it('supports explicit empty composition and selectively missing custom tooltips'
   view.rerender(
     <Chart {...props} data={[]}>
       <Chart.Plot />
+      <Chart.Empty />
     </Chart>,
   );
   expect(screen.getByRole('status').textContent).toContain('Нет положительных');

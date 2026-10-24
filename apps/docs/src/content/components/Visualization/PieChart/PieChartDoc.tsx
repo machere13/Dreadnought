@@ -23,10 +23,10 @@ export const pieChartDoc: ComponentDoc = {
     'buildPieLayout вычисляет доли и углы секторов без React и SVG. Входной innerRadius — доля внешнего радиуса, выходной — абсолютный радиус.',
   notes: [
     <>
-      Без children выводятся Plot, Legend и Table. Свои children заменяют набор и порядок частей,
+      Без children выводятся Plot, Empty, Legend и Table. Свои children заменяют набор и порядок частей,
       null оставляет подпись. usePieChart возвращает data, source полного набора, layout видимых
       категорий, visible/toggle, labels и slotProps. Неизвестные ID игнорируются. Части и хук
-      работают внутри ближайшего PieChart[Adapter]. Пустое состояние входит в Plot; пагинации у
+      работают внутри ближайшего PieChart[Adapter]. Empty выводит пустое состояние отдельно от Plot; пагинации у
       PieChart нет.
     </>,
     <>
