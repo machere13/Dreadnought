@@ -86,6 +86,48 @@ it('virtualizes bars, reaches the last category by keyboard and paginates origin
   expect(container.querySelectorAll('[data-ui="bar-item"]').length).toBeLessThan(20);
 });
 
+it('keeps virtual navigation and sampled line bounds with custom drawing', () => {
+  const categories = Array.from({ length: 1000 }, (_, i) => ({ id: String(i), label: `C${i}` }));
+  const { container, unmount } = render(
+    <BarChartAdapter
+      label="Custom bars"
+      categories={categories}
+      series={[
+        { id: 'a', label: 'A', values: Object.fromEntries(categories.map((c) => [c.id, 1])) },
+      ]}
+      domain={[0, 2]}
+      width={500}
+      height={300}
+    >
+      <BarChartAdapter.Plot>{({ defaultContent }) => <g>{defaultContent}</g>}</BarChartAdapter.Plot>
+    </BarChartAdapter>,
+  );
+  act(() => screen.getByRole('img', { name: 'A, C0: 1' }).focus());
+  fireEvent.keyDown(document.activeElement!, { key: 'End' });
+  expect(document.activeElement?.getAttribute('aria-label')).toBe('A, C999: 1');
+  expect(container.querySelectorAll('[data-ui="bar-item"]').length).toBeLessThan(20);
+  unmount();
+  const data = Array.from({ length: 10000 }, (_, x) => ({ x, y: 0 }));
+  render(
+    <LineChartAdapter
+      label="Custom lines"
+      series={[{ id: 'a', label: 'A', data }]}
+      xDomain={[0, 9999]}
+      yDomain={[0, 2]}
+      width={500}
+      height={300}
+    >
+      <LineChartAdapter.Plot>
+        {({ defaultContent }) => <g>{defaultContent}</g>}
+      </LineChartAdapter.Plot>
+    </LineChartAdapter>,
+  );
+  expect(document.querySelectorAll('[data-ui="line-point"]').length).toBeLessThan(1800);
+  act(() => screen.getByRole('img', { name: 'A, 0: 0' }).focus());
+  fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+  expect(document.activeElement?.getAttribute('aria-label')).toBe('A, 1: 0');
+});
+
 it('bounds line marks, offers zoom and retains exact unsampled table values', () => {
   const data = Array.from({ length: 10000 }, (_, x) => ({ x, y: x === 4311 ? 100 : 0 }));
   const { container } = render(

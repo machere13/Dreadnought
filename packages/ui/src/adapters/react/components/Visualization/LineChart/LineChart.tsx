@@ -10,7 +10,7 @@ import { buttonPresentation } from '#presentation/Controls/Button/buttonPresenta
 
 export type LineChartProps = LineChartAdapterProps;
 const classes = (...values: (string | undefined)[]) => values.filter(Boolean).join(' ');
-export function LineChart({ className, slotProps = {}, ...props }: LineChartProps) {
+function LineChartRoot({ className, slotProps = {}, ...props }: LineChartProps) {
   return (
     <LineChartAdapter
       {...props}
@@ -114,3 +114,16 @@ export function LineChart({ className, slotProps = {}, ...props }: LineChartProp
     />
   );
 }
+
+export const LineChart: typeof LineChartRoot &
+  Pick<
+    typeof LineChartAdapter,
+    'Plot' | 'Legend' | 'Table' | 'Pagination' | 'RangeControls' | 'Empty'
+  > = Object.assign(LineChartRoot, {
+  Plot: LineChartAdapter.Plot,
+  Legend: LineChartAdapter.Legend,
+  Table: LineChartAdapter.Table,
+  Pagination: LineChartAdapter.Pagination,
+  RangeControls: LineChartAdapter.RangeControls,
+  Empty: LineChartAdapter.Empty,
+});

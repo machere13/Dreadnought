@@ -1,4 +1,5 @@
-import type { LineSeries, LinePoint } from '@dreadnought/core';
+import type { ReactNode } from 'react';
+import type { LineSeries, LinePoint, LineLayout } from '@dreadnought/core';
 import type { ChartNative as Native } from '../../shared/chartNativeProps.ts';
 import type { ChartPaginationSlots } from '../../shared/useChartPage.tsx';
 
@@ -30,11 +31,12 @@ export interface LineChartSlotProps extends ChartPaginationSlots {
   table?: Native<'table', 'aria-hidden' | 'hidden' | 'role'>;
 }
 type Size = { width: number; height: number } | { width?: undefined; height?: undefined };
-export type LineChartAdapterProps = Native<
-  'figure',
-  'role' | 'aria-labelledby' | 'aria-describedby'
+export type LineChartAdapterProps = Omit<
+  Native<'figure', 'role' | 'aria-labelledby' | 'aria-describedby'>,
+  'children'
 > &
   Size & {
+    children?: ReactNode;
     label: string;
     description?: string;
     series: readonly LineSeries[];
@@ -52,3 +54,51 @@ export type LineChartAdapterProps = Native<
     labels?: { legend?: string; dataTable?: string; empty?: string };
     slotProps?: LineChartSlotProps;
   };
+
+export interface LineChartPlotProps {
+  children?: (context: {
+    series: LineSeries;
+    points: readonly LinePoint[];
+    defaultContent: ReactNode;
+  }) => ReactNode;
+  tooltipContent?: (context: {
+    point: LinePoint;
+    rows: readonly { item: LineSeries; value: number }[];
+    formatX: (value: number) => string;
+    formatY: (value: number) => string;
+    defaultContent: ReactNode;
+  }) => ReactNode;
+}
+export interface LineChartLegendProps {
+  children?: (context: {
+    series: LineSeries;
+    visible: boolean;
+    defaultContent: ReactNode;
+  }) => ReactNode;
+}
+export interface LineChartContextValue
+  extends
+    Required<
+      Pick<
+        LineChartAdapterProps,
+        | 'label'
+        | 'series'
+        | 'xDomain'
+        | 'xLabel'
+        | 'yLabel'
+        | 'formatX'
+        | 'formatY'
+        | 'labels'
+        | 'slotProps'
+        | 'zoom'
+      >
+    >,
+    Pick<LineChartAdapterProps, 'width' | 'height'> {
+  source: LineLayout;
+  values: ReadonlyMap<string, ReadonlyMap<number, number | null>>;
+  xs: readonly number[];
+  visible: readonly string[];
+  toggle: (id: string) => void;
+  range: { start: number; end: number; change: (start: number, end: number) => void };
+  page: { rows: number[]; page: number; count: number; change: (page: number) => void };
+}

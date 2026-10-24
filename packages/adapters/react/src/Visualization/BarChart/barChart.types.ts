@@ -1,4 +1,5 @@
-import type { BarCategory, BarSeries, BarRect } from '@dreadnought/core';
+import type { ReactNode } from 'react';
+import type { BarCategory, BarSeries, BarRect, BarLayout } from '@dreadnought/core';
 import type { ChartNative as Native } from '../../shared/chartNativeProps.ts';
 import type { ChartPaginationSlots } from '../../shared/useChartPage.tsx';
 
@@ -26,11 +27,12 @@ export interface BarChartSlotProps extends ChartPaginationSlots {
   table?: Native<'table', 'aria-hidden' | 'hidden' | 'role'>;
 }
 type Size = { width: number; height: number } | { width?: undefined; height?: undefined };
-export type BarChartAdapterProps = Native<
-  'figure',
-  'role' | 'aria-labelledby' | 'aria-describedby'
+export type BarChartAdapterProps = Omit<
+  Native<'figure', 'role' | 'aria-labelledby' | 'aria-describedby'>,
+  'children'
 > &
   Size & {
+    children?: ReactNode;
     label: string;
     description?: string;
     categories: readonly BarCategory[];
@@ -50,3 +52,51 @@ export type BarChartAdapterProps = Native<
     labels?: { legend?: string; dataTable?: string; empty?: string };
     slotProps?: BarChartSlotProps;
   };
+
+export interface BarChartPlotProps {
+  children?: (context: {
+    bar: BarRect;
+    series: BarSeries;
+    category: BarCategory;
+    active: boolean;
+    defaultContent: ReactNode;
+  }) => ReactNode;
+  tooltipContent?: (context: {
+    bar: BarRect;
+    category: BarCategory;
+    rows: readonly { item: BarSeries; value: number }[];
+    formatValue: (value: number) => string;
+    defaultContent: ReactNode;
+  }) => ReactNode;
+}
+export interface BarChartLegendProps {
+  children?: (context: {
+    series: BarSeries;
+    visible: boolean;
+    defaultContent: ReactNode;
+  }) => ReactNode;
+}
+export interface BarChartContextValue
+  extends
+    Required<
+      Pick<
+        BarChartAdapterProps,
+        | 'label'
+        | 'categories'
+        | 'series'
+        | 'domain'
+        | 'categoryLabel'
+        | 'valueLabel'
+        | 'formatValue'
+        | 'formatTick'
+        | 'minCategorySize'
+        | 'labels'
+        | 'slotProps'
+      >
+    >,
+    Pick<BarChartAdapterProps, 'width' | 'height' | 'orientation' | 'gapRatio'> {
+  source: BarLayout;
+  visible: readonly string[];
+  toggle: (id: string) => void;
+  page: { rows: BarCategory[]; page: number; count: number; change: (page: number) => void };
+}

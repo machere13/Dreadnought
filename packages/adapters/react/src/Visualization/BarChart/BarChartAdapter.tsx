@@ -1,15 +1,19 @@
-import { useCallback, useId, useMemo, useRef } from 'react';
+import { BarChartContext } from './BarChartContext.tsx';
+import {
+  BarChartPlotAdapter,
+  BarChartLegendAdapter,
+  BarChartTableAdapter,
+  BarChartPaginationAdapter,
+  BarChartEmptyAdapter,
+} from './BarChartParts.tsx';
+import { useId, useMemo } from 'react';
 import { buildBarLayout } from '@dreadnought/core';
-import { useChartViewport } from '../../shared/useChartViewport.ts';
 import { useSeriesVisibility } from '../../shared/useSeriesVisibility.ts';
 import { chartNativeProps as nativeProps } from '../../shared/chartNativeProps.ts';
-import { attachRef } from '../../shared/attachRef.ts';
-import { TableAdapter } from '../../DataDisplay/Table/TableAdapter.tsx';
-import { BarPlot } from './BarPlot.tsx';
 import type { BarChartAdapterProps } from './barChart.types.ts';
-import { ChartPagination, useChartPage } from '../../shared/useChartPage.tsx';
+import { useChartPage } from '../../shared/useChartPage.tsx';
 
-export function BarChartAdapter({
+function BarChartRootAdapter({
   label,
   description,
   categories,
@@ -30,9 +34,10 @@ export function BarChartAdapter({
   minCategorySize = 64,
   labels = {},
   slotProps = {},
+  children,
   ...native
 }: BarChartAdapterProps) {
-  useMemo(
+  const source = useMemo(
     () =>
       buildBarLayout({ categories, series, domain, orientation, gapRatio, width: 1, height: 1 }),
     [categories, series, domain[0], domain[1], orientation, gapRatio],
@@ -73,26 +78,35 @@ export function BarChartAdapter({
     }
   }
   const id = useId();
-  const plotRef = useRef<HTMLDivElement>(null);
-  const consumerRef = slotProps.plotContainer?.ref;
-  const attachPlot = useCallback(
-    (element: HTMLDivElement | null) => {
-      plotRef.current = element;
-      if (element) {
-        return attachRef(element, consumerRef, () => {
-          plotRef.current = null;
-        });
-      }
-    },
-    [consumerRef],
-  );
-  const viewport = useChartViewport(width, height, plotRef);
   const { visible, toggle } = useSeriesVisibility(
     series,
     visibleSeries,
     defaultVisibleSeries,
     onVisibleSeriesChange,
   );
+  const context = {
+    label,
+    series,
+    width,
+    height,
+    visible,
+    toggle: (id: string) => {
+      if (series.some((item) => item.id === id)) toggle(id);
+    },
+    page,
+    labels,
+    slotProps,
+    source,
+    categories,
+    domain,
+    orientation,
+    gapRatio,
+    categoryLabel,
+    valueLabel,
+    formatValue,
+    formatTick,
+    minCategorySize,
+  };
   return (
     <figure
       {...nativeProps(native, ['role'])}
@@ -102,94 +116,27 @@ export function BarChartAdapter({
     >
       <figcaption id={`${id}-label`}>{label}</figcaption>
       {description !== undefined && <p id={`${id}-description`}>{description}</p>}
-      <div {...nativeProps(slotProps.plotContainer)} ref={attachPlot} data-ui="bar-plot-container">
-        {viewport && (
-          <BarPlot
-            {...viewport}
-            categories={categories}
-            series={series}
-            domain={domain}
-            orientation={orientation}
-            gapRatio={gapRatio}
-            visible={visible}
-            minCategorySize={minCategorySize}
-            slotProps={slotProps}
-            formatValue={formatValue}
-            formatTick={formatTick}
-            categoryLabel={categoryLabel}
-            valueLabel={valueLabel}
-          />
+      <BarChartContext.Provider value={context}>
+        {children === undefined ? (
+          <>
+            <BarChartPlotAdapter />
+            <BarChartLegendAdapter />
+            <BarChartTableAdapter />
+            <BarChartPaginationAdapter />
+            <BarChartEmptyAdapter />
+          </>
+        ) : (
+          children
         )}
-      </div>
-      <div
-        {...nativeProps(slotProps.legend)}
-        role="group"
-        aria-label={labels.legend ?? 'Серии'}
-        data-ui="bar-legend"
-      >
-        {series.map((item) => {
-          const slot = nativeProps(slotProps.legendButton?.(item), [
-            'aria-label',
-            'aria-labelledby',
-            'disabled',
-          ]);
-          return (
-            <button
-              {...slot}
-              key={item.id}
-              type="button"
-              aria-pressed={visible.includes(item.id)}
-              data-ui="bar-legend-button"
-              data-series-id={item.id}
-              onClick={(event) => {
-                slot.onClick?.(event);
-                if (!event.defaultPrevented) {
-                  toggle(item.id);
-                }
-              }}
-            >
-              {item.label || item.id}
-            </button>
-          );
-        })}
-      </div>
-      <TableAdapter {...nativeProps(slotProps.table, ['role', 'aria-hidden', 'hidden'])}>
-        <caption>
-          {label}: {labels.dataTable ?? 'Данные'}
-        </caption>
-        <TableAdapter.Head>
-          <TableAdapter.Row>
-            <TableAdapter.HeaderCell scope="col">{categoryLabel}</TableAdapter.HeaderCell>
-            {series.map((item) => (
-              <TableAdapter.HeaderCell key={item.id} scope="col">
-                {item.label || item.id}
-                {(item.label || item.id) !== valueLabel && ` (${valueLabel})`}
-              </TableAdapter.HeaderCell>
-            ))}
-          </TableAdapter.Row>
-        </TableAdapter.Head>
-        <TableAdapter.Body>
-          {page.rows.map((category) => (
-            <TableAdapter.Row key={category.id}>
-              <TableAdapter.HeaderCell scope="row">
-                {category.label || category.id}
-              </TableAdapter.HeaderCell>
-              {series.map((item) => {
-                const value = Object.hasOwn(item.values, category.id)
-                  ? item.values[category.id]
-                  : null;
-                return (
-                  <TableAdapter.Cell key={item.id}>
-                    {value == null ? '—' : formatValue(value)}
-                  </TableAdapter.Cell>
-                );
-              })}
-            </TableAdapter.Row>
-          ))}
-        </TableAdapter.Body>
-      </TableAdapter>
-      <ChartPagination {...page} slotProps={slotProps} />
-      {categories.length === 0 && <p>{labels.empty ?? 'Нет данных'}</p>}
+      </BarChartContext.Provider>
     </figure>
   );
 }
+
+export const BarChartAdapter = Object.assign(BarChartRootAdapter, {
+  Plot: BarChartPlotAdapter,
+  Legend: BarChartLegendAdapter,
+  Table: BarChartTableAdapter,
+  Pagination: BarChartPaginationAdapter,
+  Empty: BarChartEmptyAdapter,
+});

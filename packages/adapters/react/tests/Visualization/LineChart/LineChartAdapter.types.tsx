@@ -26,5 +26,16 @@ const props: LineChartAdapterProps = {
 <LineChartAdapter {...props} width={500} />;
 // @ts-expect-error geometry is owned by the adapter
 <LineChartAdapter {...props} slotProps={{ series: () => ({ points: '0,0' }) }} />;
-// @ts-expect-error children cannot replace semantic data
-<LineChartAdapter {...props}>content</LineChartAdapter>;
+<LineChartAdapter {...props}>
+  <LineChartAdapter.Legend>
+    {({ series, visible }) => `${series.label}: ${visible}`}
+  </LineChartAdapter.Legend>
+  <LineChartAdapter.Plot
+    tooltipContent={({ point, defaultContent }) => (point.value.y > 0 ? defaultContent : null)}
+  >
+    {({ points, defaultContent }) => (points.length ? defaultContent : null)}
+  </LineChartAdapter.Plot>
+  <LineChartAdapter.Table />
+  <LineChartAdapter.Pagination />
+  <LineChartAdapter.RangeControls />
+</LineChartAdapter>;

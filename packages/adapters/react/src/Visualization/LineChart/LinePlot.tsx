@@ -10,21 +10,22 @@ import {
 import { TooltipAdapter } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
 import { MarkAdapter } from '../../DataDisplay/Mark/MarkAdapter.tsx';
 import { chartNativeProps as nativeProps } from '../../shared/chartNativeProps.ts';
-import type { LineChartAdapterProps } from './lineChart.types.ts';
+import type { LineChartAdapterProps, LineChartPlotProps } from './lineChart.types.ts';
 import { attachRef } from '../../shared/attachRef.ts';
 
-type Props = Pick<LineChartAdapterProps, 'series' | 'xDomain'> & {
-  source: LineLayout;
-  values: ReadonlyMap<string, ReadonlyMap<number, number | null>>;
-  width: number;
-  height: number;
-  visible: readonly string[];
-  slotProps: NonNullable<LineChartAdapterProps['slotProps']>;
-  formatX: (value: number) => string;
-  formatY: (value: number) => string;
-  xLabel: string;
-  yLabel: string;
-};
+type Props = Pick<LineChartAdapterProps, 'series' | 'xDomain'> &
+  LineChartPlotProps & {
+    source: LineLayout;
+    values: ReadonlyMap<string, ReadonlyMap<number, number | null>>;
+    width: number;
+    height: number;
+    visible: readonly string[];
+    slotProps: NonNullable<LineChartAdapterProps['slotProps']>;
+    formatX: (value: number) => string;
+    formatY: (value: number) => string;
+    xLabel: string;
+    yLabel: string;
+  };
 export function LinePlot({
   width,
   height,
@@ -38,6 +39,8 @@ export function LinePlot({
   formatY,
   xLabel,
   yLabel,
+  children,
+  tooltipContent,
 }: Props) {
   const left = 48;
   const top = 16;
@@ -84,6 +87,7 @@ export function LinePlot({
     [source, visible, xDomain[0], xDomain[1]],
   );
   const [active, setActive] = useState<string>();
+  const [tooltipOpen, setTooltipOpen] = useState(false);
   const clipId = useId();
   const pendingFocus = useRef<string | undefined>(undefined);
   const hovered = useRef<string | undefined>(undefined);
@@ -146,7 +150,7 @@ export function LinePlot({
           return value == null ? [] : [{ item, value }];
         })
     : [];
-  const content = point ? (
+  const defaultContent = point ? (
     <table
       {...nativeProps(slotProps.tooltipTable, ['role', 'hidden', 'aria-hidden'])}
       data-ui="line-tooltip-table"
@@ -168,11 +172,17 @@ export function LinePlot({
       </tbody>
     </table>
   ) : null;
+  const content =
+    point && tooltipContent
+      ? tooltipContent({ point, rows, formatX, formatY, defaultContent })
+      : defaultContent;
   const plotSlot = nativeProps(slotProps.plot, ['tabIndex', 'aria-hidden']);
   return (
     <TooltipAdapter
       {...nativeProps(slotProps.tooltip, ['ref'])}
       content={content}
+      open={tooltipOpen && content !== null && content !== undefined && content !== false}
+      onOpenChange={setTooltipOpen}
       disabled={active !== undefined && !point}
       onPointerLeave={(event) => {
         slotProps.tooltip?.onPointerLeave?.(event);
@@ -319,15 +329,25 @@ export function LinePlot({
                 {layout.series
                   .filter((item) => visible.includes(item.id))
                   .flatMap((item) =>
-                    item.segments.map((segment, index) => (
-                      <polyline
-                        {...nativeProps(slotProps.series?.(seriesById.get(item.id)!))}
-                        key={`${item.id}/${index}`}
-                        points={segment.map((point) => `${point.x},${point.y}`).join(' ')}
-                        data-ui="line-series"
-                        data-series-id={item.id}
-                      />
-                    )),
+                    item.segments.map((segment, index) => {
+                      const series = seriesById.get(item.id)!;
+                      const defaultContent = (
+                        <polyline
+                          {...nativeProps(slotProps.series?.(series))}
+                          key={`${item.id}/${index}`}
+                          points={segment.map((point) => `${point.x},${point.y}`).join(' ')}
+                          data-ui="line-series"
+                          data-series-id={item.id}
+                        />
+                      );
+                      return children ? (
+                        <g key={`${item.id}/${index}`} aria-hidden="true">
+                          {children({ series, points: segment, defaultContent })}
+                        </g>
+                      ) : (
+                        defaultContent
+                      );
+                    }),
                   )}
               </g>
               {marks.map((point) => {

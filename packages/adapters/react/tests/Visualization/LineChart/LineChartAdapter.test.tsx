@@ -35,12 +35,135 @@ const props = {
     },
   ],
 };
+it('composes custom segments, tooltips and controls with the existing shared state', () => {
+  const Chart = adapters.LineChartAdapter;
+  function Controls() {
+    const { visible, toggle, range, page } = adapters.useLineChart();
+    return (
+      <>
+        <button onClick={() => toggle('a')}>Visible {visible.join(',')}</button>
+        <button onClick={() => range.change(1, 2)}>Zoom custom</button>
+        <button onClick={() => page.change(2)}>Page custom</button>
+      </>
+    );
+  }
+  const { container } = render(
+    <Chart {...props} pageSize={1}>
+      <Controls />
+      <Chart.Legend>{({ series }) => <span>Series {series.label}</span>}</Chart.Legend>
+      <Chart.Plot
+        tooltipContent={({ defaultContent }) => <div>Custom tooltip{defaultContent}</div>}
+      >
+        {({ defaultContent }) => <g data-testid="custom-segment">{defaultContent}</g>}
+      </Chart.Plot>
+      <Chart.Table />
+      <Chart.Pagination />
+      <Chart.RangeControls />
+      <Chart.Empty />
+    </Chart>,
+  );
+  expect(container.querySelector('[data-testid="custom-segment"]')).toBeTruthy();
+  act(() => screen.getByRole('img', { name: 'A, 0: 0' }).focus());
+  fireEvent.keyDown(document.activeElement!, { key: 'End' });
+  expect(document.activeElement?.getAttribute('aria-label')).toBe('B, 10: 100');
+  expect(screen.getByRole('tooltip').textContent).toContain('Custom tooltip');
+  fireEvent.click(screen.getByRole('button', { name: 'Visible a,b' }));
+  expect(screen.queryByRole('img', { name: 'A, 0: 0' })).toBeNull();
+  expect(screen.getByRole('button', { name: 'Series A' }).getAttribute('aria-pressed')).toBe(
+    'false',
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Zoom custom' }));
+  expect(screen.queryByRole('img', { name: 'B, 0: 40' })).toBeNull();
+  expect(screen.getByRole('slider', { name: 'Начало диапазона' }).getAttribute('value')).toBe('1');
+  fireEvent.click(screen.getByRole('button', { name: 'Page custom' }));
+  expect(screen.getByRole('spinbutton').getAttribute('value')).toBe('2');
+  expect(screen.getByRole('table', { name: 'Измерения: Данные' }).textContent).toContain('5');
+});
+
+it('remounts an adaptive composed plot and supports no tooltip or no default parts', () => {
+  const Chart = adapters.LineChartAdapter;
+  let callback: ResizeObserverCallback;
+  let target: Element;
+  const disconnect = vi.fn();
+  vi.stubGlobal(
+    'ResizeObserver',
+    class {
+      constructor(next: ResizeObserverCallback) {
+        callback = next;
+      }
+      observe(element: Element) {
+        target = element;
+      }
+      disconnect = disconnect;
+    },
+  );
+  const { width, height, ...adaptive } = props;
+  const { rerender } = render(<Chart {...adaptive}>{null}</Chart>);
+  expect(screen.queryByRole('table')).toBeNull();
+  rerender(
+    <Chart {...adaptive}>
+      <Chart.Plot tooltipContent={() => null} />
+    </Chart>,
+  );
+  act(() =>
+    callback!(
+      [{ target: target!, contentRect: { width: 500 } }] as ResizeObserverEntry[],
+      {} as ResizeObserver,
+    ),
+  );
+  act(() => screen.getByRole('img', { name: 'A, 0: 0' }).focus());
+  fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+  expect(document.activeElement?.getAttribute('aria-label')).toBe('A, 10: 80');
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  rerender(<Chart {...adaptive}>{null}</Chart>);
+  expect(disconnect).toHaveBeenCalled();
+  expect(() => render(<Chart.Legend />)).toThrow('LineChart');
+});
 it('renders accessible points, separate gap segments and original data', () => {
   expect(adapters).toHaveProperty('LineChartAdapter');
   const { container } = render(<adapters.LineChartAdapter {...props} />);
   expect(container.querySelectorAll('[data-ui="line-series"]')).toHaveLength(3);
   expect(screen.getByRole('img', { name: 'A, 0: 0' })).toBeTruthy();
   expect(screen.getByRole('table', { name: 'Измерения: Данные' }).textContent).toContain('—');
+});
+
+it('opens a custom tooltip after a point without content and preserves controlled visibility', () => {
+  const Chart = adapters.LineChartAdapter;
+  const changed = vi.fn();
+  function Controls() {
+    const { toggle, range, page } = adapters.useLineChart();
+    return (
+      <button
+        onClick={() => {
+          toggle('missing');
+          range.change(-1, 99);
+          page.change(999);
+          toggle('a');
+        }}
+      >
+        Request
+      </button>
+    );
+  }
+  render(
+    <Chart {...props} visibleSeries={['a', 'b']} onVisibleSeriesChange={changed}>
+      <Controls />
+      <Chart.Plot
+        tooltipContent={({ point, defaultContent }) =>
+          point.value.x === 0 ? null : defaultContent
+        }
+      />
+      <Chart.RangeControls />
+    </Chart>,
+  );
+  act(() => screen.getByRole('img', { name: 'A, 0: 0' }).focus());
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+  expect(screen.getByRole('tooltip').textContent).toContain('80');
+  fireEvent.click(screen.getByRole('button', { name: 'Request' }));
+  expect(changed).toHaveBeenCalledExactlyOnceWith(['b']);
+  expect(screen.getByRole('img', { name: 'A, 0: 0' })).toBeTruthy();
+  expect(screen.getByRole('slider', { name: 'Начало диапазона' }).getAttribute('value')).toBe('0');
 });
 it('shows aligned tooltip rows and closes them when the active series disappears', () => {
   const { rerender } = render(<adapters.LineChartAdapter {...props} />);

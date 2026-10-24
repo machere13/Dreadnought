@@ -23,5 +23,21 @@ const props: BarChartAdapterProps = {
 <BarChartAdapter {...props} width={500} />;
 // @ts-expect-error geometry cannot be replaced through slots
 <BarChartAdapter {...props} slotProps={{ bar: () => ({ children: 'replace' }) }} />;
-// @ts-expect-error children cannot replace semantic data
-<BarChartAdapter {...props}>content</BarChartAdapter>;
+<BarChartAdapter {...props}>
+  <BarChartAdapter.Legend>
+    {({ series, visible }) => `${series.label}: ${visible}`}
+  </BarChartAdapter.Legend>
+  <BarChartAdapter.Plot
+    tooltipContent={({ bar, defaultContent }) => (bar.value > 0 ? defaultContent : null)}
+  >
+    {({ bar, defaultContent }) =>
+      bar.value === 0 ? (
+        defaultContent
+      ) : (
+        <rect x={bar.x} y={bar.y} width={bar.width} height={bar.height} />
+      )
+    }
+  </BarChartAdapter.Plot>
+  <BarChartAdapter.Table />
+  <BarChartAdapter.Pagination />
+</BarChartAdapter>;

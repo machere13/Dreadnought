@@ -6,15 +6,15 @@
   "description": "Группированные вертикальные или горизонтальные столбцы с нулевой осью, Tooltip, легендой и полной таблицей.",
   "docsUrl": "/components/barchart/#barchart-api",
   "states": [],
-  "composesWith": [
-    "domain:build-bar-layout"
-  ],
+  "composesWith": ["domain:build-bar-layout"],
   "constraints": [
     "Явный конечный domain [min,max], min < max, включает ноль. Уникальные ID категорий и серий. values — собственные конечные числа внутри domain или null; неизвестные категории запрещены. null и отсутствующее значение не создают столбец; ноль оставляет отметку на оси.",
     "Серии внутри категории располагаются рядом, не суммируются. orientation vertical или horizontal; gapRatio в [0,1). При скрытии серии свободное место перераспределяется; полный набор проверяется и сохраняется в таблице.",
     "Tab выбирает столбцы, Left/Right для vertical, Up/Down для horizontal, Home/End перемещают фокус без зацикливания; Escape закрывает Tooltip. Подсказка показывает видимые значения той же категории.",
     "width/height задаются вместе положительными конечными числами. Без размеров ResizeObserver измеряет контейнер, высота 80% ширины. При SSR или отсутствии observer доступна постраничная таблица всех исходных значений. pageSize — положительное целое, 50 по умолчанию.",
-    "Категории прокручиваются по своей оси при нехватке места; минимальный размер группы равен minCategorySize (по умолчанию 64) × число видимых серий. Отрисовывается только видимый диапазон плюс соседние категории, числовая ось закреплена. Клавиатура прокручивает до выбранного столбца даже внутри группы шире экрана. Данные передавайте неизменяемыми: валидация кешируется по ссылкам categories/series. Стоимость зависит от видимых категорий и числа серий, без гарантии неограниченного объёма. Нет stacked, zoom, brush или автоматической агрегации."
+    "Категории прокручиваются по своей оси при нехватке места; минимальный размер группы равен minCategorySize (по умолчанию 64) × число видимых серий. Отрисовывается только видимый диапазон плюс соседние категории, числовая ось закреплена. Клавиатура прокручивает до выбранного столбца даже внутри группы шире экрана. Данные передавайте неизменяемыми: валидация кешируется по ссылкам categories/series. Стоимость зависит от видимых категорий и числа серий, без гарантии неограниченного объёма. Нет stacked, zoom, brush или автоматической агрегации.",
+    "Композиция: Plot, Legend, Table, Pagination, Empty и useBarChart используют ближайший корень; свои children заменяют набор и порядок частей, null оставляет подпись. toggle игнорирует неизвестный ID, page.change — некорректную страницу.",
+    "Plot.children и tooltipContent меняют только рисунок и содержимое подсказки, Legend.children — содержимое готовой кнопки. defaultContent позволяет дополнить стандартный рендер. Не вкладывайте интерактивные элементы в рисунок или кнопку; при замене Table сохраняйте доступное представление исходных значений. Пагинация листает только таблицу; прокрутка и виртуализация графика сохраняются отдельно."
   ],
   "bindings": [
     {
@@ -43,21 +43,87 @@
         "pageSize": "Количество строк исходной таблицы на странице, положительное целое.",
         "minCategorySize": "Минимальное пространство на видимую серию внутри группы в пикселях, включая зазоры; положительное конечное число.",
         "labels": "Подписи легенды, таблицы и пустого состояния.",
-        "slotProps": "Свойства, refs и обработчики частей без подмены геометрии и обязательной семантики."
+        "slotProps": "Свойства, refs и обработчики частей без подмены геометрии и обязательной семантики.",
+        "children": "Своя композиция Plot, Legend, Table, Pagination, Empty и компонентов с useBarChart. undefined — готовая сборка; null — только подпись. Части используют общий контекст ближайшего корня."
       },
       "defaults": {
         "orientation": "vertical",
         "gapRatio": 0.2,
         "categoryLabel": "Категория",
         "valueLabel": "Значение",
-        "pageSize": 50, "minCategorySize": 64
+        "pageSize": 50,
+        "minCategorySize": 64
       },
       "examples": [
         {
           "id": "basic",
           "code": "import { BarChartAdapter } from '@dreadnought/react/unstyled';\nconst categories = [{id:'one',label:'One'},{id:'two',label:'Two'}];\nconst series = [{id:'a',label:'A',values:{one:20,two:-10}}];\nexport function Example() { return <BarChartAdapter label=\"Баланс\" categories={categories} series={series} domain={[-20,40]} width={500} height={300} />; }"
+        },
+        {
+          "id": "compound",
+          "code": "import { BarChartAdapter, useBarChart } from '@dreadnought/react/unstyled';\nconst categories=[{id:'one',label:'One'}]; const series=[{id:'a',label:'A',values:{one:10}}];\nfunction Summary() { const {visible}= useBarChart(); return <p>Видимых серий: {visible.length}</p>; }\nexport function Example() { return <BarChartAdapter label=\"Данные\" categories={categories} series={series} domain={[0,20]}><Summary /><BarChartAdapter.Legend>{({defaultContent}) => <span>{defaultContent}</span>}</BarChartAdapter.Legend><BarChartAdapter.Plot tooltipContent={({defaultContent}) => <div>{defaultContent}</div>}>{({defaultContent}) => defaultContent}</BarChartAdapter.Plot><BarChartAdapter.Table /><BarChartAdapter.Pagination /><BarChartAdapter.Empty /></BarChartAdapter>; }"
         }
       ]
+    },
+    {
+      "id": "react-adapter-plot",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "BarChartAdapter",
+      "propertyPath": ["Plot"],
+      "description": "Область графика с готовым поведением; размеры и slotProps берутся из корня.",
+      "propertyDescriptions": {
+        "children": "SVG-содержимое столбца: ({bar,series,category,active,defaultContent}) => ReactNode. Фокус, события, прокрутка и доступное имя остаются на внешнем g. Сохраняйте видимость нуля и фокуса.",
+        "tooltipContent": "Содержимое Tooltip: ({bar,category,rows,formatValue,defaultContent}) => ReactNode; rows содержит {item,value} видимых серий этой категории. null/undefined/false скрывают подсказку."
+      }
+    },
+    {
+      "id": "react-adapter-legend",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "BarChartAdapter",
+      "propertyPath": ["Legend"],
+      "description": "Легенда с готовыми кнопками, контролируемой или внутренней видимостью серий.",
+      "propertyDescriptions": {
+        "children": "Содержимое готовой кнопки: ({series,visible,defaultContent}) => ReactNode. События и aria-pressed сохраняются; без вложенных интерактивных элементов."
+      }
+    },
+    {
+      "id": "react-adapter-table",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "BarChartAdapter",
+      "propertyPath": ["Table"],
+      "description": "Доступная страница исходных данных, включая скрытые серии."
+    },
+    {
+      "id": "react-adapter-pagination",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "BarChartAdapter",
+      "propertyPath": ["Pagination"],
+      "description": "Листает только таблицу; график сохраняет отдельный диапазон или прокрутку. При одной странице скрыта."
+    },
+    {
+      "id": "react-adapter-empty",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "BarChartAdapter",
+      "propertyPath": ["Empty"],
+      "description": "Пустое состояние, когда исходных X или категорий нет."
+    },
+    {
+      "id": "react-adapter-context",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "useBarChart",
+      "description": "Контекст ближайшего BarChart[Adapter]: source полного ряда, categories, series, visible/toggle, page:{rows,page,count,change}, параметры шкалы, подписи, formatValue/formatTick, slotProps. Вне корня — ошибка."
     }
   ]
 }

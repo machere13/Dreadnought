@@ -76,6 +76,10 @@
     stroke: var(--dreadnought-bar-chart-focus-color);
     stroke-width: var(--dreadnought-bar-chart-focus-width);
   }
+  .bar[data-custom='true']:is(:focus-visible, [data-active='true']) {
+    outline: var(--dreadnought-bar-chart-focus-width) solid var(--dreadnought-bar-chart-focus-color);
+    outline-offset: var(--dreadnought-bar-chart-focus-offset);
+  }
   .series1 {
     --bar-series-color: var(--dreadnought-bar-chart-series-1-color);
     --bar-series-dash: var(--dreadnought-bar-chart-dash-solid);
@@ -198,6 +202,9 @@
     }
     .bar:is(:hover, :focus-visible, [data-active='true']) :is(rect, line) {
       stroke: Highlight;
+    }
+    .bar[data-custom='true']:is(:focus-visible, [data-active='true']) {
+      outline-color: Highlight;
     }
     .grid {
       stroke: GrayText;

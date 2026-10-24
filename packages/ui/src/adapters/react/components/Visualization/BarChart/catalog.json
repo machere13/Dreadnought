@@ -15,8 +15,75 @@
         {
           "id": "basic",
           "code": "import { BarChart } from '@dreadnought/ui/react';\nconst categories = [{id:'one',label:'One'},{id:'two',label:'Two'}];\nconst series = [{id:'a',label:'A',values:{one:20,two:-10}}];\nexport function Example() { return <BarChart label=\"Баланс\" categories={categories} series={series} domain={[-20,40]} width={500} height={300} />; }"
+        },
+        {
+          "id": "compound",
+          "code": "import { BarChart, useBarChart } from '@dreadnought/ui/react';\nconst categories=[{id:'one',label:'One'}]; const series=[{id:'a',label:'A',values:{one:10}}];\nfunction Summary() { const {visible}= useBarChart(); return <p>Видимых серий: {visible.length}</p>; }\nexport function Example() { return <BarChart label=\"Данные\" categories={categories} series={series} domain={[0,20]}><Summary /><BarChart.Legend>{({defaultContent}) => <span>{defaultContent}</span>}</BarChart.Legend><BarChart.Plot tooltipContent={({defaultContent}) => <div>{defaultContent}</div>}>{({defaultContent}) => defaultContent}</BarChart.Plot><BarChart.Table /><BarChart.Pagination /><BarChart.Empty /></BarChart>; }"
         }
-      ]
+      ],
+      "propertyDescriptions": {
+        "children": "Своя композиция Plot, Legend, Table, Pagination, Empty и компонентов с useBarChart. undefined — готовая сборка; null — только подпись. Части используют общий контекст ближайшего корня."
+      }
+    },
+    {
+      "id": "react-ui-plot",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "BarChart",
+      "propertyPath": ["Plot"],
+      "description": "Область графика с готовым поведением; размеры и slotProps берутся из корня.",
+      "propertyDescriptions": {
+        "children": "SVG-содержимое столбца: ({bar,series,category,active,defaultContent}) => ReactNode. Фокус, события, прокрутка и доступное имя остаются на внешнем g. Сохраняйте видимость нуля и фокуса.",
+        "tooltipContent": "Содержимое Tooltip: ({bar,category,rows,formatValue,defaultContent}) => ReactNode; rows содержит {item,value} видимых серий этой категории. null/undefined/false скрывают подсказку."
+      }
+    },
+    {
+      "id": "react-ui-legend",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "BarChart",
+      "propertyPath": ["Legend"],
+      "description": "Легенда с готовыми кнопками, контролируемой или внутренней видимостью серий.",
+      "propertyDescriptions": {
+        "children": "Содержимое готовой кнопки: ({series,visible,defaultContent}) => ReactNode. События и aria-pressed сохраняются; без вложенных интерактивных элементов."
+      }
+    },
+    {
+      "id": "react-ui-table",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "BarChart",
+      "propertyPath": ["Table"],
+      "description": "Доступная страница исходных данных, включая скрытые серии."
+    },
+    {
+      "id": "react-ui-pagination",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "BarChart",
+      "propertyPath": ["Pagination"],
+      "description": "Листает только таблицу; график сохраняет отдельный диапазон или прокрутку. При одной странице скрыта."
+    },
+    {
+      "id": "react-ui-empty",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "BarChart",
+      "propertyPath": ["Empty"],
+      "description": "Пустое состояние, когда исходных X или категорий нет."
+    },
+    {
+      "id": "react-ui-context",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "useBarChart",
+      "description": "Контекст ближайшего BarChart[Adapter]: source полного ряда, categories, series, visible/toggle, page:{rows,page,count,change}, параметры шкалы, подписи, formatValue/formatTick, slotProps. Вне корня — ошибка."
     }
   ]
 }

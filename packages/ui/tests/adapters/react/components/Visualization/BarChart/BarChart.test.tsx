@@ -18,6 +18,33 @@ const props = {
   categories: [{ id: 'one', label: 'One' }],
   series: [{ id: 'a', label: 'A', values: { one: 10 } }],
 };
+it('themes composed parts and exposes their shared context', () => {
+  function Summary() {
+    const { visible } = ui.useBarChart();
+    return <p>Visible {visible.length}</p>;
+  }
+  const { container } = render(
+    <ui.BarChart {...props}>
+      <Summary />
+      <ui.BarChart.Table />
+      <ui.BarChart.Plot>
+        {({ bar }) => (
+          <path d={`M${bar.x} ${bar.y} h${bar.width} v${bar.height} h${-bar.width} Z`} />
+        )}
+      </ui.BarChart.Plot>
+      <ui.BarChart.Legend />
+      <ui.BarChart.Pagination />
+      <ui.BarChart.Empty />
+    </ui.BarChart>,
+  );
+  expect(screen.getByText('Visible 1')).toBeTruthy();
+  expect(container.querySelector('[data-ui="bar-item"]')?.getAttribute('class')).toBeTruthy();
+  expect(container.querySelector('table')?.className).toBeTruthy();
+  expect(container.querySelector('[data-ui="bar-item"]')?.getAttribute('data-custom')).toBe('true');
+  fireEvent.click(screen.getByRole('button', { name: 'A' }));
+  expect(screen.getByText('Visible 0')).toBeTruthy();
+  expect(container.querySelector('[data-ui="bar-item"]')).toBeNull();
+});
 it('styles bars, preserves consumer slots and leaves the adapter unstyled', () => {
   expect(ui).toHaveProperty('BarChart');
   const { container } = render(

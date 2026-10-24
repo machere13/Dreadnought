@@ -1,29 +1,139 @@
 {
-  "id": "component:line-chart", "kind": "component", "name": "LineChart", "family": "Visualization",
+  "id": "component:line-chart",
+  "kind": "component",
+  "name": "LineChart",
+  "family": "Visualization",
   "description": "Линейный SVG-график с явными числовыми шкалами, разрывами данных, легендой и доступной таблицей.",
-  "docsUrl": "/components/linechart/#linechart-api", "states": [],
-  "composesWith": ["domain:build-line-layout", "domain:closest-line-point", "domain:sample-line-layout", "domain:line-point-at-x"],
+  "docsUrl": "/components/linechart/#linechart-api",
+  "states": [],
+  "composesWith": [
+    "domain:build-line-layout",
+    "domain:closest-line-point",
+    "domain:sample-line-layout",
+    "domain:line-point-at-x"
+  ],
   "constraints": [
     "Явные конечные xDomain/yDomain с min < max; конечные точки внутри диапазонов. Уникальные ID серий и уникальный X внутри серии. null по Y разрывает линию, без подстановки нуля. Точки сортируются по X без изменения входа.",
     "Наведение двоичным поиском выбирает ближайший исходный X в каждой видимой серии, затем ближайшую из этих точек. Tab выбирает нарисованные маркеры; Left/Right и Home/End проходят все исходные точки видимого диапазона без зацикливания; Escape закрывает Tooltip. Подсказка показывает значения видимых серий с точно совпадающим X, без интерполяции отсутствующих значений.",
     "width/height задаются вместе положительными конечными числами. Без размеров ResizeObserver измеряет контейнер, высота равна 80% ширины. При SSR и отсутствии observer доступна полная таблица.",
     "Controlled visibleSeries ждёт нового пропса; callback запрашивает изменение. Скрытые серии остаются в постраничной таблице и учитываются при валидации. pageSize — положительное целое, 50 по умолчанию. Данные передавайте неизменяемыми: подготовка кешируется по ссылке series и значениям domains.",
-    "Геометрия сокращается по ширине области: до четырёх исходных точек на пиксель на серию с сохранением крайних значений и разделения null-сегментов. zoom=true включает два ползунка диапазона X. Исходные значения остаются в Tooltip и таблице. Подготовка и изменение диапазона обходят данные, наведение выполняет O(S log N) поиск. Число серий всё ещё влияет на стоимость, неограниченный объём не гарантируется. Brush, time-scale и smoothing не включены."
+    "Геометрия сокращается по ширине области: до четырёх исходных точек на пиксель на серию с сохранением крайних значений и разделения null-сегментов. zoom=true включает два ползунка диапазона X. Исходные значения остаются в Tooltip и таблице. Подготовка и изменение диапазона обходят данные, наведение выполняет O(S log N) поиск. Число серий всё ещё влияет на стоимость, неограниченный объём не гарантируется. Brush, time-scale и smoothing не включены.",
+    "Композиция: Plot, Legend, Table, Pagination, Empty, RangeControls и useLineChart используют ближайший корень; свои children заменяют набор и порядок частей, null оставляет подпись. toggle игнорирует неизвестный ID, page.change — некорректную страницу. range.change(start,end) принимает целые индексы X, 0≤start<end<xs.length; при zoom=false и некорректных индексах игнорируется.",
+    "Plot.children и tooltipContent меняют только рисунок и содержимое подсказки, Legend.children — содержимое готовой кнопки. defaultContent позволяет дополнить стандартный рендер. Не вкладывайте интерактивные элементы в рисунок или кнопку; при замене Table сохраняйте доступное представление исходных значений. Пагинация листает только таблицу; диапазон X и прореживание графика сохраняются отдельно."
   ],
-  "bindings": [{
-    "id": "react-adapter", "layer": 2, "framework": "react", "importPath": "@dreadnought/react/unstyled", "exportName": "LineChartAdapter",
-    "propertyDescriptions": {
-      "series": "Серии {id,label,data:[{x,y}]} с числовым X и числовым или null Y.",
-      "xDomain": "Явный диапазон X [min,max].", "yDomain": "Явный диапазон Y [min,max].",
-      "label": "Обязательное доступное название графика.", "description": "Пояснение графика.",
-      "xLabel": "Название оси X и первой колонки таблицы.", "yLabel": "Название оси Y.",
-      "formatX": "Форматирование X для оси, таблицы, подсказки и доступного имени точки.", "formatY": "Форматирование Y без изменения исходных данных.",
-      "width": "Фиксированная ширина; вместе с height.", "height": "Фиксированная высота; вместе с width.",
-      "visibleSeries": "Управляемые видимые ID.", "defaultVisibleSeries": "Начальные видимые ID.", "onVisibleSeriesChange": "Запрос новых видимых ID.",
-      "pageSize": "Число строк полной исходной таблицы на странице, положительное целое.", "zoom": "Показывает два ползунка для выбора диапазона X.",
-      "labels": "Подписи легенды, таблицы и пустого состояния.", "slotProps": "Нативные свойства, refs и обработчики частей без подмены геометрии и обязательной семантики."
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "LineChartAdapter",
+      "propertyDescriptions": {
+        "series": "Серии {id,label,data:[{x,y}]} с числовым X и числовым или null Y.",
+        "xDomain": "Явный диапазон X [min,max].",
+        "yDomain": "Явный диапазон Y [min,max].",
+        "label": "Обязательное доступное название графика.",
+        "description": "Пояснение графика.",
+        "xLabel": "Название оси X и первой колонки таблицы.",
+        "yLabel": "Название оси Y.",
+        "formatX": "Форматирование X для оси, таблицы, подсказки и доступного имени точки.",
+        "formatY": "Форматирование Y без изменения исходных данных.",
+        "width": "Фиксированная ширина; вместе с height.",
+        "height": "Фиксированная высота; вместе с width.",
+        "visibleSeries": "Управляемые видимые ID.",
+        "defaultVisibleSeries": "Начальные видимые ID.",
+        "onVisibleSeriesChange": "Запрос новых видимых ID.",
+        "pageSize": "Число строк полной исходной таблицы на странице, положительное целое.",
+        "zoom": "Показывает два ползунка для выбора диапазона X.",
+        "labels": "Подписи легенды, таблицы и пустого состояния.",
+        "slotProps": "Нативные свойства, refs и обработчики частей без подмены геометрии и обязательной семантики.",
+        "children": "Своя композиция Plot, Legend, Table, Pagination, Empty, RangeControls и компонентов с useLineChart. undefined — готовая сборка; null — только подпись. Части используют общий контекст ближайшего корня."
+      },
+      "defaults": {
+        "xLabel": "X",
+        "yLabel": "Y",
+        "pageSize": 50,
+        "zoom": true
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { LineChartAdapter } from '@dreadnought/react/unstyled';\nconst series = [{id:'a',label:'A',data:[{x:0,y:20},{x:5,y:60},{x:10,y:40}]}];\nexport function Example() { return <LineChartAdapter label=\"Измерения\" series={series} xDomain={[0,10]} yDomain={[0,100]} width={500} height={300} />; }"
+        },
+        {
+          "id": "compound",
+          "code": "import { LineChartAdapter, useLineChart } from '@dreadnought/react/unstyled';\nconst series=[{id:'a',label:'A',data:[{x:0,y:20},{x:1,y:40}]}];\nfunction Summary() { const {visible}= useLineChart(); return <p>Видимых серий: {visible.length}</p>; }\nexport function Example() { return <LineChartAdapter label=\"Данные\" series={series} xDomain={[0,1]} yDomain={[0,50]}><Summary /><LineChartAdapter.Legend>{({defaultContent}) => <span>{defaultContent}</span>}</LineChartAdapter.Legend><LineChartAdapter.Plot tooltipContent={({defaultContent}) => <div>{defaultContent}</div>}>{({defaultContent}) => defaultContent}</LineChartAdapter.Plot><LineChartAdapter.RangeControls /><LineChartAdapter.Table /><LineChartAdapter.Pagination /><LineChartAdapter.Empty /></LineChartAdapter>; }"
+        }
+      ]
     },
-    "defaults": { "xLabel": "X", "yLabel": "Y", "pageSize": 50, "zoom": true },
-    "examples": [{ "id": "basic", "code": "import { LineChartAdapter } from '@dreadnought/react/unstyled';\nconst series = [{id:'a',label:'A',data:[{x:0,y:20},{x:5,y:60},{x:10,y:40}]}];\nexport function Example() { return <LineChartAdapter label=\"Измерения\" series={series} xDomain={[0,10]} yDomain={[0,100]} width={500} height={300} />; }" }]
-  }]
+    {
+      "id": "react-adapter-plot",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "LineChartAdapter",
+      "propertyPath": ["Plot"],
+      "description": "Область графика с готовым поведением; размеры и slotProps берутся из корня.",
+      "propertyDescriptions": {
+        "children": "SVG-рисунок непрерывного сегмента: ({series,points,defaultContent}) => ReactNode. Координаты points относятся к области рисования. Маркеры, поиск точных исходных точек, клавиатура и разрывы null сохраняются.",
+        "tooltipContent": "Содержимое Tooltip: ({point,rows,formatX,formatY,defaultContent}) => ReactNode; rows содержит {item,value} видимых серий с одинаковым X. null/undefined/false скрывают подсказку."
+      }
+    },
+    {
+      "id": "react-adapter-legend",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "LineChartAdapter",
+      "propertyPath": ["Legend"],
+      "description": "Легенда с готовыми кнопками, контролируемой или внутренней видимостью серий.",
+      "propertyDescriptions": {
+        "children": "Содержимое готовой кнопки: ({series,visible,defaultContent}) => ReactNode. События и aria-pressed сохраняются; без вложенных интерактивных элементов."
+      }
+    },
+    {
+      "id": "react-adapter-table",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "LineChartAdapter",
+      "propertyPath": ["Table"],
+      "description": "Доступная страница исходных данных, включая скрытые серии."
+    },
+    {
+      "id": "react-adapter-pagination",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "LineChartAdapter",
+      "propertyPath": ["Pagination"],
+      "description": "Листает только таблицу; график сохраняет отдельный диапазон или прокрутку. При одной странице скрыта."
+    },
+    {
+      "id": "react-adapter-empty",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "LineChartAdapter",
+      "propertyPath": ["Empty"],
+      "description": "Пустое состояние, когда исходных X или категорий нет."
+    },
+    {
+      "id": "react-adapter-rangecontrols",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "LineChartAdapter",
+      "propertyPath": ["RangeControls"],
+      "description": "Готовые ползунки общего диапазона X. При zoom=false или менее двух X не выводятся."
+    },
+    {
+      "id": "react-adapter-context",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "useLineChart",
+      "description": "Контекст ближайшего LineChart[Adapter]: series, source полного ряда, xs, values, visible/toggle, активный xDomain, range:{start,end,change}, page:{rows,page,count,change}, подписи, formatX/formatY, slotProps. range.change принимает индексы X. Вне корня — ошибка."
+    }
+  ]
 }

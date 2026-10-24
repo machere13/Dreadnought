@@ -4,22 +4,23 @@ import { TooltipAdapter } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
 import { MarkAdapter } from '../../DataDisplay/Mark/MarkAdapter.tsx';
 import { chartNativeProps as nativeProps } from '../../shared/chartNativeProps.ts';
 import { attachRef } from '../../shared/attachRef.ts';
-import type { BarChartAdapterProps } from './barChart.types.ts';
+import type { BarChartAdapterProps, BarChartPlotProps } from './barChart.types.ts';
 
 type Props = Pick<
   BarChartAdapterProps,
   'categories' | 'series' | 'domain' | 'orientation' | 'gapRatio'
-> & {
-  width: number;
-  height: number;
-  visible: readonly string[];
-  slotProps: NonNullable<BarChartAdapterProps['slotProps']>;
-  minCategorySize: number;
-  formatValue: (value: number) => string;
-  formatTick: (value: number) => string;
-  categoryLabel: string;
-  valueLabel: string;
-};
+> &
+  BarChartPlotProps & {
+    width: number;
+    height: number;
+    visible: readonly string[];
+    slotProps: NonNullable<BarChartAdapterProps['slotProps']>;
+    minCategorySize: number;
+    formatValue: (value: number) => string;
+    formatTick: (value: number) => string;
+    categoryLabel: string;
+    valueLabel: string;
+  };
 export function BarPlot({
   width,
   height,
@@ -35,6 +36,8 @@ export function BarPlot({
   categoryLabel,
   valueLabel,
   minCategorySize,
+  children,
+  tooltipContent,
 }: Props) {
   const vertical = orientation !== 'horizontal';
   const left = vertical ? 48 : 96;
@@ -161,6 +164,7 @@ export function BarPlot({
   ]);
   const key = (bar: (typeof layout.bars)[number]) => JSON.stringify([bar.seriesId, bar.categoryId]);
   const [active, setActive] = useState<string>();
+  const [tooltipOpen, setTooltipOpen] = useState(false);
   const hovered = useRef<string | undefined>(undefined);
   const focused = useRef<string | undefined>(undefined);
   const elements = useRef(new Map<string, SVGGElement>());
@@ -226,7 +230,7 @@ export function BarPlot({
           return value == null ? [] : [{ item, value }];
         })
     : [];
-  const content = category ? (
+  const defaultContent = category ? (
     <table
       {...nativeProps(slotProps.tooltipTable, ['role', 'hidden', 'aria-hidden'])}
       data-ui="bar-tooltip-table"
@@ -248,6 +252,10 @@ export function BarPlot({
       </tbody>
     </table>
   ) : null;
+  const content =
+    bar && category && tooltipContent
+      ? tooltipContent({ bar, category, rows, formatValue, defaultContent })
+      : defaultContent;
   const plotSlot = nativeProps(slotProps.plot, ['tabIndex', 'aria-hidden']);
   const scrollSlot = nativeProps(slotProps.scrollContainer);
   return (
@@ -287,6 +295,8 @@ export function BarPlot({
         <TooltipAdapter
           {...nativeProps(slotProps.tooltip, ['ref'])}
           content={content}
+          open={tooltipOpen && content !== null && content !== undefined && content !== false}
+          onOpenChange={setTooltipOpen}
           disabled={active !== undefined && !bar}
           onPointerLeave={(event) => {
             slotProps.tooltip?.onPointerLeave?.(event);
@@ -406,6 +416,26 @@ export function BarPlot({
                       const item = seriesById.get(bar.seriesId)!;
                       const category = categoriesById.get(bar.categoryId)!;
                       const slot = nativeProps(slotProps.bar?.(item, bar), ['aria-labelledby']);
+                      const defaultContent = (
+                        <>
+                          <rect
+                            x={bar.x}
+                            y={bar.y}
+                            width={bar.width}
+                            height={bar.height}
+                            data-ui="bar-rect"
+                          />
+                          {bar.value === 0 && (
+                            <line
+                              x1={bar.x}
+                              x2={bar.x + bar.width}
+                              y1={bar.y}
+                              y2={bar.y + bar.height}
+                              data-ui="bar-zero"
+                            />
+                          )}
+                        </>
+                      );
                       return (
                         <g
                           {...slot}
@@ -428,6 +458,7 @@ export function BarPlot({
                             (identity === active && !!trigger['aria-describedby']) || undefined
                           }
                           data-ui="bar-item"
+                          data-custom={children ? true : undefined}
                           data-series-id={item.id}
                           data-category-id={category.id}
                           onPointerEnter={(event) => {
@@ -491,22 +522,15 @@ export function BarPlot({
                             }
                           }}
                         >
-                          <rect
-                            x={bar.x}
-                            y={bar.y}
-                            width={bar.width}
-                            height={bar.height}
-                            data-ui="bar-rect"
-                          />
-                          {bar.value === 0 && (
-                            <line
-                              x1={bar.x}
-                              x2={bar.x + bar.width}
-                              y1={bar.y}
-                              y2={bar.y + bar.height}
-                              data-ui="bar-zero"
-                            />
-                          )}
+                          {children
+                            ? children({
+                                bar,
+                                series: item,
+                                category,
+                                active: identity === active && !!trigger['aria-describedby'],
+                                defaultContent,
+                              })
+                            : defaultContent}
                         </g>
                       );
                     })}

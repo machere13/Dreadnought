@@ -7,6 +7,8 @@ import { LineMissingDemo } from './LineMissingDemo.tsx';
 import missingCode from './LineMissingDemo.tsx?raw';
 import { LineRangeDemo } from './LineRangeDemo.tsx';
 import rangeCode from './LineRangeDemo.tsx?raw';
+import { LineCompositionDemo } from './LineCompositionDemo.tsx';
+import compositionCode from './LineCompositionDemo.tsx?raw';
 export const lineChartDoc: ComponentDoc = {
   ...getCatalogDoc('linechart'),
   title: 'LineChart',
@@ -19,6 +21,26 @@ export const lineChartDoc: ComponentDoc = {
   logicDescription:
     'buildLineLayout готовит полные данные; sampleLineLayout сокращает геометрию по ширине экрана, getLinePointAtX двоичным поиском находит точный исходный X. Расчёты независимы от React, DOM и SVG.',
   notes: [
+    <>
+      Без children выводится готовый график. Свои children задают порядок и набор частей:
+      LineChart[Adapter].Plot, .Legend, .RangeControls, .Table, .Pagination, .Empty. null оставляет
+      подпись. Все части и useLineChart работают внутри своего корня и используют одно состояние.
+      Хук возвращает series, source полного ряда, xs, values, visible/toggle, активный xDomain,
+      range с индексами start/end и change(start,end), page с rows/page/count/change, подписи,
+      форматирование и slotProps. Некорректные индексы и неизвестные ID игнорируются.
+    </>,
+    <>
+      Plot.children заменяет SVG-рисунок непрерывного сегмента: series, points в координатах
+      области, defaultContent. Разрывы null остаются отдельными сегментами; маркеры, поиск и
+      клавиатура сохраняются. tooltipContent получает point, rows, formatX/formatY и defaultContent;
+      null/undefined/false скрывают подсказку. Legend.children меняет содержимое готовой кнопки,
+      получает series, visible, defaultContent. Не добавляйте интерактивных потомков в рисунок или
+      кнопку легенды. При замене Table сохраните доступные исходные значения.
+    </>,
+    <>
+      Пагинация листает только таблицу. Диапазон управляет графиком отдельно; размеры задаются на
+      корне.
+    </>,
     <>X уникален внутри серии; точки должны попадать в xDomain/yDomain.</>,
     <>Передавайте данные неизменяемыми.</>,
     <>Без ResizeObserver задайте width и height вместе; иначе доступна таблица.</>,
@@ -26,7 +48,10 @@ export const lineChartDoc: ComponentDoc = {
       Большие наборы сокращаются только для рисования, не для Tooltip и таблицы; стоимость всё равно
       зависит от объёма и числа серий.
     </>,
-    <>Brush, временная шкала и сглаживание не поддерживаются.</>,
+    <>
+      Готовые brush, временная шкала и сглаживание не поддерживаются; свой рисунок можно задать
+      через Plot.
+    </>,
   ],
   examples: [
     {
@@ -52,6 +77,14 @@ export const lineChartDoc: ComponentDoc = {
         'Перемещайте ползунки zoom: изменится видимый диапазон, исходные записи сохранятся. Таблица делит 12 дней на страницы по 4. График имеет фиксированный размер 560 × 280 и прокручивается на узком экране; это учебный набор, не тест производительности.',
       demo: <LineRangeDemo />,
       code: rangeCode,
+    },
+    {
+      id: 'line-composition',
+      title: 'Своя линия, легенда и кнопки диапазона',
+      description:
+        'Ступенчатый рисунок заменяет обычные отрезки, сохраняя маркеры, разрыв Факта и точные подсказки. Своя легенда использует готовые кнопки. Кнопки диапазона и ползунки управляют одним состоянием; пагинация листает только исходную таблицу.',
+      demo: <LineCompositionDemo />,
+      code: compositionCode,
     },
   ],
 };
