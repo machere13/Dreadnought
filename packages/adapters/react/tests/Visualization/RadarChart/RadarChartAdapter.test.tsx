@@ -3,6 +3,7 @@ import { act, cleanup, fireEvent, render, screen, within } from '@testing-librar
 import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
 import { RadarChartAdapter } from '../../../src/unstyled.ts';
+import { useRadarChart } from '../../../src/unstyled.ts';
 
 afterEach(() => {
   cleanup();
@@ -14,6 +15,97 @@ const series = [
   { id: 'B', label: 'Вариант B', values: { a: 50, b: 50, c: 50, d: 50 } },
 ];
 const props = { label: 'Сравнение', metrics, series, width: 400, height: 320 };
+
+it('composes drawing, legend and controls without replacing native vertex targets or exact data', () => {
+  function Controls() {
+    const { visible, toggle } = useRadarChart();
+    return <button onClick={() => toggle('A')}>Toggle {visible.join(',')}</button>;
+  }
+  const pointRef = createRef<SVGCircleElement>();
+  const { container } = render(
+    <RadarChartAdapter {...props} slotProps={{ point: () => ({ ref: pointRef }) }}>
+      <Controls />
+      <RadarChartAdapter.Legend>
+        {({ series, visible }) => `${series.label}: ${visible}`}
+      </RadarChartAdapter.Legend>
+      <RadarChartAdapter.Plot
+        tooltipContent={({ metric, defaultContent }) => (
+          <div>
+            Metric {metric.id}
+            {defaultContent}
+          </div>
+        )}
+      >
+        {({ defaultContent, layout, visible }) => (
+          <g data-testid="drawing" data-count={visible.length}>
+            {defaultContent}
+            <text>{layout.axes.length} axes</text>
+          </g>
+        )}
+      </RadarChartAdapter.Plot>
+      <RadarChartAdapter.Table />
+    </RadarChartAdapter>,
+  );
+  expect(screen.getByTestId('drawing').getAttribute('data-count')).toBe('2');
+  expect(pointRef.current?.tagName).toBe('circle');
+  const point = screen.getByRole('img', { name: 'Вариант B, d: 50' });
+  fireEvent.focus(point);
+  expect(screen.getByRole('tooltip').textContent).toContain('Metric d');
+  fireEvent.keyDown(point, { key: 'Escape' });
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Toggle A,B' }));
+  expect(container.querySelectorAll('[data-ui="radar-point"]')).toHaveLength(4);
+  expect(screen.getByTestId('drawing').getAttribute('data-count')).toBe('1');
+  expect(
+    screen.getByRole('button', { name: 'Вариант A: false' }).getAttribute('aria-pressed'),
+  ).toBe('false');
+  expect(screen.getByRole('table', { name: 'Сравнение: Данные' }).textContent).toContain(
+    'Вариант A',
+  );
+});
+
+it('keeps controlled visibility and nullable tooltips with composed parts', () => {
+  const changed = vi.fn();
+  const { rerender } = render(
+    <RadarChartAdapter {...props} visibleSeries={['A']} onVisibleSeriesChange={changed}>
+      <RadarChartAdapter.Plot tooltipContent={() => null} />
+      <RadarChartAdapter.Legend />
+    </RadarChartAdapter>,
+  );
+  fireEvent.focus(screen.getByRole('img', { name: 'Вариант A, a: 100' }));
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Вариант A' }));
+  expect(changed).toHaveBeenCalledWith([]);
+  expect(screen.getAllByRole('img')).toHaveLength(4);
+  rerender(<RadarChartAdapter {...props} children={null} />);
+  expect(screen.queryByRole('table')).toBeNull();
+  expect(screen.queryByRole('img')).toBeNull();
+  expect(() => render(<RadarChartAdapter.Plot />)).toThrow('inside RadarChart');
+});
+
+it('opens the next vertex after hiding the active series or suppressing one metric tooltip', () => {
+  const { rerender } = render(
+    <RadarChartAdapter {...props}>
+      <RadarChartAdapter.Plot
+        tooltipContent={({ metric, defaultContent }) => (metric.id === 'c' ? null : defaultContent)}
+      />
+      <RadarChartAdapter.Legend />
+    </RadarChartAdapter>,
+  );
+  fireEvent.focus(screen.getByRole('img', { name: 'Вариант A, a: 100' }));
+  expect(screen.getByRole('tooltip')).toBeTruthy();
+  fireEvent.keyDown(screen.getByRole('img', { name: 'Вариант A, a: 100' }), { key: 'Escape' });
+  fireEvent.click(screen.getByRole('button', { name: 'Вариант A' }));
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  fireEvent.focus(screen.getByRole('img', { name: 'Вариант B, c: 50' }));
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  fireEvent.focus(screen.getByRole('img', { name: 'Вариант B, b: 50' }));
+  expect(screen.getByRole('tooltip').textContent).toContain('Вариант B50');
+  rerender(<RadarChartAdapter {...props} series={[]} />);
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  rerender(<RadarChartAdapter {...props} />);
+  expect(screen.queryByRole('tooltip')).toBeNull();
+});
 
 it('renders C1 coordinates, semantic data and native legend', () => {
   const { container } = render(

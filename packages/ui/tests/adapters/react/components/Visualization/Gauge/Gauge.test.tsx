@@ -1,9 +1,27 @@
 import { afterEach, expect, it } from 'vitest';
-import { cleanup, render } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import * as ui from '@dreadnought/ui/react';
 import * as adapters from '@dreadnought/react/unstyled';
 
 afterEach(cleanup);
+it('themes composed drawing and legend while retaining the keyboard tooltip', () => {
+  render(
+    <ui.Gauge label="Composed" value={70} thresholds={[{ id: 'all', label: 'Все', to: 100 }]}>
+      <ui.Gauge.Legend>{({ defaultContent }) => defaultContent}</ui.Gauge.Legend>
+      <ui.Gauge.Plot tooltipContent={({ defaultContent }) => <div>Custom{defaultContent}</div>}>
+        {({ defaultContent }) => defaultContent}
+      </ui.Gauge.Plot>
+    </ui.Gauge>,
+  );
+  const plot = screen.getByRole('img');
+  expect(plot.className).toBeTruthy();
+  expect(screen.getByRole('list').className).toBeTruthy();
+  act(() => plot.focus());
+  expect(screen.getByRole('tooltip').className).toBeTruthy();
+  expect(screen.getByRole('tooltip').textContent).toContain('Custom');
+  fireEvent.keyDown(plot, { key: 'Escape' });
+  expect(screen.queryByRole('tooltip')).toBeNull();
+});
 it('adds themed slots and preserves custom classes without styling the adapter', () => {
   const { container } = render(
     <>

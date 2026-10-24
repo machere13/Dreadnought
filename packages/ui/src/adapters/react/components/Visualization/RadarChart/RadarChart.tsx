@@ -11,7 +11,7 @@ import { markPresentation } from '#presentation/DataDisplay/Mark/markPresentatio
 export type RadarChartProps = RadarChartAdapterProps;
 const classes = (...values: (string | undefined)[]) => values.filter(Boolean).join(' ');
 
-export function RadarChart({ className, slotProps = {}, ...props }: RadarChartProps) {
+function RadarChartRoot({ className, slotProps = {}, ...props }: RadarChartProps) {
   return (
     <RadarChartAdapter
       {...props}
@@ -94,3 +94,10 @@ export function RadarChart({ className, slotProps = {}, ...props }: RadarChartPr
     />
   );
 }
+
+export const RadarChart: typeof RadarChartRoot &
+  Pick<typeof RadarChartAdapter, 'Plot' | 'Legend' | 'Table'> = Object.assign(RadarChartRoot, {
+  Plot: RadarChartAdapter.Plot,
+  Legend: RadarChartAdapter.Legend,
+  Table: RadarChartAdapter.Table,
+});

@@ -13,6 +13,30 @@ const series = [
 ];
 const props = { metrics, series, label: 'Radar', width: 400, height: 320 };
 
+it('themes composed parts and shares visibility with custom controls', () => {
+  function Controls() {
+    const { toggle } = ui.useRadarChart();
+    return <button onClick={() => toggle('__proto__')}>Toggle A</button>;
+  }
+  render(
+    <ui.RadarChart {...props}>
+      <Controls />
+      <ui.RadarChart.Plot>{({ defaultContent }) => defaultContent}</ui.RadarChart.Plot>
+      <ui.RadarChart.Legend />
+      <ui.RadarChart.Table />
+    </ui.RadarChart>,
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Toggle A' }));
+  expect(screen.queryByRole('img', { name: 'A, x: 80' })).toBeNull();
+  const point = screen.getByRole('img', { name: 'B, x: 40' });
+  expect(point.getAttribute('class')).toContain(presentation.radarChartPresentation.point);
+  fireEvent.focus(point);
+  expect(screen.getByRole('tooltip').className).toContain(presentation.tooltipPresentation.root);
+  expect(screen.getByRole('table', { name: 'Radar: Данные' }).className).toContain(
+    presentation.radarChartPresentation.table,
+  );
+});
+
 it('matches tooltip markers to series colors and preserves consumer slots', () => {
   render(
     <ui.RadarChart

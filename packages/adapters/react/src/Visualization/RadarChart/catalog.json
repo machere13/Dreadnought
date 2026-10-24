@@ -13,28 +13,80 @@
     "width и height задаются вместе конечными положительными числами; без них ResizeObserver измеряет контейнер, высота равна 80% ширины.",
     "Без ResizeObserver адаптивный SVG отсутствует, но таблица и легенда доступны; задайте фиксированные размеры.",
     "Длинные подписи SVG могут пересекаться; полные названия и исходные значения всегда доступны в таблице.",
-    "Controlled visibleSeries меняется только через новый пропс; onVisibleSeriesChange запрашивает изменение."
+    "Controlled visibleSeries меняется только через новый пропс; onVisibleSeriesChange запрашивает изменение.",
+    "Композиция: Plot, Legend и Table можно переставлять и опускать. useRadarChart внутри корня даёт layout, visible и toggle. Plot.children заменяет декоративный SVG в viewBox -140 -140 280 280; circle-точки с ref, фокусом и Tooltip сохраняются поверх. Рисунок неинтерактивен и использует исходные координаты. tooltipContent получает series, metric, visibleSeries, defaultContent; null отключает. Table содержит все серии независимо от видимости."
   ],
-  "bindings": [{
-    "id": "react-adapter", "layer": 2, "framework": "react",
-    "importPath": "@dreadnought/react/unstyled", "exportName": "RadarChartAdapter",
-    "description": "Нативные SVG, figure, кнопки легенды и семантическая таблица без готовых стилей.",
-    "propertyDescriptions": {
-      "metrics": "Показатели с ID, подписью, явным domain и необязательным reverse.",
-      "series": "Серии с ID, подписью и исходными значениями по каждому ID показателя.",
-      "label": "Обязательное непустое доступное название графика.",
-      "description": "Необязательное текстовое пояснение.",
-      "width": "Фиксированная ширина в CSS-пикселях; задаётся вместе с height.",
-      "height": "Фиксированная высота в CSS-пикселях; задаётся вместе с width.",
-      "visibleSeries": "Управляемый набор видимых ID; неизвестные ID игнорируются.",
-      "defaultVisibleSeries": "Начальный набор видимых ID; по умолчанию все начальные серии.",
-      "onVisibleSeriesChange": "Запрос нового набора актуальных видимых ID.",
-      "labels": "Подписи легенды, таблицы, заголовков и направления шкалы.",
-      "slotProps": "Нативные свойства частей без замены геометрии и обязательной семантики."
+  "bindings": [
+    {
+      "id": "react-adapter",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "RadarChartAdapter",
+      "description": "Нативные SVG, figure, кнопки легенды и семантическая таблица без готовых стилей.",
+      "propertyDescriptions": {
+        "metrics": "Показатели с ID, подписью, явным domain и необязательным reverse.",
+        "series": "Серии с ID, подписью и исходными значениями по каждому ID показателя.",
+        "label": "Обязательное непустое доступное название графика.",
+        "description": "Необязательное текстовое пояснение.",
+        "width": "Фиксированная ширина в CSS-пикселях; задаётся вместе с height.",
+        "height": "Фиксированная высота в CSS-пикселях; задаётся вместе с width.",
+        "visibleSeries": "Управляемый набор видимых ID; неизвестные ID игнорируются.",
+        "defaultVisibleSeries": "Начальный набор видимых ID; по умолчанию все начальные серии.",
+        "onVisibleSeriesChange": "Запрос нового набора актуальных видимых ID.",
+        "labels": "Подписи легенды, таблицы, заголовков и направления шкалы.",
+        "slotProps": "Нативные свойства частей без замены геометрии и обязательной семантики.",
+        "children": "Заменяет стандартный набор частей; undefined оставляет готовый вид, null убирает части."
+      },
+      "examples": [
+        {
+          "id": "basic",
+          "code": "import { RadarChartAdapter } from '@dreadnought/react/unstyled';\nconst metrics = ['quality','coverage','latency'].map(id => ({id,label:id,domain:[0,100] as const}));\nconst series = [{id:'a',label:'A',values:{quality:80,coverage:70,latency:60}}];\nexport function Example() { return <RadarChartAdapter label=\"Сравнение\" metrics={metrics} series={series} width={400} height={320} />; }"
+        },
+        {
+          "id": "composition",
+          "code": "import { RadarChartAdapter } from '@dreadnought/react/unstyled';\nconst metrics = ['x','y','z'].map(id => ({id,label:id,domain:[0,100] as const}));\nconst series = [{id:'a',label:'A',values:{x:80,y:60,z:40}}];\nexport function Example() { return <RadarChartAdapter label=\"Сравнение\" metrics={metrics} series={series}><RadarChartAdapter.Legend /><RadarChartAdapter.Plot tooltipContent={({defaultContent}) => <div>{defaultContent}</div>}>{({defaultContent}) => defaultContent}</RadarChartAdapter.Plot><RadarChartAdapter.Table /></RadarChartAdapter>; }"
+        }
+      ]
     },
-    "examples": [{
-      "id": "basic",
-      "code": "import { RadarChartAdapter } from '@dreadnought/react/unstyled';\nconst metrics = ['quality','coverage','latency'].map(id => ({id,label:id,domain:[0,100] as const}));\nconst series = [{id:'a',label:'A',values:{quality:80,coverage:70,latency:60}}];\nexport function Example() { return <RadarChartAdapter label=\"Сравнение\" metrics={metrics} series={series} width={400} height={320} />; }"
-    }]
-  }]
+    {
+      "id": "react-adapter-plot",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "RadarChartAdapter",
+      "propertyDescriptions": {
+        "children": "Декоративный SVG из layout, metrics, series, visible, width, height и defaultContent. Интерактивные вершины сохраняются.",
+        "tooltipContent": "Подсказка из series, metric, visibleSeries и defaultContent; null отключает."
+      },
+      "propertyPath": ["Plot"]
+    },
+    {
+      "id": "react-adapter-legend",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "RadarChartAdapter",
+      "propertyDescriptions": {
+        "children": "Содержимое кнопки: series, visible, defaultContent. Родная кнопка сохраняет переключение и aria-pressed."
+      },
+      "propertyPath": ["Legend"]
+    },
+    {
+      "id": "react-adapter-table",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "RadarChartAdapter",
+      "propertyPath": ["Table"]
+    },
+    {
+      "id": "react-adapter-context",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "useRadarChart",
+      "description": "Контекст ближайшего RadarChart[Adapter]: layout, metrics, series, visible, toggle, label, labels, slotProps, width, height. Вне корня выбрасывает ошибку."
+    }
+  ]
 }

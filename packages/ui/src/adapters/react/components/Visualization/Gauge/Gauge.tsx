@@ -6,7 +6,7 @@ import { markPresentation } from '#presentation/DataDisplay/Mark/markPresentatio
 export type GaugeProps = GaugeAdapterProps;
 const classes = (...values: (string | undefined)[]) => values.filter(Boolean).join(' ');
 
-export function Gauge({ className, slotProps = {}, ...props }: GaugeProps) {
+function GaugeRoot({ className, slotProps = {}, ...props }: GaugeProps) {
   return (
     <GaugeAdapter
       {...props}
@@ -49,3 +49,11 @@ export function Gauge({ className, slotProps = {}, ...props }: GaugeProps) {
     />
   );
 }
+
+export const Gauge: typeof GaugeRoot & Pick<typeof GaugeAdapter, 'Plot' | 'Legend'> = Object.assign(
+  GaugeRoot,
+  {
+    Plot: GaugeAdapter.Plot,
+    Legend: GaugeAdapter.Legend,
+  },
+);

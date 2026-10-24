@@ -1,10 +1,12 @@
-import { useCallback, useId, useRef } from 'react';
+import { useId } from 'react';
 import { buildRadarLayout } from '@dreadnought/core';
-import { RadarPlot } from './RadarPlot.tsx';
-import { RadarDataTable } from './RadarDataTable.tsx';
-import { useChartViewport } from '../../shared/useChartViewport.ts';
+import { RadarChartContext } from './RadarChartContext.tsx';
+import {
+  RadarChartPlotAdapter,
+  RadarChartLegendAdapter,
+  RadarChartTableAdapter,
+} from './RadarChartParts.tsx';
 import { useSeriesVisibility } from '../../shared/useSeriesVisibility.ts';
-import { attachRef } from '../../shared/attachRef.ts';
 import {
   radarNativeProps,
   type RadarChartAdapterProps,
@@ -31,7 +33,7 @@ function validateVisibility(value: readonly string[] | undefined) {
     throw new RangeError('Series visibility IDs must be unique');
   }
 }
-export function RadarChartAdapter({
+function RadarChartRootAdapter({
   metrics,
   series,
   label,
@@ -43,6 +45,7 @@ export function RadarChartAdapter({
   onVisibleSeriesChange,
   labels: customLabels,
   slotProps = {},
+  children,
   ...native
 }: RadarChartAdapterProps) {
   const layout = buildRadarLayout({ metrics, series, radius: 100 });
@@ -84,20 +87,6 @@ export function RadarChartAdapter({
     defaultVisibleSeries,
     onVisibleSeriesChange,
   );
-  const plotRef = useRef<HTMLDivElement>(null);
-  const consumerRef = slotProps.plotContainer?.ref;
-  const attachPlot = useCallback(
-    (element: HTMLDivElement | null) => {
-      plotRef.current = element;
-      if (element) {
-        return attachRef(element, consumerRef, () => {
-          plotRef.current = null;
-        });
-      }
-    },
-    [consumerRef],
-  );
-  const viewport = useChartViewport(width, height, plotRef);
   return (
     <figure
       {...radarNativeProps(native, ['role'])}
@@ -107,61 +96,36 @@ export function RadarChartAdapter({
     >
       <figcaption id={`${id}-label`}>{label}</figcaption>
       {description !== undefined && <p id={`${id}-description`}>{description}</p>}
-      <div
-        {...radarNativeProps(slotProps.plotContainer)}
-        ref={attachPlot}
-        data-ui="radar-plot-container"
+      <RadarChartContext.Provider
+        value={{
+          layout,
+          metrics,
+          series,
+          visible,
+          toggle,
+          label,
+          labels,
+          slotProps,
+          width,
+          height,
+        }}
       >
-        {viewport && (
-          <RadarPlot
-            layout={layout}
-            metrics={metrics}
-            series={series}
-            visible={visible}
-            slotProps={slotProps}
-            {...viewport}
-          />
+        {children === undefined ? (
+          <>
+            <RadarChartPlotAdapter />
+            <RadarChartLegendAdapter />
+            <RadarChartTableAdapter />
+          </>
+        ) : (
+          children
         )}
-      </div>
-      <div
-        {...radarNativeProps(slotProps.legend)}
-        role="group"
-        aria-label={labels.legend}
-        data-ui="radar-legend"
-      >
-        {series.map((item) => {
-          const buttonProps = radarNativeProps(slotProps.legendButton?.(item), [
-            'aria-label',
-            'aria-labelledby',
-            'disabled',
-          ]);
-          return (
-            <button
-              key={item.id}
-              {...buttonProps}
-              type="button"
-              aria-pressed={visible.includes(item.id)}
-              data-ui="radar-legend-button"
-              data-series-id={item.id}
-              onClick={(event) => {
-                buttonProps.onClick?.(event);
-                if (!event.defaultPrevented) {
-                  toggle(item.id);
-                }
-              }}
-            >
-              {item.label || item.id}
-            </button>
-          );
-        })}
-      </div>
-      <RadarDataTable
-        metrics={metrics}
-        series={series}
-        label={label}
-        labels={labels}
-        tableProps={slotProps.table}
-      />
+      </RadarChartContext.Provider>
     </figure>
   );
 }
+
+export const RadarChartAdapter = Object.assign(RadarChartRootAdapter, {
+  Plot: RadarChartPlotAdapter,
+  Legend: RadarChartLegendAdapter,
+  Table: RadarChartTableAdapter,
+});

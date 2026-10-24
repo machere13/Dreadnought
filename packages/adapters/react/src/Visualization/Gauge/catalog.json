@@ -12,7 +12,8 @@
     "thresholds — возрастающие {id,label,to} с уникальными непустыми ID и названиями. Первый диапазон начинается в min, последний заканчивается в max. Граница относится к следующему диапазону, сам max — к последнему. Пустой массив включает одноцветное заполнение до value.",
     "semicircle — 180°, circle — 270° с разрывом 90°. Шкала read-only: это показатель, а не Slider. Направление стрелки и все сегменты рассчитывает core, без стороннего движка и анимации.",
     "Tab фокусирует шкалу и открывает Tooltip; Escape закрывает. Наведение и нажатие также показывают подробности. Новое value сохраняет DOM-узел фокуса и обновляет открытую подсказку. Переход на null закрывает Tooltip.",
-    "Названия и числовые границы диапазонов, текущее значение и состояние доступны независимо от цвета. formatValue форматирует все числа. labels задаёт локализованные подписи."
+    "Названия и числовые границы диапазонов, текущее значение и состояние доступны независимо от цвета. formatValue форматирует все числа. labels задаёт локализованные подписи.",
+    "Композиция: Plot и Legend можно переставлять и опускать. useGauge внутри корня даёт layout, active, labels, formatValue и slotProps. Plot.children заменяет декоративный рисунок, tooltipContent — подсказку (null отключает). Родной span сохраняет фокус, ref и доступное название; обновление value не перемонтирует шкалу. Рисунок не содержит интерактивных элементов."
   ],
   "bindings": [
     {
@@ -36,14 +37,50 @@
         "description": "Контекст и единицы измерения.",
         "formatValue": "Форматирует значение и все границы, например число с % или °C.",
         "labels": "Подписи Tooltip, списка диапазонов и пустого состояния.",
-        "slotProps": "Нативные свойства шкалы, сегментов, списка диапазонов, Mark и Tooltip."
+        "slotProps": "Нативные свойства шкалы, сегментов, списка диапазонов, Mark и Tooltip.",
+        "children": "Заменяет стандартный набор частей; undefined оставляет готовый вид, null убирает части."
       },
       "examples": [
         {
           "id": "basic",
           "code": "import { GaugeAdapter } from '@dreadnought/react/unstyled';\nconst thresholds = [{ id: 'normal', label: 'Норма', to: 60 }, { id: 'warning', label: 'Внимание', to: 80 }, { id: 'critical', label: 'Критично', to: 100 }];\nexport function Example() { return <GaugeAdapter value={72} label=\"Загрузка сервера\" thresholds={thresholds} formatValue={value => `${value}%`} />; }"
+        },
+        {
+          "id": "composition",
+          "code": "import { GaugeAdapter } from '@dreadnought/react/unstyled';\nexport function Example() { return <GaugeAdapter value={72} label=\"Загрузка\"><GaugeAdapter.Legend /><GaugeAdapter.Plot tooltipContent={({defaultContent}) => <div>{defaultContent}</div>}>{({defaultContent}) => defaultContent}</GaugeAdapter.Plot></GaugeAdapter>; }"
         }
       ]
+    },
+    {
+      "id": "react-adapter-plot",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "GaugeAdapter",
+      "propertyDescriptions": {
+        "children": "Декоративный рисунок из layout, active, labels, formatValue, slotProps и defaultContent.",
+        "tooltipContent": "Содержимое подсказки из общей модели и defaultContent; null отключает."
+      },
+      "propertyPath": ["Plot"]
+    },
+    {
+      "id": "react-adapter-legend",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "GaugeAdapter",
+      "propertyDescriptions": {
+        "children": "Содержимое диапазона: segment, active, formatValue, defaultContent."
+      },
+      "propertyPath": ["Legend"]
+    },
+    {
+      "id": "react-adapter-context",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "useGauge",
+      "description": "Контекст ближайшего Gauge[Adapter]: layout, active, label, labels, formatValue, slotProps. Вне корня выбрасывает ошибку."
     }
   ]
 }

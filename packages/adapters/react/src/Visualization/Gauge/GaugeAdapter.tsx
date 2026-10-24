@@ -1,12 +1,12 @@
 import { useId } from 'react';
 import { buildGaugeLayout } from '@dreadnought/core';
-import { MarkAdapter } from '../../DataDisplay/Mark/MarkAdapter.tsx';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
-import { GaugePlot } from './GaugePlot.tsx';
+import { GaugeContext } from './GaugeContext.tsx';
+import { GaugePlotAdapter, GaugeLegendAdapter } from './GaugeParts.tsx';
 import { gaugeLabels } from './GaugeTooltip.tsx';
 import type { GaugeAdapterProps } from './gauge.types.ts';
 
-export function GaugeAdapter({
+function GaugeRootAdapter({
   value,
   min,
   max,
@@ -17,6 +17,7 @@ export function GaugeAdapter({
   formatValue = String,
   labels: overrides = {},
   slotProps = {},
+  children,
   ...rest
 }: GaugeAdapterProps) {
   const layout = buildGaugeLayout({ value, min, max, variant, thresholds });
@@ -39,32 +40,21 @@ export function GaugeAdapter({
     >
       <figcaption id={`${id}-label`}>{label}</figcaption>
       {description !== undefined && <p id={`${id}-description`}>{description}</p>}
-      <GaugePlot
-        layout={layout}
-        active={active}
-        label={label}
-        labels={labels}
-        formatValue={formatValue}
-        slotProps={slotProps}
-      />
-      {layout.segments.length > 0 && (
-        <ul {...native(slotProps.legend, ['role', 'aria-label'])} aria-label={labels.thresholds}>
-          {layout.segments.map((segment) => (
-            <li
-              {...native(slotProps.band?.(segment), ['aria-current'])}
-              key={segment.id}
-              data-color={segment.index % 6}
-              aria-current={segment.id === active?.id ? 'true' : undefined}
-            >
-              <MarkAdapter {...native(slotProps.mark?.(segment))} shape="circle" />
-              <span>{segment.label}</span>
-              <span>
-                {formatValue(segment.from)} — {formatValue(segment.to)}
-              </span>
-            </li>
-          ))}
-        </ul>
-      )}
+      <GaugeContext.Provider value={{ layout, active, label, labels, formatValue, slotProps }}>
+        {children === undefined ? (
+          <>
+            <GaugePlotAdapter />
+            <GaugeLegendAdapter />
+          </>
+        ) : (
+          children
+        )}
+      </GaugeContext.Provider>
     </figure>
   );
 }
+
+export const GaugeAdapter = Object.assign(GaugeRootAdapter, {
+  Plot: GaugePlotAdapter,
+  Legend: GaugeLegendAdapter,
+});

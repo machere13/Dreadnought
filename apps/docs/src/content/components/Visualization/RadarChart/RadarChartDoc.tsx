@@ -7,6 +7,8 @@ import { RadarAxesDemo } from './RadarAxesDemo.tsx';
 import axesCode from './RadarAxesDemo.tsx?raw';
 import { RadarReverseDemo } from './RadarReverseDemo.tsx';
 import reverseCode from './RadarReverseDemo.tsx?raw';
+import { RadarCompositionDemo } from './RadarCompositionDemo.tsx';
+import compositionCode from './RadarCompositionDemo.tsx?raw';
 export const radarChartDoc: ComponentDoc = {
   ...getCatalogDoc('radarchart'),
   title: 'RadarChart',
@@ -19,6 +21,17 @@ export const radarChartDoc: ComponentDoc = {
   logicDescription:
     'buildRadarLayout из core вычисляет оси и точки независимо от React. Используйте модель для собственной разметки или другого фреймворка.',
   notes: [
+    <>
+      Композиция: RadarChart.Plot, Legend и Table можно переставлять и опускать. useRadarChart
+      внутри корня даёт layout, visible и toggle; controlled visibleSeries по-прежнему требует
+      обновления пропса владельцем.
+    </>,
+    <>
+      Plot.children заменяет декоративные SVG-части в viewBox −140 −140 280 280: сетку, оси и
+      контуры. Исходные circle-точки, их ref, фокус и Tooltip остаются поверх рисунка. Возвращайте
+      неинтерактивный SVG без смены координат. tooltipContent получает metric, series, visibleSeries
+      и defaultContent; null отключает подсказку.
+    </>,
     <>Нужно не менее трёх metrics; ключи values соответствуют их id.</>,
     <>Задавайте width и height вместе либо оставьте оба для ResizeObserver.</>,
     <>Без него доступна таблица, для SVG нужны размеры.</>,
@@ -52,6 +65,14 @@ export const radarChartDoc: ComponentDoc = {
         'Для задержки меньше — лучше: 60 мс расположены дальше от центра, чем 100 мс. Это задаёт reverse=true. Наведите курсор или перейдите Tab на вершину: Tooltip покажет исходное число; Escape закроет подсказку.',
       demo: <RadarReverseDemo />,
       code: reverseCode,
+    },
+    {
+      id: 'composition',
+      title: 'Своя сетка, легенда и внешнее управление',
+      description:
+        'Круглая сетка и незалитые контуры заменяют стандартный рисунок. Кнопка и легенда переключают общее состояние серий, таблица сохраняет обе версии. Наведение или Tab на вершину показывает исходные баллы; Escape закрывает Tooltip.',
+      demo: <RadarCompositionDemo />,
+      code: compositionCode,
     },
   ],
 };

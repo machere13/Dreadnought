@@ -9,6 +9,8 @@ import { GaugeRangeDemo } from './GaugeRangeDemo.tsx';
 import rangeCode from './GaugeRangeDemo.tsx?raw';
 import { GaugeStatesDemo } from './GaugeStatesDemo.tsx';
 import statesCode from './GaugeStatesDemo.tsx?raw';
+import { GaugeCompositionDemo } from './GaugeCompositionDemo.tsx';
+import compositionCode from './GaugeCompositionDemo.tsx?raw';
 
 export const gaugeDoc: ComponentDoc = {
   ...getCatalogDoc('gauge'),
@@ -22,6 +24,16 @@ export const gaugeDoc: ComponentDoc = {
   logicDescription:
     'buildGaugeLayout рассчитывает долю диапазона, углы шкалы и порогов, направление стрелки и текущее состояние без React и DOM.',
   notes: [
+    <>
+      Композиция: Gauge.Plot заменяет рисунок и tooltipContent; Gauge.Legend меняет содержимое
+      диапазонов. useGauge даёт рассчитанную layout, active, labels и formatValue внутри Gauge.
+      children корня заменяет стандартные части; null убирает их.
+    </>,
+    <>
+      Рисунок Plot декоративный, без кнопок и обработчиков: внешний span сохраняет фокус, ref,
+      доступное название и Tooltip. Возврат null из tooltipContent отключает подсказку.
+      defaultContent позволяет дополнить готовую разметку.
+    </>,
     <>
       value — конечное число внутри min/max или null для отсутствующих данных. По умолчанию диапазон
       0–100; min должен быть меньше max. Числа вне диапазона, NaN и Infinity отклоняются. Ноль
@@ -80,6 +92,14 @@ export const gaugeDoc: ComponentDoc = {
         'Изменяйте значение от 0 до 100. Кнопка «Убрать значение» передаёт null: стрелка исчезает, появляется «Нет данных». Верните ноль — стрелка снова покажет минимум.',
       demo: <GaugeStatesDemo />,
       code: statesCode,
+    },
+    {
+      id: 'composition',
+      title: 'Своя шкала с готовым поведением',
+      description:
+        'Дуга заменена линейной шкалой: 72% и «Внимание» берутся из общей модели. Tab открывает подробности, Escape закрывает. Подпись и список диапазонов читают тот же контекст; код ниже — работающий пример.',
+      demo: <GaugeCompositionDemo />,
+      code: compositionCode,
     },
   ],
 };

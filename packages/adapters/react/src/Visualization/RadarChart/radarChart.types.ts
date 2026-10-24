@@ -1,6 +1,7 @@
 import type { ChartNative as Native } from '../../shared/chartNativeProps.ts';
+import type { ReactNode } from 'react';
 export { chartNativeProps as radarNativeProps } from '../../shared/chartNativeProps.ts';
-import type { RadarMetric, RadarSeries } from '@dreadnought/core';
+import type { RadarLayout, RadarMetric, RadarSeries } from '@dreadnought/core';
 
 export type RadarChartLabels = {
   legend: string;
@@ -44,11 +45,12 @@ export type RadarChartSlotProps = {
   table?: Native<'table', 'aria-hidden' | 'hidden' | 'role'>;
 };
 type Size = { width: number; height: number } | { width?: undefined; height?: undefined };
-export type RadarChartAdapterProps = Native<
-  'figure',
-  'aria-labelledby' | 'aria-describedby' | 'role'
+export type RadarChartAdapterProps = Omit<
+  Native<'figure', 'aria-labelledby' | 'aria-describedby' | 'role'>,
+  'children'
 > &
   Size & {
+    children?: ReactNode;
     metrics: readonly RadarMetric[];
     series: readonly RadarSeries[];
     label: string;
@@ -59,3 +61,42 @@ export type RadarChartAdapterProps = Native<
     labels?: Partial<RadarChartLabels>;
     slotProps?: RadarChartSlotProps;
   };
+
+export interface RadarChartContextValue {
+  layout: RadarLayout;
+  metrics: readonly RadarMetric[];
+  series: readonly RadarSeries[];
+  visible: readonly string[];
+  toggle: (id: string) => void;
+  label: string;
+  labels: RadarChartLabels;
+  slotProps: RadarChartSlotProps;
+  width?: number;
+  height?: number;
+}
+export interface RadarChartDrawingContext {
+  layout: RadarLayout;
+  metrics: readonly RadarMetric[];
+  series: readonly RadarSeries[];
+  visible: readonly string[];
+  width: number;
+  height: number;
+  defaultContent: ReactNode;
+}
+export interface RadarChartTooltipContext {
+  series: RadarSeries;
+  metric: RadarMetric;
+  visibleSeries: readonly RadarSeries[];
+  defaultContent: ReactNode;
+}
+export interface RadarChartPlotProps {
+  children?: (context: RadarChartDrawingContext) => ReactNode;
+  tooltipContent?: (context: RadarChartTooltipContext) => ReactNode;
+}
+export interface RadarChartLegendProps {
+  children?: (context: {
+    series: RadarSeries;
+    visible: boolean;
+    defaultContent: ReactNode;
+  }) => ReactNode;
+}

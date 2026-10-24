@@ -2,7 +2,11 @@ import type { RadarLayout, RadarMetric, RadarSeries } from '@dreadnought/core';
 import { useRef, useState } from 'react';
 import { MarkAdapter } from '../../DataDisplay/Mark/MarkAdapter.tsx';
 import { TooltipAdapter } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
-import { radarNativeProps, type RadarChartSlotProps } from './radarChart.types.ts';
+import {
+  radarNativeProps,
+  type RadarChartSlotProps,
+  type RadarChartPlotProps,
+} from './radarChart.types.ts';
 
 type Props = {
   layout: RadarLayout;
@@ -14,15 +18,26 @@ type Props = {
   height: number;
 };
 type Vertex = { series: string; metric: string; element: SVGCircleElement };
-export function RadarPlot({ layout, metrics, series, visible, slotProps, width, height }: Props) {
+export function RadarPlot({
+  layout,
+  metrics,
+  series,
+  visible,
+  slotProps,
+  width,
+  height,
+  children,
+  tooltipContent,
+}: Props & RadarChartPlotProps) {
   const [active, setActive] = useState<{ series: string; metric: string } | null>(null);
+  const [open, setOpen] = useState(false);
   const hovered = useRef<Vertex | null>(null);
   const focused = useRef<Vertex | null>(null);
   const activeSeries = series.find(
     (item) => item.id === active?.series && visible.includes(item.id),
   );
   const activeMetric = metrics.find((item) => item.id === active?.metric);
-  const content =
+  const defaultContent =
     activeSeries && activeMetric ? (
       <table
         {...radarNativeProps(slotProps.tooltipTable, ['role', 'aria-hidden', 'hidden'])}
@@ -47,11 +62,69 @@ export function RadarPlot({ layout, metrics, series, visible, slotProps, width, 
         </tbody>
       </table>
     ) : null;
+  const content =
+    activeSeries && activeMetric && tooltipContent
+      ? tooltipContent({
+          series: activeSeries,
+          metric: activeMetric,
+          visibleSeries: series.filter((item) => visible.includes(item.id)),
+          defaultContent,
+        })
+      : defaultContent;
+  const hasContent = content !== null && content !== undefined && content !== false;
+  if (!hasContent && open) setOpen(false);
+  if (active && (!activeSeries || !activeMetric)) setActive(null);
+  const drawing = (
+    <>
+      <g {...radarNativeProps(slotProps.grid)} data-ui="radar-grid">
+        {[0.25, 0.5, 0.75, 1].map((ratio) => (
+          <polygon
+            key={ratio}
+            points={layout.axes.map((axis) => `${axis.x * ratio},${axis.y * ratio}`).join(' ')}
+          />
+        ))}
+      </g>
+      {layout.axes.map((axis, index) => (
+        <g key={axis.id}>
+          <line
+            {...radarNativeProps(slotProps.axis?.(metrics[index]))}
+            x1={0}
+            y1={0}
+            x2={axis.x}
+            y2={axis.y}
+            data-ui="radar-axis"
+          />
+          <text
+            {...radarNativeProps(slotProps.axisLabel?.(metrics[index]))}
+            x={axis.x * 1.12}
+            y={axis.y * 1.12}
+            textAnchor={Math.abs(axis.x) < 1e-8 ? 'middle' : axis.x > 0 ? 'start' : 'end'}
+            data-ui="radar-axis-label"
+          >
+            {axis.label || axis.id}
+          </text>
+        </g>
+      ))}
+      {layout.seriesPoints.map(
+        (item, index) =>
+          visible.includes(item.id) && (
+            <polygon
+              key={item.id}
+              {...radarNativeProps(slotProps.series?.(series[index]))}
+              points={item.points.map((point) => `${point.x},${point.y}`).join(' ')}
+              data-ui="radar-series"
+              data-series-id={item.id}
+            />
+          ),
+      )}
+    </>
+  );
   return (
     <TooltipAdapter
       {...radarNativeProps(slotProps.tooltip, ['ref'])}
       content={content}
-      disabled={active !== null && !content}
+      open={open && hasContent}
+      onOpenChange={setOpen}
     >
       {({ ref: attach, ...trigger }) => (
         <svg
@@ -62,46 +135,20 @@ export function RadarPlot({ layout, metrics, series, visible, slotProps, width, 
           preserveAspectRatio="xMidYMid meet"
           data-ui="radar-plot"
         >
-          <g {...radarNativeProps(slotProps.grid)} data-ui="radar-grid">
-            {[0.25, 0.5, 0.75, 1].map((ratio) => (
-              <polygon
-                key={ratio}
-                points={layout.axes.map((axis) => `${axis.x * ratio},${axis.y * ratio}`).join(' ')}
-              />
-            ))}
-          </g>
-          {layout.axes.map((axis, index) => (
-            <g key={axis.id}>
-              <line
-                {...radarNativeProps(slotProps.axis?.(metrics[index]))}
-                x1={0}
-                y1={0}
-                x2={axis.x}
-                y2={axis.y}
-                data-ui="radar-axis"
-              />
-              <text
-                {...radarNativeProps(slotProps.axisLabel?.(metrics[index]))}
-                x={axis.x * 1.12}
-                y={axis.y * 1.12}
-                textAnchor={Math.abs(axis.x) < 1e-8 ? 'middle' : axis.x > 0 ? 'start' : 'end'}
-                data-ui="radar-axis-label"
-              >
-                {axis.label || axis.id}
-              </text>
+          {children ? (
+            <g aria-hidden="true" style={{ pointerEvents: 'none' }}>
+              {children({
+                layout,
+                metrics,
+                series,
+                visible,
+                width,
+                height,
+                defaultContent: drawing,
+              })}
             </g>
-          ))}
-          {layout.seriesPoints.map(
-            (item, index) =>
-              visible.includes(item.id) && (
-                <polygon
-                  key={item.id}
-                  {...radarNativeProps(slotProps.series?.(series[index]))}
-                  points={item.points.map((point) => `${point.x},${point.y}`).join(' ')}
-                  data-ui="radar-series"
-                  data-series-id={item.id}
-                />
-              ),
+          ) : (
+            drawing
           )}
           {layout.seriesPoints.map(
             (item, seriesIndex) =>
