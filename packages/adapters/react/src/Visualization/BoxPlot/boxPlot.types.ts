@@ -1,4 +1,5 @@
-import type { BoxPlotOptions, BoxPlotGroup } from '@dreadnought/core';
+import type { ReactNode } from 'react';
+import type { BoxPlotOptions, BoxPlotGroup, BoxPlotLayout } from '@dreadnought/core';
 import type { ChartNative as Native } from '../../shared/chartNativeProps.ts';
 import type { ChartPaginationSlots } from '../../shared/useChartPage.tsx';
 
@@ -34,11 +35,12 @@ export interface BoxPlotSlotProps extends ChartPaginationSlots {
   table?: Native<'table', 'aria-hidden' | 'hidden' | 'role'>;
 }
 
-export type BoxPlotAdapterProps = Native<
-  'figure',
-  'role' | 'aria-labelledby' | 'aria-describedby'
+export type BoxPlotAdapterProps = Omit<
+  Native<'figure', 'role' | 'aria-labelledby' | 'aria-describedby'>,
+  'children'
 > &
   BoxPlotOptions & {
+    children?: ReactNode;
     label: string;
     description?: string;
     valueLabel?: string;
@@ -47,3 +49,26 @@ export type BoxPlotAdapterProps = Native<
     labels?: BoxPlotLabels;
     slotProps?: BoxPlotSlotProps;
   };
+
+export interface BoxPlotRenderContext {
+  group: BoxPlotGroup;
+  active: boolean;
+  labels: Required<BoxPlotLabels>;
+  formatValue: (value: number) => string;
+  defaultContent: ReactNode;
+}
+
+export interface BoxPlotPlotProps {
+  children?: (context: BoxPlotRenderContext) => ReactNode;
+  tooltipContent?: (context: BoxPlotRenderContext) => ReactNode;
+}
+
+export interface BoxPlotContextValue {
+  layout: BoxPlotLayout;
+  page: { rows: BoxPlotGroup[]; page: number; count: number; change: (page: number) => void };
+  label: string;
+  labels: Required<BoxPlotLabels>;
+  valueLabel: string;
+  formatValue: (value: number) => string;
+  slotProps: BoxPlotSlotProps;
+}

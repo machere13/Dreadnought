@@ -13,7 +13,8 @@
     "Интервалы [a;b), последний [a;b]. Внутренняя граница принадлежит следующему интервалу, максимум — последнему. Пустые интервалы сохраняются. Сливающиеся из-за точности чисел границы — ошибка: уменьшите bins или расширьте domain.",
     "Высота — количество, ось от нуля с целыми отметками. Tooltip, таблица и доступное имя включают долю всей выборки, округлённую до 0.1%. formatBoundary не изменяет числа. Одна серия без переключаемой легенды.",
     "Навигация и виртуализация интервалов переиспользуют BarChartAdapter. Left/Right, Home/End без зацикливания, Escape закрывает Tooltip. При нехватке места прокручивается график. pageSize ограничивает таблицу, не выборку.",
-    "Расчёт O(n log bins), память модели O(bins), без DOM-узла на каждое наблюдение. Результат кешируется по ссылкам data/domain и bins. Не мутируйте вход на месте. Ширина/высота задаются вместе; без них ResizeObserver измеряет контейнер. Таблица доступна при SSR."
+    "Расчёт O(n log bins), память модели O(bins), без DOM-узла на каждое наблюдение. Результат кешируется по ссылкам data/domain и bins. Не мутируйте вход на месте. Ширина/высота задаются вместе; без них ResizeObserver измеряет контейнер. Таблица доступна при SSR.",
+    "Композиция: Plot, Table, Pagination, Empty и useHistogram. Без children сохраняется готовое поведение; свои children заменяют набор и порядок частей, null оставляет подпись. Хук возвращает layout точных интервалов, source столбцов, page таблицы, форматы и slotProps ближайшего root. Plot.children и tooltipContent получают bin из полного layout, геометрию bar и defaultContent. Столбцы сохраняют фокусируемую g, ref, навигацию и виртуализацию BarChart. Пагинация меняет только таблицу. Не добавляйте интерактивных потомков; при замене таблицы сохраните границы, количество и долю всей выборки. null/undefined/false из tooltipContent скрывают подсказку."
   ],
   "bindings": [
     {
@@ -43,14 +44,67 @@
         "width": "Фиксированная ширина, только вместе с height. Без размеров измеряется контейнер.",
         "height": "Фиксированная высота, только вместе с width.",
         "labels": "Подписи таблицы и пустого состояния; легенда у Histogram скрыта.",
-        "slotProps": "Слоты BarChart: столбцы, оси, Tooltip, Mark, таблица и пагинация. Геометрия задаётся Histogram."
+        "slotProps": "Слоты BarChart: столбцы, оси, Tooltip, Mark, таблица и пагинация. Геометрия задаётся Histogram.",
+        "children": "Своя композиция Plot, Table, Pagination, Empty и компонентов с useHistogram. undefined — готовый набор, null — только подпись."
       },
       "examples": [
         {
           "id": "basic",
           "code": "import { HistogramAdapter } from '@dreadnought/react/unstyled';\nconst data = [42, 65, 110, 125, 180, 210, 320, 580];\nexport function Example() { return <HistogramAdapter label=\"Время ответа\" data={data} bins={6} domain={[0,600]} categoryLabel=\"Время, мс\" valueLabel=\"Запросы\" />; }"
+        },
+        {
+          "id": "compound",
+          "code": "import { HistogramAdapter, useHistogram } from '@dreadnought/react/unstyled';\nconst data = [0,1,2,3,4];\nfunction Summary() { const {layout,page} = useHistogram(); return <button onClick={() => page.change(2)}>Страница {page.page}, измерений {layout.total}</button>; }\nexport function Example() { return <HistogramAdapter label=\"Распределение\" data={data} bins={2} pageSize={1}><Summary /><HistogramAdapter.Plot tooltipContent={({defaultContent}) => <div>{defaultContent}</div>}>{({defaultContent}) => defaultContent}</HistogramAdapter.Plot><HistogramAdapter.Table /><HistogramAdapter.Pagination /><HistogramAdapter.Empty /></HistogramAdapter>; }"
         }
       ]
+    },
+    {
+      "id": "react-adapter-plot",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "HistogramAdapter",
+      "propertyPath": ["Plot"],
+      "description": "Готовое поведение с заменяемым рисунком и Tooltip.",
+      "propertyDescriptions": {
+        "children": "Свой рисунок: ({bin, bar, category, active, defaultContent}) => ReactNode. Без интерактивных потомков; внешняя обёртка сохраняет фокус и события.",
+        "tooltipContent": "Своя подсказка с defaultContent; null/undefined/false отключают её. Получает точный bin, bar, category, rows и formatValue."
+      }
+    },
+    {
+      "id": "react-adapter-table",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "HistogramAdapter",
+      "propertyPath": ["Table"],
+      "description": "Доступная таблица текущей страницы с исходными статистиками."
+    },
+    {
+      "id": "react-adapter-pagination",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "HistogramAdapter",
+      "propertyPath": ["Pagination"],
+      "description": "Пагинация общего состояния; при одной странице скрыта."
+    },
+    {
+      "id": "react-adapter-empty",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "HistogramAdapter",
+      "propertyPath": ["Empty"],
+      "description": "Пустое состояние полного набора."
+    },
+    {
+      "id": "react-adapter-context",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "useHistogram",
+      "description": "Контекст ближайшего Histogram: layout интервалов, source столбцов, page таблицы, форматы и slotProps. Вне root выбрасывает ошибку."
     }
   ]
 }

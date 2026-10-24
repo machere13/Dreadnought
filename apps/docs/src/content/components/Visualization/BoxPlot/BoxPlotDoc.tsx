@@ -9,6 +9,8 @@ import { BoxPlotStatesDemo } from './BoxPlotStatesDemo.tsx';
 import statesCode from './BoxPlotStatesDemo.tsx?raw';
 import { BoxPlotGroupsDemo } from './BoxPlotGroupsDemo.tsx';
 import groupsCode from './BoxPlotGroupsDemo.tsx?raw';
+import { BoxPlotCompositionDemo } from './BoxPlotCompositionDemo.tsx';
+import compositionCode from './BoxPlotCompositionDemo.tsx?raw';
 
 export const boxPlotDoc: ComponentDoc = {
   ...getCatalogDoc('boxplot'),
@@ -22,6 +24,17 @@ export const boxPlotDoc: ComponentDoc = {
   logicDescription:
     'buildBoxPlotLayout вычисляет статистики и нормализованные координаты без React и DOM; возвращает общую шкалу и сгруппированные выбросы.',
   notes: [
+    <>
+      Свои children задают состав и порядок Plot, Axis, Table, Pagination и Empty. Без children
+      выводится готовый набор; null оставляет подпись. useBoxPlot возвращает layout всех групп, page
+      с текущими группами, labels, formatValue и slotProps. Общая шкала не меняется при
+      перелистывании. Части и хук требуют ближайший BoxPlot или BoxPlotAdapter. Plot.children
+      получает group, active, labels, formatValue и defaultContent рисунка; tooltipContent — те же
+      поля с defaultContent подсказки. null/undefined/false отключают Tooltip. Свой рисунок
+      декоративен: исходный span сохраняет ref, фокус, доступное имя и события. Не добавляйте
+      интерактивных потомков. При замене таблицы сохраняйте точные статистики и выбросы, включая
+      число совпадений.
+    </>,
     <>
       Квартили Q1/Q3 и медиана рассчитываются линейной интерполяцией type 7: позиция p × (n − 1).
       Метод указан явно, потому что разные статистические пакеты могут давать разные квартили на
@@ -96,6 +109,14 @@ export const boxPlotDoc: ComponentDoc = {
         '12 000 чисел сводятся к статистикам 12 команд. Перелистывайте по три группы: график и таблица меняются вместе, шкала 0–100 остаётся прежней.',
       demo: <BoxPlotGroupsDemo />,
       code: groupsCode,
+    },
+    {
+      id: 'boxplot-composition',
+      title: 'Свой рисунок и состав частей',
+      description:
+        'Боксы со скруглением используют готовые квартили, усы и выбросы. Шкала перенесена выше рисунка. Кнопка перелистывает график и таблицу вместе; общая шкала остаётся прежней.',
+      demo: <BoxPlotCompositionDemo />,
+      code: compositionCode,
     },
   ],
 };

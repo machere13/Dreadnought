@@ -12,7 +12,8 @@
     "Выбросы не удаляются. Совпадающие выбросы рисуются одной точкой; Tooltip и таблица показывают значение × количество. Все группы используют одну шкалу, в том числе на разных страницах.",
     "Пустая группа сохраняется с пометкой «Нет данных», без фиктивного нуля. Один элемент и постоянная выборка допустимы. Явный domain не обрезает данные: выход за границы — ошибка.",
     "Стрелки вверх/вниз и Home/End перемещают фокус между непустыми группами текущей страницы без зацикливания. Escape закрывает Tooltip. Нажатие графика переводит фокус для touch.",
-    "Сортировка каждой выборки O(n log n), память O(n). Модель кешируется по ссылке data и границам domain. pageSize ограничивает группы; уникальные выбросы внутри группы не прореживаются и создают отдельные SVG-точки."
+    "Сортировка каждой выборки O(n log n), память O(n). Модель кешируется по ссылке data и границам domain. pageSize ограничивает группы; уникальные выбросы внутри группы не прореживаются и создают отдельные SVG-точки.",
+    "Композиция: Plot, Axis, Table, Pagination, Empty и useBoxPlot. Без children выводится готовый набор, свои children меняют состав и порядок, null оставляет подпись. Хук возвращает layout всех групп, page:{rows,page,count,change}, label, labels, valueLabel, formatValue, slotProps. page меняет и график, и таблицу, но не общую шкалу. Plot.children и tooltipContent получают group, active, labels, formatValue и defaultContent рисунка/подсказки соответственно. Исходный span сохраняет ref, фокус и события; свой рисунок декоративен, без интерактивных потомков. null/undefined/false из tooltipContent скрывают подсказку. При замене таблицы сохраните точные статистики и все выбросы с количеством совпадений."
   ],
   "bindings": [
     {
@@ -34,14 +35,76 @@
         "formatValue": "Формат значений в шкале, Tooltip и таблице; не влияет на расчёт.",
         "pageSize": "Число групп одновременно в графике и таблице. По умолчанию 20.",
         "labels": "Подписи статистик, таблицы и пустого состояния.",
-        "slotProps": "Свойства графика, геометрических частей, Tooltip, Mark, таблицы и пагинации."
+        "slotProps": "Свойства графика, геометрических частей, Tooltip, Mark, таблицы и пагинации.",
+        "children": "Своя композиция Plot, Axis, Table, Pagination, Empty и компонентов с useBoxPlot. undefined — готовый набор, null — только подпись."
       },
       "examples": [
         {
           "id": "basic",
           "code": "import { BoxPlotAdapter } from '@dreadnought/react/unstyled';\nconst data = [{ id: 'a', label: 'Группа A', values: [1,2,3,4,5,6,7,100,100] }];\nexport function Example() { return <BoxPlotAdapter label=\"Распределение\" data={data} />; }"
+        },
+        {
+          "id": "compound",
+          "code": "import { BoxPlotAdapter, useBoxPlot } from '@dreadnought/react/unstyled';\nconst data = [{id:'a',label:'Группа A',values:[1,2,3,4,5,6,7,100,100]}];\nfunction Summary() { const {layout,page} = useBoxPlot(); return <button onClick={() => page.change(2)}>Страница {page.page}, групп {layout.groups.length}</button>; }\nexport function Example() { return <BoxPlotAdapter label=\"Распределение\" data={data} pageSize={1}><Summary /><BoxPlotAdapter.Plot tooltipContent={({defaultContent}) => <div>{defaultContent}</div>}>{({defaultContent}) => defaultContent}</BoxPlotAdapter.Plot><BoxPlotAdapter.Axis /><BoxPlotAdapter.Table /><BoxPlotAdapter.Pagination /><BoxPlotAdapter.Empty /></BoxPlotAdapter>; }"
         }
       ]
+    },
+    {
+      "id": "react-adapter-plot",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "BoxPlotAdapter",
+      "propertyPath": ["Plot"],
+      "description": "Готовое поведение с заменяемым рисунком и Tooltip.",
+      "propertyDescriptions": {
+        "children": "Свой рисунок: ({group, active, labels, formatValue, defaultContent}) => ReactNode. Без интерактивных потомков; внешняя обёртка сохраняет фокус и события.",
+        "tooltipContent": "Своя подсказка с defaultContent; null/undefined/false отключают её. Получает group, active, labels и formatValue."
+      }
+    },
+    {
+      "id": "react-adapter-axis",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "BoxPlotAdapter",
+      "propertyPath": ["Axis"],
+      "description": "Общая шкала всех групп, не меняется при перелистывании."
+    },
+    {
+      "id": "react-adapter-table",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "BoxPlotAdapter",
+      "propertyPath": ["Table"],
+      "description": "Доступная таблица текущей страницы с исходными статистиками."
+    },
+    {
+      "id": "react-adapter-pagination",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "BoxPlotAdapter",
+      "propertyPath": ["Pagination"],
+      "description": "Пагинация общего состояния; при одной странице скрыта."
+    },
+    {
+      "id": "react-adapter-empty",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "BoxPlotAdapter",
+      "propertyPath": ["Empty"],
+      "description": "Пустое состояние полного набора."
+    },
+    {
+      "id": "react-adapter-context",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "useBoxPlot",
+      "description": "Контекст ближайшего BoxPlot: полный layout, page текущих групп, labels, formatValue и slotProps. Вне root выбрасывает ошибку."
     }
   ]
 }

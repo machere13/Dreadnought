@@ -2,6 +2,8 @@ import { useMemo } from 'react';
 import { buildHistogram, type HistogramOptions } from '@dreadnought/core';
 import { BarChartAdapter } from '../BarChart/BarChartAdapter.tsx';
 import type { BarChartAdapterProps } from '../BarChart/barChart.types.ts';
+import { HistogramContext } from './HistogramContext.tsx';
+import { HistogramPlotAdapter } from './HistogramPlot.tsx';
 
 export type HistogramAdapterProps = Omit<
   BarChartAdapterProps,
@@ -24,7 +26,7 @@ export type HistogramAdapterProps = Omit<
 
 const visibleSeries = ['histogram'];
 
-export function HistogramAdapter({
+function HistogramRootAdapter({
   data,
   bins,
   domain,
@@ -59,25 +61,34 @@ export function HistogramAdapter({
   );
   const maximum = Math.max(1, ...layout.bins.map((bin) => bin.count));
   return (
-    <BarChartAdapter
-      {...props}
-      categories={categories}
-      series={series}
-      domain={[0, Math.ceil(maximum / 4) * 4]}
-      categoryLabel={categoryLabel}
-      valueLabel={valueLabel}
-      formatTick={String}
-      formatValue={(value) =>
-        `${value} (${layout.total ? Math.round((value / layout.total) * 1000) / 10 : 0}%)`
-      }
-      orientation="vertical"
-      gapRatio={0}
-      minCategorySize={minCategorySize}
-      visibleSeries={visibleSeries}
-      slotProps={{
-        ...slotProps,
-        legend: { ...slotProps.legend, hidden: true, style: { display: 'none' } },
-      }}
-    />
+    <HistogramContext.Provider value={layout}>
+      <BarChartAdapter
+        {...props}
+        categories={categories}
+        series={series}
+        domain={[0, Math.ceil(maximum / 4) * 4]}
+        categoryLabel={categoryLabel}
+        valueLabel={valueLabel}
+        formatTick={String}
+        formatValue={(value) =>
+          `${value} (${layout.total ? Math.round((value / layout.total) * 1000) / 10 : 0}%)`
+        }
+        orientation="vertical"
+        gapRatio={0}
+        minCategorySize={minCategorySize}
+        visibleSeries={visibleSeries}
+        slotProps={{
+          ...slotProps,
+          legend: { ...slotProps.legend, hidden: true, style: { display: 'none' } },
+        }}
+      />
+    </HistogramContext.Provider>
   );
 }
+
+export const HistogramAdapter = Object.assign(HistogramRootAdapter, {
+  Plot: HistogramPlotAdapter,
+  Table: BarChartAdapter.Table,
+  Pagination: BarChartAdapter.Pagination,
+  Empty: BarChartAdapter.Empty,
+});

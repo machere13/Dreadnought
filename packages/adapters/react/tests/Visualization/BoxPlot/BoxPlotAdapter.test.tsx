@@ -1,6 +1,7 @@
 import { afterEach, expect, it, vi } from 'vitest';
+import { createRef } from 'react';
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
-import * as adapters from '../../../src/unstyled.ts';
+import * as adapters from '../../../src/Visualization/BoxPlot/index.ts';
 
 afterEach(() => {
   cleanup();
@@ -56,4 +57,112 @@ it('pages both plot and table and removes stale tooltips when data changes', () 
   rerender(<adapters.BoxPlotAdapter label="Сроки" data={[]} pageSize={1} />);
   expect(screen.queryAllByRole('img')).toHaveLength(0);
   expect(screen.getByText('Нет данных')).toBeTruthy();
+});
+
+it('composes groups, axis and table around shared pages without changing the full scale', () => {
+  expect(adapters.BoxPlotAdapter.Plot).toBeTypeOf('function');
+  function Controls() {
+    const { layout, page } = adapters.useBoxPlot();
+    return (
+      <button onClick={() => page.change(2)}>
+        Scale {layout.domain?.join(':')}, page {page.page}
+      </button>
+    );
+  }
+  const ref = createRef<HTMLSpanElement>();
+  const { unmount } = render(
+    <adapters.BoxPlotAdapter
+      label="Сроки"
+      data={data}
+      pageSize={1}
+      slotProps={{ group: () => ({ ref }) }}
+    >
+      <Controls />
+      <adapters.BoxPlotAdapter.Axis />
+      <adapters.BoxPlotAdapter.Plot
+        tooltipContent={({ group, defaultContent }) => (
+          <div>
+            {defaultContent}
+            <p>Count {group.count}</p>
+          </div>
+        )}
+      >
+        {({ group, defaultContent }) => <span data-count={group.count}>{defaultContent}</span>}
+      </adapters.BoxPlotAdapter.Plot>
+      <adapters.BoxPlotAdapter.Table />
+      <adapters.BoxPlotAdapter.Pagination />
+      <adapters.BoxPlotAdapter.Empty />
+    </adapters.BoxPlotAdapter>,
+  );
+  const first = screen.getByRole('img');
+  expect(ref.current).toBe(first);
+  expect(first.tagName).toBe('SPAN');
+  expect(first.querySelector('[data-count="9"]')).toBeTruthy();
+  act(() => first.focus());
+  expect(screen.getByRole('tooltip').textContent).toContain('Count 9');
+  expect(screen.getByRole('tooltip').textContent).toContain('100 × 2');
+  fireEvent.click(screen.getByRole('button', { name: 'Scale 1:100, page 1' }));
+  expect(screen.getByRole('button', { name: 'Scale 1:100, page 2' })).toBeTruthy();
+  expect(screen.getByRole('img').getAttribute('aria-label')).toContain('Команда B');
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  expect(within(screen.getByRole('table')).queryByText('Команда A')).toBeNull();
+  unmount();
+  expect(ref.current).toBeNull();
+});
+
+it('keeps cancellation, roving focus and optional tooltip content with custom glyphs', () => {
+  expect(adapters.BoxPlotAdapter.Plot).toBeTypeOf('function');
+  render(
+    <adapters.BoxPlotAdapter
+      label="Сроки"
+      data={data}
+      slotProps={{
+        group: () => ({
+          onKeyDown: (event) => {
+            if (event.key === 'ArrowDown') event.preventDefault();
+          },
+        }),
+      }}
+    >
+      <adapters.BoxPlotAdapter.Plot
+        tooltipContent={({ group, defaultContent }) => (group.id === 'a' ? null : defaultContent)}
+      >
+        {({ defaultContent }) => defaultContent}
+      </adapters.BoxPlotAdapter.Plot>
+    </adapters.BoxPlotAdapter>,
+  );
+  const [first, second] = screen.getAllByRole('img');
+  act(() => first.focus());
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  fireEvent.keyDown(first, { key: 'ArrowDown' });
+  expect(document.activeElement).toBe(first);
+  fireEvent.keyDown(first, { key: 'End' });
+  expect(document.activeElement).toBe(second);
+  expect(first.tabIndex).toBe(-1);
+  expect(second.tabIndex).toBe(0);
+  expect(screen.getByRole('tooltip').textContent).toContain('Команда B');
+  fireEvent.keyDown(second, { key: 'Escape' });
+  expect(screen.queryByRole('tooltip')).toBeNull();
+});
+
+it('allows empty composition and requires a BoxPlot root for the context hook', () => {
+  expect(adapters.useBoxPlot).toBeTypeOf('function');
+  const { rerender } = render(
+    <adapters.BoxPlotAdapter label="Сроки" data={data}>
+      {null}
+    </adapters.BoxPlotAdapter>,
+  );
+  expect(screen.queryByRole('img')).toBeNull();
+  expect(screen.queryByRole('table')).toBeNull();
+  rerender(
+    <adapters.BoxPlotAdapter label="Сроки" data={[]}>
+      <adapters.BoxPlotAdapter.Empty />
+    </adapters.BoxPlotAdapter>,
+  );
+  expect(screen.getByText('Нет данных')).toBeTruthy();
+  function Outside() {
+    adapters.useBoxPlot();
+    return null;
+  }
+  expect(() => render(<Outside />)).toThrow(/BoxPlot/);
 });

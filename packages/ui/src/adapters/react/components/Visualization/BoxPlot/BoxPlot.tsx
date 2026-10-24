@@ -8,7 +8,7 @@ import { buttonPresentation } from '#presentation/Controls/Button/buttonPresenta
 export type BoxPlotProps = BoxPlotAdapterProps;
 const classes = (...values: (string | undefined)[]) => values.filter(Boolean).join(' ');
 
-export function BoxPlot({ className, slotProps = {}, ...props }: BoxPlotProps) {
+function BoxPlotRoot({ className, slotProps = {}, ...props }: BoxPlotProps) {
   return (
     <BoxPlotAdapter
       {...props}
@@ -75,3 +75,15 @@ export function BoxPlot({ className, slotProps = {}, ...props }: BoxPlotProps) {
     />
   );
 }
+
+export const BoxPlot: typeof BoxPlotRoot &
+  Pick<typeof BoxPlotAdapter, 'Plot' | 'Axis' | 'Table' | 'Pagination' | 'Empty'> = Object.assign(
+  BoxPlotRoot,
+  {
+    Plot: BoxPlotAdapter.Plot,
+    Axis: BoxPlotAdapter.Axis,
+    Table: BoxPlotAdapter.Table,
+    Pagination: BoxPlotAdapter.Pagination,
+    Empty: BoxPlotAdapter.Empty,
+  },
+);

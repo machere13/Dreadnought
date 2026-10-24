@@ -1,7 +1,8 @@
 {
   "componentId": "component:histogram",
   "constraints": [
-    "Переиспользует оформление, слоты и токены --dreadnought-bar-chart-*; цвет маркера совпадает со столбцами."
+    "Переиспользует оформление, слоты и токены --dreadnought-bar-chart-*; цвет маркера совпадает со столбцами.",
+    "Композиция: Plot, Table, Pagination, Empty и useHistogram. Без children сохраняется готовое поведение; свои children заменяют набор и порядок частей, null оставляет подпись. Хук возвращает layout точных интервалов, source столбцов, page таблицы, форматы и slotProps ближайшего root. Plot.children и tooltipContent получают bin из полного layout, геометрию bar и defaultContent. Столбцы сохраняют фокусируемую g, ref, навигацию и виртуализацию BarChart. Пагинация меняет только таблицу. Не добавляйте интерактивных потомков; при замене таблицы сохраните границы, количество и долю всей выборки. null/undefined/false из tooltipContent скрывают подсказку."
   ],
   "bindings": [
     {
@@ -31,14 +32,67 @@
         "width": "Фиксированная ширина, только вместе с height. Без размеров измеряется контейнер.",
         "height": "Фиксированная высота, только вместе с width.",
         "labels": "Подписи таблицы и пустого состояния; легенда у Histogram скрыта.",
-        "slotProps": "Слоты BarChart: столбцы, оси, Tooltip, Mark, таблица и пагинация. Геометрия задаётся Histogram."
+        "slotProps": "Слоты BarChart: столбцы, оси, Tooltip, Mark, таблица и пагинация. Геометрия задаётся Histogram.",
+        "children": "Своя композиция Plot, Table, Pagination, Empty и компонентов с useHistogram. undefined — готовый набор, null — только подпись."
       },
       "examples": [
         {
           "id": "basic",
           "code": "import { Histogram } from '@dreadnought/ui/react';\nconst data = [42, 65, 110, 125, 180, 210, 320, 580];\nexport function Example() { return <Histogram label=\"Время ответа\" data={data} bins={6} domain={[0,600]} categoryLabel=\"Время, мс\" valueLabel=\"Запросы\" />; }"
+        },
+        {
+          "id": "compound",
+          "code": "import { Histogram, useHistogram } from '@dreadnought/ui/react';\nconst data = [0,1,2,3,4];\nfunction Summary() { const {layout,page} = useHistogram(); return <button onClick={() => page.change(2)}>Страница {page.page}, измерений {layout.total}</button>; }\nexport function Example() { return <Histogram label=\"Распределение\" data={data} bins={2} pageSize={1}><Summary /><Histogram.Plot tooltipContent={({defaultContent}) => <div>{defaultContent}</div>}>{({defaultContent}) => defaultContent}</Histogram.Plot><Histogram.Table /><Histogram.Pagination /><Histogram.Empty /></Histogram>; }"
         }
       ]
+    },
+    {
+      "id": "react-ui-plot",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Histogram",
+      "propertyPath": ["Plot"],
+      "description": "Готовое поведение с заменяемым рисунком и Tooltip.",
+      "propertyDescriptions": {
+        "children": "Свой рисунок: ({bin, bar, category, active, defaultContent}) => ReactNode. Без интерактивных потомков; внешняя обёртка сохраняет фокус и события.",
+        "tooltipContent": "Своя подсказка с defaultContent; null/undefined/false отключают её. Получает точный bin, bar, category, rows и formatValue."
+      }
+    },
+    {
+      "id": "react-ui-table",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Histogram",
+      "propertyPath": ["Table"],
+      "description": "Доступная таблица текущей страницы с исходными статистиками."
+    },
+    {
+      "id": "react-ui-pagination",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Histogram",
+      "propertyPath": ["Pagination"],
+      "description": "Пагинация общего состояния; при одной странице скрыта."
+    },
+    {
+      "id": "react-ui-empty",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Histogram",
+      "propertyPath": ["Empty"],
+      "description": "Пустое состояние полного набора."
+    },
+    {
+      "id": "react-ui-context",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "useHistogram",
+      "description": "Контекст ближайшего Histogram: layout интервалов, source столбцов, page таблицы, форматы и slotProps. Вне root выбрасывает ошибку."
     }
   ]
 }

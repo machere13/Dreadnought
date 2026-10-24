@@ -1,7 +1,8 @@
 {
   "componentId": "component:box-plot",
   "constraints": [
-    "Оформление управляется токенами --dreadnought-box-plot-*. Геометрия не зависит от CSS."
+    "Оформление управляется токенами --dreadnought-box-plot-*. Геометрия не зависит от CSS.",
+    "Композиция: Plot, Axis, Table, Pagination, Empty и useBoxPlot. Без children выводится готовый набор, свои children меняют состав и порядок, null оставляет подпись. Хук возвращает layout всех групп, page:{rows,page,count,change}, label, labels, valueLabel, formatValue, slotProps. page меняет и график, и таблицу, но не общую шкалу. Plot.children и tooltipContent получают group, active, labels, formatValue и defaultContent рисунка/подсказки соответственно. Исходный span сохраняет ref, фокус и события; свой рисунок декоративен, без интерактивных потомков. null/undefined/false из tooltipContent скрывают подсказку. При замене таблицы сохраните точные статистики и все выбросы с количеством совпадений."
   ],
   "bindings": [
     {
@@ -23,14 +24,76 @@
         "formatValue": "Формат значений в шкале, Tooltip и таблице; не влияет на расчёт.",
         "pageSize": "Число групп одновременно в графике и таблице. По умолчанию 20.",
         "labels": "Подписи статистик, таблицы и пустого состояния.",
-        "slotProps": "Свойства графика, геометрических частей, Tooltip, Mark, таблицы и пагинации."
+        "slotProps": "Свойства графика, геометрических частей, Tooltip, Mark, таблицы и пагинации.",
+        "children": "Своя композиция Plot, Axis, Table, Pagination, Empty и компонентов с useBoxPlot. undefined — готовый набор, null — только подпись."
       },
       "examples": [
         {
           "id": "basic",
           "code": "import { BoxPlot } from '@dreadnought/ui/react';\nconst data = [{ id: 'a', label: 'Группа A', values: [1,2,3,4,5,6,7,100,100] }];\nexport function Example() { return <BoxPlot label=\"Распределение\" data={data} />; }"
+        },
+        {
+          "id": "compound",
+          "code": "import { BoxPlot, useBoxPlot } from '@dreadnought/ui/react';\nconst data = [{id:'a',label:'Группа A',values:[1,2,3,4,5,6,7,100,100]}];\nfunction Summary() { const {layout,page} = useBoxPlot(); return <button onClick={() => page.change(2)}>Страница {page.page}, групп {layout.groups.length}</button>; }\nexport function Example() { return <BoxPlot label=\"Распределение\" data={data} pageSize={1}><Summary /><BoxPlot.Plot tooltipContent={({defaultContent}) => <div>{defaultContent}</div>}>{({defaultContent}) => defaultContent}</BoxPlot.Plot><BoxPlot.Axis /><BoxPlot.Table /><BoxPlot.Pagination /><BoxPlot.Empty /></BoxPlot>; }"
         }
       ]
+    },
+    {
+      "id": "react-ui-plot",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "BoxPlot",
+      "propertyPath": ["Plot"],
+      "description": "Готовое поведение с заменяемым рисунком и Tooltip.",
+      "propertyDescriptions": {
+        "children": "Свой рисунок: ({group, active, labels, formatValue, defaultContent}) => ReactNode. Без интерактивных потомков; внешняя обёртка сохраняет фокус и события.",
+        "tooltipContent": "Своя подсказка с defaultContent; null/undefined/false отключают её. Получает group, active, labels и formatValue."
+      }
+    },
+    {
+      "id": "react-ui-axis",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "BoxPlot",
+      "propertyPath": ["Axis"],
+      "description": "Общая шкала всех групп, не меняется при перелистывании."
+    },
+    {
+      "id": "react-ui-table",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "BoxPlot",
+      "propertyPath": ["Table"],
+      "description": "Доступная таблица текущей страницы с исходными статистиками."
+    },
+    {
+      "id": "react-ui-pagination",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "BoxPlot",
+      "propertyPath": ["Pagination"],
+      "description": "Пагинация общего состояния; при одной странице скрыта."
+    },
+    {
+      "id": "react-ui-empty",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "BoxPlot",
+      "propertyPath": ["Empty"],
+      "description": "Пустое состояние полного набора."
+    },
+    {
+      "id": "react-ui-context",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "useBoxPlot",
+      "description": "Контекст ближайшего BoxPlot: полный layout, page текущих групп, labels, formatValue и slotProps. Вне root выбрасывает ошибку."
     }
   ]
 }

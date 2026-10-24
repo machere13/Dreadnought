@@ -9,6 +9,8 @@ import { HistogramStatesDemo } from './HistogramStatesDemo.tsx';
 import statesCode from './HistogramStatesDemo.tsx?raw';
 import { HistogramLargeDemo } from './HistogramLargeDemo.tsx';
 import largeCode from './HistogramLargeDemo.tsx?raw';
+import { HistogramCompositionDemo } from './HistogramCompositionDemo.tsx';
+import compositionCode from './HistogramCompositionDemo.tsx?raw';
 
 export const histogramDoc: ComponentDoc = {
   ...getCatalogDoc('histogram'),
@@ -22,6 +24,16 @@ export const histogramDoc: ComponentDoc = {
   logicDescription:
     'buildHistogram проверяет исходные числа и рассчитывает границы, количество и долю наблюдений без React и DOM.',
   notes: [
+    <>
+      Без children доступны готовые график и таблица. Свои children задают состав и порядок Plot,
+      Table, Pagination и Empty; null оставляет только подпись. useHistogram возвращает layout
+      точных интервалов, source столбцов, page и оформление. Пагинация меняет только таблицу.
+      Plot.children и tooltipContent получают bin, геометрию bar и defaultContent. null из
+      tooltipContent отключает подсказку. Обёртка столбца сохраняет ref, имя и клавиатуру; рисунок
+      должен оставаться внутри его области, без интерактивных потомков. Части и хук работают внутри
+      Histogram или HistogramAdapter. При замене таблицы сохраняйте интервалы, количество и долю
+      всей выборки.
+    </>,
     <>
       bins — число равных интервалов от 1 до 1000. Без него используется ceil(log₂(n)) + 1, максимум
       100. domain задаёт общий диапазон: ширина интервала равна (max − min) / bins. Произвольные
@@ -92,6 +104,14 @@ export const histogramDoc: ComponentDoc = {
         'Компонент агрегирует 100 000 чисел в 20 интервалов. На узком экране график прокручивается; таблица показывает по пять интервалов на странице.',
       demo: <HistogramLargeDemo />,
       code: largeCode,
+    },
+    {
+      id: 'histogram-composition',
+      title: 'Свой рисунок и состав частей',
+      description:
+        'Количество подписано внутри столбцов, Tooltip поясняет границу интервала. Перелистывайте таблицу: все четыре столбца остаются на графике. На узком экране график прокручивается отдельно.',
+      demo: <HistogramCompositionDemo />,
+      code: compositionCode,
     },
   ],
 };

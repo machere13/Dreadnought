@@ -3,7 +3,7 @@ import { getBarChartAppearance } from '../BarChart/getBarChartAppearance.ts';
 import { histogramPresentation } from '#presentation/Visualization/Histogram/index.ts';
 
 export type HistogramProps = HistogramAdapterProps;
-export function Histogram({ className, slotProps = {}, ...props }: HistogramProps) {
+function HistogramRoot({ className, slotProps = {}, ...props }: HistogramProps) {
   const appearance = getBarChartAppearance(
     [histogramPresentation.root, className].filter(Boolean).join(' '),
     {
@@ -18,3 +18,14 @@ export function Histogram({ className, slotProps = {}, ...props }: HistogramProp
   );
   return <HistogramAdapter {...props} {...appearance} />;
 }
+
+export const Histogram: typeof HistogramRoot &
+  Pick<typeof HistogramAdapter, 'Plot' | 'Table' | 'Pagination' | 'Empty'> = Object.assign(
+  HistogramRoot,
+  {
+    Plot: HistogramAdapter.Plot,
+    Table: HistogramAdapter.Table,
+    Pagination: HistogramAdapter.Pagination,
+    Empty: HistogramAdapter.Empty,
+  },
+);

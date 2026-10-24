@@ -122,11 +122,10 @@ export type {
   UploadAdapterProps, UploadActionRenderProps, UploadSlotClassNames,
 } from './Fields/Upload/upload.types.ts';
 export type { CalendarDate, DatePickerRange, DatePickerValue } from './Fields/DatePicker/datePicker.types.ts';
-export { BoxPlotAdapter } from './Visualization/BoxPlot/index.ts';
+export * from './Visualization/BoxPlot/index.ts';
 export * from './Visualization/FunnelChart/index.ts';
 export * from './Visualization/Treemap/index.ts';
 export * from './Visualization/WaterfallChart/index.ts';
-export type { BoxPlotAdapterProps, BoxPlotSlotProps, BoxPlotLabels } from './Visualization/BoxPlot/index.ts';
 export * from './Visualization/Sankey/index.ts';
 export * from './Visualization/Gauge/index.ts';
 export * from './Visualization/CandlestickChart/index.ts';
