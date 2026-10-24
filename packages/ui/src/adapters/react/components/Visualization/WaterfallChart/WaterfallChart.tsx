@@ -11,7 +11,7 @@ import { buttonPresentation } from '#presentation/Controls/Button/buttonPresenta
 export type WaterfallChartProps = WaterfallChartAdapterProps;
 const classes = (...values: (string | undefined)[]) => values.filter(Boolean).join(' ');
 
-export function WaterfallChart({ className, slotProps = {}, ...props }: WaterfallChartProps) {
+function WaterfallChartRoot({ className, slotProps = {}, ...props }: WaterfallChartProps) {
   return (
     <WaterfallChartAdapter
       {...props}
@@ -77,3 +77,14 @@ export function WaterfallChart({ className, slotProps = {}, ...props }: Waterfal
     />
   );
 }
+
+export const WaterfallChart: typeof WaterfallChartRoot &
+  Pick<typeof WaterfallChartAdapter, 'Plot' | 'Table' | 'Pagination' | 'Empty'> = Object.assign(
+  WaterfallChartRoot,
+  {
+    Plot: WaterfallChartAdapter.Plot,
+    Table: WaterfallChartAdapter.Table,
+    Pagination: WaterfallChartAdapter.Pagination,
+    Empty: WaterfallChartAdapter.Empty,
+  },
+);

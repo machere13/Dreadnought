@@ -1,12 +1,18 @@
 import { useId, useMemo, useState } from 'react';
 import { buildWaterfallLayout } from '@dreadnought/core';
-import { ChartPagination, useChartPage } from '../../shared/useChartPage.tsx';
+import { useChartPage } from '../../shared/useChartPage.tsx';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
-import { WaterfallPlot } from './WaterfallPlot.tsx';
-import { WaterfallDataTable, waterfallLabels } from './WaterfallStatistics.tsx';
+import { WaterfallChartContext } from './WaterfallChartContext.tsx';
+import {
+  WaterfallChartPlotAdapter,
+  WaterfallChartTableAdapter,
+  WaterfallChartPaginationAdapter,
+  WaterfallChartEmptyAdapter,
+} from './WaterfallChartParts.tsx';
+import { waterfallLabels } from './WaterfallStatistics.tsx';
 import type { WaterfallChartAdapterProps } from './waterfallChart.types.ts';
 
-export function WaterfallChartAdapter({
+function WaterfallChartRootAdapter({
   data,
   domain,
   label,
@@ -15,6 +21,7 @@ export function WaterfallChartAdapter({
   pageSize = 12,
   labels: overrides = {},
   slotProps = {},
+  children,
   ...rest
 }: WaterfallChartAdapterProps) {
   const layout = useMemo(() => buildWaterfallLayout({ data, domain }), [data, domain]);
@@ -33,7 +40,15 @@ export function WaterfallChartAdapter({
     throw new TypeError('Waterfall description must be a string');
   const id = useId();
   const page = useChartPage(layout.steps, pageSize);
-  const statistics = { labels, formatValue, slotProps };
+  const context = {
+    layout,
+    page,
+    label,
+    labels,
+    formatValue,
+    slotProps,
+    plotKey: `${revision}:${page.page}`,
+  };
   return (
     <figure
       {...native(rest, ['role'])}
@@ -43,18 +58,25 @@ export function WaterfallChartAdapter({
     >
       <figcaption id={`${id}-label`}>{label}</figcaption>
       {description !== undefined && <p id={`${id}-description`}>{description}</p>}
-      {layout.steps.length ? (
-        <WaterfallPlot
-          key={`${revision}:${page.page}`}
-          layout={layout}
-          steps={page.rows}
-          {...statistics}
-        />
-      ) : (
-        <p>{labels.empty}</p>
-      )}
-      <WaterfallDataTable steps={page.rows} label={label} {...statistics} />
-      <ChartPagination {...page} slotProps={slotProps} />
+      <WaterfallChartContext.Provider value={context}>
+        {children === undefined ? (
+          <>
+            <WaterfallChartPlotAdapter />
+            <WaterfallChartEmptyAdapter />
+            <WaterfallChartTableAdapter />
+            <WaterfallChartPaginationAdapter />
+          </>
+        ) : (
+          children
+        )}
+      </WaterfallChartContext.Provider>
     </figure>
   );
 }
+
+export const WaterfallChartAdapter = Object.assign(WaterfallChartRootAdapter, {
+  Plot: WaterfallChartPlotAdapter,
+  Table: WaterfallChartTableAdapter,
+  Pagination: WaterfallChartPaginationAdapter,
+  Empty: WaterfallChartEmptyAdapter,
+});

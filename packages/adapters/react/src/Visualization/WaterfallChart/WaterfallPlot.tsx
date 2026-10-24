@@ -11,12 +11,16 @@ import {
   waterfallValue,
   type WaterfallStatisticsProps,
 } from './WaterfallStatistics.tsx';
+import type { WaterfallChartPlotProps } from './waterfallChart.types.ts';
 
 export function WaterfallPlot({
   layout,
   steps,
+  children,
+  tooltipContent,
   ...statistics
-}: WaterfallStatisticsProps & { layout: WaterfallLayout; steps: WaterfallStep[] }) {
+}: WaterfallStatisticsProps &
+  WaterfallChartPlotProps & { layout: WaterfallLayout; steps: WaterfallStep[] }) {
   const { slotProps, formatValue } = statistics;
   const [tabStop, setTabStop] = useState<string>();
   const [open, setOpen] = useState<string | null>(null);
@@ -40,40 +44,60 @@ export function WaterfallPlot({
             gridTemplateColumns: `repeat(${steps.length}, minmax(6rem, 1fr))`,
           }}
         >
-          {steps.map((step, index) => (
-            <WaterfallStepView
-              key={step.id}
-              step={step}
-              baseline={layout.baseline}
-              connector={index < steps.length - 1}
-              value={waterfallValue(step, formatValue)}
-              tabIndex={tabId === step.id ? 0 : -1}
-              slotProps={slotProps}
-              elements={elements}
-              activate={() => {
-                interaction.current = step.id;
-              }}
-              focus={() => setTabStop(step.id)}
-              navigate={(key) => {
-                const next = getCollectionNavigation(candidates, step.id, key, {
-                  orientation: 'horizontal',
-                  loop: false,
-                });
-                if (next === undefined) return false;
-                elements.current.get(next)?.focus();
-                return true;
-              }}
-              tooltip={{
-                ...native(slotProps.tooltip, ['ref']),
-                content: <WaterfallTooltip step={step} {...statistics} />,
-                open: open === step.id,
-                onOpenChange: (next) => {
-                  if (next && interaction.current !== step.id) return;
-                  setOpen((current) => (next ? step.id : current === step.id ? null : current));
-                },
-              }}
-            />
-          ))}
+          {steps.map((step, index) => {
+            const context = {
+              step,
+              baseline: layout.baseline,
+              connector: index < steps.length - 1,
+              active: open === step.id,
+              labels: statistics.labels,
+              formatValue,
+            };
+            const defaultContent = <WaterfallTooltip step={step} {...statistics} />;
+            const content = tooltipContent
+              ? tooltipContent({ ...context, defaultContent })
+              : defaultContent;
+            const hasContent = content !== null && content !== undefined && content !== false;
+            return (
+              <WaterfallStepView
+                key={step.id}
+                step={step}
+                drawing={
+                  children &&
+                  ((defaultContent) =>
+                    children({ ...context, active: context.active && hasContent, defaultContent }))
+                }
+                baseline={layout.baseline}
+                connector={index < steps.length - 1}
+                value={waterfallValue(step, formatValue)}
+                tabIndex={tabId === step.id ? 0 : -1}
+                slotProps={slotProps}
+                elements={elements}
+                activate={() => {
+                  interaction.current = step.id;
+                }}
+                focus={() => setTabStop(step.id)}
+                navigate={(key) => {
+                  const next = getCollectionNavigation(candidates, step.id, key, {
+                    orientation: 'horizontal',
+                    loop: false,
+                  });
+                  if (next === undefined) return false;
+                  elements.current.get(next)?.focus();
+                  return true;
+                }}
+                tooltip={{
+                  ...native(slotProps.tooltip, ['ref']),
+                  content,
+                  open: open === step.id && hasContent,
+                  onOpenChange: (next) => {
+                    if (next && interaction.current !== step.id) return;
+                    setOpen((current) => (next ? step.id : current === step.id ? null : current));
+                  },
+                }}
+              />
+            );
+          })}
         </div>
       </div>
     </div>

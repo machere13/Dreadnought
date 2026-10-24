@@ -1,12 +1,18 @@
 import { useId, useMemo, useState } from 'react';
 import { buildSankeyLayout } from '@dreadnought/core';
-import { ChartPagination, useChartPage } from '../../shared/useChartPage.tsx';
+import { useChartPage } from '../../shared/useChartPage.tsx';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
-import { SankeyPlot } from './SankeyPlot.tsx';
-import { SankeyDataTable, sankeyLabels } from './SankeyStatistics.tsx';
+import { SankeyContext } from './SankeyContext.tsx';
+import {
+  SankeyPlotAdapter,
+  SankeyTableAdapter,
+  SankeyPaginationAdapter,
+  SankeyEmptyAdapter,
+} from './SankeyParts.tsx';
+import { sankeyLabels } from './SankeyStatistics.tsx';
 import type { SankeyAdapterProps } from './sankey.types.ts';
 
-export function SankeyAdapter({
+function SankeyRootAdapter({
   nodes,
   links,
   label,
@@ -16,6 +22,7 @@ export function SankeyAdapter({
   pageSize = 20,
   labels: overrides = {},
   slotProps = {},
+  children,
   ...rest
 }: SankeyAdapterProps) {
   const layout = useMemo(
@@ -34,7 +41,15 @@ export function SankeyAdapter({
     throw new TypeError('Sankey description must be a string');
   const id = useId();
   const page = useChartPage(layout.links, pageSize);
-  const statistics = { labels, formatValue, slotProps };
+  const context = {
+    layout,
+    page,
+    label,
+    labels,
+    formatValue,
+    slotProps,
+    plotKey: String(revision),
+  };
   return (
     <figure
       {...native(rest, ['role'])}
@@ -44,13 +59,25 @@ export function SankeyAdapter({
     >
       <figcaption id={`${id}-label`}>{label}</figcaption>
       {description !== undefined && <p id={`${id}-description`}>{description}</p>}
-      {layout.nodes.length ? (
-        <SankeyPlot key={revision} layout={layout} {...statistics} />
-      ) : (
-        <p>{labels.empty}</p>
-      )}
-      <SankeyDataTable links={page.rows} label={label} {...statistics} />
-      <ChartPagination {...page} slotProps={slotProps} />
+      <SankeyContext.Provider value={context}>
+        {children === undefined ? (
+          <>
+            <SankeyPlotAdapter />
+            <SankeyEmptyAdapter />
+            <SankeyTableAdapter />
+            <SankeyPaginationAdapter />
+          </>
+        ) : (
+          children
+        )}
+      </SankeyContext.Provider>
     </figure>
   );
 }
+
+export const SankeyAdapter = Object.assign(SankeyRootAdapter, {
+  Plot: SankeyPlotAdapter,
+  Table: SankeyTableAdapter,
+  Pagination: SankeyPaginationAdapter,
+  Empty: SankeyEmptyAdapter,
+});

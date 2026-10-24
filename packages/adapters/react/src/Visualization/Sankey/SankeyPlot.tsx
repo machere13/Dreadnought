@@ -3,11 +3,14 @@ import { getCollectionNavigation, type SankeyLayout } from '@dreadnought/core';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
 import { SankeyItemView } from './SankeyItemView.tsx';
 import { SankeyTooltip, type SankeyStatisticsProps } from './SankeyStatistics.tsx';
+import type { SankeyPlotProps } from './sankey.types.ts';
 
 export function SankeyPlot({
   layout,
+  children,
+  tooltipContent,
   ...statistics
-}: SankeyStatisticsProps & { layout: SankeyLayout }) {
+}: SankeyStatisticsProps & SankeyPlotProps & { layout: SankeyLayout }) {
   const { slotProps } = statistics;
   const [tabStop, setTabStop] = useState<string>();
   const [open, setOpen] = useState<string | null>(null);
@@ -28,10 +31,26 @@ export function SankeyPlot({
       >
         {items.map((item) => {
           const key = `${item.kind}:${item.id}`;
+          const context = {
+            item,
+            active: open === key,
+            labels: statistics.labels,
+            formatValue: statistics.formatValue,
+          };
+          const defaultContent = <SankeyTooltip item={item} {...statistics} />;
+          const content = tooltipContent
+            ? tooltipContent({ ...context, defaultContent })
+            : defaultContent;
+          const hasContent = content !== null && content !== undefined && content !== false;
           return (
             <SankeyItemView
               key={key}
               item={item}
+              drawing={
+                children &&
+                ((geometry) =>
+                  children({ ...context, active: context.active && hasContent, ...geometry }))
+              }
               itemKey={key}
               layoutWidth={layout.width}
               tabIndex={key === tabId ? 0 : -1}
@@ -52,8 +71,8 @@ export function SankeyPlot({
               }}
               tooltip={{
                 ...native(slotProps.tooltip, ['ref']),
-                content: <SankeyTooltip item={item} {...statistics} />,
-                open: open === key,
+                content,
+                open: open === key && hasContent,
                 onOpenChange: (next) => {
                   if (next && interaction.current !== key) return;
                   setOpen((current) => (next ? key : current === key ? null : current));

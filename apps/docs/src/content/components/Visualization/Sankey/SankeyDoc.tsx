@@ -10,6 +10,9 @@ import statesCode from './SankeyStatesDemo.tsx?raw';
 import { SankeyManyDemo } from './SankeyManyDemo.tsx';
 import manyCode from './SankeyManyDemo.tsx?raw';
 
+import { SankeyCompositionDemo } from './SankeyCompositionDemo.tsx';
+import compositionCode from './SankeyCompositionDemo.tsx?raw';
+
 export const sankeyDoc: ComponentDoc = {
   ...getCatalogDoc('sankey'),
   title: 'Sankey',
@@ -22,6 +25,21 @@ export const sankeyDoc: ComponentDoc = {
   logicDescription:
     'buildSankeyLayout проверяет направленный граф без циклов, определяет колонки и рассчитывает размеры узлов и толщину связей без React и DOM.',
   notes: [
+    <>
+      Свои children задают состав и порядок Plot, Table, Pagination и Empty. Без children выводится
+      готовый набор; null оставляет подпись. useSankey возвращает layout полного графа, page
+      таблицы, labels, formatValue и slotProps. Пагинация меняет только таблицу, не узлы и потоки.
+      Новые ссылки nodes/links сбрасывают страницу и Tooltip.
+    </>,
+    <>
+      Plot.children получает item (node или link), width/height локальной области, path потока,
+      active, labels, formatValue и defaultContent рисунка с подписью. tooltipContent получает item,
+      active, labels, formatValue и defaultContent подсказки. Свой рисунок декоративен и inert:
+      исходные прозрачные фигуры и подписи сохраняют области наведения; span сохраняет ref, фокус и
+      события. Вписывайте рисунок в исходную геометрию, не меняйте толщину потока и не добавляйте
+      интерактивных потомков. null/undefined/false отключают Tooltip. Части и хук требуют ближайший
+      Sankey[Adapter]. При замене таблицы сохраните все точные связи и значения.
+    </>,
     <>
       nodes задаёт категории с уникальными id и label. links содержит уникальный id связи, source и
       target — ID узлов, value — конечное положительное число. Параллельные связи разрешены.
@@ -86,6 +104,14 @@ export const sankeyDoc: ComponentDoc = {
         'Все 12 команд остаются на диаграмме. Перейдите на вторую страницу таблицы: изменятся строки, но не ширины и не состав потоков.',
       demo: <SankeyManyDemo />,
       code: manyCode,
+    },
+    {
+      id: 'composition',
+      title: 'Свои узлы и потоки с готовым поведением',
+      description:
+        'Узлы получили скругление, потоки используют исходную геометрию, Tooltip различает их содержимое. Листайте таблицу своей кнопкой: граф остаётся целым. Стрелки проходят узлы и связи, Enter не нужен для просмотра Tooltip.',
+      demo: <SankeyCompositionDemo />,
+      code: compositionCode,
     },
   ],
 };

@@ -10,6 +10,9 @@ import statesCode from './WaterfallChartStatesDemo.tsx?raw';
 import { WaterfallChartManyDemo } from './WaterfallChartManyDemo.tsx';
 import manyCode from './WaterfallChartManyDemo.tsx?raw';
 
+import { WaterfallChartCompositionDemo } from './WaterfallChartCompositionDemo.tsx';
+import compositionCode from './WaterfallChartCompositionDemo.tsx?raw';
+
 export const waterfallChartDoc: ComponentDoc = {
   ...getCatalogDoc('waterfallchart'),
   title: 'WaterfallChart',
@@ -22,6 +25,20 @@ export const waterfallChartDoc: ComponentDoc = {
   logicDescription:
     'buildWaterfallLayout вычисляет суммы до и после каждого шага, геометрию столбцов и общую шкалу без React и DOM.',
   notes: [
+    <>
+      Свои children задают состав и порядок Plot, Table, Pagination и Empty. Без children выводится
+      готовый набор; null оставляет подпись. useWaterfallChart возвращает layout полного ряда, page
+      текущих шагов, labels, formatValue и slotProps. Пагинация меняет график и таблицу вместе, но
+      сохраняет общую шкалу и накопление. Соединители рисуются только между шагами одной страницы.
+    </>,
+    <>
+      Plot.children и tooltipContent получают step, baseline, connector, active, labels, formatValue
+      и defaultContent рисунка/подсказки. Координаты рисунка — нормализованный SVG 0…100,
+      стандартный viewBox «0 -2 100 104». Свой рисунок декоративен, без интерактивных потомков;
+      исходный span сохраняет ref, фокус, имя и события. null/undefined/false отключают Tooltip.
+      Части и хук требуют ближайший WaterfallChart[Adapter]. При замене таблицы сохраните тип,
+      точное значение, баланс до и после шага.
+    </>,
     <>
       kind: start задаёт начальное значение и допустим только первым. change прибавляет value со
       знаком. total показывает накопленную сумму и не изменяет её — используйте его и для
@@ -90,6 +107,14 @@ export const waterfallChartDoc: ComponentDoc = {
         '20 шагов по пять на странице. Вторая страница продолжает баланс первой, а не начинает с нуля. На последней итог — 145; шкала одинакова на всех страницах.',
       demo: <WaterfallChartManyDemo />,
       code: manyCode,
+    },
+    {
+      id: 'composition',
+      title: 'Свой рисунок и состав частей',
+      description:
+        'Бары со скруглением и свои подписи используют готовые координаты. Кнопка листает шаги и таблицу вместе. Итог всего ряда остаётся 115, на последней странице расход начинается с накопленных 140.',
+      demo: <WaterfallChartCompositionDemo />,
+      code: compositionCode,
     },
   ],
 };

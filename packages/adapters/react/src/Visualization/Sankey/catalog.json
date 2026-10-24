@@ -12,7 +12,8 @@
     "Только направленные графы без циклов. Самоссылки, неизвестные endpoints и переполнение сумм отклоняются. Высота узла — max(incoming,outgoing), ширина связей в общем масштабе; разница входа/выхода не добавляется как выдуманная связь.",
     "Колонки по длине максимального пути, конечные узлы справа. Порядок внутри колонки и связей сохраняется; оптимизации пересечений нет. nodeGap > 0. До 200 узлов и 1000 связей; большие графы агрегируйте до передачи. Расчёт и память O(nodes+links), весь граф в DOM.",
     "Tab входит один раз; ←/→ и Home/End переключают узлы, затем связи. Escape закрывает Tooltip, нажатие фокусирует элемент. Полные подписи и числа доступны в Tooltip, данные связей в таблице; цвет не единственный канал.",
-    "pageSize относится только к таблице, граф не разрывается. Граф и таблица имеют собственную прокрутку; фокус раскрывает элемент. Новые ссылки nodes/links сбрасывают Tooltip и страницу таблицы."
+    "pageSize относится только к таблице, граф не разрывается. Граф и таблица имеют собственную прокрутку; фокус раскрывает элемент. Новые ссылки nodes/links сбрасывают Tooltip и страницу таблицы.",
+    "Композиция: Plot, Table, Pagination, Empty и useSankey. Без children сохраняется готовый набор; свои children меняют состав и порядок, null оставляет подпись. Хук возвращает layout, page:{rows,page,count,change}, label, labels, formatValue, slotProps. Части и хук требуют ближайший root. layout содержит полный граф; page ограничивает только таблицу связей. Новые ссылки nodes/links сбрасывают страницу и Tooltip. Plot.children получает item, width/height локальной области, path потока, active, labels, formatValue, defaultContent рисунка с подписью. tooltipContent получает item, active, labels, formatValue и defaultContent подсказки. Рисунок декоративен и inert; исходные прозрачные фигуры/подписи сохраняют области наведения, span сохраняет ref, фокус, имя и события. Рисуйте внутри исходной геометрии, не меняйте толщину потока и не вкладывайте интерактивные элементы. null/undefined/false из tooltipContent отключают подсказку. Своя таблица должна сохранять точные связи и значения."
   ],
   "bindings": [
     {
@@ -34,14 +35,67 @@
         "formatValue": "Формат чисел в Tooltip и таблице, не меняющий расчёт.",
         "pageSize": "Число строк таблицы на странице. Граф всегда показывается целиком.",
         "labels": "Подписи колонок, числовых показателей и пустого состояния.",
-        "slotProps": "Нативные свойства графа, узлов и связей, Tooltip, Mark, таблицы и пагинации."
+        "slotProps": "Нативные свойства графа, узлов и связей, Tooltip, Mark, таблицы и пагинации.",
+        "children": "Своя композиция Plot, Table, Pagination, Empty и компонентов с useSankey. undefined — готовый набор, null — только подпись."
       },
       "examples": [
         {
           "id": "basic",
           "code": "import { SankeyAdapter } from '@dreadnought/react/unstyled';\nconst nodes = [{ id: 'a', label: 'Поиск' }, { id: 'b', label: 'Сайт' }];\nconst links = [{ id: 'ab', source: 'a', target: 'b', value: 70 }];\nexport function Example() { return <SankeyAdapter label=\"Переходы\" nodes={nodes} links={links} />; }"
+        },
+        {
+          "id": "compound",
+          "code": "import { SankeyAdapter, useSankey } from '@dreadnought/react/unstyled';\nconst nodes = [{id:'a',label:'Сайт'},{id:'b',label:'Заказ'}]; const links = [{id:'ab',source:'a',target:'b',value:60}];\nfunction Controls() { const {page} = useSankey(); return <button disabled={page.page === page.count} onClick={() => page.change(page.page + 1)}>Следующая страница</button>; }\nexport function Example() { return <SankeyAdapter label=\"Данные\" nodes={nodes} links={links} pageSize={1}><Controls /><SankeyAdapter.Plot tooltipContent={({defaultContent}) => <div>{defaultContent}</div>}>{({defaultContent}) => defaultContent}</SankeyAdapter.Plot><SankeyAdapter.Table /><SankeyAdapter.Pagination /><SankeyAdapter.Empty /></SankeyAdapter>; }"
         }
       ]
+    },
+    {
+      "id": "react-adapter-plot",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "SankeyAdapter",
+      "propertyPath": ["Plot"],
+      "description": "Готовое поведение с заменяемым рисунком и Tooltip.",
+      "propertyDescriptions": {
+        "children": "Свой рисунок: ({item,width,height,path,active,labels,formatValue,defaultContent}) => ReactNode. Обёртка сохраняет фокус, ref и события. Рисунок декоративен, без интерактивных потомков.",
+        "tooltipContent": "Содержимое Tooltip: ({item,active,labels,formatValue,defaultContent}) => ReactNode. null/undefined/false отключают подсказку."
+      }
+    },
+    {
+      "id": "react-adapter-table",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "SankeyAdapter",
+      "propertyPath": ["Table"],
+      "description": "Таблица текущей страницы с точными исходными значениями."
+    },
+    {
+      "id": "react-adapter-pagination",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "SankeyAdapter",
+      "propertyPath": ["Pagination"],
+      "description": "Пагинация общего состояния; при одной странице скрыта."
+    },
+    {
+      "id": "react-adapter-empty",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "SankeyAdapter",
+      "propertyPath": ["Empty"],
+      "description": "Пустое состояние полного набора."
+    },
+    {
+      "id": "react-adapter-context",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "useSankey",
+      "description": "Контекст ближайшего SankeyAdapter: полный layout, page:{rows,page,count,change}, label, labels, formatValue, slotProps. Вне root выбрасывает ошибку."
     }
   ]
 }

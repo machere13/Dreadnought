@@ -1,4 +1,11 @@
-import type { SankeyItem, SankeyLink, SankeyNode } from '@dreadnought/core';
+import type { ReactNode } from 'react';
+import type {
+  SankeyItem,
+  SankeyLink,
+  SankeyNode,
+  SankeyLayout,
+  SankeyFlow,
+} from '@dreadnought/core';
 import type { ChartNative as Native } from '../../shared/chartNativeProps.ts';
 import type { ChartPaginationSlots } from '../../shared/useChartPage.tsx';
 
@@ -22,10 +29,11 @@ export interface SankeySlotProps extends ChartPaginationSlots {
   tableContainer?: Native<'div'>;
   table?: Native<'table', 'role' | 'hidden' | 'aria-hidden'>;
 }
-export type SankeyAdapterProps = Native<
-  'figure',
-  'role' | 'aria-labelledby' | 'aria-describedby'
+export type SankeyAdapterProps = Omit<
+  Native<'figure', 'role' | 'aria-labelledby' | 'aria-describedby'>,
+  'children'
 > & {
+  children?: ReactNode;
   nodes: readonly SankeyNode[];
   links: readonly SankeyLink[];
   label: string;
@@ -36,3 +44,28 @@ export type SankeyAdapterProps = Native<
   labels?: SankeyLabels;
   slotProps?: SankeySlotProps;
 };
+
+export interface SankeyRenderContext {
+  item: SankeyItem;
+  active: boolean;
+  labels: Required<SankeyLabels>;
+  formatValue: (value: number) => string;
+  defaultContent: ReactNode;
+}
+export interface SankeyGlyphContext extends SankeyRenderContext {
+  width: number;
+  height: number;
+  path: string;
+}
+export interface SankeyPlotProps {
+  children?: (context: SankeyGlyphContext) => ReactNode;
+  tooltipContent?: (context: SankeyRenderContext) => ReactNode;
+}
+export interface SankeyContextValue {
+  layout: SankeyLayout;
+  page: { rows: SankeyFlow[]; page: number; count: number; change: (page: number) => void };
+  label: string;
+  labels: Required<SankeyLabels>;
+  formatValue: (value: number) => string;
+  slotProps: SankeySlotProps;
+}

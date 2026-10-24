@@ -13,7 +13,8 @@
     "Шкала вычисляется по полному набору, включает ноль и накопленные значения. Явный domain не может обрезать данные. Ноль изображается линией без искусственной высоты.",
     "Tab входит в шаги один раз; ←/→ и Home/End перемещают фокус в текущей странице без зацикливания. Escape закрывает Tooltip, нажатие фокусирует шаг. Знак и таблица дополняют цвет.",
     "pageSize ограничивает диаграмму и таблицу. Соединители только между соседями одной страницы. На узком экране диаграмма и таблица прокручиваются отдельно; фокусируемый шаг раскрывается прокруткой.",
-    "Расчёт и память O(n), видимых шагов не больше pageSize. data и domain неизменяемые; новая ссылка сбрасывает страницу и Tooltip. Нет фильтрации шагов, меняющей накопление."
+    "Расчёт и память O(n), видимых шагов не больше pageSize. data и domain неизменяемые; новая ссылка сбрасывает страницу и Tooltip. Нет фильтрации шагов, меняющей накопление.",
+    "Композиция: Plot, Table, Pagination, Empty и useWaterfallChart. Без children сохраняется готовый набор; свои children меняют состав и порядок, null оставляет подпись. Хук возвращает layout, page:{rows,page,count,change}, label, labels, formatValue, slotProps. Части и хук требуют ближайший root. layout содержит полный ряд; page меняет график и таблицу одновременно, но не накопление и общую шкалу. Соединители рисуются только между шагами текущей страницы. Новые ссылки data/domain сбрасывают страницу и Tooltip. Plot.children и tooltipContent получают step, baseline, connector, active, labels, formatValue, defaultContent рисунка/подсказки. Координаты нормализованы к SVG 0…100, стандартный viewBox «0 -2 100 104». Исходный span сохраняет ref, фокус, имя и события. Рисунок декоративен, без интерактивных потомков. null/undefined/false из tooltipContent отключают подсказку. Своя таблица должна сохранять тип, точное значение, баланс до и после каждого шага."
   ],
   "bindings": [
     {
@@ -33,14 +34,67 @@
         "formatValue": "Формат чисел. У change знак добавляется компонентом, formatter получает модуль; остальные значения передаются со знаком.",
         "pageSize": "Число шагов одновременно в диаграмме и таблице. Накопленные суммы и шкала остаются общими.",
         "labels": "Подписи типов шагов, столбцов и пустого состояния.",
-        "slotProps": "Нативные свойства областей диаграммы, шагов, Tooltip, Mark, таблицы и пагинации."
+        "slotProps": "Нативные свойства областей диаграммы, шагов, Tooltip, Mark, таблицы и пагинации.",
+        "children": "Своя композиция Plot, Table, Pagination, Empty и компонентов с useWaterfallChart. undefined — готовый набор, null — только подпись."
       },
       "examples": [
         {
           "id": "basic",
           "code": "import { WaterfallChartAdapter } from '@dreadnought/react/unstyled';\nconst data = [{ id: 'start', label: 'Начало', kind: 'start', value: 100 }, { id: 'income', label: 'Доход', kind: 'change', value: 40 }, { id: 'subtotal', label: 'Подытог', kind: 'total' }, { id: 'cost', label: 'Расходы', kind: 'change', value: -25 }, { id: 'total', label: 'Остаток', kind: 'total' }] as const;\nexport function Example() { return <WaterfallChartAdapter label=\"Бюджет\" data={data} />; }"
+        },
+        {
+          "id": "compound",
+          "code": "import { WaterfallChartAdapter, useWaterfallChart } from '@dreadnought/react/unstyled';\nconst data = [{id:'a',label:'Начало',kind:'start',value:100},{id:'b',label:'Расход',kind:'change',value:-25},{id:'c',label:'Итог',kind:'total'}] as const;\nfunction Controls() { const {page} = useWaterfallChart(); return <button disabled={page.page === page.count} onClick={() => page.change(page.page + 1)}>Следующая страница</button>; }\nexport function Example() { return <WaterfallChartAdapter label=\"Данные\" data={data} pageSize={1}><Controls /><WaterfallChartAdapter.Plot tooltipContent={({defaultContent}) => <div>{defaultContent}</div>}>{({defaultContent}) => defaultContent}</WaterfallChartAdapter.Plot><WaterfallChartAdapter.Table /><WaterfallChartAdapter.Pagination /><WaterfallChartAdapter.Empty /></WaterfallChartAdapter>; }"
         }
       ]
+    },
+    {
+      "id": "react-adapter-plot",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "WaterfallChartAdapter",
+      "propertyPath": ["Plot"],
+      "description": "Готовое поведение с заменяемым рисунком и Tooltip.",
+      "propertyDescriptions": {
+        "children": "Свой рисунок: ({step,baseline,connector,active,labels,formatValue,defaultContent}) => ReactNode. Обёртка сохраняет фокус, ref и события. Рисунок декоративен, без интерактивных потомков.",
+        "tooltipContent": "Содержимое Tooltip: ({step,baseline,connector,active,labels,formatValue,defaultContent}) => ReactNode. null/undefined/false отключают подсказку."
+      }
+    },
+    {
+      "id": "react-adapter-table",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "WaterfallChartAdapter",
+      "propertyPath": ["Table"],
+      "description": "Таблица текущей страницы с точными исходными значениями."
+    },
+    {
+      "id": "react-adapter-pagination",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "WaterfallChartAdapter",
+      "propertyPath": ["Pagination"],
+      "description": "Пагинация общего состояния; при одной странице скрыта."
+    },
+    {
+      "id": "react-adapter-empty",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "WaterfallChartAdapter",
+      "propertyPath": ["Empty"],
+      "description": "Пустое состояние полного набора."
+    },
+    {
+      "id": "react-adapter-context",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "useWaterfallChart",
+      "description": "Контекст ближайшего WaterfallChartAdapter: полный layout, page:{rows,page,count,change}, label, labels, formatValue, slotProps. Вне root выбрасывает ошибку."
     }
   ]
 }

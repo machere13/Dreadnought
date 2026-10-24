@@ -1,4 +1,4 @@
-import type { ComponentProps, RefObject } from 'react';
+import type { ComponentProps, RefObject, ReactNode } from 'react';
 import type { SankeyItem } from '@dreadnought/core';
 import { TooltipAdapter } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
@@ -6,6 +6,12 @@ import { attachRef } from '../../shared/attachRef.ts';
 import { sankeyItemLabel, type SankeyStatisticsProps } from './SankeyStatistics.tsx';
 
 interface Props {
+  drawing?: (context: {
+    width: number;
+    height: number;
+    path: string;
+    defaultContent: ReactNode;
+  }) => ReactNode;
   item: SankeyItem;
   itemKey: string;
   layoutWidth: number;
@@ -18,6 +24,7 @@ interface Props {
   navigate: (key: string) => boolean;
 }
 export function SankeyItemView({
+  drawing,
   item,
   itemKey,
   layoutWidth,
@@ -45,6 +52,51 @@ export function SankeyItemView({
         `C${width / 2},${item.sourceY - top}`,
         `${width / 2},${item.targetY - top} ${width},${item.targetY - top}`,
       ].join(' ');
+  const content = (
+    <>
+      <svg
+        width="100%"
+        height="100%"
+        aria-hidden="true"
+        style={{ display: 'block', overflow: 'visible' }}
+      >
+        {node ? (
+          <rect
+            width={width}
+            height={height}
+            fill="currentColor"
+            style={{ pointerEvents: 'all' }}
+          />
+        ) : (
+          <path
+            d={path}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={item.width}
+            style={{ pointerEvents: 'stroke' }}
+          />
+        )}
+      </svg>
+      {node && (
+        <span
+          data-ui="sankey-node-label"
+          data-side={item.x > layoutWidth - 200 ? 'left' : 'right'}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: 124,
+            pointerEvents: 'auto',
+            ...(item.x > layoutWidth - 200
+              ? { right: 'calc(100% + 8px)' }
+              : { left: 'calc(100% + 8px)' }),
+          }}
+        >
+          {item.label}
+        </span>
+      )}
+    </>
+  );
   return (
     <TooltipAdapter {...tooltip}>
       {(trigger) => (
@@ -113,46 +165,26 @@ export function SankeyItemView({
             if (!event.defaultPrevented && navigate(event.key)) event.preventDefault();
           }}
         >
-          <svg
-            width="100%"
-            height="100%"
-            aria-hidden="true"
-            style={{ display: 'block', overflow: 'visible' }}
-          >
-            {node ? (
-              <rect
-                width={width}
-                height={height}
-                fill="currentColor"
-                style={{ pointerEvents: 'all' }}
-              />
-            ) : (
-              <path
-                d={path}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={item.width}
-                style={{ pointerEvents: 'stroke' }}
-              />
-            )}
-          </svg>
-          {node && (
-            <span
-              data-ui="sankey-node-label"
-              data-side={item.x > layoutWidth - 200 ? 'left' : 'right'}
-              style={{
-                position: 'absolute',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                width: 124,
-                pointerEvents: 'auto',
-                ...(item.x > layoutWidth - 200
-                  ? { right: 'calc(100% + 8px)' }
-                  : { left: 'calc(100% + 8px)' }),
-              }}
-            >
-              {item.label}
-            </span>
+          {drawing ? (
+            <>
+              <span
+                inert
+                aria-hidden="true"
+                data-ui="sankey-item-drawing"
+                style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
+              >
+                {drawing({ width, height, path, defaultContent: content })}
+              </span>
+              <span
+                aria-hidden="true"
+                data-ui="sankey-item-hit"
+                style={{ position: 'absolute', inset: 0, opacity: 0, pointerEvents: 'none' }}
+              >
+                {content}
+              </span>
+            </>
+          ) : (
+            content
           )}
         </span>
       )}

@@ -8,7 +8,7 @@ import { buttonPresentation } from '#presentation/Controls/Button/buttonPresenta
 export type SankeyProps = SankeyAdapterProps;
 const classes = (...values: (string | undefined)[]) => values.filter(Boolean).join(' ');
 
-export function Sankey({ className, slotProps = {}, ...props }: SankeyProps) {
+function SankeyRoot({ className, slotProps = {}, ...props }: SankeyProps) {
   return (
     <SankeyAdapter
       {...props}
@@ -74,3 +74,14 @@ export function Sankey({ className, slotProps = {}, ...props }: SankeyProps) {
     />
   );
 }
+
+export const Sankey: typeof SankeyRoot &
+  Pick<typeof SankeyAdapter, 'Plot' | 'Table' | 'Pagination' | 'Empty'> = Object.assign(
+  SankeyRoot,
+  {
+    Plot: SankeyAdapter.Plot,
+    Table: SankeyAdapter.Table,
+    Pagination: SankeyAdapter.Pagination,
+    Empty: SankeyAdapter.Empty,
+  },
+);
