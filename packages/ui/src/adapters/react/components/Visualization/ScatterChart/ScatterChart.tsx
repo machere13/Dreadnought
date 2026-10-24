@@ -10,7 +10,7 @@ import { buttonPresentation } from '#presentation/Controls/Button/buttonPresenta
 
 export type ScatterChartProps = ScatterChartAdapterProps;
 const classes = (...values: (string | undefined)[]) => values.filter(Boolean).join(' ');
-export function ScatterChart({ className, slotProps = {}, ...props }: ScatterChartProps) {
+function ScatterChartRoot({ className, slotProps = {}, ...props }: ScatterChartProps) {
   const colors = getScatterSeriesClasses(props.series.map((series) => series.id));
   return (
     <ScatterChartAdapter
@@ -96,3 +96,13 @@ export function ScatterChart({ className, slotProps = {}, ...props }: ScatterCha
     />
   );
 }
+
+export const ScatterChart: typeof ScatterChartRoot &
+  Pick<typeof ScatterChartAdapter, 'Plot' | 'Legend' | 'Table' | 'Pagination' | 'Empty'> =
+  Object.assign(ScatterChartRoot, {
+    Plot: ScatterChartAdapter.Plot,
+    Legend: ScatterChartAdapter.Legend,
+    Table: ScatterChartAdapter.Table,
+    Pagination: ScatterChartAdapter.Pagination,
+    Empty: ScatterChartAdapter.Empty,
+  });

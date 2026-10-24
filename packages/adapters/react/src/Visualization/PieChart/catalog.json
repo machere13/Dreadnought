@@ -6,16 +6,16 @@
   "description": "Круговая и кольцевая диаграмма долей с переключаемой легендой, Tooltip и таблицей исходных данных.",
   "docsUrl": "/components/piechart/#piechart-api",
   "states": [],
-  "composesWith": [
-    "domain:build-pie-layout"
-  ],
+  "composesWith": ["domain:build-pie-layout"],
   "constraints": [
     "innerRadius — доля внешнего радиуса в [0,1). 0 рисует круг, положительное значение — кольцо.",
     "Все данные проверяются, включая скрытые. Нулевые категории остаются в легенде и таблице, но не рисуются. Пустые данные или нулевая видимая сумма дают пустое состояние.",
     "Tooltip по наведению или фокусу показывает круглый Mark, название, значение и долю среди видимых категорий. Tab, стрелки, Home/End перемещают фокус; Escape закрывает подсказку.",
     "width и height задаются вместе положительными конечными числами. Без них ResizeObserver измеряет контейнер; высота 80% ширины. Без ResizeObserver остаются легенда и таблица.",
     "Controlled visibleItems меняется только новым пропсом. defaultVisibleItems применяется при монтировании; неизвестные ID игнорируются.",
-    "Сумма значений должна быть конечной. Рекомендуется небольшое число категорий; автоматической агрегации, виртуализации и скрытия данных нет."
+    "Сумма значений должна быть конечной. Рекомендуется небольшое число категорий; автоматической агрегации, виртуализации и скрытия данных нет.",
+    "Композиция: Plot, Legend, Table и usePieChart используют ближайший корень. Свои children заменяют порядок и набор частей; null оставляет подпись. toggle игнорирует неизвестный ID. Plot включает пустое состояние; таблица без пагинации. Данные передавайте неизменяемыми.",
+    "Plot.children заменяет только декоративный SVG, tooltipContent — содержимое подсказки, Legend.children — содержимое готовой кнопки. defaultContent позволяет дополнить стандартный рисунок. Исходный path остаётся поверх декоративного рисунка: сохраняет refs, события, доступное имя и focus ring UI. Рисунок скрыт от скринридера и указателя; вписывайте его в исходную область и не добавляйте интерактивных потомков. При замене Table сохраняйте все исходные данные, включая скрытые и нулевые."
   ],
   "bindings": [
     {
@@ -24,7 +24,9 @@
       "framework": "react",
       "importPath": "@dreadnought/react/unstyled",
       "exportName": "PieChartAdapter",
-      "defaults": { "innerRadius": 0 },
+      "defaults": {
+        "innerRadius": 0
+      },
       "description": "Семантическая разметка и взаимодействие без оформления.",
       "propertyDescriptions": {
         "data": "Категории с уникальным id, label и конечным неотрицательным value.",
@@ -37,14 +39,61 @@
         "defaultVisibleItems": "Начальные видимые ID; по умолчанию все начальные категории.",
         "onVisibleItemsChange": "Запрос нового набора видимых ID.",
         "labels": "Подписи легенды, таблицы и пустого состояния.",
-        "slotProps": "Нативные свойства частей без замены геометрии и доступности."
+        "slotProps": "Нативные свойства частей без замены геометрии и доступности.",
+        "children": "Своя композиция Plot, Legend, Table и компонентов с usePieChart. undefined — готовая сборка, null — только подпись. Части используют состояние ближайшего корня."
       },
       "examples": [
         {
           "id": "basic",
           "code": "import { PieChartAdapter } from '@dreadnought/react/unstyled';\nconst data = [{id:'a',label:'Прямые',value:60},{id:'b',label:'Поиск',value:40}];\nexport function Example() { return <PieChartAdapter label=\"Источники посещений\" data={data} innerRadius={0.6} />; }"
+        },
+        {
+          "id": "compound",
+          "code": "import { PieChartAdapter, usePieChart } from '@dreadnought/react/unstyled';\nconst data=[{id:'a',label:'A',value:60},{id:'b',label:'B',value:40}];\nfunction Summary(){const {visible}=usePieChart();return <p>Видимых: {visible.length}</p>;}\nexport function Example(){return <PieChartAdapter label=\"Данные\" data={data} innerRadius={0.6}><Summary/><PieChartAdapter.Legend>{({defaultContent})=><span>{defaultContent}</span>}</PieChartAdapter.Legend><PieChartAdapter.Plot tooltipContent={({defaultContent})=><div>{defaultContent}</div>}>{({defaultContent})=>defaultContent}</PieChartAdapter.Plot><PieChartAdapter.Table/></PieChartAdapter>;}"
         }
       ]
+    },
+    {
+      "id": "react-adapter-plot",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "PieChartAdapter",
+      "propertyPath": ["Plot"],
+      "description": "Готовая область графика с измерением и заменяемым SVG-рисунком. Включает пустое состояние.",
+      "propertyDescriptions": {
+        "children": "Рисунок сектора: ({slice,path,radius,innerRadius,active,defaultContent}) => ReactNode. Координаты нормализованы к radius=100, innerRadius абсолютный. Исходный path поверх рисунка сохраняет ref, фокус и область наведения.",
+        "tooltipContent": "Содержимое Tooltip: ({slice,layout,defaultContent}) => ReactNode. null/undefined/false скрывают подсказку. Доли считаются среди видимых категорий."
+      }
+    },
+    {
+      "id": "react-adapter-legend",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "PieChartAdapter",
+      "propertyPath": ["Legend"],
+      "description": "Легенда с готовыми кнопками и общей видимостью данных.",
+      "propertyDescriptions": {
+        "children": "Содержимое кнопки: ({item,visible,defaultContent}) => ReactNode. События и aria-pressed сохраняются; без интерактивных потомков."
+      }
+    },
+    {
+      "id": "react-adapter-table",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "PieChartAdapter",
+      "propertyPath": ["Table"],
+      "description": "Полная исходная таблица, включая скрытые и нулевые категории."
+    },
+    {
+      "id": "react-adapter-context",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "usePieChart",
+      "description": "Контекст ближайшего PieChart[Adapter]: data, source полного набора, layout видимых категорий, visible/toggle, label, labels, slotProps, размеры. Вне корня — ошибка."
     }
   ]
 }

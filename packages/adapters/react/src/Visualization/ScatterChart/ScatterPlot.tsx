@@ -1,15 +1,15 @@
-import { useMemo, useRef, useState } from 'react';
+import { Fragment, useMemo, useRef, useState } from 'react';
 import { getCollectionNavigation, type ScatterLayout, type ScatterSeries } from '@dreadnought/core';
 import { TooltipAdapter } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
 import { MarkAdapter } from '../../DataDisplay/Mark/MarkAdapter.tsx';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
 import { attachRef } from '../../shared/attachRef.ts';
-import type { ScatterChartSlotProps } from './scatterChart.types.ts';
+import type { ScatterChartSlotProps, ScatterChartPlotProps } from './scatterChart.types.ts';
 import { ScatterAxes } from './ScatterAxes.tsx';
 import type { ScatterFormat } from './scatterChart.types.ts';
 
 type Target = { id: string; element: SVGCircleElement };
-type Props = {
+type Props = ScatterChartPlotProps & {
   source: ScatterLayout;
   series: readonly ScatterSeries[];
   visible: readonly string[];
@@ -19,7 +19,17 @@ type Props = {
   height: number;
 };
 
-export function ScatterPlot({ source, series, visible, slotProps, format, width, height }: Props) {
+export function ScatterPlot({
+  source,
+  series,
+  visible,
+  slotProps,
+  format,
+  width,
+  height,
+  children,
+  tooltipContent,
+}: Props) {
   const byId = useMemo(() => new Map(series.map((item) => [item.id, item])), [series]);
   const all = useMemo(() => source.series.flatMap((item) => item.points), [source]);
   const viewWidth = Math.max(200, width);
@@ -43,6 +53,7 @@ export function ScatterPlot({ source, series, visible, slotProps, format, width,
     [all, visible],
   );
   const [active, setActive] = useState<string | null>(null);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
   const hovered = useRef<Target | null>(null);
   const focused = useRef<Target | null>(null);
   const elements = useRef(new Map<string, SVGCircleElement>());
@@ -56,7 +67,7 @@ export function ScatterPlot({ source, series, visible, slotProps, format, width,
   const item = points.find((point) => point.id === active);
   const navigation = points.map((point) => ({ value: point.id }));
   const group = item ? byId.get(item.seriesId)! : undefined;
-  const content =
+  const defaultContent =
     item && group ? (
       <table {...native(slotProps.tooltipTable, ['role', 'hidden', 'aria-hidden'])}>
         <caption>{item.value.label || item.original.id}</caption>
@@ -92,10 +103,16 @@ export function ScatterPlot({ source, series, visible, slotProps, format, width,
         </tbody>
       </table>
     ) : null;
+  const content =
+    item && group && tooltipContent
+      ? tooltipContent({ point: item.original, series: group, format, defaultContent })
+      : defaultContent;
   return (
     <TooltipAdapter
       {...native(slotProps.tooltip, ['ref'])}
       content={content}
+      open={tooltipOpen && content !== null && content !== undefined && content !== false}
+      onOpenChange={setTooltipOpen}
       disabled={active !== null && !item}
       onPointerLeave={(event) => {
         slotProps.tooltip?.onPointerLeave?.(event);
@@ -130,6 +147,9 @@ export function ScatterPlot({ source, series, visible, slotProps, format, width,
                 'hidden',
               ]);
               const selected = active === point.id;
+              const cx = left + point.x * plotWidth;
+              const cy = top + point.y * plotHeight;
+              const radius = point.radius * radiusScale;
               const accessibleLabel = [
                 seriesItem.label || seriesItem.id,
                 point.value.label || point.original.id,
@@ -140,80 +160,113 @@ export function ScatterPlot({ source, series, visible, slotProps, format, width,
                   : [`${format.sizeLabel}: ${format.formatSize(point.value.size)}`]),
               ].join(', ');
               return (
-                <circle
-                  {...slot}
-                  key={point.id}
-                  ref={(element) => {
-                    if (!element) return;
-                    elements.current.set(point.id, element);
-                    return attachRef(element, slot.ref, () => elements.current.delete(point.id));
-                  }}
-                  cx={left + point.x * plotWidth}
-                  cy={top + point.y * plotHeight}
-                  r={point.radius * radiusScale}
-                  role="img"
-                  tabIndex={0}
-                  aria-label={accessibleLabel}
-                  aria-describedby={selected ? trigger['aria-describedby'] : undefined}
-                  data-ui="scatter-point"
-                  data-series-id={point.seriesId}
-                  data-point-id={point.original.id}
-                  data-active={(selected && !!trigger['aria-describedby']) || undefined}
-                  onPointerEnter={(event) => {
-                    slot.onPointerEnter?.(event);
-                    if (event.defaultPrevented) return;
-                    hovered.current = { id: point.id, element: event.currentTarget };
-                    setActive(point.id);
-                    trigger.onPointerEnter?.(event);
-                  }}
-                  onPointerLeave={(event) => {
-                    slot.onPointerLeave?.(event);
-                    if (event.defaultPrevented) return;
-                    hovered.current = null;
-                    const target = event.relatedTarget;
-                    const popup = trigger['aria-describedby']
-                      ? event.currentTarget.ownerDocument.getElementById(
-                          trigger['aria-describedby'],
-                        )
-                      : null;
-                    if (!(target instanceof Node && popup?.contains(target))) {
-                      restore(focused.current);
+                <Fragment key={point.id}>
+                  {children && (
+                    <g aria-hidden="true" pointerEvents="none" data-ui="scatter-point-drawing">
+                      {children({
+                        point: point.original,
+                        series: seriesItem,
+                        cx,
+                        cy,
+                        radius,
+                        active: selected && !!trigger['aria-describedby'],
+                        defaultContent: (
+                          <circle
+                            cx={cx}
+                            cy={cy}
+                            r={radius}
+                            className={slot.className}
+                            style={slot.style}
+                          />
+                        ),
+                      })}
+                    </g>
+                  )}
+                  <circle
+                    {...slot}
+                    key={point.id}
+                    ref={(element) => {
+                      if (!element) return;
+                      elements.current.set(point.id, element);
+                      return attachRef(element, slot.ref, () => elements.current.delete(point.id));
+                    }}
+                    cx={cx}
+                    cy={cy}
+                    r={radius}
+                    style={
+                      children
+                        ? {
+                            ...slot.style,
+                            fillOpacity: 0,
+                            strokeOpacity: 'var(--scatter-hit-stroke-opacity, 0)',
+                          }
+                        : slot.style
                     }
-                    trigger.onPointerLeave?.(event);
-                  }}
-                  onFocus={(event) => {
-                    slot.onFocus?.(event);
-                    if (event.defaultPrevented) return;
-                    focused.current = { id: point.id, element: event.currentTarget };
-                    setActive(point.id);
-                    trigger.onFocus?.(event);
-                  }}
-                  onBlur={(event) => {
-                    slot.onBlur?.(event);
-                    if (event.defaultPrevented) return;
-                    focused.current = null;
-                    restore(hovered.current);
-                    trigger.onBlur?.(event);
-                  }}
-                  onKeyDown={(event) => {
-                    slot.onKeyDown?.(event);
-                    if (event.defaultPrevented || event.nativeEvent.isComposing) return;
-                    trigger.onKeyDown?.(event);
-                    if (event.defaultPrevented) return;
-                    const orientation =
-                      event.key === 'ArrowLeft' || event.key === 'ArrowRight'
-                        ? 'horizontal'
-                        : 'vertical';
-                    const next = getCollectionNavigation(navigation, point.id, event.key, {
-                      orientation,
-                      loop: true,
-                    });
-                    if (next !== undefined) {
-                      event.preventDefault();
-                      elements.current.get(next)?.focus();
-                    }
-                  }}
-                />
+                    data-custom={children ? true : undefined}
+                    role="img"
+                    tabIndex={0}
+                    aria-label={accessibleLabel}
+                    aria-describedby={selected ? trigger['aria-describedby'] : undefined}
+                    data-ui="scatter-point"
+                    data-series-id={point.seriesId}
+                    data-point-id={point.original.id}
+                    data-active={(selected && !!trigger['aria-describedby']) || undefined}
+                    onPointerEnter={(event) => {
+                      slot.onPointerEnter?.(event);
+                      if (event.defaultPrevented) return;
+                      hovered.current = { id: point.id, element: event.currentTarget };
+                      setActive(point.id);
+                      trigger.onPointerEnter?.(event);
+                    }}
+                    onPointerLeave={(event) => {
+                      slot.onPointerLeave?.(event);
+                      if (event.defaultPrevented) return;
+                      hovered.current = null;
+                      const target = event.relatedTarget;
+                      const popup = trigger['aria-describedby']
+                        ? event.currentTarget.ownerDocument.getElementById(
+                            trigger['aria-describedby'],
+                          )
+                        : null;
+                      if (!(target instanceof Node && popup?.contains(target))) {
+                        restore(focused.current);
+                      }
+                      trigger.onPointerLeave?.(event);
+                    }}
+                    onFocus={(event) => {
+                      slot.onFocus?.(event);
+                      if (event.defaultPrevented) return;
+                      focused.current = { id: point.id, element: event.currentTarget };
+                      setActive(point.id);
+                      trigger.onFocus?.(event);
+                    }}
+                    onBlur={(event) => {
+                      slot.onBlur?.(event);
+                      if (event.defaultPrevented) return;
+                      focused.current = null;
+                      restore(hovered.current);
+                      trigger.onBlur?.(event);
+                    }}
+                    onKeyDown={(event) => {
+                      slot.onKeyDown?.(event);
+                      if (event.defaultPrevented || event.nativeEvent.isComposing) return;
+                      trigger.onKeyDown?.(event);
+                      if (event.defaultPrevented) return;
+                      const orientation =
+                        event.key === 'ArrowLeft' || event.key === 'ArrowRight'
+                          ? 'horizontal'
+                          : 'vertical';
+                      const next = getCollectionNavigation(navigation, point.id, event.key, {
+                        orientation,
+                        loop: true,
+                      });
+                      if (next !== undefined) {
+                        event.preventDefault();
+                        elements.current.get(next)?.focus();
+                      }
+                    }}
+                  />
+                </Fragment>
               );
             })}
           </svg>

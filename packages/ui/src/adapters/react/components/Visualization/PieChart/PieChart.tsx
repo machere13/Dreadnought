@@ -10,7 +10,7 @@ import { tablePresentation } from '#presentation/DataDisplay/Table/tablePresenta
 export type PieChartProps = PieChartAdapterProps;
 const classes = (...values: (string | undefined)[]) => values.filter(Boolean).join(' ');
 
-export function PieChart({ className, slotProps = {}, ...props }: PieChartProps) {
+function PieChartRoot({ className, slotProps = {}, ...props }: PieChartProps) {
   const itemClasses = getPieItemClasses(props.data.map((item) => item.id));
   return (
     <PieChartAdapter
@@ -74,3 +74,10 @@ export function PieChart({ className, slotProps = {}, ...props }: PieChartProps)
     />
   );
 }
+
+export const PieChart: typeof PieChartRoot &
+  Pick<typeof PieChartAdapter, 'Plot' | 'Legend' | 'Table'> = Object.assign(PieChartRoot, {
+  Plot: PieChartAdapter.Plot,
+  Legend: PieChartAdapter.Legend,
+  Table: PieChartAdapter.Table,
+});

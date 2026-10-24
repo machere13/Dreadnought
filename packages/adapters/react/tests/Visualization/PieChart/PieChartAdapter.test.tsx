@@ -1,10 +1,12 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
-import * as adapters from '../../../src/unstyled.ts';
+import * as adapters from '../../../src/Visualization/PieChart/index.ts';
+import { createRef } from 'react';
 
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
+  vi.unstubAllGlobals();
 });
 const data = [
   { id: 'a', label: 'Alpha', value: 30 },
@@ -12,6 +14,155 @@ const data = [
   { id: 'zero', label: 'Zero', value: 0 },
 ];
 const props = { data, label: 'Budget', width: 400, height: 320 };
+
+it('keeps native refs and controlled visibility when drawing is replaced', () => {
+  const Chart = adapters.PieChartAdapter;
+  const ref = createRef<SVGPathElement>();
+  const changed = vi.fn();
+  function Controls() {
+    const { toggle } = adapters.usePieChart();
+    return (
+      <button
+        onClick={() => {
+          toggle('missing');
+          toggle('a');
+        }}
+      >
+        Request
+      </button>
+    );
+  }
+  const view = render(
+    <Chart
+      {...props}
+      visibleItems={['a', 'b']}
+      onVisibleItemsChange={changed}
+      slotProps={{ slice: () => ({ ref, onKeyDown: (e) => e.preventDefault() }) }}
+    >
+      <Controls />
+      <Chart.Plot>{({ defaultContent }) => defaultContent}</Chart.Plot>
+    </Chart>,
+  );
+  expect(ref.current?.getAttribute('data-ui')).toBe('pie-slice');
+  const alpha = screen.getByRole('img', { name: 'Alpha: 30 (30%)' });
+  act(() => alpha.focus());
+  fireEvent.keyDown(alpha, { key: 'End' });
+  expect(document.activeElement).toBe(alpha);
+  fireEvent.click(screen.getByRole('button', { name: 'Request' }));
+  expect(changed).toHaveBeenCalledExactlyOnceWith(['b']);
+  expect(screen.getAllByRole('img')).toHaveLength(2);
+  view.unmount();
+  expect(ref.current).toBeNull();
+});
+
+it('measures a conditionally mounted plot and releases its observer', () => {
+  const Chart = adapters.PieChartAdapter;
+  let callback: ResizeObserverCallback;
+  let target: Element;
+  const disconnect = vi.fn();
+  vi.stubGlobal(
+    'ResizeObserver',
+    class {
+      constructor(next: ResizeObserverCallback) {
+        callback = next;
+      }
+      observe(element: Element) {
+        target = element;
+      }
+      disconnect = disconnect;
+    },
+  );
+  const view = render(
+    <Chart data={data} label="Adaptive">
+      {null}
+    </Chart>,
+  );
+  view.rerender(
+    <Chart data={data} label="Adaptive">
+      <Chart.Plot />
+    </Chart>,
+  );
+  act(() =>
+    callback!(
+      [{ target: target!, contentRect: { width: 300 } }] as ResizeObserverEntry[],
+      {} as ResizeObserver,
+    ),
+  );
+  expect(view.container.querySelector('svg')?.getAttribute('width')).toBe('300');
+  view.rerender(
+    <Chart data={data} label="Adaptive">
+      {null}
+    </Chart>,
+  );
+  expect(disconnect).toHaveBeenCalledOnce();
+});
+
+it('composes slice drawing, tooltip and legend around the existing path behavior', () => {
+  const Chart = adapters.PieChartAdapter;
+  function Summary() {
+    const { layout, toggle } = adapters.usePieChart();
+    return <button onClick={() => toggle('a')}>Total {layout.total}</button>;
+  }
+  const view = render(
+    <Chart {...props} innerRadius={0.6}>
+      <Summary />
+      <Chart.Legend>
+        {({ item, visible }) => (
+          <span>
+            {item.label}: {String(visible)}
+          </span>
+        )}
+      </Chart.Legend>
+      <Chart.Plot tooltipContent={({ defaultContent }) => <div>Custom{defaultContent}</div>}>
+        {({ path }) => <path d={path} data-testid="custom-slice" />}
+      </Chart.Plot>
+      <Chart.Table />
+    </Chart>,
+  );
+  expect(view.container.querySelectorAll('[data-testid="custom-slice"]')).toHaveLength(2);
+  const alpha = screen.getByRole('img', { name: 'Alpha: 30 (30%)' });
+  expect(alpha.tagName.toLowerCase()).toBe('path');
+  act(() => alpha.focus());
+  fireEvent.keyDown(alpha, { key: 'ArrowRight' });
+  expect(document.activeElement?.getAttribute('aria-label')).toBe('Beta: 70 (70%)');
+  expect(screen.getByRole('tooltip').textContent).toContain('Custom');
+  fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+  expect(document.activeElement).toBe(alpha);
+  fireEvent.click(screen.getByRole('button', { name: 'Total 100' }));
+  expect(screen.getByRole('img', { name: 'Beta: 70 (100%)' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Alpha: false' }).getAttribute('aria-pressed')).toBe(
+    'false',
+  );
+  expect(screen.getByRole('table', { name: 'Budget — Все исходные данные' }).textContent).toContain(
+    'Alpha',
+  );
+});
+
+it('supports explicit empty composition and selectively missing custom tooltips', () => {
+  const Chart = adapters.PieChartAdapter;
+  const view = render(<Chart {...props}>{null}</Chart>);
+  expect(screen.queryByRole('table')).toBeNull();
+  view.rerender(
+    <Chart {...props}>
+      <Chart.Plot
+        tooltipContent={({ slice, defaultContent }) => (slice.id === 'a' ? null : defaultContent)}
+      />
+    </Chart>,
+  );
+  act(() => screen.getByRole('img', { name: 'Alpha: 30 (30%)' }).focus());
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  fireEvent.keyDown(document.activeElement!, { key: 'End' });
+  expect(screen.getByRole('tooltip').textContent).toContain('Beta');
+  view.rerender(
+    <Chart {...props} data={[]}>
+      <Chart.Plot />
+    </Chart>,
+  );
+  expect(screen.getByRole('status').textContent).toContain('Нет положительных');
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  view.unmount();
+  expect(() => render(<Chart.Legend />)).toThrow('PieChart');
+});
 
 it('exposes a keyboard-accessible pie, tooltip and complete data table', () => {
   expect(adapters).toHaveProperty('PieChartAdapter');

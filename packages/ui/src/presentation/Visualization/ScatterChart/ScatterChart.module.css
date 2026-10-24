@@ -66,6 +66,7 @@
     stroke-dasharray: var(--scatter-series-dash);
   }
   .point:is(:hover, :focus-visible, [data-active='true']) {
+    --scatter-hit-stroke-opacity: 1;
     stroke: var(--dreadnought-scatter-chart-focus-color);
     stroke-width: var(--dreadnought-scatter-chart-focus-width);
     outline: none;

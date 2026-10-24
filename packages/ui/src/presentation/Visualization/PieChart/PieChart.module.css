@@ -35,6 +35,7 @@
     cursor: help;
   }
   .slice:is(:hover, :focus-visible, [data-active='true']) {
+    --pie-hit-stroke-opacity: 1;
     stroke: var(--dreadnought-pie-chart-focus);
     stroke-width: var(--dreadnought-pie-chart-focus-width);
     outline: none;

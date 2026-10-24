@@ -1,14 +1,19 @@
-import { useCallback, useId, useMemo, useRef } from 'react';
+import { ScatterChartContext } from './ScatterChartContext.tsx';
+import {
+  ScatterChartPlotAdapter,
+  ScatterChartLegendAdapter,
+  ScatterChartTableAdapter,
+  ScatterChartPaginationAdapter,
+  ScatterChartEmptyAdapter,
+} from './ScatterChartParts.tsx';
+import { useChartPage } from '../../shared/useChartPage.tsx';
+import { useId, useMemo } from 'react';
 import { buildScatterLayout } from '@dreadnought/core';
-import { useChartViewport } from '../../shared/useChartViewport.ts';
 import { useSeriesVisibility } from '../../shared/useSeriesVisibility.ts';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
-import { attachRef } from '../../shared/attachRef.ts';
-import { ScatterPlot } from './ScatterPlot.tsx';
-import { ScatterDataTable } from './ScatterDataTable.tsx';
 import type { ScatterChartAdapterProps } from './scatterChart.types.ts';
 
-export function ScatterChartAdapter({
+function ScatterChartRootAdapter({
   label,
   description,
   series,
@@ -30,6 +35,7 @@ export function ScatterChartAdapter({
   pageSize = 50,
   labels = {},
   slotProps = {},
+  children,
   ...rest
 }: ScatterChartAdapterProps) {
   const source = useMemo(
@@ -71,20 +77,6 @@ export function ScatterChartAdapter({
     }
   }
   const id = useId();
-  const plotRef = useRef<HTMLDivElement>(null);
-  const consumerRef = slotProps.plotContainer?.ref;
-  const attachPlot = useCallback(
-    (element: HTMLDivElement | null) => {
-      plotRef.current = element;
-      if (element)
-        return attachRef(element, consumerRef, () => {
-          plotRef.current = null;
-        });
-    },
-    [consumerRef],
-  );
-  const measured = useChartViewport(width, height, plotRef);
-  const viewport = measured && { ...measured, height: height ?? Math.max(280, measured.height) };
   const { visible, toggle } = useSeriesVisibility(
     series,
     visibleSeries,
@@ -96,10 +88,31 @@ export function ScatterChartAdapter({
     () => new Map(series.map((item) => [item.id, item.label || item.id])),
     [series],
   );
+  const page = useChartPage(rows, pageSize);
+  const hasSize = rows.some((point) => point.value.size !== undefined);
   const format = { xLabel, yLabel, sizeLabel, formatX, formatY, formatSize };
   const hasVisiblePoints = rows.some(
     (point) => point.radius > 0 && visible.includes(point.seriesId),
   );
+  const context = {
+    series,
+    label,
+    width,
+    height,
+    source,
+    rows,
+    seriesNames: names,
+    visible,
+    page,
+    hasSize,
+    hasVisiblePoints,
+    format,
+    labels,
+    slotProps,
+    toggle: (id: string) => {
+      if (series.some((item) => item.id === id)) toggle(id);
+    },
+  };
   return (
     <figure
       {...native(rest, ['role'])}
@@ -109,58 +122,27 @@ export function ScatterChartAdapter({
     >
       <figcaption id={`${id}-label`}>{label}</figcaption>
       {description !== undefined && <p id={`${id}-description`}>{description}</p>}
-      <div {...native(slotProps.plotContainer)} ref={attachPlot} data-ui="scatter-plot-container">
-        {viewport && (
-          <ScatterPlot
-            {...viewport}
-            source={source}
-            series={series}
-            visible={visible}
-            format={format}
-            slotProps={slotProps}
-          />
+      <ScatterChartContext.Provider value={context}>
+        {children === undefined ? (
+          <>
+            <ScatterChartPlotAdapter />
+            <ScatterChartEmptyAdapter />
+            <ScatterChartLegendAdapter />
+            <ScatterChartTableAdapter />
+            <ScatterChartPaginationAdapter />
+          </>
+        ) : (
+          children
         )}
-      </div>
-      {!hasVisiblePoints && <p>{labels.empty ?? 'Нет точек для отображения'}</p>}
-      <div
-        {...native(slotProps.legend)}
-        role="group"
-        aria-label={labels.legend ?? 'Серии'}
-        data-ui="scatter-legend"
-      >
-        {series.map((item) => {
-          const slot = native(slotProps.legendButton?.(item), [
-            'aria-label',
-            'aria-labelledby',
-            'disabled',
-          ]);
-          return (
-            <button
-              {...slot}
-              key={item.id}
-              type="button"
-              aria-pressed={visible.includes(item.id)}
-              data-ui="scatter-legend-button"
-              data-series-id={item.id}
-              onClick={(event) => {
-                slot.onClick?.(event);
-                if (!event.defaultPrevented) toggle(item.id);
-              }}
-            >
-              {item.label || item.id}
-            </button>
-          );
-        })}
-      </div>
-      <ScatterDataTable
-        rows={rows}
-        seriesNames={names}
-        label={label}
-        labels={labels}
-        format={format}
-        slotProps={slotProps}
-        pageSize={pageSize}
-      />
+      </ScatterChartContext.Provider>
     </figure>
   );
 }
+
+export const ScatterChartAdapter = Object.assign(ScatterChartRootAdapter, {
+  Plot: ScatterChartPlotAdapter,
+  Legend: ScatterChartLegendAdapter,
+  Table: ScatterChartTableAdapter,
+  Pagination: ScatterChartPaginationAdapter,
+  Empty: ScatterChartEmptyAdapter,
+});

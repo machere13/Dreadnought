@@ -7,6 +7,8 @@ import { ScatterBubbleDemo } from './ScatterBubbleDemo.tsx';
 import bubbleCode from './ScatterBubbleDemo.tsx?raw';
 import { ScatterEmptyDemo } from './ScatterEmptyDemo.tsx';
 import emptyCode from './ScatterEmptyDemo.tsx?raw';
+import { ScatterCompositionDemo } from './ScatterCompositionDemo.tsx';
+import compositionCode from './ScatterCompositionDemo.tsx?raw';
 
 export const scatterChartDoc: ComponentDoc = {
   ...getCatalogDoc('scatterchart'),
@@ -20,6 +22,22 @@ export const scatterChartDoc: ComponentDoc = {
   logicDescription:
     'buildScatterLayout рассчитывает координаты, отметки осей и радиусы без React и DOM. Площадь пузырька пропорциональна size.',
   notes: [
+    <>
+      Без children выводятся Plot, Empty, Legend, Table и Pagination. Свои children задают набор и
+      порядок частей; null оставляет подпись. useScatterChart возвращает series, source, rows всех
+      наблюдений, seriesNames, visible/toggle, page с rows/page/count/change, hasSize,
+      hasVisiblePoints, format, labels и slotProps. Некорректные страницы и неизвестные ID
+      игнорируются. Части и хук работают внутри ближайшего ScatterChart[Adapter].
+    </>,
+    <>
+      Plot.children получает point из исходного layout, series, cx/cy/radius в координатах SVG,
+      active и defaultContent. tooltipContent получает point, series, format, defaultContent;
+      null/undefined/false скрывают подсказку. Legend.children меняет содержимое кнопки через
+      series, visible, defaultContent. Декоративный SVG скрыт от скринридера и указателя. Исходный
+      circle сохраняет ref, область наведения, фокус и доступное имя; вписывайте рисунок в эту
+      область и не добавляйте интерактивных потомков. При замене Table сохраните все исходные
+      наблюдения, включая нулевые размеры и скрытые серии. Данные передавайте неизменяемыми.
+    </>,
     <>
       Без size наблюдение становится обычной точкой. С size — пузырьком; нулевой размер остаётся
       только в таблице. Размеры сравниваются по всем сериям и не меняются при их скрытии.
@@ -75,6 +93,14 @@ export const scatterChartDoc: ComponentDoc = {
         'Добавьте результаты: появится один пузырёк. Кампания без выручки останется в таблице со значением 0, но без видимого пузырька. Очистка возвращает пустое состояние.',
       demo: <ScatterEmptyDemo />,
       code: emptyCode,
+    },
+    {
+      id: 'scatter-composition',
+      title: 'Ромбы вместо пузырьков и свои элементы управления',
+      description:
+        'Рисунок заменён ромбами внутри исходных круговых областей. Площади ромбов по-прежнему пропорциональны выручке; скрытие серии не меняет масштаб. Своя легенда сохраняет готовые кнопки, две пагинации управляют одной таблицей. Клавиатура и Tooltip работают на исходных наблюдениях.',
+      demo: <ScatterCompositionDemo />,
+      code: compositionCode,
     },
   ],
 };

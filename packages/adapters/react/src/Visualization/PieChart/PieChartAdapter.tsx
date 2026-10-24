@@ -1,10 +1,13 @@
-import { useCallback, useId, useRef } from 'react';
+import { PieChartContext } from './PieChartContext.tsx';
+import {
+  PieChartPlotAdapter,
+  PieChartLegendAdapter,
+  PieChartTableAdapter,
+} from './PieChartParts.tsx';
+import { useId, useMemo } from 'react';
 import { buildPieLayout } from '@dreadnought/core';
-import { useChartViewport } from '../../shared/useChartViewport.ts';
 import { useSeriesVisibility } from '../../shared/useSeriesVisibility.ts';
-import { attachRef } from '../../shared/attachRef.ts';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
-import { PiePlot } from './PiePlot.tsx';
 import type { PieChartAdapterProps, PieChartLabels } from './pieChart.types.ts';
 
 const defaults: PieChartLabels = {
@@ -14,7 +17,7 @@ const defaults: PieChartLabels = {
   value: 'Значение',
   empty: 'Нет положительных значений для отображения',
 };
-export function PieChartAdapter({
+function PieChartRootAdapter({
   data,
   label,
   description,
@@ -26,9 +29,13 @@ export function PieChartAdapter({
   onVisibleItemsChange,
   labels: customLabels,
   slotProps = {},
+  children,
   ...rest
 }: PieChartAdapterProps) {
-  buildPieLayout({ data, radius: 100, innerRadius });
+  const source = useMemo(
+    () => buildPieLayout({ data, radius: 100, innerRadius }),
+    [data, innerRadius],
+  );
   if (typeof label !== 'string' || !label.trim()) throw new TypeError('Pie label must be nonempty');
   if (description !== undefined && typeof description !== 'string')
     throw new TypeError('Pie description must be a string');
@@ -64,25 +71,28 @@ export function PieChartAdapter({
     defaultVisibleItems,
     onVisibleItemsChange,
   );
-  const visibleSet = new Set(visible);
-  const layout = buildPieLayout({
-    data: data.filter((item) => visibleSet.has(item.id)),
-    radius: 100,
-    innerRadius,
-  });
-  const plotRef = useRef<HTMLDivElement>(null);
-  const consumerRef = slotProps.plotContainer?.ref;
-  const attachPlot = useCallback(
-    (element: HTMLDivElement | null) => {
-      plotRef.current = element;
-      if (element)
-        return attachRef(element, consumerRef, () => {
-          plotRef.current = null;
-        });
+  const layout = useMemo(() => {
+    const visibleSet = new Set(visible);
+    return buildPieLayout({
+      data: data.filter((item) => visibleSet.has(item.id)),
+      radius: 100,
+      innerRadius,
+    });
+  }, [data, visible, innerRadius]);
+  const context = {
+    data,
+    label,
+    width,
+    height,
+    source,
+    layout,
+    visible,
+    labels,
+    slotProps,
+    toggle: (id: string) => {
+      if (data.some((item) => item.id === id)) toggle(id);
     },
-    [consumerRef],
-  );
-  const viewport = useChartViewport(width, height, plotRef);
+  };
   return (
     <figure
       {...native(rest, ['role'])}
@@ -92,62 +102,23 @@ export function PieChartAdapter({
     >
       <figcaption id={`${id}-label`}>{label}</figcaption>
       {description !== undefined && <p id={`${id}-description`}>{description}</p>}
-      <div {...native(slotProps.plotContainer)} ref={attachPlot} data-ui="pie-plot-container">
-        {layout.slices.length === 0 ? (
-          <p role="status">{labels.empty}</p>
+      <PieChartContext.Provider value={context}>
+        {children === undefined ? (
+          <>
+            <PieChartPlotAdapter />
+            <PieChartLegendAdapter />
+            <PieChartTableAdapter />
+          </>
         ) : (
-          viewport && <PiePlot layout={layout} slotProps={slotProps} {...viewport} />
+          children
         )}
-      </div>
-      <div
-        {...native(slotProps.legend)}
-        role="group"
-        aria-label={labels.legend}
-        data-ui="pie-legend"
-      >
-        {data.map((item) => {
-          const slot = native(slotProps.legendButton?.(item), [
-            'disabled',
-            'aria-label',
-            'aria-labelledby',
-          ]);
-          return (
-            <button
-              {...slot}
-              key={item.id}
-              type="button"
-              aria-pressed={visibleSet.has(item.id)}
-              data-ui="pie-legend-button"
-              data-item-id={item.id}
-              onClick={(event) => {
-                slot.onClick?.(event);
-                if (!event.defaultPrevented) toggle(item.id);
-              }}
-            >
-              {item.label || item.id}
-            </button>
-          );
-        })}
-      </div>
-      <table {...native(slotProps.table, ['role', 'aria-hidden', 'hidden'])} data-ui="pie-table">
-        <caption>
-          {label} — {labels.dataTable}
-        </caption>
-        <thead>
-          <tr>
-            <th scope="col">{labels.category}</th>
-            <th scope="col">{labels.value}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item) => (
-            <tr key={item.id}>
-              <th scope="row">{item.label || item.id}</th>
-              <td>{item.value}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      </PieChartContext.Provider>
     </figure>
   );
 }
+
+export const PieChartAdapter = Object.assign(PieChartRootAdapter, {
+  Plot: PieChartPlotAdapter,
+  Legend: PieChartLegendAdapter,
+  Table: PieChartTableAdapter,
+});

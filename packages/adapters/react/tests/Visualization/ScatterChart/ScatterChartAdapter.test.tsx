@@ -1,6 +1,7 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
-import * as adapters from '../../../src/unstyled.ts';
+import * as adapters from '../../../src/Visualization/ScatterChart/index.ts';
+import { createRef } from 'react';
 
 afterEach(() => {
   cleanup();
@@ -19,6 +20,160 @@ const props = {
   width: 400,
   height: 320,
 };
+
+it('keeps native circle refs, cancellation and controlled context actions', () => {
+  const Chart = adapters.ScatterChartAdapter;
+  const ref = createRef<SVGCircleElement>();
+  const changed = vi.fn();
+  function Controls() {
+    const { toggle } = adapters.useScatterChart();
+    return (
+      <button
+        onClick={() => {
+          toggle('missing');
+          toggle('a');
+        }}
+      >
+        Request
+      </button>
+    );
+  }
+  const view = render(
+    <Chart
+      {...props}
+      visibleSeries={['a', 'b']}
+      onVisibleSeriesChange={changed}
+      slotProps={{ point: () => ({ ref, onKeyDown: (e) => e.preventDefault() }) }}
+    >
+      <Controls />
+      <Chart.Plot>{({ defaultContent }) => defaultContent}</Chart.Plot>
+    </Chart>,
+  );
+  expect(ref.current?.getAttribute('data-ui')).toBe('scatter-point');
+  const one = screen.getAllByRole('img')[0];
+  act(() => one.focus());
+  fireEvent.keyDown(one, { key: 'End' });
+  expect(document.activeElement).toBe(one);
+  fireEvent.click(screen.getByRole('button', { name: 'Request' }));
+  expect(changed).toHaveBeenCalledExactlyOnceWith(['b']);
+  expect(screen.getAllByRole('img')).toHaveLength(2);
+  view.unmount();
+  expect(ref.current).toBeNull();
+});
+
+it('preserves the size column across shared pages with unsized and zero-sized observations', () => {
+  const Chart = adapters.ScatterChartAdapter;
+  render(
+    <Chart
+      {...props}
+      pageSize={1}
+      series={[
+        {
+          id: 'a',
+          label: 'A',
+          data: [
+            { id: 'plain', label: 'Plain', x: 1, y: 2 },
+            { id: 'zero', label: 'Zero', x: 3, y: 4, size: 0 },
+          ],
+        },
+      ]}
+    >
+      <Chart.Table />
+      <Chart.Pagination />
+      <Chart.Plot />
+    </Chart>,
+  );
+  expect(screen.getByRole('columnheader', { name: 'Размер' })).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Следующая страница данных' }));
+  expect(screen.getByRole('table').textContent).toContain('Zero');
+  expect(screen.getByRole('columnheader', { name: 'Размер' })).toBeTruthy();
+  expect(screen.getAllByRole('img')).toHaveLength(1);
+});
+
+it('composes custom point drawing with protected circles, shared visibility and table pages', () => {
+  const Chart = adapters.ScatterChartAdapter;
+  function Controls() {
+    const { page, visible, toggle } = adapters.useScatterChart();
+    return (
+      <>
+        <button onClick={() => page.change(2)}>Next custom</button>
+        <button onClick={() => toggle('b')}>Visible {visible.length}</button>
+      </>
+    );
+  }
+  const view = render(
+    <Chart {...props} pageSize={1}>
+      <Controls />
+      <Chart.Legend>
+        {({ series, visible }) => (
+          <span>
+            {series.label}: {String(visible)}
+          </span>
+        )}
+      </Chart.Legend>
+      <Chart.Plot tooltipContent={({ defaultContent }) => <div>Custom{defaultContent}</div>}>
+        {({ cx, cy, radius }) => (
+          <path
+            d={`M${cx} ${cy - radius} L${cx + radius} ${cy} L${cx} ${cy + radius} L${cx - radius} ${cy} Z`}
+            data-testid="custom-point"
+          />
+        )}
+      </Chart.Plot>
+      <Chart.Table />
+      <Chart.Pagination />
+      <Chart.Empty />
+    </Chart>,
+  );
+  expect(view.container.querySelectorAll('[data-testid="custom-point"]')).toHaveLength(2);
+  const [one, two] = screen.getAllByRole('img');
+  expect(one.tagName.toLowerCase()).toBe('circle');
+  const radius = one.getAttribute('r');
+  act(() => one.focus());
+  fireEvent.keyDown(one, { key: 'ArrowRight' });
+  expect(document.activeElement).toBe(two);
+  expect(screen.getByRole('tooltip').textContent).toContain('Custom');
+  fireEvent.keyDown(two, { key: 'ArrowRight' });
+  expect(document.activeElement).toBe(one);
+  fireEvent.click(screen.getByRole('button', { name: 'Next custom' }));
+  expect(screen.getByRole('spinbutton').getAttribute('value')).toBe('2');
+  expect(
+    screen.getByRole('table', { name: 'Observations: Все исходные данные' }).textContent,
+  ).toContain('Two');
+  fireEvent.click(screen.getByRole('button', { name: 'Visible 2' }));
+  expect(screen.getByRole('img').getAttribute('r')).toBe(radius);
+  expect(
+    screen.getByRole('table', { name: 'Observations: Все исходные данные' }).textContent,
+  ).toContain('Two');
+});
+
+it('keeps no default parts, supports selectively hidden tooltips and validates part scope', () => {
+  const Chart = adapters.ScatterChartAdapter;
+  const view = render(<Chart {...props}>{null}</Chart>);
+  expect(screen.queryByRole('table')).toBeNull();
+  view.rerender(
+    <Chart {...props}>
+      <Chart.Plot
+        tooltipContent={({ point, defaultContent }) => (point.id === 'one' ? null : defaultContent)}
+      />
+    </Chart>,
+  );
+  const [one, two] = screen.getAllByRole('img');
+  act(() => one.focus());
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  fireEvent.keyDown(one, { key: 'End' });
+  expect(document.activeElement).toBe(two);
+  expect(screen.getByRole('tooltip').textContent).toContain('Two');
+  view.rerender(
+    <Chart {...props} series={[]}>
+      <Chart.Plot />
+      <Chart.Empty />
+    </Chart>,
+  );
+  expect(screen.getByText('Нет точек для отображения')).toBeTruthy();
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  view.unmount();
+  expect(() => render(<Chart.Table />)).toThrow('ScatterChart');
+});
 
 it('uses the shared hover delay and restores the focused observation after hover', () => {
   vi.useFakeTimers();

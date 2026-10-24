@@ -7,6 +7,8 @@ import { PieDonutDemo } from './PieDonutDemo.tsx';
 import donutCode from './PieDonutDemo.tsx?raw';
 import { PieEmptyDemo } from './PieEmptyDemo.tsx';
 import emptyCode from './PieEmptyDemo.tsx?raw';
+import { PieCompositionDemo } from './PieCompositionDemo.tsx';
+import compositionCode from './PieCompositionDemo.tsx?raw';
 
 export const pieChartDoc: ComponentDoc = {
   ...getCatalogDoc('piechart'),
@@ -20,6 +22,22 @@ export const pieChartDoc: ComponentDoc = {
   logicDescription:
     'buildPieLayout вычисляет доли и углы секторов без React и SVG. Входной innerRadius — доля внешнего радиуса, выходной — абсолютный радиус.',
   notes: [
+    <>
+      Без children выводятся Plot, Legend и Table. Свои children заменяют набор и порядок частей,
+      null оставляет подпись. usePieChart возвращает data, source полного набора, layout видимых
+      категорий, visible/toggle, labels и slotProps. Неизвестные ID игнорируются. Части и хук
+      работают внутри ближайшего PieChart[Adapter]. Пустое состояние входит в Plot; пагинации у
+      PieChart нет.
+    </>,
+    <>
+      Plot.children получает slice, path, radius, innerRadius (абсолютный), active, defaultContent;
+      координаты нормализованы к радиусу 100. tooltipContent получает slice, layout, defaultContent.
+      null/undefined/false скрывают подсказку. Legend.children меняет содержимое кнопки через item,
+      visible, defaultContent. Декоративный SVG скрыт от скринридера и указателя; исходный path
+      поверх него сохраняет ref, область наведения, фокус и имя. Не выходите рисунком за эту область
+      и не вкладывайте интерактивные элементы. Своя Table должна сохранять исходные значения,
+      включая скрытые и нулевые. Данные передавайте неизменяемыми.
+    </>,
     <>
       У каждой категории уникальный id и конечное неотрицательное value. Нулевые значения остаются в
       таблице и легенде, но не создают сектор.
@@ -69,6 +87,14 @@ export const pieChartDoc: ComponentDoc = {
         'При нулевой сумме диаграмма показывает сообщение вместо выдуманных долей. Добавьте заказы: единственная категория займёт всё кольцо. Обнуление возвращает пустое состояние.',
       demo: <PieEmptyDemo />,
       code: emptyCode,
+    },
+    {
+      id: 'pie-composition',
+      title: 'Свой рисунок и состав частей',
+      description:
+        'Секторы дополнены штриховкой, легенда получила свои подписи, Tooltip — пояснение. Скройте категории: сумма над графиком и доли обновятся вместе. Кнопка возвращает категории, таблица сохраняет все исходные числа. Стрелки циклически переходят между видимыми секторами.',
+      demo: <PieCompositionDemo />,
+      code: compositionCode,
     },
   ],
 };

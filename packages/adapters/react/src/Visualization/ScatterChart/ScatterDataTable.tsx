@@ -1,7 +1,6 @@
 import type { ScatterPoint } from '@dreadnought/core';
 import { TableAdapter as Table } from '../../DataDisplay/Table/TableAdapter.tsx';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
-import { ChartPagination, useChartPage } from '../../shared/useChartPage.tsx';
 import type {
   ScatterChartLabels,
   ScatterChartSlotProps,
@@ -15,7 +14,7 @@ export function ScatterDataTable({
   labels,
   format,
   slotProps,
-  pageSize,
+  hasSize,
 }: {
   rows: readonly ScatterPoint[];
   seriesNames: ReadonlyMap<string, string>;
@@ -23,10 +22,8 @@ export function ScatterDataTable({
   labels: ScatterChartLabels;
   format: ScatterFormat;
   slotProps: ScatterChartSlotProps;
-  pageSize: number;
+  hasSize: boolean;
 }) {
-  const page = useChartPage(rows, pageSize);
-  const hasSize = rows.some((point) => point.value.size !== undefined);
   return (
     <>
       <Table
@@ -46,7 +43,7 @@ export function ScatterDataTable({
           </Table.Row>
         </Table.Head>
         <Table.Body>
-          {page.rows.map((point) => (
+          {rows.map((point) => (
             <Table.Row key={JSON.stringify([point.seriesId, point.id])}>
               <Table.Cell>{seriesNames.get(point.seriesId)}</Table.Cell>
               <Table.HeaderCell scope="row">{point.value.label || point.id}</Table.HeaderCell>
@@ -61,7 +58,6 @@ export function ScatterDataTable({
           ))}
         </Table.Body>
       </Table>
-      <ChartPagination {...page} slotProps={slotProps} />
     </>
   );
 }

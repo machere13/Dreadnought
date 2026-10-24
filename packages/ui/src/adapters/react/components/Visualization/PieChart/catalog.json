@@ -11,7 +11,9 @@
       "framework": "react",
       "importPath": "@dreadnought/ui/react",
       "exportName": "PieChart",
-      "defaults": { "innerRadius": 0 },
+      "defaults": {
+        "innerRadius": 0
+      },
       "description": "Готовый PieChart с темой, интерактивной легендой и Tooltip.",
       "propertyDescriptions": {
         "data": "Категории с уникальным id, label и конечным неотрицательным value.",
@@ -24,14 +26,61 @@
         "defaultVisibleItems": "Начальные видимые ID; по умолчанию все начальные категории.",
         "onVisibleItemsChange": "Запрос нового набора видимых ID.",
         "labels": "Подписи легенды, таблицы и пустого состояния.",
-        "slotProps": "Нативные свойства частей без замены геометрии и доступности."
+        "slotProps": "Нативные свойства частей без замены геометрии и доступности.",
+        "children": "Своя композиция Plot, Legend, Table и компонентов с usePieChart. undefined — готовая сборка, null — только подпись. Части используют состояние ближайшего корня."
       },
       "examples": [
         {
           "id": "basic",
           "code": "import { PieChart } from '@dreadnought/ui/react';\nconst data = [{id:'a',label:'Прямые',value:60},{id:'b',label:'Поиск',value:40}];\nexport function Example() { return <PieChart label=\"Источники посещений\" data={data} innerRadius={0.6} />; }"
+        },
+        {
+          "id": "compound",
+          "code": "import { PieChart, usePieChart } from '@dreadnought/ui/react';\nconst data=[{id:'a',label:'A',value:60},{id:'b',label:'B',value:40}];\nfunction Summary(){const {visible}=usePieChart();return <p>Видимых: {visible.length}</p>;}\nexport function Example(){return <PieChart label=\"Данные\" data={data} innerRadius={0.6}><Summary/><PieChart.Legend>{({defaultContent})=><span>{defaultContent}</span>}</PieChart.Legend><PieChart.Plot tooltipContent={({defaultContent})=><div>{defaultContent}</div>}>{({defaultContent})=>defaultContent}</PieChart.Plot><PieChart.Table/></PieChart>;}"
         }
       ]
+    },
+    {
+      "id": "react-ui-plot",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "PieChart",
+      "propertyPath": ["Plot"],
+      "description": "Готовая область графика с измерением и заменяемым SVG-рисунком. Включает пустое состояние.",
+      "propertyDescriptions": {
+        "children": "Рисунок сектора: ({slice,path,radius,innerRadius,active,defaultContent}) => ReactNode. Координаты нормализованы к radius=100, innerRadius абсолютный. Исходный path поверх рисунка сохраняет ref, фокус и область наведения.",
+        "tooltipContent": "Содержимое Tooltip: ({slice,layout,defaultContent}) => ReactNode. null/undefined/false скрывают подсказку. Доли считаются среди видимых категорий."
+      }
+    },
+    {
+      "id": "react-ui-legend",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "PieChart",
+      "propertyPath": ["Legend"],
+      "description": "Легенда с готовыми кнопками и общей видимостью данных.",
+      "propertyDescriptions": {
+        "children": "Содержимое кнопки: ({item,visible,defaultContent}) => ReactNode. События и aria-pressed сохраняются; без интерактивных потомков."
+      }
+    },
+    {
+      "id": "react-ui-table",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "PieChart",
+      "propertyPath": ["Table"],
+      "description": "Полная исходная таблица, включая скрытые и нулевые категории."
+    },
+    {
+      "id": "react-ui-context",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "usePieChart",
+      "description": "Контекст ближайшего PieChart[Adapter]: data, source полного набора, layout видимых категорий, visible/toggle, label, labels, slotProps, размеры. Вне корня — ошибка."
     }
   ]
 }

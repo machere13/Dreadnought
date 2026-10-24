@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
-import { PieChart } from '@dreadnought/ui/react';
+import { PieChart, usePieChart } from '@dreadnought/ui/react';
 import {
   pieChartPresentation,
   getPieItemClasses,
@@ -30,6 +30,30 @@ const data = [
   { id: 'constructor', label: 'Beta', value: 70 },
 ];
 const props = { data, label: 'Budget', width: 400, height: 320 };
+it('themes composed parts and shares visibility with custom controls', () => {
+  function Summary() {
+    const { layout } = usePieChart();
+    return <p>Total {layout.total}</p>;
+  }
+  const view = render(
+    <PieChart {...props}>
+      <Summary />
+      <PieChart.Table />
+      <PieChart.Legend />
+      <PieChart.Plot>{({ defaultContent }) => <g>{defaultContent}</g>}</PieChart.Plot>
+    </PieChart>,
+  );
+  expect(screen.getByText('Total 100')).toBeTruthy();
+  const target = screen.getByRole('img', { name: 'Alpha: 30 (30%)' });
+  expect(target.getAttribute('data-custom')).toBe('true');
+  expect(target.style.fillOpacity).toBe('0');
+  expect(
+    view.container.querySelector('[data-ui="pie-slice-drawing"] path')?.getAttribute('class'),
+  ).toContain(pieChartPresentation.slice);
+  fireEvent.click(screen.getByRole('button', { name: 'Alpha' }));
+  expect(screen.getByText('Total 70')).toBeTruthy();
+  expect(screen.getByRole('table').className).toContain(tablePresentation.root);
+});
 const alphaColor = () => getPieItemClasses(data.map((item) => item.id)).get('__proto__');
 
 it('applies presentation only in UI and preserves consumer classes', () => {

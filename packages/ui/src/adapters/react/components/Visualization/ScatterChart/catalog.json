@@ -40,14 +40,79 @@
         "onVisibleSeriesChange": "Запрос изменения видимых серий; controlled-значение обновляет приложение.",
         "pageSize": "Число строк исходной таблицы на странице; не ограничивает число точек.",
         "labels": "Подписи легенды, колонок, таблицы и пустого состояния.",
-        "slotProps": "Свойства частей диаграммы."
+        "slotProps": "Свойства частей диаграммы.",
+        "children": "Своя композиция Plot, Legend, Table, Pagination, Empty и компонентов с useScatterChart. undefined — готовая сборка, null — только подпись. Части используют состояние ближайшего корня."
       },
       "examples": [
         {
           "id": "basic",
           "code": "import { ScatterChart } from '@dreadnought/ui/react';\nconst series = [{ id: 'a', label: 'Кампании', data: [{ id: 'one', label: 'Поиск', x: 20, y: 40, size: 100 }, { id: 'two', label: 'Соцсети', x: 40, y: 60, size: 200 }] }];\nexport function Example() { return <ScatterChart label=\"Эффективность кампаний\" series={series} xDomain={[0, 100]} yDomain={[0, 100]} xLabel=\"Бюджет\" yLabel=\"Заказы\" sizeLabel=\"Выручка\" />; }"
+        },
+        {
+          "id": "compound",
+          "code": "import { ScatterChart, useScatterChart } from '@dreadnought/ui/react';\nconst series=[{id:'a',label:'A',data:[{id:'one',label:'One',x:2,y:4,size:25}]}];\nfunction Summary(){const {visible}=useScatterChart();return <p>Видимых: {visible.length}</p>;}\nexport function Example(){return <ScatterChart label=\"Данные\" series={series} xDomain={[0,10]} yDomain={[0,10]}><Summary/><ScatterChart.Legend>{({defaultContent})=><span>{defaultContent}</span>}</ScatterChart.Legend><ScatterChart.Plot tooltipContent={({defaultContent})=><div>{defaultContent}</div>}>{({defaultContent})=>defaultContent}</ScatterChart.Plot><ScatterChart.Empty/><ScatterChart.Table/><ScatterChart.Pagination/></ScatterChart>;}"
         }
       ]
+    },
+    {
+      "id": "react-ui-plot",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "ScatterChart",
+      "propertyPath": ["Plot"],
+      "description": "Готовая область графика с измерением и заменяемым SVG-рисунком.",
+      "propertyDescriptions": {
+        "children": "Рисунок точки: ({point,series,cx,cy,radius,active,defaultContent}) => ReactNode. point — исходный нормализованный ScatterPoint; cx/cy/radius — координаты SVG после адаптации размера. Исходный circle сохраняет ref, фокус и область наведения.",
+        "tooltipContent": "Содержимое Tooltip: ({point,series,format,defaultContent}) => ReactNode. null/undefined/false скрывают подсказку."
+      }
+    },
+    {
+      "id": "react-ui-legend",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "ScatterChart",
+      "propertyPath": ["Legend"],
+      "description": "Легенда с готовыми кнопками и общей видимостью данных.",
+      "propertyDescriptions": {
+        "children": "Содержимое кнопки: ({series,visible,defaultContent}) => ReactNode. События и aria-pressed сохраняются; без интерактивных потомков."
+      }
+    },
+    {
+      "id": "react-ui-table",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "ScatterChart",
+      "propertyPath": ["Table"],
+      "description": "Текущая страница всех исходных наблюдений, включая скрытые серии и нулевые размеры."
+    },
+    {
+      "id": "react-ui-pagination",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "ScatterChart",
+      "propertyPath": ["Pagination"],
+      "description": "Листает только таблицу, график не ограничивает; при одной странице скрыта."
+    },
+    {
+      "id": "react-ui-empty",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "ScatterChart",
+      "propertyPath": ["Empty"],
+      "description": "Сообщение, если видимых точек положительного размера нет."
+    },
+    {
+      "id": "react-ui-context",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "useScatterChart",
+      "description": "Контекст ближайшего ScatterChart[Adapter]: series, source, rows полного набора, seriesNames, visible/toggle, page:{rows,page,count,change}, hasSize, hasVisiblePoints, format, labels, slotProps, размеры. Вне корня — ошибка."
     }
   ]
 }
