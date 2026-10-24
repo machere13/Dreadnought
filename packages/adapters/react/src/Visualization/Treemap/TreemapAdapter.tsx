@@ -1,15 +1,23 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { buildTreemapLayout } from '@dreadnought/core';
-import { BreadcrumbAdapter } from '../../Navigation/Breadcrumb/BreadcrumbAdapter.tsx';
-import { ButtonAdapter } from '../../Controls/Button/ButtonAdapter.tsx';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
-import { TreemapPlot } from './TreemapPlot.tsx';
-import { TreemapDataTable, treemapLabels } from './TreemapStatistics.tsx';
+import { useChartPage } from '../../shared/useChartPage.tsx';
+import { attachRef } from '../../shared/attachRef.ts';
+import { TreemapContext } from './TreemapContext.tsx';
+import {
+  TreemapPlotAdapter,
+  TreemapBreadcrumbAdapter,
+  TreemapLocationAdapter,
+  TreemapTableAdapter,
+  TreemapPaginationAdapter,
+  TreemapEmptyAdapter,
+} from './TreemapParts.tsx';
+import { treemapLabels } from './TreemapStatistics.tsx';
 import type { TreemapAdapterProps } from './treemap.types.ts';
 
 const percent = (ratio: number) => `${Number((ratio * 100).toFixed(1))}%`;
 
-export function TreemapAdapter({
+function TreemapRootAdapter({
   data,
   label,
   description,
@@ -19,6 +27,7 @@ export function TreemapAdapter({
   pageSize = 20,
   labels: overrides = {},
   slotProps = {},
+  children,
   ...rest
 }: TreemapAdapterProps) {
   const [view, setView] = useState({ data, rootId: data.id, revision: 0 });
@@ -39,7 +48,9 @@ export function TreemapAdapter({
     throw new TypeError('Treemap formatters must be functions');
   if (description !== undefined && typeof description !== 'string')
     throw new TypeError('Treemap description must be a string');
+  const page = useChartPage(layout.items, pageSize);
   const id = useId();
+  const figure = useRef<HTMLElement>(null);
   const elements = useRef(new Map<string, HTMLElement>());
   const location = useRef<HTMLParagraphElement>(null);
   const pendingFocus = useRef<{ rootId: string; itemId?: string } | null>(null);
@@ -49,11 +60,16 @@ export function TreemapAdapter({
     const target = preferred
       ? elements.current.get(preferred)
       : elements.current.values().next().value;
-    (target ?? location.current)?.focus();
+    (target ?? location.current ?? figure.current)?.focus();
     pendingFocus.current = null;
   }, [layout]);
   function navigate(rootId: string) {
     if (rootId === layout.root.id) return;
+    if (
+      !layout.path.some((node) => node.id === rootId) &&
+      !layout.items.some((item) => item.group && item.id === rootId)
+    )
+      return;
     const ancestor = layout.path.findIndex((node) => node.id === rootId);
     pendingFocus.current = {
       rootId,
@@ -62,53 +78,60 @@ export function TreemapAdapter({
     setView({ data, rootId, revision: current.revision });
     onRootChange?.(rootId);
   }
-  const statistics = { layout, labels, formatValue, formatPercent, slotProps };
-  const button = native(slotProps.navigationButton);
+  const context = {
+    layout,
+    labels,
+    formatValue,
+    formatPercent,
+    slotProps,
+    label,
+    page,
+    navigate,
+    elements,
+    location,
+    plotKey: `${current.revision}:${layout.root.id}`,
+  };
+  const rootSlot = native(rest, ['role']);
   return (
     <figure
-      {...native(rest, ['role'])}
+      {...rootSlot}
+      tabIndex={rootSlot.tabIndex ?? -1}
+      ref={(element) => {
+        figure.current = element;
+        if (element)
+          return attachRef(element, rootSlot.ref, () => {
+            figure.current = null;
+          });
+      }}
       data-ui="treemap"
       aria-labelledby={`${id}-label`}
       aria-describedby={description === undefined ? undefined : `${id}-description`}
     >
       <figcaption id={`${id}-label`}>{label}</figcaption>
       {description !== undefined && <p id={`${id}-description`}>{description}</p>}
-      <BreadcrumbAdapter
-        {...native(slotProps.breadcrumb)}
-        aria-label={labels.breadcrumb}
-        slotClassNames={slotProps.breadcrumbClassNames}
-        items={layout.path.map((node, index) => ({
-          label:
-            index === layout.path.length - 1 ? (
-              node.label
-            ) : (
-              <ButtonAdapter
-                {...button}
-                type="button"
-                onClick={(event) => {
-                  button.onClick?.(event);
-                  if (!event.defaultPrevented) navigate(node.id);
-                }}
-              >
-                {node.label}
-              </ButtonAdapter>
-            ),
-        }))}
-      />
-      <p ref={location} tabIndex={-1} data-ui="treemap-location" aria-live="polite">
-        {layout.root.label}: {formatValue(layout.root.value)}
-      </p>
-      {layout.root.value === 0 ? (
-        <p>{labels.empty}</p>
-      ) : (
-        <TreemapPlot
-          key={`${current.revision}:${layout.root.id}`}
-          {...statistics}
-          elements={elements}
-          navigate={navigate}
-        />
-      )}
-      <TreemapDataTable {...statistics} label={label} pageSize={pageSize} navigate={navigate} />
+      <TreemapContext.Provider value={context}>
+        {children === undefined ? (
+          <>
+            <TreemapBreadcrumbAdapter />
+            <TreemapLocationAdapter />
+            <TreemapEmptyAdapter />
+            <TreemapPlotAdapter />
+            <TreemapTableAdapter />
+            <TreemapPaginationAdapter />
+          </>
+        ) : (
+          children
+        )}
+      </TreemapContext.Provider>
     </figure>
   );
 }
+
+export const TreemapAdapter = Object.assign(TreemapRootAdapter, {
+  Plot: TreemapPlotAdapter,
+  Breadcrumb: TreemapBreadcrumbAdapter,
+  Location: TreemapLocationAdapter,
+  Table: TreemapTableAdapter,
+  Pagination: TreemapPaginationAdapter,
+  Empty: TreemapEmptyAdapter,
+});

@@ -12,7 +12,8 @@
     "Верхняя ширина этапа пропорциональна value/first, нижняя — следующему этапу; у последнего обе ширины равны. Площадь трапеции не кодирует количество. Подписи расположены вне геометрии.",
     "От первого = value/first, от предыдущего = value/previous. Первый этап не имеет previous; нулевой знаменатель даёт «—». Нулевые этапы не удаляются и не рисуют фиктивную фигуру.",
     "Tab входит в этапы один раз; ↑/↓ и Home/End перемещают фокус в текущей странице без зацикливания. Escape закрывает Tooltip; нажатие переводит фокус для touch. Точная таблица доступна без наведения.",
-    "Расчёт O(n), память O(n), модель кешируется по ссылке data. pageSize ограничивает SVG и строки таблицы одновременно; доли и ширины не пересчитываются относительно страницы."
+    "Расчёт O(n), память O(n), модель кешируется по ссылке data. pageSize ограничивает SVG и строки таблицы одновременно; доли и ширины не пересчитываются относительно страницы.",
+    "Композиция: Plot, Table, Pagination, Empty и useFunnelChart. Без children сохраняется готовый набор; свои children заменяют состав и порядок, null оставляет подпись. Хук возвращает layout всех этапов, page:{rows,page,count,change}, label, labels, форматы и slotProps. Пагинация меняет одновременно график и таблицу, но конверсии и ширины считаются по полному процессу. Plot.children и tooltipContent получают stage, active, labels, formatValue, formatPercent и defaultContent рисунка/подсказки. Исходный span сохраняет ref, фокус и события. null/undefined/false из tooltipContent скрывают подсказку. Рисунок декоративен, без интерактивных потомков; при замене таблицы сохраните значения, обе конверсии и потери."
   ],
   "bindings": [
     {
@@ -32,14 +33,67 @@
         "formatPercent": "Формат отношения 0–1, не числа 0–100. Не вызывается для неопределённой конверсии.",
         "pageSize": "Число этапов одновременно в графике и таблице. Шкала и конверсии всегда по всему набору.",
         "labels": "Подписи столбцов, конверсий и пустого состояния.",
-        "slotProps": "Нативные свойства этапов, SVG-фигуры, Tooltip, Mark, таблицы и пагинации."
+        "slotProps": "Нативные свойства этапов, SVG-фигуры, Tooltip, Mark, таблицы и пагинации.",
+        "children": "Своя композиция Plot, Table, Pagination, Empty и элементов с useFunnelChart. undefined — готовый набор, null — только подпись."
       },
       "examples": [
         {
           "id": "basic",
           "code": "import { FunnelChartAdapter } from '@dreadnought/react/unstyled';\nconst data = [{ id: 'visit', label: 'Визиты', value: 1000 }, { id: 'cart', label: 'Корзина', value: 400 }, { id: 'paid', label: 'Оплата', value: 100 }];\nexport function Example() { return <FunnelChartAdapter label=\"Путь к покупке\" data={data} />; }"
+        },
+        {
+          "id": "compound",
+          "code": "import { FunnelChartAdapter, useFunnelChart } from '@dreadnought/react/unstyled';\nconst data = [{id:'a',label:'Визиты',value:100},{id:'b',label:'Оплата',value:10}];\nfunction Controls() { const {page} = useFunnelChart(); return <button disabled={page.page === page.count} onClick={() => page.change(page.page + 1)}>Следующая страница</button>; }\nexport function Example() { return <FunnelChartAdapter label=\"Распределение\" data={data} pageSize={1}><Controls /><FunnelChartAdapter.Plot tooltipContent={({defaultContent}) => <div>{defaultContent}</div>}>{({defaultContent}) => defaultContent}</FunnelChartAdapter.Plot><FunnelChartAdapter.Table /><FunnelChartAdapter.Pagination /><FunnelChartAdapter.Empty /></FunnelChartAdapter>; }"
         }
       ]
+    },
+    {
+      "id": "react-adapter-plot",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "FunnelChartAdapter",
+      "propertyPath": ["Plot"],
+      "description": "Готовое поведение с заменяемым рисунком и Tooltip.",
+      "propertyDescriptions": {
+        "children": "Свой рисунок: ({stage,active,labels,formatValue,formatPercent,defaultContent}) => ReactNode. Внешняя обёртка сохраняет ref, фокус и события; без интерактивных потомков.",
+        "tooltipContent": "Своя подсказка с тем же контекстом и defaultContent Tooltip. null/undefined/false отключают её."
+      }
+    },
+    {
+      "id": "react-adapter-table",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "FunnelChartAdapter",
+      "propertyPath": ["Table"],
+      "description": "Доступная таблица текущей страницы с точными данными."
+    },
+    {
+      "id": "react-adapter-pagination",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "FunnelChartAdapter",
+      "propertyPath": ["Pagination"],
+      "description": "Пагинация общего состояния; при одной странице скрыта."
+    },
+    {
+      "id": "react-adapter-empty",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "FunnelChartAdapter",
+      "propertyPath": ["Empty"],
+      "description": "Пустое состояние без фиктивных значений."
+    },
+    {
+      "id": "react-adapter-context",
+      "layer": 2,
+      "framework": "react",
+      "importPath": "@dreadnought/react/unstyled",
+      "exportName": "useFunnelChart",
+      "description": "Контекст ближайшего FunnelChartAdapter: layout, page, label, labels, formatValue, formatPercent, slotProps. Вне root выбрасывает ошибку."
     }
   ]
 }

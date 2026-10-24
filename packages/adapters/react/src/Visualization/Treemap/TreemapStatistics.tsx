@@ -3,7 +3,6 @@ import { MarkAdapter } from '../../DataDisplay/Mark/MarkAdapter.tsx';
 import { TableAdapter as Table } from '../../DataDisplay/Table/TableAdapter.tsx';
 import { ButtonAdapter } from '../../Controls/Button/ButtonAdapter.tsx';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
-import { ChartPagination, useChartPage } from '../../shared/useChartPage.tsx';
 import type { TreemapLabels, TreemapSlotProps } from './treemap.types.ts';
 
 export const treemapLabels: Required<TreemapLabels> = {
@@ -55,15 +54,14 @@ export function TreemapTooltip({ item, ...props }: TreemapStatisticsProps & { it
 }
 export function TreemapDataTable({
   label,
-  pageSize,
+  rows,
   navigate,
   ...props
 }: TreemapStatisticsProps & {
   label: string;
-  pageSize: number;
+  rows: readonly TreemapItem[];
   navigate: (id: string) => void;
 }) {
-  const page = useChartPage(props.layout.items, pageSize);
   const button = native(props.slotProps.navigationButton);
   return (
     <>
@@ -93,7 +91,7 @@ export function TreemapDataTable({
             </Table.Row>
           </Table.Head>
           <Table.Body>
-            {page.rows.map((item) => (
+            {rows.map((item) => (
               <Table.Row key={item.id}>
                 <Table.HeaderCell scope="row">
                   {item.group ? (
@@ -119,7 +117,6 @@ export function TreemapDataTable({
           </Table.Body>
         </Table>
       </div>
-      <ChartPagination {...page} slotProps={props.slotProps} />
     </>
   );
 }

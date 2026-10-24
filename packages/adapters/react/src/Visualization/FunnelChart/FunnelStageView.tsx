@@ -1,4 +1,4 @@
-import type { ComponentProps, RefObject } from 'react';
+import type { ComponentProps, RefObject, ReactNode } from 'react';
 import type { FunnelStage } from '@dreadnought/core';
 import { TooltipAdapter } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
@@ -6,6 +6,8 @@ import { attachRef } from '../../shared/attachRef.ts';
 import type { FunnelChartSlotProps } from './funnelChart.types.ts';
 
 interface Props {
+  drawing?: (defaultContent: ReactNode) => ReactNode;
+  active: boolean;
   stage: FunnelStage;
   tabIndex: number;
   name: string;
@@ -18,6 +20,8 @@ interface Props {
 }
 
 export function FunnelStageView({
+  drawing,
+  active,
   stage,
   name,
   tabIndex,
@@ -32,6 +36,19 @@ export function FunnelStageView({
   const left = 50 - stage.width * 48;
   const bottomLeft = 50 - stage.nextWidth * 48;
   const points = `${left},0 ${100 - left},0 ${100 - bottomLeft},100 ${bottomLeft},100`;
+  const content = (
+    <svg
+      width="100%"
+      height="56"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      {stage.width > 0 && (
+        <polygon {...native(slotProps.shape)} points={points} fill="currentColor" />
+      )}
+    </svg>
+  );
   return (
     <TooltipAdapter {...tooltip}>
       {(trigger) => (
@@ -42,6 +59,7 @@ export function FunnelStageView({
           tabIndex={tabIndex}
           aria-label={name}
           data-ui="funnel-stage"
+          data-active={active || undefined}
           ref={(element) => {
             trigger.ref(element);
             if (!element) return;
@@ -84,17 +102,13 @@ export function FunnelStageView({
             if (!event.defaultPrevented && navigate(event.key)) event.preventDefault();
           }}
         >
-          <svg
-            width="100%"
-            height="56"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            {stage.width > 0 && (
-              <polygon {...native(slotProps.shape)} points={points} fill="currentColor" />
-            )}
-          </svg>
+          {drawing ? (
+            <span aria-hidden="true" style={{ display: 'contents', pointerEvents: 'none' }}>
+              {drawing(content)}
+            </span>
+          ) : (
+            content
+          )}
         </span>
       )}
     </TooltipAdapter>

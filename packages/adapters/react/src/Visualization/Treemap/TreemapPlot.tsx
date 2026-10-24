@@ -3,15 +3,19 @@ import { getCollectionNavigation } from '@dreadnought/core';
 import { chartNativeProps as native } from '../../shared/chartNativeProps.ts';
 import { TreemapTile } from './TreemapTile.tsx';
 import { TreemapTooltip, type TreemapStatisticsProps } from './TreemapStatistics.tsx';
+import type { TreemapPlotProps } from './treemap.types.ts';
 
 export function TreemapPlot({
   elements,
   navigate,
+  children,
+  tooltipContent,
   ...props
-}: TreemapStatisticsProps & {
-  elements: RefObject<Map<string, HTMLElement>>;
-  navigate: (id: string) => void;
-}) {
+}: TreemapStatisticsProps &
+  TreemapPlotProps & {
+    elements: RefObject<Map<string, HTMLElement>>;
+    navigate: (id: string) => void;
+  }) {
   const { layout, slotProps } = props;
   const [tabStop, setTabStop] = useState<string>();
   const [open, setOpen] = useState<string | null>(null);
@@ -32,40 +36,61 @@ export function TreemapPlot({
         aspectRatio: `${layout.width} / ${layout.height}`,
       }}
     >
-      {items.map((item) => (
-        <TreemapTile
-          key={item.id}
-          item={item}
-          {...props}
-          width={layout.width}
-          height={layout.height}
-          tabIndex={item.id === tabId ? 0 : -1}
-          elements={elements}
-          activate={() => {
-            interaction.current = item.id;
-          }}
-          focus={() => setTabStop(item.id)}
-          drill={() => navigate(item.id)}
-          navigate={(key) => {
-            const next = getCollectionNavigation(candidates, item.id, key, {
-              orientation: key === 'ArrowLeft' || key === 'ArrowRight' ? 'horizontal' : 'vertical',
-              loop: false,
-            });
-            if (next === undefined) return false;
-            elements.current.get(next)?.focus();
-            return true;
-          }}
-          tooltip={{
-            ...native(slotProps.tooltip?.(item), ['ref']),
-            content: <TreemapTooltip item={item} {...props} />,
-            open: open === item.id,
-            onOpenChange: (next) => {
-              if (next && interaction.current !== item.id) return;
-              setOpen((current) => (next ? item.id : current === item.id ? null : current));
-            },
-          }}
-        />
-      ))}
+      {items.map((item) => {
+        const context = {
+          item,
+          layout,
+          labels: props.labels,
+          formatValue: props.formatValue,
+          formatPercent: props.formatPercent,
+          active: open === item.id,
+        };
+        const defaultContent = <TreemapTooltip item={item} {...props} />;
+        const content = tooltipContent
+          ? tooltipContent({ ...context, defaultContent })
+          : defaultContent;
+        const hasContent = content !== null && content !== undefined && content !== false;
+        return (
+          <TreemapTile
+            key={item.id}
+            item={item}
+            renderContent={
+              children &&
+              ((defaultContent) =>
+                children({ ...context, active: context.active && hasContent, defaultContent }))
+            }
+            {...props}
+            width={layout.width}
+            height={layout.height}
+            tabIndex={item.id === tabId ? 0 : -1}
+            elements={elements}
+            activate={() => {
+              interaction.current = item.id;
+            }}
+            focus={() => setTabStop(item.id)}
+            drill={() => navigate(item.id)}
+            navigate={(key) => {
+              const next = getCollectionNavigation(candidates, item.id, key, {
+                orientation:
+                  key === 'ArrowLeft' || key === 'ArrowRight' ? 'horizontal' : 'vertical',
+                loop: false,
+              });
+              if (next === undefined) return false;
+              elements.current.get(next)?.focus();
+              return true;
+            }}
+            tooltip={{
+              ...native(slotProps.tooltip?.(item), ['ref']),
+              content,
+              open: open === item.id && hasContent,
+              onOpenChange: (next) => {
+                if (next && interaction.current !== item.id) return;
+                setOpen((current) => (next ? item.id : current === item.id ? null : current));
+              },
+            }}
+          />
+        );
+      })}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import type { CSSProperties, ComponentProps, RefObject, HTMLAttributes } from 'react';
+import type { CSSProperties, ComponentProps, RefObject, HTMLAttributes, ReactNode } from 'react';
 import type { TreemapItem, TreemapRect } from '@dreadnought/core';
 import { ButtonAdapter } from '../../Controls/Button/ButtonAdapter.tsx';
 import { TooltipAdapter } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
@@ -16,6 +16,7 @@ function position(rect: TreemapRect, width: number, height: number): CSSProperti
   };
 }
 interface Props {
+  renderContent?: (defaultContent: ReactNode) => ReactNode;
   item: TreemapItem;
   width: number;
   height: number;
@@ -30,6 +31,7 @@ interface Props {
   drill: () => void;
 }
 export function TreemapTile({
+  renderContent,
   item,
   width,
   height,
@@ -126,11 +128,23 @@ export function TreemapTile({
             data-ui="treemap-tile"
             data-group="true"
           >
-            {content}
+            {renderContent ? (
+              <span aria-hidden="true" style={{ display: 'contents', pointerEvents: 'none' }}>
+                {renderContent(content)}
+              </span>
+            ) : (
+              content
+            )}
           </ButtonAdapter>
         ) : (
           <span {...props} ref={ref} role="img" data-ui="treemap-tile">
-            {content}
+            {renderContent ? (
+              <span aria-hidden="true" style={{ display: 'contents', pointerEvents: 'none' }}>
+                {renderContent(content)}
+              </span>
+            ) : (
+              content
+            )}
           </span>
         );
       }}

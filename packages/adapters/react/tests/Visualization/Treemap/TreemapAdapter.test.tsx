@@ -1,6 +1,7 @@
 import { afterEach, expect, it, vi } from 'vitest';
+import { createRef } from 'react';
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
-import * as adapters from '../../../src/unstyled.ts';
+import * as adapters from '../../../src/Visualization/Treemap/index.ts';
 
 afterEach(cleanup);
 const data = {
@@ -19,6 +20,116 @@ const data = {
     { id: 'zero', label: 'Резерв', children: [] },
   ],
 };
+
+it('composes tile content, breadcrumbs and controls while retaining drill focus and shares', () => {
+  expect(adapters.TreemapAdapter.Plot).toBeTypeOf('function');
+  const changed = vi.fn();
+  const ref = createRef<HTMLElement>();
+  function Controls() {
+    const { layout, page, navigate } = adapters.useTreemap();
+    return (
+      <>
+        <p>
+          Root {layout.root.id}, page {page.page}
+        </p>
+        <button onClick={() => page.change(2)}>Next rows</button>
+        <button onClick={() => navigate('all')}>Root</button>
+        <button onClick={() => navigate('unknown')}>Unknown</button>
+      </>
+    );
+  }
+  render(
+    <adapters.TreemapAdapter
+      data={data}
+      label="Расходы"
+      pageSize={1}
+      onRootChange={changed}
+      slotProps={{ tile: (item) => (item.id === 'dev' ? { ref } : {}) }}
+    >
+      <Controls />
+      <adapters.TreemapAdapter.Breadcrumb />
+      <adapters.TreemapAdapter.Location />
+      <adapters.TreemapAdapter.Plot
+        tooltipContent={({ item, defaultContent }) => (
+          <div>
+            {defaultContent}
+            <p>Item {item.id}</p>
+          </div>
+        )}
+      >
+        {({ item, defaultContent }) => <span data-value={item.value}>{defaultContent}</span>}
+      </adapters.TreemapAdapter.Plot>
+      <adapters.TreemapAdapter.Table />
+      <adapters.TreemapAdapter.Pagination />
+      <adapters.TreemapAdapter.Empty />
+    </adapters.TreemapAdapter>,
+  );
+  const group = screen.getByRole('button', { name: 'Разработка: 60' });
+  expect(ref.current).toBe(group);
+  expect(group.querySelector('[data-value="60"]')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Unknown', exact: true }));
+  expect(changed).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: 'Next rows' }));
+  expect(screen.getByText('Root all, page 2')).toBeTruthy();
+  expect(within(screen.getByRole('table')).getByText('Дизайн')).toBeTruthy();
+  fireEvent.click(group);
+  expect(document.activeElement).toBe(screen.getByRole('img', { name: 'Web: 30' }));
+  expect(screen.getByText('Root dev, page 1')).toBeTruthy();
+  expect(screen.getByRole('tooltip').textContent).toContain('Доля от всего30%');
+  expect(screen.getByRole('tooltip').textContent).toContain('Item web');
+  expect(ref.current).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Root', exact: true }));
+  expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Разработка: 60' }));
+  expect(changed.mock.calls).toEqual([['dev'], ['all']]);
+});
+
+it('supports nullable tile tooltips, explicit composition and scoped hooks', () => {
+  expect(adapters.useTreemap).toBeTypeOf('function');
+  const { rerender } = render(
+    <adapters.TreemapAdapter data={data} label="Расходы">
+      <adapters.TreemapAdapter.Plot tooltipContent={() => null}>
+        {({ defaultContent }) => defaultContent}
+      </adapters.TreemapAdapter.Plot>
+    </adapters.TreemapAdapter>,
+  );
+  act(() => screen.getByRole('img', { name: 'Дизайн: 40' }).focus());
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  rerender(
+    <adapters.TreemapAdapter data={data} label="Расходы">
+      {null}
+    </adapters.TreemapAdapter>,
+  );
+  expect(screen.queryByRole('img')).toBeNull();
+  expect(screen.queryByRole('table')).toBeNull();
+  function Outside() {
+    adapters.useTreemap();
+    return null;
+  }
+  expect(() => render(<Outside />)).toThrow(/Treemap/);
+});
+
+it('keeps focus recoverable when plot and location are replaced, and resets data without callbacks', () => {
+  const changed = vi.fn();
+  const ref = createRef<HTMLElement>();
+  const renderChart = (source: typeof data) => (
+    <adapters.TreemapAdapter data={source} label="Расходы" onRootChange={changed} ref={ref}>
+      <adapters.TreemapAdapter.Breadcrumb />
+      <adapters.TreemapAdapter.Table />
+      <adapters.TreemapAdapter.Pagination />
+      <adapters.TreemapAdapter.Empty />
+    </adapters.TreemapAdapter>
+  );
+  const { rerender, unmount } = render(renderChart(data));
+  fireEvent.click(within(screen.getByRole('table')).getByRole('button', { name: 'Резерв' }));
+  expect(document.activeElement).toBe(ref.current);
+  expect(screen.getByText('Нет положительных значений')).toBeTruthy();
+  expect(changed).toHaveBeenCalledExactlyOnceWith('zero');
+  rerender(renderChart({ ...data }));
+  expect(screen.getByRole('table', { name: 'Расходы: Бюджет' })).toBeTruthy();
+  expect(changed).toHaveBeenCalledTimes(1);
+  unmount();
+  expect(ref.current).toBeNull();
+});
 
 it('drills down and returns via Breadcrumb with surviving focus and exact tooltip values', () => {
   render(<adapters.TreemapAdapter data={data} label="Расходы" />);

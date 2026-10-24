@@ -10,6 +10,9 @@ import statesCode from './FunnelChartStatesDemo.tsx?raw';
 import { FunnelChartStagesDemo } from './FunnelChartStagesDemo.tsx';
 import stagesCode from './FunnelChartStagesDemo.tsx?raw';
 
+import { FunnelChartCompositionDemo } from './FunnelChartCompositionDemo.tsx';
+import compositionCode from './FunnelChartCompositionDemo.tsx?raw';
+
 export const funnelChartDoc: ComponentDoc = {
   ...getCatalogDoc('funnelchart'),
   title: 'FunnelChart',
@@ -22,6 +25,20 @@ export const funnelChartDoc: ComponentDoc = {
   logicDescription:
     'buildFunnelLayout сохраняет порядок этапов и считает ширины, конверсии и потери без React и DOM.',
   notes: [
+    <>
+      Свои children задают состав и порядок Plot, Table, Pagination и Empty. Без children выводится
+      готовый набор, null оставляет подпись. useFunnelChart возвращает layout всех этапов, page
+      текущих этапов, labels, форматы и slotProps. Пагинация меняет и график, и таблицу, но ширины и
+      конверсии остаются рассчитанными по полному процессу.
+    </>,
+    <>
+      Plot.children получает stage, active, labels, formatValue, formatPercent и defaultContent
+      рисунка; tooltipContent — те же поля с defaultContent подсказки. null/undefined/false
+      отключают Tooltip. Исходная фокусируемая обёртка сохраняет ref, имя и события, свой рисунок
+      декоративен, без интерактивных потомков. Части и хук требуют ближайший FunnelChart[Adapter].
+      При замене таблицы сохраните точные значения и доли, конверсии и потери. Данные передавайте
+      неизменяемыми.
+    </>,
     <>
       Передавайте готовые количества для одного периода и одной группы. Компонент не анализирует
       журнал событий и не определяет, кто действительно прошёл все этапы.
@@ -88,6 +105,14 @@ export const funnelChartDoc: ComponentDoc = {
         '12 этапов по четыре на странице. На второй странице шаг 5 остаётся 66,7% от начала процесса, а не становится новыми 100%. Таблица и график перелистываются вместе.',
       demo: <FunnelChartStagesDemo />,
       code: stagesCode,
+    },
+    {
+      id: 'composition',
+      title: 'Свой рисунок и состав частей',
+      description:
+        'Полосы со скруглением используют готовые ширины этапов. Своя кнопка листает график и таблицу вместе; итоговая конверсия 10% не меняется при переходе на последнюю страницу.',
+      demo: <FunnelChartCompositionDemo />,
+      code: compositionCode,
     },
   ],
 };

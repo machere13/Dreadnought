@@ -1,4 +1,5 @@
-import type { FunnelLayoutOptions, FunnelStage } from '@dreadnought/core';
+import type { ReactNode } from 'react';
+import type { FunnelLayoutOptions, FunnelLayout, FunnelStage } from '@dreadnought/core';
 import type { ChartNative as Native } from '../../shared/chartNativeProps.ts';
 import type { ChartPaginationSlots } from '../../shared/useChartPage.tsx';
 
@@ -25,11 +26,12 @@ export interface FunnelChartSlotProps extends ChartPaginationSlots {
   table?: Native<'table', 'aria-hidden' | 'hidden' | 'role'>;
 }
 
-export type FunnelChartAdapterProps = Native<
-  'figure',
-  'role' | 'aria-labelledby' | 'aria-describedby'
+export type FunnelChartAdapterProps = Omit<
+  Native<'figure', 'role' | 'aria-labelledby' | 'aria-describedby'>,
+  'children'
 > &
   FunnelLayoutOptions & {
+    children?: ReactNode;
     label: string;
     description?: string;
     formatValue?: (value: number) => string;
@@ -38,3 +40,25 @@ export type FunnelChartAdapterProps = Native<
     labels?: FunnelChartLabels;
     slotProps?: FunnelChartSlotProps;
   };
+
+export interface FunnelChartRenderContext {
+  stage: FunnelStage;
+  active: boolean;
+  labels: Required<FunnelChartLabels>;
+  formatValue: (value: number) => string;
+  formatPercent: (ratio: number) => string;
+  defaultContent: ReactNode;
+}
+export interface FunnelChartPlotProps {
+  children?: (context: FunnelChartRenderContext) => ReactNode;
+  tooltipContent?: (context: FunnelChartRenderContext) => ReactNode;
+}
+export interface FunnelChartContextValue {
+  layout: FunnelLayout;
+  page: { rows: FunnelStage[]; page: number; count: number; change: (page: number) => void };
+  label: string;
+  labels: Required<FunnelChartLabels>;
+  formatValue: (value: number) => string;
+  formatPercent: (ratio: number) => string;
+  slotProps: FunnelChartSlotProps;
+}

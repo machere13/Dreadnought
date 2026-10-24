@@ -14,7 +14,7 @@ const tone = (index: number): CSSProperties =>
     '--dreadnought-treemap-active': `var(--dreadnought-treemap-color-${(index % 6) + 1})`,
   }) as CSSProperties;
 
-export function Treemap({ className, slotProps = {}, ...props }: TreemapProps) {
+function TreemapRoot({ className, slotProps = {}, ...props }: TreemapProps) {
   return (
     <TreemapAdapter
       {...props}
@@ -104,3 +104,16 @@ export function Treemap({ className, slotProps = {}, ...props }: TreemapProps) {
     />
   );
 }
+
+export const Treemap: typeof TreemapRoot &
+  Pick<
+    typeof TreemapAdapter,
+    'Plot' | 'Breadcrumb' | 'Location' | 'Table' | 'Pagination' | 'Empty'
+  > = Object.assign(TreemapRoot, {
+  Plot: TreemapAdapter.Plot,
+  Breadcrumb: TreemapAdapter.Breadcrumb,
+  Location: TreemapAdapter.Location,
+  Table: TreemapAdapter.Table,
+  Pagination: TreemapAdapter.Pagination,
+  Empty: TreemapAdapter.Empty,
+});

@@ -1,7 +1,8 @@
 {
   "componentId": "component:treemap",
   "constraints": [
-    "Оформление через --dreadnought-treemap-*. Геометрия не зависит от темы. Маленькие подписи скрываются, точные значения доступны в таблице."
+    "Оформление через --dreadnought-treemap-*. Геометрия не зависит от темы. Маленькие подписи скрываются, точные значения доступны в таблице.",
+    "Композиция: Breadcrumb, Location, Plot, Table, Pagination, Empty и useTreemap. Без children сохраняется готовый набор; свои children заменяют состав и порядок, null оставляет подпись. Хук возвращает layout текущей группы, page:{rows,page,count,change}, navigate, label, labels, форматы и slotProps. navigate принимает непосредственную дочернюю группу или предка; неизвестные ID, листья и текущий ID игнорируются. page меняет только таблицу, переход сбрасывает её к первой странице. После перехода фокус восстанавливается на плитке, Location или корне графика. Plot.children и tooltipContent получают item, layout, active, labels, formatValue, formatPercent и defaultContent. Плитка сохраняет кнопку/фокусируемый span, ref, геометрию, имя и события. Рисунок декоративен, без интерактивных потомков; null/undefined/false из tooltipContent отключают подсказку. При замене таблицы сохраните точные значения, обе доли, нулевые элементы и переходы."
   ],
   "bindings": [
     {
@@ -22,14 +23,85 @@
         "formatPercent": "Формат отношения 0–1. Не вызывается для неопределённой доли.",
         "pageSize": "Число строк таблицы на странице. Не ограничивает диаграмму и не меняет площади.",
         "labels": "Подписи пути, столбцов и пустого состояния.",
-        "slotProps": "Свойства плиток, Breadcrumb, кнопок перехода, Tooltip, Mark, таблицы и пагинации."
+        "slotProps": "Свойства плиток, Breadcrumb, кнопок перехода, Tooltip, Mark, таблицы и пагинации.",
+        "children": "Своя композиция Plot, Breadcrumb, Location, Table, Pagination, Empty и элементов с useTreemap. undefined — готовый набор, null — только подпись."
       },
       "examples": [
         {
           "id": "basic",
           "code": "import { Treemap } from '@dreadnought/ui/react';\nconst data = { id: 'all', label: 'Бюджет', children: [{ id: 'team', label: 'Команда', children: [{ id: 'web', label: 'Web', value: 60 }, { id: 'api', label: 'API', value: 40 }] }] };\nexport function Example() { return <Treemap label=\"Бюджет команды\" data={data} />; }"
+        },
+        {
+          "id": "compound",
+          "code": "import { Treemap, useTreemap } from '@dreadnought/ui/react';\nconst data = {id:'all',label:'Все',children:[{id:'a',label:'Проект A',value:60},{id:'b',label:'Проект B',value:40}]};\nfunction Controls() { const {page} = useTreemap(); return <button disabled={page.page === page.count} onClick={() => page.change(page.page + 1)}>Следующая страница</button>; }\nexport function Example() { return <Treemap label=\"Распределение\" data={data} pageSize={1}><Controls /><Treemap.Breadcrumb /><Treemap.Location /><Treemap.Plot tooltipContent={({defaultContent}) => <div>{defaultContent}</div>}>{({defaultContent}) => defaultContent}</Treemap.Plot><Treemap.Table /><Treemap.Pagination /><Treemap.Empty /></Treemap>; }"
         }
       ]
+    },
+    {
+      "id": "react-ui-plot",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Treemap",
+      "propertyPath": ["Plot"],
+      "description": "Готовое поведение с заменяемым рисунком и Tooltip.",
+      "propertyDescriptions": {
+        "children": "Свой рисунок: ({item,layout,active,labels,formatValue,formatPercent,defaultContent}) => ReactNode. Внешняя обёртка сохраняет ref, фокус и события; без интерактивных потомков.",
+        "tooltipContent": "Своя подсказка с тем же контекстом и defaultContent Tooltip. null/undefined/false отключают её."
+      }
+    },
+    {
+      "id": "react-ui-breadcrumb",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Treemap",
+      "propertyPath": ["Breadcrumb"],
+      "description": "Путь до текущей группы с переходом к предкам и восстановлением фокуса."
+    },
+    {
+      "id": "react-ui-location",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Treemap",
+      "propertyPath": ["Location"],
+      "description": "Название и значение текущей группы: aria-live и запасная точка фокуса."
+    },
+    {
+      "id": "react-ui-table",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Treemap",
+      "propertyPath": ["Table"],
+      "description": "Доступная таблица текущей страницы с точными данными."
+    },
+    {
+      "id": "react-ui-pagination",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Treemap",
+      "propertyPath": ["Pagination"],
+      "description": "Пагинация общего состояния; при одной странице скрыта."
+    },
+    {
+      "id": "react-ui-empty",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "Treemap",
+      "propertyPath": ["Empty"],
+      "description": "Пустое состояние без фиктивных значений."
+    },
+    {
+      "id": "react-ui-context",
+      "layer": 3,
+      "framework": "react",
+      "importPath": "@dreadnought/ui/react",
+      "exportName": "useTreemap",
+      "description": "Контекст ближайшего Treemap: layout, page, navigate, label, labels, formatValue, formatPercent, slotProps. Вне root выбрасывает ошибку."
     }
   ]
 }

@@ -8,7 +8,7 @@ import { buttonPresentation } from '#presentation/Controls/Button/buttonPresenta
 export type FunnelChartProps = FunnelChartAdapterProps;
 const classes = (...values: (string | undefined)[]) => values.filter(Boolean).join(' ');
 
-export function FunnelChart({ className, slotProps = {}, ...props }: FunnelChartProps) {
+function FunnelChartRoot({ className, slotProps = {}, ...props }: FunnelChartProps) {
   return (
     <FunnelChartAdapter
       {...props}
@@ -74,3 +74,14 @@ export function FunnelChart({ className, slotProps = {}, ...props }: FunnelChart
     />
   );
 }
+
+export const FunnelChart: typeof FunnelChartRoot &
+  Pick<typeof FunnelChartAdapter, 'Plot' | 'Table' | 'Pagination' | 'Empty'> = Object.assign(
+  FunnelChartRoot,
+  {
+    Plot: FunnelChartAdapter.Plot,
+    Table: FunnelChartAdapter.Table,
+    Pagination: FunnelChartAdapter.Pagination,
+    Empty: FunnelChartAdapter.Empty,
+  },
+);

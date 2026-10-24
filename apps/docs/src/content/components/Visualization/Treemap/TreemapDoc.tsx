@@ -10,6 +10,9 @@ import statesCode from './TreemapStatesDemo.tsx?raw';
 import { TreemapManyDemo } from './TreemapManyDemo.tsx';
 import manyCode from './TreemapManyDemo.tsx?raw';
 
+import { TreemapCompositionDemo } from './TreemapCompositionDemo.tsx';
+import compositionCode from './TreemapCompositionDemo.tsx?raw';
+
 export const treemapDoc: ComponentDoc = {
   ...getCatalogDoc('treemap'),
   title: 'Treemap',
@@ -22,6 +25,22 @@ export const treemapDoc: ComponentDoc = {
   logicDescription:
     'buildTreemapLayout проверяет дерево, суммирует листья и возвращает прямоугольники, путь и доли. Нет React, DOM и CSS.',
   notes: [
+    <>
+      Свои children задают состав и порядок Breadcrumb, Location, Plot, Table, Pagination и Empty.
+      Без children выводится готовый набор, null оставляет подпись. useTreemap возвращает layout
+      открытой группы, page таблицы, navigate, labels, форматы и slotProps. navigate открывает
+      непосредственную дочернюю группу или предка; неизвестные ID и листья игнорируются. Пагинация
+      меняет только таблицу. Location объявляет открытый уровень и принимает фокус в пустой группе;
+      без неё и без плиток фокус возвращается на корень графика.
+    </>,
+    <>
+      Plot.children получает item, layout, active, labels, formatValue, formatPercent и
+      defaultContent рисунка; tooltipContent — те же поля с defaultContent подсказки.
+      null/undefined/false отключают Tooltip. Исходная фокусируемая обёртка сохраняет ref, имя и
+      события, свой рисунок декоративен, без интерактивных потомков. Части и хук требуют ближайший
+      Treemap[Adapter]. При замене таблицы сохраните точные значения и доли, нулевые элементы и
+      переходы в группы. Данные передавайте неизменяемыми.
+    </>,
     <>
       У листа есть value, у группы — children. Не задавайте оба: сумма группы вычисляется
       автоматически. Корень data всегда группа; ID уникальны во всём дереве. Отрицательные числа,
@@ -91,6 +110,14 @@ export const treemapDoc: ComponentDoc = {
         'Откройте одну из команд: на диаграмме будут все 50 проектов, а таблица покажет по 10 строк. Листайте таблицу — размеры блоков не меняются.',
       demo: <TreemapManyDemo />,
       code: manyCode,
+    },
+    {
+      id: 'composition',
+      title: 'Свои плитки и управление переходами',
+      description:
+        'На плитках добавлены доли, Tooltip поясняет действие. Откройте группу, затем вернитесь через Breadcrumb или свою кнопку: фокус восстановится. Перелистывание таблицы не меняет плитки.',
+      demo: <TreemapCompositionDemo />,
+      code: compositionCode,
     },
   ],
 };
