@@ -12,6 +12,7 @@ import { MarkAdapter } from '../../DataDisplay/Mark/MarkAdapter.tsx';
 import { chartNativeProps as nativeProps } from '../../shared/chartNativeProps.ts';
 import type { LineChartAdapterProps, LineChartPlotProps } from './lineChart.types.ts';
 import { attachRef } from '../../shared/attachRef.ts';
+import { useChartAxes } from '../../shared/useChartAxes.ts';
 
 type Props = Pick<LineChartAdapterProps, 'series' | 'xDomain'> &
   LineChartPlotProps & {
@@ -42,7 +43,8 @@ export function LinePlot({
   children,
   tooltipContent,
 }: Props) {
-  const left = 48;
+  const axes = useChartAxes(width, 48);
+  const left = axes.left;
   const top = 16;
   const layout = useMemo(
     () =>
@@ -52,7 +54,7 @@ export function LinePlot({
         Math.max(1, height - top - 32),
         xDomain,
       ),
-    [source, width, height, xDomain[0], xDomain[1]],
+    [source, width, height, left, xDomain[0], xDomain[1]],
   );
   const indexes = useMemo(
     () => new Map(source.series.map((item) => [item.id, item.segments.flat()])),
@@ -260,7 +262,7 @@ export function LinePlot({
               trigger.onPointerLeave?.(event);
             }}
           >
-            <g transform={`translate(${left} ${top})`}>
+            <g ref={axes.ref} transform={`translate(${left} ${top})`}>
               <defs>
                 <clipPath id={clipId}>
                   <rect width={layout.width} height={layout.height} />
@@ -286,7 +288,7 @@ export function LinePlot({
                   />
                 ))}
               </g>
-              {layout.xTicks.map((tick) => (
+              {layout.xTicks.map((tick, index) => (
                 <text
                   {...nativeProps(slotProps.axisLabel?.('x', tick.value))}
                   key={`x${tick.value}`}
@@ -300,6 +302,8 @@ export function LinePlot({
                         : 'middle'
                   }
                   data-ui="line-axis-label"
+                  data-chart-axis="x"
+                  {...(axes.hidden.includes(index) ? { visibility: 'hidden' } : {})}
                 >
                   {formatX(tick.value)}
                 </text>
@@ -312,6 +316,7 @@ export function LinePlot({
                   y={tick.position}
                   textAnchor="end"
                   data-ui="line-axis-label"
+                  data-chart-axis="y"
                 >
                   {formatY(tick.value)}
                 </text>

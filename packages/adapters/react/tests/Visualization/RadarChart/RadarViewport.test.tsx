@@ -53,7 +53,7 @@ it('measures only the plot width and preserves selection through zero width', ()
   expect(container.querySelector('svg')).toBeNull();
   expect(screen.getByRole('table')).toBeTruthy();
   measure(250);
-  expect(container.querySelector('svg')?.getAttribute('width')).toBe('250');
+  expect(container.querySelector('svg')?.getAttribute('width')).toBe('400');
   expect(container.querySelector('polygon[data-series-id]')).toBeNull();
 });
 
@@ -83,7 +83,7 @@ it('disconnects old observers on mode changes and waits for fresh measurements',
   measure(200, old);
   expect(container.querySelector('svg')).toBeNull();
   measure(250);
-  expect(container.querySelector('svg')?.getAttribute('height')).toBe('200');
+  expect(container.querySelector('svg')?.getAttribute('height')).toBe('320');
   const current = observers.at(-1)!;
   unmount();
   measure(700, current);

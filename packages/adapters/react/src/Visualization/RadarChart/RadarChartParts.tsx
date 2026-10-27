@@ -26,9 +26,13 @@ export function RadarChartPlotAdapter(props: RadarChartPlotProps) {
     [consumerRef],
   );
   const viewport = useChartViewport(width, height, plotRef);
+  const drawing =
+    viewport && width === undefined
+      ? { width: Math.max(400, viewport.width), height: Math.max(320, viewport.height) }
+      : viewport;
   return (
     <div {...native(slotProps.plotContainer)} ref={attachPlot} data-ui="radar-plot-container">
-      {viewport && <RadarPlot {...context} {...viewport} {...props} />}
+      {drawing && <RadarPlot {...context} {...drawing} {...props} />}
     </div>
   );
 }

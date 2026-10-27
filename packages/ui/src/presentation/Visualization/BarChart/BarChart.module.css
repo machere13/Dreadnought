@@ -18,10 +18,10 @@
     min-width: 0;
     max-width: var(--dreadnought-bar-chart-plot-max-width);
     margin-inline: auto;
+    overflow-x: auto;
   }
   .plot {
     display: block;
-    max-width: 100%;
   }
   .scrollContainer {
     scrollbar-color: var(--dreadnought-bar-chart-scrollbar-thumb)

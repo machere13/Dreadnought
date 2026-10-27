@@ -4,6 +4,7 @@ import { TooltipAdapter } from '../../Overlays/Tooltip/TooltipAdapter.tsx';
 import { MarkAdapter } from '../../DataDisplay/Mark/MarkAdapter.tsx';
 import { chartNativeProps as nativeProps } from '../../shared/chartNativeProps.ts';
 import { attachRef } from '../../shared/attachRef.ts';
+import { useChartAxes } from '../../shared/useChartAxes.ts';
 import type { BarChartAdapterProps, BarChartPlotProps } from './barChart.types.ts';
 
 type Props = Pick<
@@ -40,7 +41,8 @@ export function BarPlot({
   tooltipContent,
 }: Props) {
   const vertical = orientation !== 'horizontal';
-  const left = vertical ? 48 : 96;
+  const axes = useChartAxes(width, vertical ? 48 : 96);
+  const left = axes.left;
   const top = 20;
   const plotWidth = Math.max(1, width - left - 16);
   const plotHeight = Math.max(1, height - top - 40);
@@ -276,6 +278,7 @@ export function BarPlot({
         ...scrollSlot.style,
         overflowX: vertical ? 'auto' : 'hidden',
         overflowY: vertical ? 'hidden' : 'auto',
+        width,
         maxWidth: width,
         height: vertical ? undefined : height,
       }}
@@ -335,7 +338,7 @@ export function BarPlot({
                   trigger.onPointerLeave?.(event);
                 }}
               >
-                <g transform={`translate(${left} ${top})`}>
+                <g ref={axes.ref} transform={`translate(${left} ${top})`}>
                   <defs>
                     <clipPath id={`${clipId}-bars`}>
                       <rect width={plotWidth} height={plotHeight} />
@@ -367,7 +370,7 @@ export function BarPlot({
                       y2={vertical ? layout.baseline : layout.height}
                     />
                   </g>
-                  {layout.ticks.map((tick) => (
+                  {layout.ticks.map((tick, index) => (
                     <text
                       {...nativeProps(slotProps.valueLabel?.(tick.value))}
                       key={`value${tick.value}`}
@@ -383,12 +386,16 @@ export function BarPlot({
                               : 'middle'
                       }
                       data-ui="bar-axis-label"
+                      data-chart-axis={vertical ? 'y' : 'x'}
+                      {...(!vertical && axes.hidden.includes(index)
+                        ? { visibility: 'hidden' }
+                        : {})}
                     >
                       {formatTick(tick.value)}
                     </text>
                   ))}
                   <g clipPath={`url(#${clipId}-labels)`}>
-                    {layout.categories.map((item) => (
+                    {layout.categories.map((item, index) => (
                       <text
                         {...nativeProps(slotProps.categoryLabel?.(item))}
                         key={item.id}
@@ -396,6 +403,10 @@ export function BarPlot({
                         y={vertical ? layout.height + 16 : item.position}
                         textAnchor={vertical ? 'middle' : 'end'}
                         data-ui="bar-axis-label"
+                        data-chart-axis={vertical ? 'x' : 'y'}
+                        {...(vertical && axes.hidden.includes(index)
+                          ? { visibility: 'hidden' }
+                          : {})}
                       >
                         {item.label || item.id}
                       </text>
